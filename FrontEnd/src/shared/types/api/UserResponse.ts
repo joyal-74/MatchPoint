@@ -10,3 +10,8 @@ export interface UsersResponse {
 export interface UserResponse {
     user: ApiUser;
 }
+
+export interface LoginUserResponse {
+    user: ApiUser;
+}
+
