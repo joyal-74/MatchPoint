@@ -8,9 +8,12 @@ export interface ApiUser {
     role: string;
     wallet?: number;
     phone?: string;
-    is_active: boolean;
-    created_at: string;
-    updated_at: string;
+    password?: string;
+    gender: Gender;
+    sport?: string;
+    is_active?: boolean;
+    created_at?: string;
+    updated_at?: string;
     settings?: {
         location?: string;
         country?: string;
@@ -24,8 +27,9 @@ export interface UserRegister {
     first_name: string;
     last_name: string;
     email: string;
-    password : string;
+    password: string;
     role: string;
-    gender : Gender;
+    gender: Gender;
     phone: string;
+    sport?: string;
 }

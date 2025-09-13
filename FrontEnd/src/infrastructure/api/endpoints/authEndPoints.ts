@@ -1,9 +1,12 @@
 import type { ApiResponse } from '../../../shared/types/api/ApiResponse';
 import type { User } from '../../../core/domain/entities/User';
 import { axiosClient } from '../http/axiosClient';
-import { mapApiUserToDomain } from '../mappers/userMappers';
+import { mapApiUserToDomain, mapUserForSignup } from '../mappers/userMappers';
 import type { LoginUserResponse, UserResponse } from '../../../shared/types/api/UserResponse';
 import type { UserRegister } from '../../../shared/types/api/UserApi';
+import { getEndpoint } from '../http/services/authEndPoints';
+import type { SignupRole } from '../../../core/domain/types/UserRoles';
+
 
 export const authEndpoints = {
     login: async (credentials: { email: string; password: string }): Promise<User> => {
@@ -15,15 +18,19 @@ export const authEndpoints = {
     },
 
     signup: async (data: UserRegister): Promise<User> => {
+        console.log(data)
+        const endpoint = getEndpoint(data.role as SignupRole);
+        console.log(endpoint);
         const response = await axiosClient.post<ApiResponse<UserResponse>>(
-            "/signup",
-            data
+            endpoint,
+            mapUserForSignup(data)
         );
         return mapApiUserToDomain(response.data.data.user);
     },
 
+
     verifyOtp: async (data: { email: string; otp: string }): Promise<void> => {
-        await axiosClient.post(`/auth/verify-otp`, data);
+        await axiosClient.post(`/verify-otp`, data);
     },
 
     resendOtp: async (email: string): Promise<void> => {
@@ -40,14 +47,14 @@ export const authEndpoints = {
     },
 
     forgotPassword: async (email: string): Promise<void> => {
-        await axiosClient.post('/forgot_password', email)
+        await axiosClient.post('/forgot_password', email);
     },
 
     verifyResetOtp: async (data: { email: string, otp: string }): Promise<void> => {
-        await axiosClient.post('/verify-reset-otp', data)
+        await axiosClient.post('/verify-reset-otp', data);
     },
 
     resetPassword: async (data: { email: string, newPassword: string }): Promise<void> => {
-        await axiosClient.post('/reset-password', data)
+        await axiosClient.post('/reset-password', data);
     }
 };

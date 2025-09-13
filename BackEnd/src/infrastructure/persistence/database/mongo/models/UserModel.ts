@@ -1,8 +1,9 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 import type { User, UserSettings } from '../../../../../core/domain/entities/User';
 import { UserRole, Gender, Theme } from '../../../../../core/domain/types/UserRoles';
 
 interface UserDocument extends Omit<User, 'userId'>, Document {
+    _id: Types.ObjectId;
     userId: string;
     settings: UserSettings;
 }

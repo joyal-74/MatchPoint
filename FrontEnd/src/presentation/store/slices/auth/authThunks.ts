@@ -22,6 +22,7 @@ export const signupUser = createAsyncThunk<void, UserRegister, { rejectValue: st
         try {
             await authEndpoints.signup(credentials);
         } catch (err: any) {
+            console.log(err)
             return rejectWithValue(err.response?.data?.message || "Verification failed");
         }
     }

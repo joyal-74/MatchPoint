@@ -16,10 +16,11 @@ export interface User {
     password?: string;
     phone: string;
     gender?: Gender;
+    sport?: string;
     role: UserRole;
     wallet: number;
     settings: UserSettings;
-    isActive: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    isActive?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

@@ -1,9 +1,14 @@
 import { Request, Response } from 'express';
 import { UserService } from '../../../../core/domain/usecases/admin/UserService';
-import { UserRole } from '../../../../core/domain/types/UserRoles';
+import { PlayerService } from '../../../../core/domain/usecases/admin/PlayerService'; 
+import { CareerStatsService } from '../../../../core/domain/usecases/admin/CareerStatService'; 
 
 export class UserController {
-    constructor(private userService: UserService) { }
+    constructor(
+        private userService: UserService,
+        private playerService: PlayerService,
+        private careerStatsService: CareerStatsService
+    ) {}
 
     async getAllViewers(req: Request, res: Response) {
         try {
@@ -32,29 +37,43 @@ export class UserController {
         }
     }
 
-    async createViewer(req: Request, res: Response) {
+    async signupViewer(req: Request, res: Response) {
         try {
             const user = await this.userService.createViewer(req.body);
-            res.status(201).json(user);
-        } catch (err) {
+            res.status(201).json({ user, message: 'Viewer created successfully' });
+        } catch (err: any) {
             res.status(400).json({ error: err.message });
         }
     }
 
-    async createPlayer(req: Request, res: Response) {
+    async signupPlayer(req: Request, res: Response) {
         try {
+            const { sport } = req.body;
+            if (!sport) {
+                throw new Error('Sport is required for player signup');
+            }
+
             const user = await this.userService.createPlayer(req.body);
-            res.status(201).json(user);
-        } catch (err) {
+            const playerProfile = await this.playerService.createPlayerProfile(user._id, sport);
+            const careerStats = await this.careerStatsService.initializeCareerStats(user._id, sport);
+
+            res.status(201).json({
+                user,
+                playerProfile,
+                careerStats,
+                message: 'Player created successfully',
+            });
+        } catch (err: any) {
             res.status(400).json({ error: err.message });
+            console.log(err)
         }
     }
 
-    async createManager(req: Request, res: Response) {
+    async signupManager(req: Request, res: Response) {
         try {
             const user = await this.userService.createManager(req.body);
-            res.status(201).json(user);
-        } catch (err) {
+            res.status(201).json({ user, message: 'Manager created successfully' });
+        } catch (err: any) {
             res.status(400).json({ error: err.message });
         }
     }

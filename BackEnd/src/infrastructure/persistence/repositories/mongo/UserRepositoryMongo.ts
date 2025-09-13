@@ -9,8 +9,9 @@ export class UserRepositoryMongo implements IUserRepository {
     }
 
     async findByEmail(email: string): Promise<User | null> {
-        return UserModel.findById({ email }).lean();
+        return UserModel.findOne({ email }).lean<User>().exec();
     }
+
 
     async findByRole(role: UserRole): Promise<User[]> {
         return UserModel.find({ role }).lean();
@@ -21,8 +22,10 @@ export class UserRepositoryMongo implements IUserRepository {
         return created.toObject();
     }
 
-    async update(userId: string, data: Partial<User>): Promise<User | null> {
-        const updated = await UserModel.findOneAndUpdate({ userId }, data, { new: true }).lean();
+    async update(userId: string, data: Partial<User>): Promise<User> {
+        const updated = await UserModel.findOneAndUpdate({ userId }, data, { new: true }).lean<User>();
+        if (!updated) throw new Error("User not found");
         return updated;
     }
+
 }

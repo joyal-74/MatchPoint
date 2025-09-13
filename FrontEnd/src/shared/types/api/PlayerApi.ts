@@ -22,6 +22,6 @@ export interface PlayerTournament {
 export interface ApiPlayer extends ApiUser {
   sport: string;
   profile: PlayerProfileField[];
-  carier_stats: PlayerStatsField[];
+  career_stats: PlayerStatsField[];
   tournaments: PlayerTournament[];
 }
