@@ -4,12 +4,12 @@ export interface UserSettings {
     location?: string;
     country?: string;
     theme: Theme;
-    language: string;
+    language: string; 
     currency: string;
 }
 
 export interface User {
-    id: string;
+    userId: string;
     first_name: string;
     last_name: string;
     email: string;
