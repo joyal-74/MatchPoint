@@ -40,15 +40,18 @@ export const useSignup = () => {
 
         try {
             const resultAction = await dispatch(signupUser(payload));
+            console.log(resultAction.payload);
+
             if (signupUser.fulfilled.match(resultAction)) {
-                navigate("/email-verify");
-                return { success: true };
+                navigate("/otp-verify", { state: { expiresAt: resultAction.payload.expiresAt, email: payload.email } });
+                return { success: true, message: "Signup successful now verify your account!" };
             } else {
-                return { success: false, errors: { global: resultAction.payload || "Signup failed" } };
+                const backendError = resultAction.payload || "Signup failed";
+                return { success: false, errors: backendError };
             }
         } catch (err) {
             console.error(err);
-            return { success: false, errors: { global: "Something went wrong" } };
+            return { success: false, errors: "Something went wrong" };
         }
     };
 

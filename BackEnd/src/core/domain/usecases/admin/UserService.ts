@@ -2,11 +2,18 @@ import type { IUserRepository } from '../../repositories/interfaces/IUserReposit
 import type { User } from '../../entities/User';
 import { generateViewerId, generateManagerId, generatePlayerId } from '../../../../shared/utils/helpers/UserIdHelper';
 import * as bcrypt from 'bcryptjs';
+import crypto from 'node:crypto';
 import { UserRole } from '../../types/UserRoles';
 import { PersistedUser } from '@shared/types/Types';
+import { MailService } from '@infra/services/email/MailService';
+import { IOtpRepository } from '@core/domain/repositories/interfaces/IOtpRepository';
 
 export class UserService {
-    constructor(private userRepository: IUserRepository) { }
+    constructor(
+        private userRepository: IUserRepository,
+        private otpRepository: IOtpRepository,
+        private mailService: MailService
+    ) { }
 
     async getAllViewers(): Promise<User[]> {
         return this.userRepository.findByRole(UserRole.VIEWER) ?? [];
@@ -82,6 +89,41 @@ export class UserService {
         return this.createUser(userData, UserRole.MANAGER);
     }
 
+    async sendEmailVerification(email: string): Promise<Date> {
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) throw new Error("User not found");
+
+        const otp = crypto.randomInt(100000, 999999).toString();
+        const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
+
+        await this.otpRepository.saveOtp(user.userId, otp, expiresAt);
+
+        await this.mailService.sendVerificationEmail(email, otp);
+
+        return expiresAt;
+    }
+
+    async verifyOtp(email: string, otp: string): Promise<boolean> {
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) throw new Error("User not found");
+
+        const otpRecord = await this.otpRepository.findOtp(user.userId);
+
+        if (!otpRecord) {
+            throw new Error("OTP expired");
+        }
+
+        if (otpRecord.code !== otp) {
+            throw new Error("Invalid OTP");
+        }
+
+        await this.userRepository.update(user.userId, { isVerified: true });
+
+        await this.otpRepository.deleteOtp(user.userId);
+
+        return true;
+    }
+
     async login(email: string, password: string): Promise<PersistedUser> {
         const user = await this.userRepository.findByEmail(email);
         if (!user) {
@@ -96,4 +138,20 @@ export class UserService {
         return user;
     }
 
+    async resendOtp(email: string): Promise<void> {
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) throw new Error("User not found");
+
+        await this.otpRepository.deleteOtp(user.userId);
+
+        const otp = crypto.randomInt(100000, 999999).toString();
+
+        await this.otpRepository.saveOtp(
+            user.userId,
+            otp,
+            new Date(Date.now() + 10 * 60 * 1000)
+        );
+
+        await this.mailService.sendVerificationEmail(email, otp);
+    }
 }

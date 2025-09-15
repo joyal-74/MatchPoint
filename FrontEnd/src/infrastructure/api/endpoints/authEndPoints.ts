@@ -16,16 +16,20 @@ export const authEndpoints = {
         return mapApiUserToDomain(response.data.data.user);
     },
 
-    signup: async (data: UserRegister): Promise<User> => {
+    signup: async (data: UserRegister): Promise<{ user: User; expiresAt: string }> => {
         const endpoint = getEndpoint(data.role as SignupRole);
-    
-        const response = await axiosClient.post<ApiResponse<UserResponse>>(
+
+        const response = await axiosClient.post<ApiResponse<any>>(
             endpoint,
             mapUserForSignup(data)
         );
 
-        return mapApiUserToDomain(response.data.data.user);
+        return {
+            user: mapApiUserToDomain(response.data.data.user),
+            expiresAt: response.data.data.expiresAt,
+        };
     },
+
 
     verifyOtp: async (data: { email: string; otp: string }): Promise<void> => {
         await axiosClient.post(`/verify-otp`, data);
@@ -61,9 +65,9 @@ export const authEndpoints = {
         return mapApiUserToDomain(response.data.data.user);
     },
 
-    changePassword: async (data: { 
-        currentPassword: string; 
-        newPassword: string; 
+    changePassword: async (data: {
+        currentPassword: string;
+        newPassword: string;
     }): Promise<void> => {
         await axiosClient.post('/change-password', data);
     },

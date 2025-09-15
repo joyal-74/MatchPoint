@@ -13,7 +13,6 @@ export class UserRepositoryMongo implements IUserRepository {
         return UserModel.findOne({ email }).lean<PersistedUser>().exec();
     }
 
-
     async findByRole(role: UserRole): Promise<PersistedUser[]> {
         return UserModel.find({ role }).lean();
     }
@@ -29,4 +28,8 @@ export class UserRepositoryMongo implements IUserRepository {
         return updated;
     }
 
+    async deleteUnverifiedUsersBefore(date: Date): Promise<number> {
+        const result = await UserModel.deleteMany({ isVerified: false, createdAt: { $lt: date } });
+        return result.deletedCount || 0;
+    }
 }

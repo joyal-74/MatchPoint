@@ -2,21 +2,49 @@ import React, { useState } from "react";
 import AuthForm from "./AuthForm";
 import OtpVerify from "../../components/common/OtpVerify";
 import { useOtpVerification } from "../../hooks/useOtpVerify";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const EnterAccountOtpPage: React.FC = () => {
     const [otp, setOtp] = useState("");
+    const navigate = useNavigate();
+
+    const location = useLocation();
+    const { expiresAt, email } = location.state || {};
+
     const [errors, setErrors] = useState<{ otp?: string; global?: string }>({});
-    const { handleOtpVerify, handleResendOtp, loading, resendLoading } = useOtpVerification('/login');
+    const { handleOtpVerify, handleResendOtp, loading, resendLoading } = useOtpVerification(email);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const result = await handleOtpVerify(otp);
-        if (!result.success) setErrors(result.errors);
+        if (!result.success) {
+            if (typeof result.errors === "string") {
+                alert(result.errors);
+            } else {
+                setErrors(result.errors || {});
+            }
+        } else {
+            if (result.message) {
+                alert(result.message);
+                navigate("/login");
+            }
+        }
     };
 
     const resendOtp = async () => {
         const result = await handleResendOtp();
-        if (!result.success) setErrors(result.errors);
+
+        if (!result.success) {
+            if (typeof result.errors === "string") {
+                alert(result.errors);
+            } else {
+                setErrors(result.errors || {});
+            }
+        } else {
+            if (result.message) {
+                alert(result.message);
+            }
+        }
     };
 
     return (
@@ -38,10 +66,7 @@ const EnterAccountOtpPage: React.FC = () => {
             }
         >
 
-            <OtpVerify otp={otp} setOtp={setOtp} />
-
-            {errors.otp && <p className="text-red-500 text-center text-sm mt-2">{errors.otp}</p>}
-            {errors.global && <p className="text-red-500 text-center text-sm mt-2">{errors.global}</p>}
+            <OtpVerify otp={otp} setOtp={setOtp} expiresAt={expiresAt} error={errors.otp} />
 
         </AuthForm>
     );

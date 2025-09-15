@@ -9,6 +9,7 @@ interface UserDocument extends Omit<User, 'userId'>, Document {
 }
 
 const UserSchema = new Schema<UserDocument>({
+    userId: { type: String, required: true, unique: true },
     first_name: { type: String, required: true, trim: true },
     last_name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
@@ -25,6 +26,7 @@ const UserSchema = new Schema<UserDocument>({
         currency: { type: String, default: 'USD' },
     },
     isActive: { type: Boolean, default: true },
+    isVerified: { type: Boolean, default: false },
 }, { timestamps: true });
 
 export const UserModel = model<UserDocument>('User', UserSchema);

@@ -1,3 +1,4 @@
+import type { User } from "../../../core/domain/entities/User";
 import type { Gender } from "../../../core/domain/types/UserRoles";
 
 export interface ApiUser {
@@ -33,6 +34,11 @@ export interface UserRegister {
     phone: string;
     sport?: string;
 }
+
+export type SignupResponse = {
+    user: User;
+    expiresAt: string;
+};
 
 export interface LoginRequest {
   email: string;

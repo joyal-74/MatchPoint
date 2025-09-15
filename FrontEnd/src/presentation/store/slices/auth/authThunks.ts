@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { authEndpoints } from "../../../../infrastructure/api/endpoints/authEndPoints";
-import type { UserRegister } from "../../../../shared/types/api/UserApi";
+import type { SignupResponse, UserRegister } from "../../../../shared/types/api/UserApi";
 import type { User } from "../../../../core/domain/entities/User";
 
 export const loginUser = createAsyncThunk<User, { email: string; password: string }, { rejectValue: string }>(
@@ -15,16 +15,18 @@ export const loginUser = createAsyncThunk<User, { email: string; password: strin
     }
 );
 
-export const signupUser = createAsyncThunk<void, UserRegister, { rejectValue: string }>(
+export const signupUser = createAsyncThunk<SignupResponse, UserRegister, { rejectValue: string }>(
     "/signup",
     async (credentials, { rejectWithValue }) => {
         try {
-            await authEndpoints.signup(credentials);
+            const user = await authEndpoints.signup(credentials);
+            return user;
         } catch (err: any) {
             return rejectWithValue(err.response?.data?.message || err.response?.data?.error);
         }
     }
 );
+
 
 export const verifyOtp = createAsyncThunk<void, { email: string; otp: string }, { rejectValue: string }>(
     "/verifyOtp",

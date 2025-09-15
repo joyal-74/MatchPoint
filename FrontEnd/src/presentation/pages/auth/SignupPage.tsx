@@ -41,8 +41,17 @@ const SignupPage: React.FC = () => {
         };
 
         const result = await handleSignup(payload, formData.confirmPassword);
+
         if (!result.success) {
-            setErrors(result.errors || {});
+            if (typeof result.errors === "string") {
+                alert(result.errors);
+            } else {
+                setErrors(result.errors || {});
+            }
+        } else {
+            if (result.message) {
+                alert(result.message);
+            }
         }
     };
 

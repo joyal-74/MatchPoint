@@ -8,4 +8,5 @@ export interface IUserRepository {
     findByRole(role: UserRole): Promise<PersistedUser[]>;
     create(user: User): Promise<User>;
     update(userId: string, data: Partial<PersistedUser>): Promise<PersistedUser | null>;
+    deleteUnverifiedUsersBefore(date: Date): Promise<number>;
 }

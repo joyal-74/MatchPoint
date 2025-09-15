@@ -44,11 +44,14 @@ export class UserController {
     async signupViewer(req: Request, res: Response) {
         try {
             const user = await this.userService.createViewer(req.body);
+            const expiresAt = await this.userService.sendEmailVerification(user.email);
             res.status(201).json({
                 success: true,
-                data: { user }, message: 'Viewer created successfully'
+                data: { user, expiresAt },
+                message: 'Viewer created successfully'
             });
         } catch (err: any) {
+            console.log(err)
             res.status(400).json({ error: err.message });
         }
     }
@@ -61,12 +64,13 @@ export class UserController {
             }
 
             const user = await this.userService.createPlayer(req.body);
+            const expiresAt = await this.userService.sendEmailVerification(user.email);
             const playerProfile = await this.playerService.createPlayerProfile(user._id, sport);
             const careerStats = await this.careerStatsService.initializeCareerStats(user._id, sport);
 
             res.status(201).json({
                 success: true,
-                data: { user },
+                data: { user, expiresAt },
                 playerProfile,
                 careerStats,
                 message: 'Player created successfully',
@@ -80,16 +84,54 @@ export class UserController {
     async signupManager(req: Request, res: Response) {
         try {
             const user = await this.userService.createManager(req.body);
+            const expiresAt = await this.userService.sendEmailVerification(user.email);
+
             res.status(201).json({
                 success: true,
-                data: { user },
+                data: { user, expiresAt },
                 message: "Manager created successfully"
             });
 
         } catch (err: any) {
+            console.log(err)
             res.status(400).json({ success: false, error: err.message });
         }
     }
+
+    async resendOtp(req: Request, res: Response) {
+        try {
+            const { email } = req.body;
+            const expiresAt = await this.userService.sendEmailVerification(email);
+
+            res.status(200).json({
+                success: true,
+                message: "OTP resent successfully",
+                expiresAt,
+            });
+        } catch (err: any) {
+            res.status(400).json({ success: false, error: err.message });
+        }
+    }
+
+
+    async verifyOtp(req: Request, res: Response) {
+        try {
+            const { email, otp } = req.body;
+            const success = await this.userService.verifyOtp(email, otp);
+
+            if (success) {
+                res.status(200).json({ success: true, message: "Verification successful" });
+                return;
+            } else {
+                res.status(400).json({ success: false, message: "Invalid OTP" });
+                return;
+            }
+        } catch (err: any) {
+            res.status(500).json({ success: false, message: err.message || "Something went wrong" });
+            return;
+        }
+    };
+
 
     async loginUsers(req: Request, res: Response): Promise<void> {
         try {

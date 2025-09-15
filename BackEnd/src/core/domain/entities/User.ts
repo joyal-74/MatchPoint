@@ -21,6 +21,7 @@ export interface User {
     settings: UserSettings;
     wallet: number;
     isActive: boolean;
+    isVerified: boolean;
     createdAt: Date;
     updatedAt: Date;
 }

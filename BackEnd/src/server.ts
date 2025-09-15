@@ -1,7 +1,10 @@
-import { MongoConnection } from "@infra/persistence/database/mongo"; 
+import { MongoConnection } from "@infra/persistence/database/mongo";
 import app from "./app";
+import { deleteUnverifiedUsersCron } from "@infra/cron/deleteUnverifiedUsersCron";
 
 const PORT = process.env.PORT || 3000;
+
+deleteUnverifiedUsersCron();
 
 const startServer = async () => {
     await MongoConnection.connect();

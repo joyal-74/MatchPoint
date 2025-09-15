@@ -1,23 +1,20 @@
 import { useState } from "react";
 import { useAppDispatch } from "../store/hooks";
 import { verifyOtp, resendOtp } from "../store/slices/auth/authThunks";
-import { useNavigate, useLocation } from "react-router-dom";
 
 type ValidationErrors = { otp?: string; global?: string };
 
 type OtpResult =
-    | { success: true }
+    | { success: true, message : string }
     | { success: false; errors: ValidationErrors };
 
-export const useOtpVerification = (redirectTo: string) => {
+export const useOtpVerification = (email : string) => {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-    const location = useLocation();
 
     const [loading, setLoading] = useState(false);
     const [resendLoading, setResendLoading] = useState(false);
 
-    const email = (location.state as { email?: string })?.email;
+    console.log(email)
 
     const validateForm = (otp: string): ValidationErrors => {
         const errors: ValidationErrors = {};
@@ -41,8 +38,7 @@ export const useOtpVerification = (redirectTo: string) => {
         try {
             const resultAction = await dispatch(verifyOtp({ email, otp }));
             if (verifyOtp.fulfilled.match(resultAction)) {
-                navigate(redirectTo, { state: { email } });
-                return { success: true };
+                return { success: true, message: "Account verified now login to your account!" };
             } else {
                 return {
                     success: false,
@@ -67,7 +63,7 @@ export const useOtpVerification = (redirectTo: string) => {
         try {
             const resultAction = await dispatch(resendOtp(email));
             if (resendOtp.fulfilled.match(resultAction)) {
-                return { success: true };
+                return { success: true, message : 'Otp sended successfully' };
             } else {
                 return {
                     success: false,
