@@ -127,6 +127,7 @@ export class UserController {
                 return;
             }
         } catch (err: any) {
+            console.log(err)
             res.status(500).json({ success: false, message: err.message || "Something went wrong" });
             return;
         }
@@ -187,6 +188,41 @@ export class UserController {
                 success: false,
                 error: { code: "INVALID_CREDENTIALS", message: error.message || "Internal server error" }
             });
+        }
+    }
+
+    async forgotPassword(req: Request, res: Response) {
+        try {
+            const { email } = req.body;
+            const expiresAt = await this.userService.forgotPassword(email);
+            res.status(200).json({
+                success: true,
+                data: { expiresAt },
+                message: "OTP sent to your email",
+            });
+        } catch (err: any) {
+            res.status(400).json({
+                success: false,
+                message: err.message || "Something went wrong",
+            });
+        }
+    }
+
+    async resetPassword(req: Request, res: Response) {
+        try {
+            const { email, otp, newPassword } = req.body;
+            if (!email || !otp || !newPassword) {
+                res.status(400).json({ error: "Email, OTP, and new password are required" });
+                return;
+            }
+
+            await this.userService.resetPassword(email, otp, newPassword);
+
+            res.status(200).json({ message: "Password reset successfully" });
+            return
+        } catch (err: any) {
+            res.status(400).json({ error: err.message });
+            return;
         }
     }
 

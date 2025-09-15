@@ -1,20 +1,18 @@
-// hooks/useResetPassword.ts
-import { useAppDispatch } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { clearResetEmail } from "../store/slices/auth";
 import { resetPassword } from "../store/slices/auth/authThunks";
-import { useNavigate, useLocation } from "react-router-dom";
 
 type ValidationErrors = { password?: string; confirmPassword?: string; global?: string };
 type ResetPayload = { password: string; confirmPassword: string };
 type ResetResult =
-    | { success: true; errors: {} }
+    | { success: true; message: string }
     | { success: false; errors: ValidationErrors };
 
 export const useResetPassword = () => {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-    const location = useLocation();
 
-    const email = (location.state as { email?: string })?.email;
+    const email = useAppSelector((state) => state.auth.resetEmail);
+    console.log(email)
 
     const validateForm = (payload: ResetPayload): ValidationErrors => {
         const errors: ValidationErrors = {};
@@ -42,8 +40,8 @@ export const useResetPassword = () => {
         try {
             const resultAction = await dispatch(resetPassword({ email, newPassword: payload.password }));
             if (resetPassword.fulfilled.match(resultAction)) {
-                navigate("/login");
-                return { success: true, errors: {} };
+                dispatch(clearResetEmail());
+                return { success: true, message: "Password has successfully changed" };
             } else {
                 return {
                     success: false,

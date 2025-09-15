@@ -1,27 +1,18 @@
-// hooks/useForgotPassword.ts
-import { useState } from "react";
 import { useAppDispatch } from "../store/hooks";
 import { requestResetOtp } from "../store/slices/auth";
-import { useNavigate } from "react-router-dom";
 
 type ForgotPasswordPayload = {
     email: string;
 };
 
-type ValidationErrors = Partial<Record<keyof ForgotPasswordPayload, string>>;
+type ForgotPasswordResult =
+    | { success: true; message: string; expiresAt: string; email: string }
+    | { success: false; errors: ValidationErrors };
 
-type ForgotPasswordResult = {
-    success: boolean;
-    errors?: ValidationErrors;
-    message?: string;
-};
+type ValidationErrors = Partial<Record<keyof ForgotPasswordPayload | "global", string>>;
 
 export const useForgotPassword = () => {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState(false);
 
     const validateForm = (payload: ForgotPasswordPayload): ValidationErrors => {
         const errors: ValidationErrors = {};
@@ -35,54 +26,29 @@ export const useForgotPassword = () => {
         return errors;
     };
 
-    const forgotPassword = async (email: string): Promise<ForgotPasswordResult> => {
-        setLoading(true);
-        setError(null);
-        setSuccess(false);
-
+    const forgotPassword = async ( email: string): Promise<ForgotPasswordResult> => {
         const payload = { email };
         const errors = validateForm(payload);
 
         if (Object.keys(errors).length > 0) {
-            setLoading(false);
             return { success: false, errors };
         }
 
         try {
             const resultAction = await dispatch(requestResetOtp(email));
+            console.log(resultAction);
 
             if (requestResetOtp.fulfilled.match(resultAction)) {
-                setSuccess(true);
-                navigate("/otp-verification", { state: { email } });
-                return { success: true };
+                return { success: true, message: "OTP sent to your email", expiresAt: resultAction.payload.expiresAt, email };
             } else {
-                const errorMessage = resultAction.payload as string || "Failed to send OTP";
-                setError(errorMessage);
-                return {
-                    success: false,
-                    errors: { email: errorMessage }
-                };
+                const errorMessage = (resultAction.payload as string) || "Failed to send OTP";
+                return { success: false, errors: { global: errorMessage } };
             }
         } catch (err) {
-            const errorMessage = "Something went wrong";
-            setError(errorMessage);
-            return {
-                success: false,
-                errors: { email: errorMessage }
-            };
-        } finally {
-            setLoading(false);
+            console.error(err);
+            return { success: false, errors: { global: "Something went wrong" } };
         }
     };
 
-    return {
-        forgotPassword,
-        loading,
-        error,
-        success,
-        resetState: () => {
-            setError(null);
-            setSuccess(false);
-        }
-    };
+    return { forgotPassword };
 };

@@ -154,4 +154,35 @@ export class UserService {
 
         await this.mailService.sendVerificationEmail(email, otp);
     }
+
+    async forgotPassword(email: string): Promise<Date> {
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        const otp = crypto.randomInt(100000, 999999).toString();
+        const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
+
+        await this.otpRepository.saveOtp(user.userId, otp, expiresAt);
+
+        await this.mailService.sendVerificationEmail(email, otp);
+        return expiresAt;
+    }
+
+    async resetPassword(email: string, otp: string, newPassword: string): Promise<void> {
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) throw new Error("User not found");
+
+        const otpRecord = await this.otpRepository.findOtp(user.userId);
+        if (!otpRecord) throw new Error("OTP expired");
+
+        if (otpRecord.code !== otp) throw new Error("Invalid OTP");
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await this.userRepository.update(user.userId, { password: hashedPassword });
+
+        await this.otpRepository.deleteOtp(user.userId);
+    }
 }

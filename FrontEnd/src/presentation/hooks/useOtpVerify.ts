@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useAppDispatch } from "../store/hooks";
 import { verifyOtp, resendOtp } from "../store/slices/auth/authThunks";
 
@@ -10,9 +9,6 @@ type OtpResult =
 
 export const useOtpVerification = (email : string) => {
     const dispatch = useAppDispatch();
-
-    const [loading, setLoading] = useState(false);
-    const [resendLoading, setResendLoading] = useState(false);
 
     console.log(email)
 
@@ -34,11 +30,10 @@ export const useOtpVerification = (email : string) => {
             return { success: false, errors: { global: "Email is missing" } };
         }
 
-        setLoading(true);
         try {
             const resultAction = await dispatch(verifyOtp({ email, otp }));
             if (verifyOtp.fulfilled.match(resultAction)) {
-                return { success: true, message: "Account verified now login to your account!" };
+                return { success: true, message: "Otp Verification successsfull..!" };
             } else {
                 return {
                     success: false,
@@ -49,8 +44,6 @@ export const useOtpVerification = (email : string) => {
             }
         } catch {
             return { success: false, errors: { global: "Something went wrong" } };
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -59,7 +52,6 @@ export const useOtpVerification = (email : string) => {
             return { success: false, errors: { global: "Email is missing" } };
         }
 
-        setResendLoading(true);
         try {
             const resultAction = await dispatch(resendOtp(email));
             if (resendOtp.fulfilled.match(resultAction)) {
@@ -72,10 +64,8 @@ export const useOtpVerification = (email : string) => {
             }
         } catch {
             return { success: false, errors: { global: "Something went wrong" } };
-        } finally {
-            setResendLoading(false);
-        }
+        } 
     };
 
-    return { handleOtpVerify, handleResendOtp, loading, resendLoading };
+    return { handleOtpVerify, handleResendOtp };
 };

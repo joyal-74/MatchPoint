@@ -3,9 +3,10 @@ import React from "react";
 interface EmailVerifyProps {
     email: string;
     setEmail: React.Dispatch<React.SetStateAction<string>>;
+    error: string | undefined;
 }
 
-const EmailVerify:React.FC<EmailVerifyProps> = ({ email, setEmail }) => {
+const EmailVerify: React.FC<EmailVerifyProps> = ({ email, setEmail, error }) => {
     return (
         <>
             <div className="flex flex-col text-sm">
@@ -21,6 +22,9 @@ const EmailVerify:React.FC<EmailVerifyProps> = ({ email, setEmail }) => {
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full p-3 rounded-md bg-[var(--color-surface-raised)] placeholder-gray-400 focus:outline-none"
                 />
+                {error && (
+                    <p className="text-red-500 text-xs mt-1 text-center">{error}</p>
+                )}
             </div>
         </>
     )

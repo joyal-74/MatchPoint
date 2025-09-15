@@ -10,7 +10,8 @@ export const loginUser = createAsyncThunk<User, { email: string; password: strin
             const user = await authEndpoints.login(credentials);
             return user;
         } catch (err: any) {
-            return rejectWithValue(err.response?.data?.message || "Login failed");
+            console.log(err)
+            return rejectWithValue(err.response?.data?.error.message || "Login failed");
         }
     }
 );
@@ -62,16 +63,18 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
 );
 
 
-export const requestResetOtp = createAsyncThunk<void, string, { rejectValue: string }>(
+export const requestResetOtp = createAsyncThunk<{ expiresAt: string },string,{ rejectValue: string }>(
     "/requestResetOtp",
     async (email, { rejectWithValue }) => {
         try {
-            await authEndpoints.forgotPassword(email);
+            const { expiresAt } = await authEndpoints.forgotPassword(email);
+            return { expiresAt };
         } catch (err: any) {
             return rejectWithValue(err.response?.data?.message || "Failed to send OTP");
         }
     }
 );
+
 
 // Verify OTP
 export const verifyResetOtp = createAsyncThunk<void, { email: string; otp: string }, { rejectValue: string }>(

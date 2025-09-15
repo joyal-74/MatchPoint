@@ -20,6 +20,7 @@ interface AuthState {
     resetOtpSent: boolean;
     resetOtpVerified: boolean;
     passwordReset: boolean;
+    resetEmail?: string;
 }
 
 const initialState: AuthState = {
@@ -57,6 +58,9 @@ const authSlice = createSlice({
         resetSignupState(state) {
             state.signupSuccess = false;
             state.otpVerified = false;
+        },
+        clearResetEmail(state) {
+            state.resetEmail = undefined;
         }
     },
     extraReducers: (builder) => {
@@ -83,7 +87,7 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(signupUser.fulfilled, (state, action) => {
-                state.user = action.payload;
+                state.user = action.payload.user;
                 state.loading = false;
                 state.signupSuccess = true;
                 state.error = null;
@@ -130,9 +134,10 @@ const authSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(requestResetOtp.fulfilled, (state) => {
+            .addCase(requestResetOtp.fulfilled, (state, action) => {
                 state.loading = false;
                 state.resetOtpSent = true;
+                state.resetEmail = action.meta.arg;
                 state.error = null;
             })
             .addCase(requestResetOtp.rejected, (state, action) => {
@@ -196,5 +201,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { logout, clearError, resetPasswordFlow, resetSignupState } = authSlice.actions;
+export const { logout, clearError, resetPasswordFlow, resetSignupState, clearResetEmail } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,14 +1,12 @@
 import { useAppDispatch } from "../store/hooks";
 import { signupUser } from "../store/slices/auth";
 import type { UserRegister } from "../../shared/types/api/UserApi";
-import { useNavigate } from "react-router-dom";
 import { UserRole } from "../../core/domain/types/UserRoles";
 
-type ValidationErrors = Partial<Record<keyof UserRegister | "confirmPassword", string>>;
+type ValidationErrors = Partial<Record<keyof UserRegister | "confirmPassword" | "global", string>>;
 
 export const useSignup = () => {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
 
     const validateForm = (payload: UserRegister, confirmPassword: string): ValidationErrors => {
         const errors: ValidationErrors = {};
@@ -21,8 +19,7 @@ export const useSignup = () => {
             errors.phone = "Phone must be 10 digits";
         if (!payload.gender) errors.gender = "Gender is required";
         if (!payload.password) errors.password = "Password is required";
-        if (payload.password.length < 6)
-            errors.password = "Password must be 6+ char";
+        else if (payload.password.length < 6) errors.password = "Password must be 6+ characters";
         if (payload.password !== confirmPassword)
             errors.confirmPassword = "Passwords do not match";
         if (payload.role === UserRole.Player && !payload.sport) {
@@ -34,24 +31,21 @@ export const useSignup = () => {
 
     const handleSignup = async (payload: UserRegister, confirmPassword: string) => {
         const errors = validateForm(payload, confirmPassword);
-        if (Object.keys(errors).length > 0) {
-            return { success: false, errors };
-        }
+        if (Object.keys(errors).length > 0) return { success: false, errors };
 
         try {
             const resultAction = await dispatch(signupUser(payload));
-            console.log(resultAction.payload);
 
             if (signupUser.fulfilled.match(resultAction)) {
-                navigate("/otp-verify", { state: { expiresAt: resultAction.payload.expiresAt, email: payload.email } });
-                return { success: true, message: "Signup successful now verify your account!" };
+                return { success: true, message: "Signup successful! Verify your account via email.", 
+                    expiresAt: resultAction.payload.expiresAt, email: payload.email };
             } else {
                 const backendError = resultAction.payload || "Signup failed";
-                return { success: false, errors: backendError };
+                return { success: false, errors: { global: backendError } };
             }
         } catch (err) {
             console.error(err);
-            return { success: false, errors: "Something went wrong" };
+            return { success: false, errors: { global: "Something went wrong" } };
         }
     };
 

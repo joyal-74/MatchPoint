@@ -42,6 +42,8 @@ router.post("/signup/manager", (req, res) => userController.signupManager(req, r
 router.post("/verify-otp", (req, res) => userController.verifyOtp(req, res));
 router.post("/resend-otp", (req, res) => userController.resendOtp(req, res));
 
+router.post("/forgot-password", (req, res) => userController.forgotPassword(req, res));
+router.post("/reset-password", (req, res) => userController.resetPassword(req, res));
 
 router.post("/login", (req, res) => userController.loginUsers(req, res));
 router.post("/logout", (req, res) => userController.logoutUser(req, res));

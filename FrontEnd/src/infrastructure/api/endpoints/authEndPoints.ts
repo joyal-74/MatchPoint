@@ -48,8 +48,9 @@ export const authEndpoints = {
         return mapApiUserToDomain(response.data.data.user);
     },
 
-    forgotPassword: async (email: string): Promise<void> => {
-        await axiosClient.post('/forgot-password', { email });
+    forgotPassword: async (email: string): Promise<{ expiresAt: string }> => {
+        const response = await axiosClient.post<{ data: { expiresAt: string } }>('/forgot-password', { email });
+        return response.data.data;
     },
 
     verifyResetOtp: async (data: { email: string, otp: string }): Promise<void> => {
