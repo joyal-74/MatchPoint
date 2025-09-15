@@ -1,4 +1,4 @@
-import type { UserRole, Gender, Theme } from "../types/UserRoles";
+import type { UserRole, Gender, Theme, SignupRole } from "../types/UserRoles";
 
 export interface UserSettings {
     location?: string;
@@ -9,7 +9,7 @@ export interface UserSettings {
 }
 
 export interface User {
-    id: string;
+    _id: string;
     first_name: string;
     last_name: string;
     email: string;
@@ -23,4 +23,16 @@ export interface User {
     isActive?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
+}
+
+export interface RegisterUser {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    gender: string;
+    password: string;
+    confirmPassword: string;
+    role: SignupRole;
+    sport: string;
 }

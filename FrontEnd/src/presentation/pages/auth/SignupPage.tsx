@@ -2,22 +2,13 @@ import React, { useState } from "react";
 import AuthForm from "./AuthForm";
 import { useNavigate } from "react-router-dom";
 import { type SignupRole, type Gender, UserRole } from "../../../core/domain/types/UserRoles";
-import { useAppDispatch } from "../../store/hooks";
-import { signupUser } from "../../store/slices/auth";
 import type { UserRegister } from "../../../shared/types/api/UserApi";
+import type { RegisterUser } from "../../../core/domain/entities/User";
+import FormField from "../../components/common/FormField";
+import { useSignup } from "../../hooks/useSignup";
 
 const SignupPage: React.FC = () => {
-    const [formData, setFormData] = useState<{
-        firstName: string;
-        lastName: string;
-        email: string;
-        phone: string;
-        gender: string;
-        password: string;
-        confirmPassword: string;
-        role: SignupRole;
-        sport: string;
-    }>({
+    const initialFormData: RegisterUser = {
         firstName: "",
         lastName: "",
         email: "",
@@ -27,21 +18,18 @@ const SignupPage: React.FC = () => {
         confirmPassword: "",
         role: UserRole.Player,
         sport: "",
-    });
+    };
+    const [formData, setFormData] = useState<RegisterUser>(initialFormData);
 
     const [selectedRole, setSelectedRole] = useState<SignupRole>(UserRole.Player);
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const { handleSignup } = useSignup();
+    const [errors, setErrors] = useState<Partial<Record<string, string>>>({});
+
+    const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match");
-            return;
-        }
-
-        const signupPayload: UserRegister = {
+        const payload: UserRegister = {
             first_name: formData.firstName,
             last_name: formData.lastName,
             email: formData.email,
@@ -52,18 +40,9 @@ const SignupPage: React.FC = () => {
             sport: formData.sport || undefined,
         };
 
-        try {
-            const resultAction = await dispatch(signupUser(signupPayload));
-            console.log('==============', resultAction)
-            if (signupUser.fulfilled.match(resultAction)) {
-                alert("Signup successful!");
-                navigate("/login");
-            } else {
-                alert(resultAction.payload || "Signup failed");
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Something went wrong");
+        const result = await handleSignup(payload, formData.confirmPassword);
+        if (!result.success) {
+            setErrors(result.errors || {});
         }
     };
 
@@ -82,7 +61,7 @@ const SignupPage: React.FC = () => {
         <AuthForm
             title="Create new Account"
             buttonText="Sign Up"
-            onSubmit={handleSubmit}
+            onSubmit={onSubmit}
             footer={
                 <>
                     Already have an account?{" "}
@@ -118,140 +97,95 @@ const SignupPage: React.FC = () => {
             </div>
 
             <div className="flex space-x-3 text-sm">
-                <div className="flex flex-col w-1/2">
-                    <label htmlFor="firstName" className="text-sm mb-1">First Name</label>
-                    <input
-                        id="firstName"
-                        type="text"
-                        name="firstName"
-                        placeholder="Enter your First name"
-                        value={formData.firstName}
-                        onChange={(e) =>
-                            setFormData({ ...formData, firstName: e.target.value })
-                        }
-                        className="p-3 rounded-md bg-[var(--color-surface-raised)] placeholder-[var(--color-text-tertiary)] focus:outline-none"
-                    />
-                </div>
-                <div className="flex flex-col w-1/2">
-                    <label htmlFor="lastName" className="text-sm mb-1">Last Name</label>
-                    <input
-                        id="lastName"
-                        type="text"
-                        name="lastName"
-                        placeholder="Enter your Last name"
-                        value={formData.lastName}
-                        onChange={(e) =>
-                            setFormData({ ...formData, lastName: e.target.value })
-                        }
-                        className="p-3 rounded-md bg-[var(--color-surface-raised)] placeholder-[var(--color-text-tertiary)] focus:outline-none"
-                    />
-                </div>
+                <FormField
+                    id="firstName"
+                    label="First Name"
+                    value={formData.firstName}
+                    placeholder="Enter your First name"
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    className="w-1/2"
+                    error={errors.first_name}
+                />
+                <FormField
+                    id="lastName"
+                    label="Last Name"
+                    value={formData.lastName}
+                    placeholder="Enter your Last name"
+                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                    className="w-1/2"
+                    error={errors.last_name}
+                />
             </div>
 
             <div className="flex space-x-3 text-sm w-full">
-                <div className={`flex flex-col text-sm ${selectedRole === UserRole.Player ? "w-1/2" : "w-full"}`}>
-                    <label htmlFor="email" className="text-sm mb-1">
-                        Email
-                    </label>
-                    <input
-                        id="email"
-                        type="email"
-                        name="email"
-                        placeholder="Enter your email address"
-                        value={formData.email}
-                        onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
-                        }
-                        className="w-full p-3 rounded-md bg-[var(--color-surface-raised)] placeholder-[var(--color-text-tertiary)] focus:outline-none"
-                    />
-                </div>
-
+                <FormField
+                    id="email"
+                    label="Email"
+                    type="email"
+                    value={formData.email}
+                    placeholder="Enter your email"
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className={selectedRole === UserRole.Player ? "w-1/2" : "w-full"}
+                    error={errors.email}
+                />
                 {selectedRole === UserRole.Player && (
-                    <div className="flex flex-col text-sm w-1/2">
-                        <label htmlFor="sport" className="text-sm mb-1">
-                            Sport
-                        </label>
-                        <select
-                            id="sport"
-                            name="sport"
-                            value={formData.sport}
-                            onChange={(e) =>
-                                setFormData({ ...formData, sport: e.target.value })
-                            }
-                            className="w-full p-3 rounded-md bg-[var(--color-surface-raised)] text-[var(--color-text-tertiary)] focus:outline-none"
-                        >
-                            <option value="" disabled >Select a sport</option>
-                            {sports.map((sport) => (
-                                <option key={sport} value={sport}>
-                                    {sport}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    <FormField
+                        id="sport"
+                        label="Sport"
+                        as="select"
+                        value={formData.sport}
+                        options={sports}
+                        onChange={(e) => setFormData({ ...formData, sport: e.target.value })}
+                        className="w-1/2"
+                        error={errors.sport}
+                    />
                 )}
             </div>
 
             <div className="flex space-x-3 text-sm">
-                <div className="flex flex-col w-1/2">
-                    <label htmlFor="gender" className="text-sm mb-1">Gender</label>
-                    <select
-                        id="gender"
-                        name="gender"
-                        value={formData.gender}
-                        onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                        className="p-3 rounded-md bg-[var(--color-surface-raised)] text-[var(--color-text-tertiary)] focus:outline-none"
-                    >
-                        <option value="" disabled >Select your gender</option>
-                        {gender.map((gender) => (
-                            <option key={gender} value={gender}>
-                                {gender}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className="flex flex-col w-1/2">
-                    <label htmlFor="phone" className="text-sm mb-1">Phone</label>
-                    <input
-                        id="phone"
-                        type="tel"
-                        name="phone"
-                        placeholder="Enter your phone number"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="p-3 rounded-md bg-[var(--color-surface-raised)] placeholder-[var(--color-text-tertiary)] focus:outline-none"
-                    />
-                </div>
+                <FormField
+                    id="gender"
+                    label="Gender"
+                    as="select"
+                    value={formData.gender}
+                    options={gender}
+                    onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                    className="w-1/2"
+                    error={errors.gender}
+                />
+                <FormField
+                    id="phone"
+                    label="Phone"
+                    type="tel"
+                    value={formData.phone}
+                    placeholder="Enter your phone number"
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-1/2"
+                    error={errors.phone}
+                />
             </div>
 
             <div className="flex space-x-3 text-sm">
-                <div className="flex flex-col w-1/2">
-                    <label htmlFor="password" className="text-sm mb-1">Password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        name="password"
-                        placeholder="Enter your password"
-                        value={formData.password}
-                        onChange={(e) =>
-                            setFormData({ ...formData, password: e.target.value })
-                        }
-                        className="p-3 rounded-md bg-[var(--color-surface-raised)] placeholder-[var(--color-text-tertiary)] focus:outline-none"
-                    />
-                </div>
-                <div className="flex flex-col w-1/2">
-                    <label htmlFor="confirmPassword" className="text-sm mb-1">Confirm Password</label>
-                    <input
-                        id="confirmPassword"
-                        type="password"
-                        name="confirmPassword"
-                        placeholder="Confirm your password"
-                        value={formData.confirmPassword}
-                        onChange={(e) =>
-                            setFormData({ ...formData, confirmPassword: e.target.value })
-                        }
-                        className="p-3 rounded-md bg-[var(--color-surface-raised)] placeholder-[var(--color-text-tertiary)] focus:outline-none"
-                    />
-                </div>
+                <FormField
+                    id="password"
+                    label="Password"
+                    type="password"
+                    value={formData.password}
+                    placeholder="Enter your password"
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    className="w-1/2"
+                    error={errors.password}
+                />
+                <FormField
+                    id="confirmPassword"
+                    label="Confirm Password"
+                    type="password"
+                    value={formData.confirmPassword}
+                    placeholder="Confirm your password"
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                    className="w-1/2"
+                    error={errors.confirmPassword}
+                />
             </div>
         </AuthForm>
     );

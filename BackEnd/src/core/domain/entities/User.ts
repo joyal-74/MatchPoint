@@ -8,17 +8,18 @@ export interface UserSettings {
     currency: string;
 }
 
+// Base User type
 export interface User {
     userId: string;
+    email: string;
+    role: string;
     first_name: string;
     last_name: string;
-    email: string;
-    password?: string;
+    gender: string;
     phone: string;
-    gender?: Gender;
-    role: UserRole;
-    wallet: number;
+    password : string;
     settings: UserSettings;
+    wallet: number;
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;

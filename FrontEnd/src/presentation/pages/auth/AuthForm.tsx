@@ -30,7 +30,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
                 </div>
 
                 <div className="flex-1 w-full px-6 py-8 md:px-10 md:py-10 flex flex-col justify-center">
-                    <div className="w-full max-w-md mx-auto">
+                    <div className="w-full max-w-lg mx-auto">
                         <h1 className="text-[var(--color-text-primary)] text-3xl md:text-4xl font-rowdies text-center mb-4">
                             <span className="text-[var(--color-primary)]">M</span>atch
                             <span className="text-[var(--color-primary)]">P</span>oint

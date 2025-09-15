@@ -15,21 +15,19 @@ export const loginUser = createAsyncThunk<User, { email: string; password: strin
     }
 );
 
-
 export const signupUser = createAsyncThunk<void, UserRegister, { rejectValue: string }>(
     "/signup",
     async (credentials, { rejectWithValue }) => {
         try {
             await authEndpoints.signup(credentials);
         } catch (err: any) {
-            console.log(err)
-            return rejectWithValue(err.response?.data?.message || "Verification failed");
+            return rejectWithValue(err.response?.data?.message || err.response?.data?.error);
         }
     }
 );
 
 export const verifyOtp = createAsyncThunk<void, { email: string; otp: string }, { rejectValue: string }>(
-    "auth/verifyOtp",
+    "/verifyOtp",
     async (data: { email: string, otp: string }, { rejectWithValue }) => {
         try {
             await authEndpoints.verifyOtp(data);
@@ -40,7 +38,7 @@ export const verifyOtp = createAsyncThunk<void, { email: string; otp: string }, 
 );
 
 export const resendOtp = createAsyncThunk<void, string, { rejectValue: string }>(
-    "auth/resendOtp",
+    "/resendOtp",
     async (email, { rejectWithValue }) => {
         try {
             await authEndpoints.resendOtp(email);
@@ -63,7 +61,7 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
 
 
 export const requestResetOtp = createAsyncThunk<void, string, { rejectValue: string }>(
-    "auth/requestResetOtp",
+    "/requestResetOtp",
     async (email, { rejectWithValue }) => {
         try {
             await authEndpoints.forgotPassword(email);
@@ -75,7 +73,7 @@ export const requestResetOtp = createAsyncThunk<void, string, { rejectValue: str
 
 // Verify OTP
 export const verifyResetOtp = createAsyncThunk<void, { email: string; otp: string }, { rejectValue: string }>(
-    "auth/verifyResetOtp",
+    "/verifyResetOtp",
     async (data, { rejectWithValue }) => {
         try {
             await authEndpoints.verifyResetOtp(data);
@@ -87,12 +85,38 @@ export const verifyResetOtp = createAsyncThunk<void, { email: string; otp: strin
 
 // Reset Password
 export const resetPassword = createAsyncThunk<void, { email: string; newPassword: string }, { rejectValue: string }>(
-    "auth/resetPassword",
+    "/resetPassword",
     async (data, { rejectWithValue }) => {
         try {
             await authEndpoints.resetPassword(data);
         } catch (err: any) {
             return rejectWithValue(err.response?.data?.message || "Reset password failed");
+        }
+    }
+);
+
+
+export const refreshToken = createAsyncThunk<User, void, { rejectValue: string }>(
+    "/refresh",
+    async (_, { rejectWithValue }) => {
+        try {
+            const user = await authEndpoints.refreshToken();
+            return user;
+        } catch (err: any) {
+            return rejectWithValue(err.response?.data?.message || "Token refresh failed");
+        }
+    }
+);
+
+
+export const validateSession = createAsyncThunk<User, void, { rejectValue: string }>(
+    "/validate-session",
+    async (_, { rejectWithValue }) => {
+        try {
+            const user = await authEndpoints.validateSession();
+            return user;
+        } catch (err: any) {
+            return rejectWithValue(err.response?.data?.message || "Session validation failed");
         }
     }
 );

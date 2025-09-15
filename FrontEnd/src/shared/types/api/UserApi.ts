@@ -1,7 +1,7 @@
 import type { Gender } from "../../../core/domain/types/UserRoles";
 
 export interface ApiUser {
-    id: string;
+    _id: string;
     email: string;
     first_name: string;
     last_name: string;
@@ -32,4 +32,9 @@ export interface UserRegister {
     gender: Gender;
     phone: string;
     sport?: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
 }

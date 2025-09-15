@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 import AuthForm from "./AuthForm";
 import { useNavigate } from "react-router-dom";
+import { useResetPassword } from "../../hooks/useResetPassword";
+import FormField from "../../components/common/FormField";
 
 const ResetPasswordPage: React.FC = () => {
     const [formData, setFormData] = useState({
         password: "",
         confirmPassword: "",
     });
+    const [errors, setErrors] = useState<{ password?: string; confirmPassword?: string; global?: string }>({});
+    const { handleResetPassword } = useResetPassword();
     const navigate = useNavigate();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match!");
-            return;
-        }
-        console.log("Reset password data:", formData);
-        // Call backend API to reset password here
+        const result = await handleResetPassword(formData);
+        if (!result.success) setErrors(result.errors);
     };
 
     return (
@@ -27,45 +27,37 @@ const ResetPasswordPage: React.FC = () => {
             onSubmit={handleSubmit}
             footer={
                 <>
-                    Remembered your password?{" "} <span className="text-[var(--color-text-accent)] hover:underline" onClick={()=> navigate("/signup")}>Signup</span>
+                    Remembered your password?{" "}
+                    <span
+                        className="text-[var(--color-text-accent)] hover:underline"
+                        onClick={() => navigate("/signup")}
+                    >
+                        Signup
+                    </span>
                 </>
             }
         >
+            <FormField
+                id="password"
+                label="New Password"
+                type="password"
+                placeholder="Enter new password"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                error={errors.password}
+            />
 
-            {/* Password */}
-            <div className="flex flex-col text-sm max-w-md w-full mx-auto">
-                <label htmlFor="password" className="text-sm mb-1">
-                    New Password
-                </label>
-                <input
-                    id="password"
-                    type="password"
-                    name="password"
-                    placeholder="Enter new password"
-                    value={formData.password}
-                    onChange={(e) =>
-                        setFormData({ ...formData, password: e.target.value })
-                    }
-                    className="w-full p-3 rounded-md bg-[var(--color-surface-raised)] placeholder-gray-400 focus:outline-none"
-                />
-            </div>
+            <FormField
+                id="confirmPassword"
+                label="Confirm New Password"
+                type="password"
+                placeholder="Confirm new password"
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                error={errors.confirmPassword}
+            />
 
-            <div className="flex flex-col text-sm max-w-md w-full mx-auto">
-                <label htmlFor="confirmPassword" className="text-sm mb-1">
-                    Confirm New Password
-                </label>
-                <input
-                    id="confirmPassword"
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="Confirm new password"
-                    value={formData.confirmPassword}
-                    onChange={(e) =>
-                        setFormData({ ...formData, confirmPassword: e.target.value })
-                    }
-                    className="w-full p-3 rounded-md bg-[var(--color-surface-raised)] placeholder-gray-400 focus:outline-none"
-                />
-            </div>
+            {errors.global && <p className="text-red-500 text-sm mt-2">{errors.global}</p>}
         </AuthForm>
     );
 };

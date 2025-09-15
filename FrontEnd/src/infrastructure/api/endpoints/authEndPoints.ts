@@ -7,7 +7,6 @@ import type { UserRegister } from '../../../shared/types/api/UserApi';
 import { getEndpoint } from '../http/services/authEndPoints';
 import type { SignupRole } from '../../../core/domain/types/UserRoles';
 
-
 export const authEndpoints = {
     login: async (credentials: { email: string; password: string }): Promise<User> => {
         const response = await axiosClient.post<ApiResponse<LoginUserResponse>>(
@@ -18,36 +17,35 @@ export const authEndpoints = {
     },
 
     signup: async (data: UserRegister): Promise<User> => {
-        console.log(data)
         const endpoint = getEndpoint(data.role as SignupRole);
-        console.log(endpoint);
+    
         const response = await axiosClient.post<ApiResponse<UserResponse>>(
             endpoint,
             mapUserForSignup(data)
         );
+
         return mapApiUserToDomain(response.data.data.user);
     },
-
 
     verifyOtp: async (data: { email: string; otp: string }): Promise<void> => {
         await axiosClient.post(`/verify-otp`, data);
     },
 
     resendOtp: async (email: string): Promise<void> => {
-        await axiosClient.post(`resend-otp`, email);
+        await axiosClient.post(`/resend-otp`, { email });
     },
 
     logout: async (): Promise<void> => {
         await axiosClient.post("/logout");
     },
 
-    refresh: async (): Promise<User> => {
-        const response = await axiosClient.get<ApiResponse<UserResponse>>("/auth/refresh");
+    refreshToken: async (): Promise<User> => {
+        const response = await axiosClient.get<ApiResponse<UserResponse>>("/refresh");
         return mapApiUserToDomain(response.data.data.user);
     },
 
     forgotPassword: async (email: string): Promise<void> => {
-        await axiosClient.post('/forgot_password', email);
+        await axiosClient.post('/forgot-password', { email });
     },
 
     verifyResetOtp: async (data: { email: string, otp: string }): Promise<void> => {
@@ -56,5 +54,25 @@ export const authEndpoints = {
 
     resetPassword: async (data: { email: string, newPassword: string }): Promise<void> => {
         await axiosClient.post('/reset-password', data);
+    },
+
+    validateSession: async (): Promise<User> => {
+        const response = await axiosClient.get<ApiResponse<UserResponse>>("/validate-session");
+        return mapApiUserToDomain(response.data.data.user);
+    },
+
+    changePassword: async (data: { 
+        currentPassword: string; 
+        newPassword: string; 
+    }): Promise<void> => {
+        await axiosClient.post('/change-password', data);
+    },
+
+    updateProfile: async (data: Partial<User>): Promise<User> => {
+        const response = await axiosClient.put<ApiResponse<UserResponse>>(
+            '/profile',
+            data
+        );
+        return mapApiUserToDomain(response.data.data.user);
     }
 };

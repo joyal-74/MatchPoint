@@ -24,7 +24,7 @@ export class UserService {
         return this.userRepository.findById(userId);
     }
 
-    async getUserByEmail(email: string): Promise<User | null> {
+    async getUserByEmail(email: string): Promise<PersistedUser | null> {
         return this.userRepository.findByEmail(email);
     }
 
@@ -81,4 +81,19 @@ export class UserService {
     async createManager(userData: Partial<User>): Promise<User> {
         return this.createUser(userData, UserRole.MANAGER);
     }
+
+    async login(email: string, password: string): Promise<PersistedUser> {
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) {
+            throw new Error("Invalid credentials");
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            throw new Error("Invalid credentials");
+        }
+
+        return user;
+    }
+
 }

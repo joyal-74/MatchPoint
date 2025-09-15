@@ -5,7 +5,7 @@ import type { ApiPlayer } from "../../../shared/types/api/PlayerApi";
 import type { UserRole, Theme } from "../../../core/domain/types/UserRoles";
 
 export const mapApiUserToDomain = (apiUser: ApiUser): User => ({  // backend to front
-    id: apiUser.id,
+    _id: apiUser._id,
     email: apiUser.email,
     first_name: apiUser.first_name,
     last_name: apiUser.last_name,
@@ -35,7 +35,7 @@ export const mapApiPlayerToDomain = (apiPlayer: ApiPlayer): Player => ({
 
 export const mapDomainUserToApi = (user: Partial<User>): Partial<ApiUser> => {
     return {
-        id: user.id,
+        _id: user._id,
         email: user.email,
         first_name: user.first_name,
         last_name: user.last_name,
