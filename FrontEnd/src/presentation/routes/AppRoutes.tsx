@@ -1,8 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { publicRoutes } from "./publicRoutes";
 import { adminRoutes } from "./AdminRoutes";
-import ProtectedRoute from "./ProtectedRoute";
-import RoleBasedRoute from "./RoleBasedRoute";
+import AdminRouteProtect from "./AdminRouteProtect";
 
 const AppRoutes = () => {
     return (
@@ -17,11 +16,9 @@ const AppRoutes = () => {
                         key={path}
                         path={path}
                         element={
-                            <ProtectedRoute>
-                                <RoleBasedRoute allowedRoles={["admin"]}>
-                                    {element}
-                                </RoleBasedRoute>
-                            </ProtectedRoute>
+                            <AdminRouteProtect >
+                                {element}
+                            </AdminRouteProtect>
                         }
                     />
                 ))}

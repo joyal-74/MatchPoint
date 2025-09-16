@@ -1,3 +1,4 @@
+import type { ApiAdmin } from "./AdminApi";
 import type { ApiUser } from "./UserApi";
 
 export interface UsersResponse {
@@ -15,3 +16,6 @@ export interface LoginUserResponse {
     user: ApiUser;
 }
 
+export interface LoginAdminResponse {
+    admin: ApiAdmin;
+}

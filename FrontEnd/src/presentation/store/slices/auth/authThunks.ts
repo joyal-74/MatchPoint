@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { authEndpoints } from "../../../../infrastructure/api/endpoints/authEndPoints";
 import type { SignupResponse, UserRegister } from "../../../../shared/types/api/UserApi";
 import type { User } from "../../../../core/domain/entities/User";
+import type { Admin } from "../../../../core/domain/entities/Admin";
 
 export const loginUser = createAsyncThunk<User, { email: string; password: string }, { rejectValue: string }>(
     "/login",
@@ -9,6 +10,20 @@ export const loginUser = createAsyncThunk<User, { email: string; password: strin
         try {
             const user = await authEndpoints.login(credentials);
             return user;
+        } catch (err: any) {
+            console.log(err)
+            return rejectWithValue(err.response?.data?.error.message || "Login failed");
+        }
+    }
+);
+
+export const loginAdmin = createAsyncThunk<Admin, { email: string; password: string }, { rejectValue: string }>(
+    "/admin/login",
+    async (credentials, { rejectWithValue }) => {
+        try {
+            const admin = await authEndpoints.adminLogin(credentials);
+
+            return admin;
         } catch (err: any) {
             console.log(err)
             return rejectWithValue(err.response?.data?.error.message || "Login failed");

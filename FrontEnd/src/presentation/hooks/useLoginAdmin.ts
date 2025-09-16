@@ -1,11 +1,10 @@
 import { useAppDispatch } from "../store/hooks";
-import { loginUser } from "../store/slices/auth";
+import { loginAdmin } from "../store/slices/auth"; 
 import type { LoginRequest } from "../../shared/types/api/UserApi";
-import { UserRole } from "../../core/domain/types/UserRoles";
 
 type ValidationErrors = Partial<Record<keyof LoginRequest | "global", string>>;
 
-export const useLogin = () => {
+export const useLoginAdmin = () => {
     const dispatch = useAppDispatch();
 
 
@@ -27,12 +26,11 @@ export const useLogin = () => {
         if (Object.keys(errors).length > 0) return { success: false, errors };
 
         try {
-            const resultAction = await dispatch(loginUser(payload));
+            const resultAction = await dispatch(loginAdmin(payload));
+            console.log(resultAction)
 
-            if (loginUser.fulfilled.match(resultAction)) {
-                const role: UserRole = resultAction.payload.role;
-
-                return { success: true, message: "Login successful!", role };
+            if (loginAdmin.fulfilled.match(resultAction)) {
+                return { success: true, message: "Login successful!" };
             } else {
                 const backendError = resultAction.payload || "Login failed";
                 return { success: false, errors: { global: backendError } };

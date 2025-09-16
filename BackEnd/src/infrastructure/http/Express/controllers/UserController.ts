@@ -5,6 +5,8 @@ import { CareerStatsService } from '../../../../core/domain/usecases/admin/Caree
 import { toUserResponseDTO } from '../dtos/User.dto';
 import bcrypt from 'bcryptjs';
 import { AuthService } from '@app/services/AuthService';
+import { UserRole } from '@core/domain/types/UserRoles';
+import { AuthEntity, PersistedUser } from '@shared/types/Types';
 
 export class UserController {
     constructor(
@@ -164,7 +166,16 @@ export class UserController {
                 return;
             }
 
-            const { accessToken, refreshToken } = await this.authService.generateTokens(user);
+            function toAuthEntity(user: PersistedUser): AuthEntity {
+                return {
+                    _id: user._id,
+                    email: user.email,
+                    role: user.role as UserRole,
+                };
+            }
+
+
+            const { accessToken, refreshToken } = await this.authService.generateTokens(toAuthEntity(user));
 
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
@@ -174,8 +185,7 @@ export class UserController {
             });
 
             res.status(200).json({
-                success: true,
-                message: "Login successful",
+                success: true, message: "Login successful",
                 data: {
                     accessToken,
                     user: toUserResponseDTO(user),

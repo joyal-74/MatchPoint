@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
     loginUser,
+    loginAdmin,
     resendOtp,
     signupUser,
     verifyOtp,
@@ -10,9 +11,11 @@ import {
     resetPassword
 } from "../auth/authThunks";
 import type { User } from "../../../../core/domain/entities/User";
+import type { Admin } from "../../../../core/domain/entities/Admin";
 
 interface AuthState {
     user: User | null;
+    admin: Admin | null
     loading: boolean;
     error: string | null;
     signupSuccess: boolean;
@@ -25,6 +28,7 @@ interface AuthState {
 
 const initialState: AuthState = {
     user: null,
+    admin: null,
     loading: false,
     error: null,
     signupSuccess: false,
@@ -40,6 +44,7 @@ const authSlice = createSlice({
     reducers: {
         logout(state) {
             state.user = null;
+            state.admin = null;
             state.error = null;
             state.signupSuccess = false;
             state.otpVerified = false;
@@ -64,6 +69,22 @@ const authSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
+        // Login (Admin)
+        builder
+            .addCase(loginAdmin.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(loginAdmin.fulfilled, (state, action) => {
+                state.loading = false;
+                state.admin = action.payload;
+                state.error = null;
+            })
+            .addCase(loginAdmin.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? "Login failed";
+            });
+
         // Login
         builder
             .addCase(loginUser.pending, (state) => {

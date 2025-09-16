@@ -1,11 +1,12 @@
 import type { ApiResponse } from '../../../shared/types/api/ApiResponse';
 import type { User } from '../../../core/domain/entities/User';
 import { axiosClient } from '../http/axiosClient';
-import { mapApiUserToDomain, mapUserForSignup } from '../mappers/userMappers';
-import type { LoginUserResponse, UserResponse } from '../../../shared/types/api/UserResponse';
+import { mapApiAdminToDomain, mapApiUserToDomain, mapUserForSignup } from '../mappers/userMappers';
+import type { LoginAdminResponse, LoginUserResponse, UserResponse } from '../../../shared/types/api/UserResponse';
 import type { UserRegister } from '../../../shared/types/api/UserApi';
 import { getEndpoint } from '../http/services/authEndPoints';
 import type { SignupRole } from '../../../core/domain/types/UserRoles';
+import type { Admin } from '../../../core/domain/entities/Admin';
 
 export const authEndpoints = {
     login: async (credentials: { email: string; password: string }): Promise<User> => {
@@ -14,6 +15,14 @@ export const authEndpoints = {
             credentials
         );
         return mapApiUserToDomain(response.data.data.user);
+    },
+
+    adminLogin: async (credentials: { email: string; password: string }): Promise<Admin> => {
+        const response = await axiosClient.post<ApiResponse<LoginAdminResponse>>(
+            "/admin/login",
+            credentials
+        );
+        return mapApiAdminToDomain(response.data.data.admin);
     },
 
     signup: async (data: UserRegister): Promise<{ user: User; expiresAt: string }> => {

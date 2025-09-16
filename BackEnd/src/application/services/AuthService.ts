@@ -1,7 +1,8 @@
 import { RefreshTokenService } from './RefreshTokenService';
 import { generateAccessToken, generateRefreshToken } from '@shared/utils/helpers/token';
-import { PersistedUser } from '@shared/types/Types';
+import { AuthEntity } from '@shared/types/Types';
 import { IRefreshTokenRepository } from '@core/domain/repositories/interfaces/IRefreshTokenRepository';
+import { UserRole } from '@core/domain/types/UserRoles';
 
 export class AuthService {
     private refreshTokenService: RefreshTokenService;
@@ -10,13 +11,13 @@ export class AuthService {
         this.refreshTokenService = new RefreshTokenService(refreshTokenRepository);
     }
 
-    async generateTokens(user: PersistedUser) {
-        const accessToken = generateAccessToken({ id: user._id, role: user.role });
-        const refreshToken = generateRefreshToken({ id: user._id });
+    async generateTokens(entity: AuthEntity) {
+        const accessToken = generateAccessToken({ id: entity._id, role: entity.role });
+        const refreshToken = generateRefreshToken({ id: entity._id });
 
         await this.refreshTokenService.storeRefreshToken({
             token: refreshToken,
-            userId: user._id.toString(),
+            userId: entity._id.toString(),
             expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         });
 

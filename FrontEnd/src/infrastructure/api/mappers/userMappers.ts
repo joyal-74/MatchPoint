@@ -3,6 +3,8 @@ import type { Player } from '../../../core/domain/entities/Player';
 import type { ApiUser, UserRegister } from "../../../shared/types/api/UserApi";
 import type { ApiPlayer } from "../../../shared/types/api/PlayerApi";
 import type { UserRole, Theme } from "../../../core/domain/types/UserRoles";
+import type { ApiAdmin } from '../../../shared/types/api/AdminApi';
+import type { Admin, AdminSettings } from '../../../core/domain/entities/Admin';
 
 export const mapApiUserToDomain = (apiUser: ApiUser): User => ({  // backend to front
     _id: apiUser._id,
@@ -27,6 +29,7 @@ export const mapApiUserToDomain = (apiUser: ApiUser): User => ({  // backend to 
 
 export const mapApiPlayerToDomain = (apiPlayer: ApiPlayer): Player => ({
     ...mapApiUserToDomain(apiPlayer),
+    id : apiPlayer._id,
     sport: apiPlayer.sport,
     profile: apiPlayer.profile,
     career_stats: apiPlayer.career_stats,
@@ -66,4 +69,23 @@ export const mapUserForSignup = (user: UserRegister): Partial<ApiUser> => ({
     gender: user.gender,
     sport: user.sport,
     phone: user.phone,
+});
+
+export const mapApiAdminToDomain = (apiAdmin: ApiAdmin): Admin => ({
+    _id: apiAdmin._id,
+    email: apiAdmin.email,
+    first_name: apiAdmin.first_name,
+    last_name: apiAdmin.last_name,
+
+    wallet: apiAdmin.wallet ?? 0,
+
+    settings: {
+        theme: (apiAdmin.settings?.theme as AdminSettings["theme"]) ?? "light",
+        language: apiAdmin.settings?.language ?? "en",
+        currency: apiAdmin.settings?.currency ?? "USD",
+    },
+
+    password: apiAdmin.password,
+    createdAt: undefined,
+    updatedAt: undefined,
 });

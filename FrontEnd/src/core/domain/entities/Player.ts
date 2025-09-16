@@ -20,6 +20,7 @@ export interface PlayerTournament {
 }
 
 export interface Player extends User {
+    id:string
     sport: string;
     profile: PlayerProfileField[];
     career_stats: PlayerStatsField[];

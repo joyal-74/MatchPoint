@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import AuthForm from "./AuthForm";
 import { useNavigate } from "react-router-dom";
 import FormField from "../../components/common/FormField";
-import { useLogin } from "../../hooks/useLogin";
 import type { LoginRequest } from "../../../shared/types/api/UserApi";
 import { toast, ToastContainer } from "react-toastify";
 import LoadingOverlay from "../../components/common/LoadingOverlay";
-import { UserRole } from "../../../core/domain/types/UserRoles";
+import { useLoginAdmin } from "../../hooks/useLoginAdmin";
 
 
-const LoginPage: React.FC = () => {
+const AdminLoginPage: React.FC = () => {
     const navigate = useNavigate();
-    const { handleLogin } = useLogin();
+    const { handleLogin } = useLoginAdmin();
 
     const [formData, setFormData] = useState<LoginRequest>({ email: "", password: "" });
     const [errors, setErrors] = useState<Partial<Record<keyof LoginRequest, string>>>({});
@@ -27,15 +26,8 @@ const LoginPage: React.FC = () => {
 
         if (result.success) {
             toast.success(result.message || "Login successful!");
-
-            const role = result.role;
-            console.log(role)
-
-            if (role === UserRole.Manager.toLowerCase()) navigate("/manager/dashboard");
-            else if (role === UserRole.Viewer.toLowerCase()) navigate("/");
-            else if (role === UserRole.Admin.toLowerCase()) navigate('/admin/dashboard')
-            else if (role === UserRole.Player.toLowerCase()) navigate('/player/dashboard')
-
+            navigate('/admin/dashboard')
+            
         } else if (result.errors) {
 
             if (result.errors.global) toast.error(result.errors.global);
@@ -51,12 +43,12 @@ const LoginPage: React.FC = () => {
             <ToastContainer position="top-right" autoClose={3000} />
             <LoadingOverlay show={loading} />
             <AuthForm
-                title="Login to your Account"
+                title="Login to your Admin Account"
                 buttonText="Login"
                 onSubmit={onSubmit}
                 footer={
                     <>
-                        Don’t have an account?{" "}
+                        Not an admin? Go back to User{" "}
                         <span
                             className="text-[var(--color-text-accent)] hover:underline cursor-pointer"
                             onClick={() => navigate("/signup")}
@@ -87,10 +79,9 @@ const LoginPage: React.FC = () => {
                     className="w-full"
                     error={errors.password}
                 />
-                <h1 className="text-end text-sm text-[var(--color-link)]" onClick={() => navigate("/forgot-password")}>Forgot Password ?</h1>
             </AuthForm>
         </>
     );
 };
 
-export default LoginPage;
+export default AdminLoginPage;

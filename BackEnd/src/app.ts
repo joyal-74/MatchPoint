@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import userRoutes from './infrastructure/http/Express/routes/userRoutes'
+import adminRoutes from './infrastructure/http/Express/routes/AdminRoutes'
 
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 app.use("/", userRoutes);
+app.use("/admin", adminRoutes);
 
 app.get("/health", (_req: Request, res: Response) => {
     res.status(200).json({ status: "ok" });
