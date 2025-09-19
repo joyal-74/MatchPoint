@@ -39,8 +39,7 @@ export class PlayerRepositoryMongo implements IPlayerRepository {
         return updated;
     }
 
-    async deleteUnverifiedplayers(date: Date): Promise<number> {
-        const result = await PlayerModel.deleteMany({ isVerified: false, createdAt: { $lt: date } });
-        return result.deletedCount || 0;
+    async deleteByUserId(userId: string): Promise<void> {
+        await PlayerModel.deleteMany({ userId });
     }
 }

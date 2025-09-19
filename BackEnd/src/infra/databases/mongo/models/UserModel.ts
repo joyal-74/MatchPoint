@@ -25,7 +25,7 @@ const UserSchema = new Schema<UserDocument>({
         country: { type: String },
         theme: { type: String, enum: ThemeValues, default: Theme.Dark },
         language: { type: String, default: 'en' },
-        currency: { type: String, default: 'USD' },
+        currency: { type: String, default: 'INR' },
     },
     isActive: { type: Boolean, default: true },
     isVerified: { type: Boolean, default: false },

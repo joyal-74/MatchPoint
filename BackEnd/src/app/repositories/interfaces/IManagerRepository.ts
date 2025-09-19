@@ -9,5 +9,5 @@ export interface IManagerRepository {
 
     update(_id: string, data: Partial<Manager>): Promise<ManagerResponse>;
 
-    deleteUnverifiedManagers(date: Date): Promise<number>;
+    deleteByUserId(userId: string): Promise<void>;
 }

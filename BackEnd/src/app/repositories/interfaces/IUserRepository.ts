@@ -1,23 +1,25 @@
-import { UserRegisterResponseDTO } from "domain/dtos/User.dto";
+import { ManagersResponseDTO } from "domain/dtos/Manager.dto";
+import { PlayersResponseDTO } from "domain/dtos/Player.dto";
+import { UserRegisterResponseDTO, UsersResponseDTO } from "domain/dtos/User.dto";
 import { User, UserRegister, UserResponse } from "domain/entities/User";
-import { AllRole } from "domain/enums/Roles";
+import { UserRole } from "domain/enums/Roles";
 
 export interface IUserRepository {
-    // Find user by MongoDB _id
     findById(_id: string): Promise<UserResponse | null>;
 
-    // Find user by email
+    deleteById(_id: string): Promise<void>;
+
     findByEmail(email: string): Promise<UserResponse | null>;
 
-    // Find users by role
-    findByRole(role: AllRole): Promise<UserResponse[]>;
+    findAllPlayers(role: UserRole): Promise<PlayersResponseDTO[]>;
 
-    // Create a new user
+    findAllViewers(role: UserRole): Promise<UsersResponseDTO[]>;
+
+    findAllManagers(role: UserRole): Promise<ManagersResponseDTO[]>;
+
     create(user: UserRegister): Promise<UserRegisterResponseDTO>;
 
-    // Update user by MongoDB _id
     update(_id: string, data: Partial<User>): Promise<UserResponse>;
 
-    // Delete unverified users created before a specific date
-    deleteUnverifiedUsersBefore(date: Date): Promise<number>;
+    findUnverifiedUsers(date: Date): Promise<UserResponse[]>;
 }

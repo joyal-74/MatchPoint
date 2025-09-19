@@ -1,4 +1,5 @@
 import { ThemeType, RoleType, GenderType } from "domain/enums";
+import { UsersResponseDTO } from "./User.dto";
 
 export interface PlayerSettingsDTO {
     location?: string;
@@ -8,7 +9,11 @@ export interface PlayerSettingsDTO {
     currency: string;
 }
 
-export interface PlayerResponseDTO {
+export interface PlayerResponseDTO extends UsersResponseDTO {
+    sports : string
+}
+
+export interface PlayersResponseDTO {
     _id: string;
     userId: string;
     email: string;
@@ -19,6 +24,7 @@ export interface PlayerResponseDTO {
     gender: GenderType;
     phone: string | null;
     wallet: number;
+    createdAt: Date
 }
 
 export interface PlayerRegisterResponseDTO {

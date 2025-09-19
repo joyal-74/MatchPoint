@@ -21,6 +21,20 @@ export interface UserResponseDTO {
     wallet: number;
 }
 
+export interface UsersResponseDTO {
+    _id: string;
+    userId: string;
+    email: string;
+    role: RoleType;
+    first_name: string;
+    last_name: string;
+    gender: GenderType;
+    phone: string | null;
+    wallet: number;
+    createdAt : Date,
+    isActive : Boolean,
+}
+
 export interface UserRegisterResponseDTO {
     _id: string;
     userId: string;

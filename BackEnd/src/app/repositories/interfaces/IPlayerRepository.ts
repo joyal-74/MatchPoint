@@ -9,5 +9,5 @@ export interface IPlayerRepository {
 
     update(_id: string, data: Partial<Player>): Promise<PlayerResponse>;
 
-    deleteUnverifiedplayers(date: Date): Promise<number>;
+    deleteByUserId(userId: string): Promise<void>;
 }

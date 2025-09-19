@@ -26,6 +26,8 @@ export class LoginAdmin {
         const accessToken = await this.jwtService.generateAccessToken(payload);
         const refreshToken = await this.jwtService.generateRefreshToken(payload);
 
+        await this.userRepository.update(admin._id, { refreshToken });
+
         const adminDTO: AdminToResponseDTO = {
             _id: admin._id,
             email: admin.email,

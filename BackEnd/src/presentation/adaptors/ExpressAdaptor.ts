@@ -13,8 +13,6 @@ export async function expressAdapter(request: Request, response: Response, apiRo
 
     const httpResponse: IHttpResponse = await apiRoute.handle(httpRequest);
 
-    console.log('kk')
-
     const { accessToken, refreshToken } = httpResponse.body;
 
     if (accessToken) {

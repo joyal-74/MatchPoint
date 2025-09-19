@@ -20,6 +20,19 @@ export interface ManagerResponseDTO {
     wallet: number;
 }
 
+export interface ManagersResponseDTO {
+    _id: string;
+    userId: string;
+    email: string;
+    role: RoleType;
+    first_name: string;
+    last_name: string;
+    gender: GenderType;
+    phone: string | null;
+    wallet: number;
+    createdAt : string,
+}
+
 export interface ManagerRegisterResponseDTO {
     _id: string;
     userId: string;

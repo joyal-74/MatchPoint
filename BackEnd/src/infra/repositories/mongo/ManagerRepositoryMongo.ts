@@ -43,8 +43,7 @@ export class ManagerRepositoryMongo implements IManagerRepository {
         return updated;
     }
 
-    async deleteUnverifiedManagers(date: Date): Promise<number> {
-        const result = await ManagerModel.deleteMany({ isVerified: false, createdAt: { $lt: date } });
-        return result.deletedCount || 0;
+    async deleteByUserId(userId: string): Promise<void> {
+        await ManagerModel.deleteMany({ userId });
     }
 }
