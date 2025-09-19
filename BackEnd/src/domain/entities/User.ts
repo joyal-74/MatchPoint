@@ -1,0 +1,45 @@
+import { GenderType, ThemeType, RoleType } from "../enums";
+
+export interface UserSettings {
+    location?: string;
+    country?: string;
+    theme: ThemeType;
+    language: string; 
+    currency: string;
+}
+
+export interface User {
+    userId: string;
+    email: string;
+    role: RoleType;
+    first_name: string;
+    last_name: string;
+    gender: GenderType;
+    phone: string;
+    password : string;
+    settings: UserSettings;
+    wallet: number;
+    refreshToken?: string | null;
+    isActive: boolean;
+    isVerified: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export interface UserRegister {
+    userId: string;
+    email: string;
+    role: RoleType;
+    first_name: string;
+    last_name: string;
+    gender: GenderType;
+    password : string;
+    settings: UserSettings;
+    wallet: number;
+    isActive: boolean;
+    isVerified: boolean;
+}
+
+export interface UserResponse extends User {
+    _id: string;
+}

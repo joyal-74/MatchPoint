@@ -6,7 +6,7 @@ export interface AdminSettings {
     currency: string;
 }
 
-// Base Admin type
+
 export interface Admin {
     _id: string;
     email: string;
@@ -15,7 +15,6 @@ export interface Admin {
     password: string;
     settings: AdminSettings;
     wallet: number;
-    isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
