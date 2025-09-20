@@ -29,6 +29,7 @@ const UserSchema = new Schema<UserDocument>({
     },
     isActive: { type: Boolean, default: true },
     isVerified: { type: Boolean, default: false },
+    logo: { type: String, default: null },
 }, { timestamps: true });
 
 export const UserModel = model<UserDocument>('User', UserSchema);

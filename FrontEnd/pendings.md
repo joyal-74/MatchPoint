@@ -16,15 +16,13 @@
 [x] - admin viewer/player/manager -management
 [x] - improve front end and back end folder structure
 [x] - forgot password
+[x] - common response model
+[x] - Logger
 [] - Keep message in constant
 [] - Proper naming for variables and private variables(_)
-[] - Keep message in constant
-[] - Proper naming for variables and private variables(_)
-[] - common response model
-[] - Logger
+[] - Logging mechanism needed
 [] - polymorphism and its type
 [] - introduce more Reusable components
-[] - Logging mechanism needed
 [] - Proper merge request from feature -> master
 [] - eslint
 [] - Lint issue fix 
@@ -33,3 +31,9 @@
 [] - multiline comments
 [] - readme.md
 [] - every week need to raise to PR with proper comments
+
+
+
+# Important
+[] - protect middleware to check token with roles need to implement
+[] - rest routes need to use logger

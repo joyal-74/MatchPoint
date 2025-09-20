@@ -3,6 +3,7 @@ import { HttpStatusCode } from "../enums/StatusCodes";
 
 export class BadRequestError extends AppError {
     constructor(message = "Bad request", details?: Record<string, string>) {
+        console.log(details)
         super(message, HttpStatusCode.BAD_REQUEST, true, details);
     }
 }

@@ -1,4 +1,3 @@
-import { UserResponse } from "domain/entities/User";
 import { ThemeType, RoleType, GenderType } from "domain/enums";
 
 export interface UserSettingsDTO {
@@ -16,9 +15,12 @@ export interface UserResponseDTO {
     role: RoleType;
     first_name: string;
     last_name: string;
+    username: string;
     gender: GenderType;
     phone: string | null;
     wallet: number;
+    logo?: string | null;
+    sport?: string;
 }
 
 export interface UsersResponseDTO {
@@ -31,8 +33,8 @@ export interface UsersResponseDTO {
     gender: GenderType;
     phone: string | null;
     wallet: number;
-    createdAt : Date,
-    isActive : Boolean,
+    createdAt: Date,
+    isActive: Boolean,
 }
 
 export interface UserRegisterResponseDTO {
@@ -42,4 +44,17 @@ export interface UserRegisterResponseDTO {
     role: RoleType;
     first_name: string;
     last_name: string;
+}
+
+export interface UserUpdateDTO {
+    _id: string;
+    userId: string;
+    email: string;
+    logo: string;
+    phone: string;
+    role: RoleType;
+    first_name: string;
+    last_name: string;
+    username : string;
+    gender : GenderType;
 }

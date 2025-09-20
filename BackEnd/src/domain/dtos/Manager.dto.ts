@@ -12,9 +12,11 @@ export interface ManagerResponseDTO {
     _id: string;
     userId: string;
     email: string;
+    logo: string | null;
     role: RoleType;
     first_name: string;
     last_name: string;
+    username : string;
     gender: GenderType;
     phone: string | null;
     wallet: number;
@@ -27,6 +29,7 @@ export interface ManagersResponseDTO {
     role: RoleType;
     first_name: string;
     last_name: string;
+    username : string;
     gender: GenderType;
     phone: string | null;
     wallet: number;
@@ -39,5 +42,18 @@ export interface ManagerRegisterResponseDTO {
     email: string;
     first_name: string;
     last_name: string;
+    username : string;
     role: RoleType; 
+}
+
+
+export interface ManagerUpdateDTO {
+    _id : string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone : string;
+    username : string;
+    gender: GenderType;
+    logo?: string;
 }

@@ -1,11 +1,10 @@
-import express, { Request, Response} from "express";
+import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-// import userRoutes from './infrastructure/http/Express/routes/userRoutes'
-// import adminRoutes from './infrastructure/http/Express/routes/AdminRoutes'
 import authRoutes from "presentation/express/routes/authRoutes";
 import adminRoutes from "presentation/express/routes/adminRoutes";
+import managerRoutes from "presentation/express/routes/managerRoutes";
 import { errorHandler } from "presentation/express/middlewares/errorHandler";
 import cookieParser from 'cookie-parser';
 
@@ -26,14 +25,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
-// app.use("/", userRoutes);
-// app.use("/admin", adminRoutes);
+
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
-
-app.get("/health", (_req: Request, res: Response) => {
-    res.status(200).json({ status: "ok" });
-});
+app.use("/manager", managerRoutes);
 
 app.use(errorHandler);
 

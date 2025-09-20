@@ -4,19 +4,21 @@ export interface UserSettings {
     location?: string;
     country?: string;
     theme: ThemeType;
-    language: string; 
+    language: string;
     currency: string;
 }
 
 export interface User {
     userId: string;
     email: string;
+    logo: string;
     role: RoleType;
     first_name: string;
     last_name: string;
+    username: string;
     gender: GenderType;
     phone: string;
-    password : string;
+    password: string;
     settings: UserSettings;
     wallet: number;
     refreshToken?: string | null;
@@ -33,7 +35,7 @@ export interface UserRegister {
     first_name: string;
     last_name: string;
     gender: GenderType;
-    password : string;
+    password: string;
     settings: UserSettings;
     wallet: number;
     isActive: boolean;
@@ -42,4 +44,5 @@ export interface UserRegister {
 
 export interface UserResponse extends User {
     _id: string;
+    sport?: string;
 }

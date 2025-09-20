@@ -1,5 +1,5 @@
 import { ThemeType, RoleType, GenderType } from "domain/enums";
-import { UsersResponseDTO } from "./User.dto";
+import { UserResponseDTO, UsersResponseDTO } from "./User.dto";
 
 export interface PlayerSettingsDTO {
     location?: string;
@@ -9,8 +9,12 @@ export interface PlayerSettingsDTO {
     currency: string;
 }
 
-export interface PlayerResponseDTO extends UsersResponseDTO {
-    sports : string
+export interface PlayerResponseDTO extends UserResponseDTO {
+    sport : string;
+}
+
+export interface PlayersResponseDTO extends UsersResponseDTO {
+    sport: string
 }
 
 export interface PlayersResponseDTO {
@@ -35,4 +39,17 @@ export interface PlayerRegisterResponseDTO {
     role: RoleType;
     first_name: string;
     last_name: string;
+}
+
+export interface PlayerUpdateDTO {
+    _id: string;
+    userId: string;
+    email: string;
+    logo: string;
+    phone: string;
+    role: RoleType;
+    first_name: string;
+    last_name: string;
+    username: string;
+    gender: GenderType;
 }

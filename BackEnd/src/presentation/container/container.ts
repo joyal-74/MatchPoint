@@ -7,6 +7,7 @@ import { JWTService } from '../../infra/services/jwtServices';
 import { NodeMailerService } from '../../infra/services/NodeMailerService';
 import { NodeOtpGenerator } from '../../infra/providers/NodeOtpGenerator';
 import { BcryptPasswordHasher } from '../../infra/providers/BcryptPasswordHasher';
+import { WinstonLogger } from "infra/providers/WinstonLogger";
 import { SignupViewer } from '../../app/usecases/authentication/SignupViewer';
 import { SignupPlayer } from '../../app/usecases/authentication/SignupPlayer';
 import { SignupManager } from '../../app/usecases/authentication/SignUpManager';
@@ -40,6 +41,11 @@ import { GetAllManagersController } from 'presentation/http/controllers/admin/Ge
 import { deleteUnverifiedUsersCron } from 'infra/cron/deleteUnverifiedUsersCron';
 import { NodeCronScheduler } from 'infra/services/NodeCronScheduler';
 
+// import { S3FileProvider } from 'infra/providers/S3FileStorage';
+import { ImageKitFileStorage } from 'infra/providers/ImageKitFileStorage';
+import { UpdateManagerProfileController } from 'presentation/http/controllers/manager/UpdateManagerProfileController';
+import { UpdateManagerProfile } from 'app/usecases/manager/UpdateManagerProfile';
+
 
 // Repositories
 const userRepository = new UserRepositoryMongo();
@@ -53,9 +59,13 @@ const mailService = new NodeMailerService();
 const otpGenerator = new NodeOtpGenerator();
 const passwordHasher = new BcryptPasswordHasher();
 const otpService = new OtpRepositoryMongo();
+// const S3fileProvider = new S3FileProvider()
+const imageKitfileProvider = new ImageKitFileStorage();
+const logger = new WinstonLogger();
+
 
 // Use Cases (Authentication)
-const loginAdmin = new LoginAdmin(adminRepository, jwtService, passwordHasher);
+const loginAdmin = new LoginAdmin(adminRepository, jwtService, passwordHasher, logger);
 const loginUser = new LoginUser(userRepository, jwtService, passwordHasher);
 const refreshUser = new RefreshTokenUser(userRepository, jwtService);
 const refreshAdmin = new RefreshTokenAdmin(adminRepository, jwtService);
@@ -69,9 +79,13 @@ const resetPassword = new ResetPassword(userRepository, otpService, passwordHash
 const forgotPassword = new ForgotPassword(userRepository, otpService, mailService, otpGenerator);
 
 // Use Cases (Admin)
-const getAllViewers = new GetAllViewers(userRepository);
-const getAllManagers = new GetAllManagers(userRepository);
-const getAllPlayers = new GetAllPlayers(userRepository);
+const getAllViewers = new GetAllViewers(userRepository, logger);
+const getAllManagers = new GetAllManagers(userRepository, logger);
+const getAllPlayers = new GetAllPlayers(userRepository, logger);
+
+// use case (manager)
+const updateProfile = new UpdateManagerProfile(userRepository, imageKitfileProvider)
+
 
 const scheduler = new NodeCronScheduler();
 
@@ -95,3 +109,5 @@ export const forgotPasswordController = new ForgotPasswordController(forgotPassw
 export const getAllViewersController = new GetAllViewersController(getAllViewers);
 export const getAllManagerController = new GetAllManagersController(getAllManagers);
 export const getAllPlayersController = new GetAllPlayersController(getAllPlayers);
+
+export const updateManagerProfileController = new UpdateManagerProfileController(updateProfile);
