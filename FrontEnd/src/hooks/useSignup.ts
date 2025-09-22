@@ -1,0 +1,89 @@
+import { useState } from "react";
+import { useAppDispatch } from "../hooks/hooks";
+import { signupUser } from "../features/auth/authThunks";
+import { UserRole, type Gender } from "../types/UserRoles";
+import { validateSignup } from "../validators/SignpValidators";
+import type { SignUpForm } from "../utils/helpers/SignupFields";
+
+type ValidationErrors = Partial<Record<keyof SignUpForm | "global", string>>;
+
+export const useSignup = () => {
+    const dispatch = useAppDispatch();
+
+    const [formData, setFormData] = useState<SignUpForm>({
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
+        gender: "" as Gender,
+        password: "",
+        confirmPassword: "",
+        role: UserRole.Player,
+        sport: "",
+    });
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [errors, setErrors] = useState<ValidationErrors>({});
+    const [loading, setLoading] = useState(false);
+
+    const validateForm = (payload: SignUpForm): ValidationErrors => {
+        return validateSignup(payload);
+    };
+
+    const handleFieldChange = <K extends keyof SignUpForm>(field: K, value: SignUpForm[K]) => {
+        setFormData((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
+
+    const handleConfirmPasswordChange = (value: string) => {
+        setConfirmPassword(value);
+        const confirmError = formData.password !== value ? "Passwords do not match" : undefined;
+        setErrors((prev) => ({ ...prev, confirmPassword: confirmError }));
+    };
+
+    const handleSubmit = async () => {
+        setErrors({});
+        setLoading(true);
+
+        const validationErrors = validateForm(formData);
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            setLoading(false);
+            return { success: false, errors: validationErrors };
+        }
+
+        try {
+            const resultAction = await dispatch(signupUser(formData));
+
+            setLoading(false);
+
+            if (signupUser.fulfilled.match(resultAction)) {
+                return {
+                    success: true,
+                    message: "Signup successful! Verify your account via email.",
+                    expiresAt: resultAction.payload.expiresAt,
+                    email: formData.email,
+                };
+            } else {
+                const backendError = resultAction.payload || "Signup failed";
+                return { success: false, errors: { global: backendError } };
+            }
+        } catch (err) {
+            console.error(err);
+            setLoading(false);
+            return { success: false, errors: { global: "Something went wrong" } };
+        }
+    };
+
+    return {
+        formData,
+        confirmPassword,
+        setFormData,
+        handleFieldChange,
+        handleConfirmPasswordChange,
+        handleSubmit,
+        errors,
+        loading,
+    };
+};

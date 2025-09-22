@@ -45,6 +45,8 @@ import { NodeCronScheduler } from 'infra/services/NodeCronScheduler';
 import { ImageKitFileStorage } from 'infra/providers/ImageKitFileStorage';
 import { UpdateManagerProfileController } from 'presentation/http/controllers/manager/UpdateManagerProfileController';
 import { UpdateManagerProfile } from 'app/usecases/manager/UpdateManagerProfile';
+import { ChangeUserStatus } from 'app/usecases/admin/ChangeUserStatus';
+import { ChangeUserStatusController } from 'presentation/http/controllers/admin/ChangeUserStatusController';
 
 
 // Repositories
@@ -82,6 +84,7 @@ const forgotPassword = new ForgotPassword(userRepository, otpService, mailServic
 const getAllViewers = new GetAllViewers(userRepository, logger);
 const getAllManagers = new GetAllManagers(userRepository, logger);
 const getAllPlayers = new GetAllPlayers(userRepository, logger);
+const changeUserStatus = new ChangeUserStatus(userRepository, logger);
 
 // use case (manager)
 const updateProfile = new UpdateManagerProfile(userRepository, imageKitfileProvider)
@@ -111,3 +114,4 @@ export const getAllManagerController = new GetAllManagersController(getAllManage
 export const getAllPlayersController = new GetAllPlayersController(getAllPlayers);
 
 export const updateManagerProfileController = new UpdateManagerProfileController(updateProfile);
+export const changeUserStatusController = new ChangeUserStatusController(changeUserStatus, logger);

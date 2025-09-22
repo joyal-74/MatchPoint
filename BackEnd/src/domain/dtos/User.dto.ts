@@ -34,7 +34,7 @@ export interface UsersResponseDTO {
     phone: string | null;
     wallet: number;
     createdAt: Date,
-    isActive: Boolean,
+    isActive: boolean,
 }
 
 export interface UserRegisterResponseDTO {

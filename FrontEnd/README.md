@@ -1,79 +1,69 @@
-# 🏆 Sports Tournament Management
+# React + TypeScript + Vite
 
-A modern web application for managing sports tournaments, built with **React + TypeScript** and structured using **Clean Architecture** principles.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
----
+Currently, two official plugins are available:
 
-## ✨ Features
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-* ⚛️ **React + TypeScript** – Type-safe and scalable frontend development.
-* 🏗 **Clean Architecture** – Separation of concerns for maintainability and testability.
-* 📊 **Tournament Management** – Organize matches, teams, and schedules.
-* 👤 **User-Friendly UI** – Responsive and intuitive interface for admins and players.
-* 🔒 **Extensible Design** – Easily extend to support multiple sports and formats.
-* 🔒 **Live streaming support** – Easily extend to support multiple sports and formats.
+## Expanding the ESLint configuration
 
----
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-## 🚀 Tech Stack
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-* **Frontend:** React, TypeScript
-* **Architecture:** Clean Architecture principles
-* **State Management:** (to be filled in if you’re using Redux, Zustand, Context API, etc.)
-* **Styling:** (add Tailwind, Bootstrap, or custom CSS if applicable)
-* **Backend (Optional):** (add if you plan to integrate Node.js, Express, or any API layer)
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
----
-
-## 📂 Project Structure (Clean Architecture)
-
-```
-src/
-├── app/            # Application logic (use cases, services)
-├── domain/         # Entities, business rules
-├── infra/          # Infrastructure (APIs, DB, external services)
-├── presentation/   # UI layer (React components, views)
-```
-
----
-
-## ⚙️ Installation & Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/your-username/sports-tournament-management.git
-
-# Navigate into the project
-cd sports-tournament-management
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
----
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-## 📝 Roadmap
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-* [ ] User authentication (Admin / Player)
-* [ ] Team and player management
-* [ ] Match scheduling and results tracking
-* [ ] Leaderboards & statistics
-* [ ] Multi-sport support
-* [ ] API integration with backend
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request.
-
----
-
-## 📜 License
-
-This project is licensed under the **MIT License**.
-
----
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```

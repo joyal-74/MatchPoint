@@ -9,11 +9,18 @@ export class GetAllManagersController implements IController {
     constructor(private getAllManagersUseCase: GetAllManagers) { }
 
     async handle(_httpRequest: IHttpRequest): Promise<IHttpResponse> {
-        const Managers = await this.getAllManagersUseCase.execute();
+        const { page = 1, limit = 10, filter, search } = _httpRequest.query;
+
+        const Managers = await this.getAllManagersUseCase.execute({
+            page: Number(page),
+            limit: Number(limit),
+            filter: filter as string | undefined,
+            search: search as string | undefined,
+        });
 
         return new HttpResponse(HttpStatusCode.OK, {
             success: true,
-            message : "Managers fetched successfully",
+            message: "Managers fetched successfully",
             data: Managers,
         });
     }

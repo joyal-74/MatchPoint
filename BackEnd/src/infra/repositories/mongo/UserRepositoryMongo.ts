@@ -1,9 +1,9 @@
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
+import { GetAllUsersParams } from "app/usecases/admin/GetAllViewers";
 import { ManagersResponseDTO } from "domain/dtos/Manager.dto";
 import { PlayersResponseDTO } from "domain/dtos/Player.dto";
 import { UsersResponseDTO } from "domain/dtos/User.dto";
 import { User, UserResponse } from "domain/entities/User";
-import { UserRole } from "domain/enums/Roles";
 import { UserModel } from "infra/databases/mongo/models/UserModel";
 
 
@@ -17,7 +17,7 @@ export class UserRepositoryMongo implements IUserRepository {
         await UserModel.findByIdAndDelete(_id).exec();
     }
 
-    async findUnverifiedUsers(date: Date) : Promise < UserResponse[]> {
+    async findUnverifiedUsers(date: Date): Promise<UserResponse[]> {
         return UserModel.find({ isVerified: false, createdAt: { $lt: date } });
     }
 
@@ -27,16 +27,109 @@ export class UserRepositoryMongo implements IUserRepository {
     }
 
     // Find users by role
-    async findAllManagers(role: UserRole): Promise<ManagersResponseDTO[]> {
-        return UserModel.find({ role }).lean<ManagersResponseDTO[]>().exec();
+    async findAllManagers(params: GetAllUsersParams): Promise<ManagersResponseDTO[]> {
+        const query: Record<string, unknown> = { role: "player" };
+        const andConditions: Record<string, unknown>[] = [];
+
+        // Filter logic
+        if (params.filter && params.filter !== "All") {
+            if (params.filter === "Active") andConditions.push({ isActive: true });
+            if (params.filter === "Blocked") andConditions.push({ isActive: false });
+        }
+
+        // Search logic
+        if (params.search) {
+            andConditions.push({
+                $or: [
+                    { name: { $regex: params.search, $options: "i" } },
+                    { email: { $regex: params.search, $options: "i" } },
+                ],
+            });
+        }
+
+        // Combine conditions if any exist
+        if (andConditions.length > 0) {
+            query.$and = andConditions;
+        }
+
+
+        const data = await UserModel.find(query)
+            .skip((Number(params.page) - 1) * Number(params.limit))
+            .limit(Number(params.limit))
+            .lean<ManagersResponseDTO[]>()
+            .exec();
+
+        return data;
     }
 
-    async findAllPlayers(role: UserRole): Promise<PlayersResponseDTO[]> {
-        return UserModel.find({ role }).lean<PlayersResponseDTO[]>().exec();
+    async findAllPlayers(params: GetAllUsersParams): Promise<PlayersResponseDTO[]> {
+        const query: Record<string, unknown> = { role: "player" };
+        const andConditions: Record<string, unknown>[] = [];
+
+        // Filter logic
+        if (params.filter && params.filter !== "All") {
+            if (params.filter === "Active") andConditions.push({ isActive: true });
+            if (params.filter === "Blocked") andConditions.push({ isActive: false });
+        }
+
+        // Search logic
+        if (params.search) {
+            andConditions.push({
+                $or: [
+                    { name: { $regex: params.search, $options: "i" } },
+                    { email: { $regex: params.search, $options: "i" } },
+                ],
+            });
+        }
+
+        // Combine conditions if any exist
+        if (andConditions.length > 0) {
+            query.$and = andConditions;
+        }
+
+
+        const data = await UserModel.find(query)
+            .skip((Number(params.page) - 1) * Number(params.limit))
+            .limit(Number(params.limit))
+            .lean<PlayersResponseDTO[]>()
+            .exec();
+
+        return data;
     }
 
-    async findAllViewers(role: UserRole): Promise<UsersResponseDTO[]> {
-        return UserModel.find({ role }).lean<UsersResponseDTO[]>().exec();
+    async findAllViewers(params: GetAllUsersParams): Promise<UsersResponseDTO[]> {
+        const query: Record<string, unknown> = { role: "viewer" };
+        const andConditions: Record<string, unknown>[] = [];
+
+        // Filter logic
+        if (params.filter && params.filter !== "All") {
+            if (params.filter === "Active") andConditions.push({ isActive: true });
+            if (params.filter === "Blocked") andConditions.push({ isActive: false });
+        }
+
+        // Search logic
+        if (params.search) {
+            andConditions.push({
+                $or: [
+                    { name: { $regex: params.search, $options: "i" } },
+                    { email: { $regex: params.search, $options: "i" } },
+                ],
+            });
+        }
+
+        // Combine conditions if any exist
+        if (andConditions.length > 0) {
+            query.$and = andConditions;
+        }
+
+
+        const data = await UserModel.find(query)
+            .skip((Number(params.page) - 1) * Number(params.limit))
+            .limit(Number(params.limit))
+            .lean<UsersResponseDTO[]>()
+            .exec();
+
+        return data;
     }
 
     // Create new user

@@ -1,0 +1,16 @@
+export const AuthMessages = {
+    INVALID_EMAIL: "Invalid email address",
+    PASSWORD_REQUIRED: "Password is required",
+    PASSWORD_TOO_SHORT: "Password must be 6+ characters",
+    FIRST_NAME_REQUIRED: "First name is required",
+    LAST_NAME_REQUIRED: "Last name is required",
+    INVALID_PHONE: "Phone number must be 10 digits",
+    SPORTS_REQUIRED: "Sports field is required for players",
+    LOGIN_SUCCESS: "Login successful!",
+    LOGIN_FAILED: "Login failed",
+    SOMETHING_WENT_WRONG: "Something went wrong",
+    OTP_VERIFICATION_FAILED: "OTP verification failed",
+    RESEND_OTP_FAILED: "Failed to resend OTP",
+    PASSWORDS_DO_NOT_MATCH : "Passwords do not match",
+    CONFIRM_PASSWORD_REQUIRED : "Confirm Password is required",
+};
