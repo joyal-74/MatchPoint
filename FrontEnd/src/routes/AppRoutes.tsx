@@ -1,7 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { adminRoutes } from "./AdminRoutes";
 import { publicRoutes } from "./publicRoutes";
+import { playerRoutes } from "./PlayerRoutes";
+import { managerRoutes } from "./ManagerRoutes";
 import NotFoundPage from "../pages/shared/PageNotFound";
+import Unauthorized from "../pages/shared/Unauthorized";
 
 
 const AppRoutes = () => {
@@ -13,14 +16,19 @@ const AppRoutes = () => {
                 ))}
 
                 {adminRoutes.map(({ path, element }) => (
-                    <Route
-                        key={path}
-                        path={path}
-                        element={element}
-                    />
+                    <Route key={path} path={path} element={element} />
+                ))}
+
+                {playerRoutes.map(({ path, element }) => (
+                    <Route key={path} path={path} element={element} />
+                ))}
+
+                {managerRoutes.map(({ path, element }) => (
+                    <Route key={path} path={path} element={element} />
                 ))}
 
                 <Route path="*" element={<NotFoundPage />} />
+                <Route path="/unauthorized" element={<Unauthorized />} />
             </Routes>
         </BrowserRouter>
     );

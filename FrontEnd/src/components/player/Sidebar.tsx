@@ -1,13 +1,12 @@
-import {type JSX } from "react";
+import { type JSX } from "react";
 import {
-    LayoutDashboard,
-    Trophy,
-    Users,
     User,
-    UserCog,
+    Trophy,
+    BarChart3,
+    CreditCard,
+    Settings,
+    Users2,
     DollarSign,
-    Layers,
-    Shield,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
@@ -20,14 +19,13 @@ interface MenuItem {
 const Sidebar: React.FC = () => {
 
     const menuItems: MenuItem[] = [
-        { name: "Dashboard", path: "/admin/dashboard", icon: <LayoutDashboard size={20} /> },
-        { name: "Viewers", path: "/admin/viewers", icon: <Users size={20} /> },
-        { name: "Players", path: "/admin/players", icon: <User size={20} /> },
-        { name: "Managers", path: "/admin/managers", icon: <UserCog size={20} /> },
-        { name: "Subscriptions", path: "/admin/subscriptions", icon: <DollarSign size={20} /> },
-        { name: "Sports", path: "/admin/sports", icon: <Shield size={20} /> },
-        { name: "Teams", path: "/admin/teams", icon: <Layers size={20} /> },
+        { name: "Profile", path: "/admin/profile", icon: <User size={20} /> },
+        { name: "My Groups", path: "/admin/groups", icon: <Users2 size={20} /> },
         { name: "Tournaments", path: "/admin/tournaments", icon: <Trophy size={20} /> },
+        { name: "My Statistics", path: "/admin/statistics", icon: <BarChart3 size={20} /> },
+        { name: "Subscription", path: "/admin/subscription", icon: <CreditCard size={20} /> },
+        { name: "Payments", path: "/admin/payments", icon: <DollarSign size={20} /> },
+        { name: "Settings", path: "/admin/settings", icon: <Settings size={20} /> },
     ];
 
     return (

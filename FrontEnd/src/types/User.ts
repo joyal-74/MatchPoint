@@ -8,14 +8,15 @@ export interface UserSettings {
     currency: string;
 }
 
+// Full DB user (all roles)
 export interface User {
     _id: string;
     first_name: string;
     last_name: string;
     email: string;
     password?: string;
-    phone: string;
-    gender: Gender;
+    phone?: string;
+    gender?: Gender;
     sport?: string;
     role: UserRole;
     wallet: number;
@@ -25,14 +26,18 @@ export interface User {
     updatedAt?: Date;
 }
 
+// Registration payload
 export interface RegisterUser {
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     email: string;
     phone: string;
-    gender: string;
+    gender: Gender;
     password: string;
     confirmPassword: string;
     role: SignupRole;
-    sport: string;
+    sport?: string;
 }
+
+
+export type AuthUser = Pick<User, "_id" | "first_name" | "last_name" | "email" | "role" | "phone" | "gender">;

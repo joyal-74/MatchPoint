@@ -8,7 +8,9 @@ import { buildResponse } from '../../../../infra/utils/responseBuilder';
 import { HttpStatusCode } from '../../../../domain/enums/StatusCodes';
 
 export class UserRefreshController implements IController {
-    constructor(private refreshTokenUserUseCase: RefreshTokenUser) { }
+    constructor(
+        private refreshTokenUserUseCase: RefreshTokenUser
+    ) { }
 
     async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
         if (!httpRequest.headers || !httpRequest.headers['cookie']) {
@@ -23,6 +25,7 @@ export class UserRefreshController implements IController {
         );
 
         const refreshToken = cookies['refreshToken'];
+    
         if (!refreshToken) {
             throw new UnauthorizedError('Refresh token missing');
         }

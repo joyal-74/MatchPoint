@@ -3,6 +3,7 @@ import { authEndpoints } from "../../api/endpoints/authEndPoints";
 import { createApiThunk } from "../../utils/createApiThunk";
 
 
+
 // User login
 export const loginUser = createAsyncThunk("auth/login", createApiThunk(authEndpoints.login));
 
@@ -53,6 +54,6 @@ export const resetPassword = createAsyncThunk(
 
 // Refresh Token
 export const refreshToken = createAsyncThunk(
-    "auth/refreshToken",
-    createApiThunk(authEndpoints.refreshToken)
+  "auth/refresToken",
+  createApiThunk(authEndpoints.refreshToken)
 );

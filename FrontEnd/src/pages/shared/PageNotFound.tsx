@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 
-const NotFoundPage = () => {
+const NotFoundPage : React.FC = () => {
     const navigate = useNavigate();
     return (
         <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import AppRoutes from "./routes/AppRoutes";
+import AuthProvider from "./components/shared/AuthProvider";
 
 function App() {
 
@@ -9,7 +10,9 @@ function App() {
 
     return (
         <>
-            <AppRoutes />
+            <AuthProvider>
+                <AppRoutes />
+            </AuthProvider>
         </>
     )
 }

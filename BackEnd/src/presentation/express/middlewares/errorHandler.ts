@@ -13,6 +13,6 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     }
 
     res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json(
-        buildResponse(false, "Internal Server Error", undefined, "Something went wrong")
+        buildResponse(false, err.message, undefined, "Something went wrong")
     );
 };

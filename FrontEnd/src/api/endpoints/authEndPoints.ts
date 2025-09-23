@@ -42,7 +42,7 @@ export const authEndpoints = {
         await axiosClient.post(`/auth/logout`);
     },
 
-    refreshToken: async (): Promise<User> => {
+    refreshToken : async (): Promise<User> => {
         const { data } = await axiosClient.get(`/auth/refresh`, { withCredentials: true });
         return mapApiUserToDomain(data.data.user);
     },

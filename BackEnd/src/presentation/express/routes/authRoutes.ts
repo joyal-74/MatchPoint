@@ -29,7 +29,7 @@ router.post('/login', async (req: Request, res: Response) => {
     await expressAdapter(req, res, userLoginController);
 });
 
-router.post('/refresh', async (req: Request, res: Response) => {
+router.get('/refresh', async (req: Request, res: Response) => {
     await expressAdapter(req, res, userRefreshController);
 });
 

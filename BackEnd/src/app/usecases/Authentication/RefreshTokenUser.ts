@@ -1,3 +1,4 @@
+import { ILogger } from "app/providers/ILogger";
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { IJWTRepository } from "app/repositories/interfaces/IjwtRepository";
 import { UserResponseDTO } from "domain/dtos/User.dto";
@@ -7,17 +8,21 @@ import { NotFoundError, UnauthorizedError } from "domain/errors";
 export class RefreshTokenUser {
     constructor(
         private userRepository: IUserRepository,
-        private jwtService: IJWTRepository
+        private jwtService: IJWTRepository,
+        private logger: ILogger
+
     ) { }
 
     async execute(refreshToken: string): Promise<{ accessToken: string; refreshToken: string; user: UserResponseDTO }> {
-        // Verify refresh token
-        let payload: JwtPayload;
-        try {
-            payload = await this.jwtService.verifyRefreshToken(refreshToken);
-        } catch {
-            throw new UnauthorizedError("Invalid refresh token");
+
+        if (!refreshToken) {
+            this.logger.info("Refresh token missing");
+            throw new UnauthorizedError("Refresh token missing");
         }
+        // Verify refresh token
+        const payload: JwtPayload = await this.jwtService.verifyRefreshToken(refreshToken);
+
+        this.logger.info(`Checking refresh token for userId: ${payload?.userId || "unknown"}`);
 
         // Find user by ID from payload
         const user = await this.userRepository.findById(payload.userId);

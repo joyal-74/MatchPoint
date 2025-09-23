@@ -16,9 +16,9 @@ export const fetchPlayers = createAsyncThunk<User[], { page: number; limit: numb
     createApiThunk(({ page, limit, filter, search }) => userEndpoints.fetchPlayers(page, limit, filter, search))
 );
 
-export const fetchManagers = createAsyncThunk(
+export const fetchManagers = createAsyncThunk<User[], { page: number; limit: number; filter?: string; search?: string }>(
     "/admin/managers",
-    createApiThunk(userEndpoints.fetchManagers)
+    createApiThunk(({ page, limit, filter, search }) => userEndpoints.fetchPlayers(page, limit, filter, search))
 );
 
 export const userStatusChange = createAsyncThunk(

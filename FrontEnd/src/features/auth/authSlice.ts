@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, loginAdmin, resendOtp, signupUser, verifyOtp, logoutUser, requestResetOtp, verifyResetOtp, resetPassword } from "./authThunks";
-import type { User } from "../../types/User";
-import type { Admin } from "../../types/Admin";
+import {
+    loginUser, loginAdmin, resendOtp, signupUser, verifyOtp, logoutUser, requestResetOtp,
+    verifyResetOtp, resetPassword, refreshToken
+} from "./authThunks";
+import type { AuthUser } from "../../types/User";
 
 interface AuthState {
-    user: User | null;
-    admin: Admin | null
+    user: AuthUser | null;
     loading: boolean;
     error: string | null;
     signupSuccess: boolean;
@@ -14,11 +15,11 @@ interface AuthState {
     resetOtpVerified: boolean;
     passwordReset: boolean;
     resetEmail?: string;
+    isInitialized: boolean
 }
 
 const initialState: AuthState = {
     user: null,
-    admin: null,
     loading: false,
     error: null,
     signupSuccess: false,
@@ -26,6 +27,7 @@ const initialState: AuthState = {
     resetOtpSent: false,
     resetOtpVerified: false,
     passwordReset: false,
+    isInitialized: false
 };
 
 const authSlice = createSlice({
@@ -34,7 +36,6 @@ const authSlice = createSlice({
     reducers: {
         logout(state) {
             state.user = null;
-            state.admin = null;
             state.error = null;
             state.signupSuccess = false;
             state.otpVerified = false;
@@ -66,8 +67,8 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(loginAdmin.fulfilled, (state, action) => {
+                state.user = action.payload;
                 state.loading = false;
-                state.admin = action.payload;
                 state.error = null;
             })
             .addCase(loginAdmin.rejected, (state, action) => {
@@ -82,14 +83,34 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(loginUser.fulfilled, (state, action) => {
-                state.loading = false;
                 state.user = action.payload;
+                state.loading = false;
                 state.error = null;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? action.error.message ?? "Login failed";
             });
+
+        // Refresh Token (User)
+        builder
+            .addCase(refreshToken.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(refreshToken.fulfilled, (state, action) => {
+                state.user = action.payload;
+                state.loading = false;
+                state.isInitialized = true;
+                state.error = null;
+            })
+            .addCase(refreshToken.rejected, (state, action) => {
+                state.loading = false;
+                state.user = null;
+                state.error = action.payload as string;
+                state.isInitialized = true;
+            });
+
 
         // Signup
         builder
@@ -146,7 +167,7 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(requestResetOtp.fulfilled, (state, action) => {
-                console.log(action)
+
                 state.loading = false;
                 state.resetOtpSent = true;
                 state.resetEmail = action.meta.arg;

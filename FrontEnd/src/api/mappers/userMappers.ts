@@ -67,7 +67,7 @@ export const mapApiAdminToDomain = (apiAdmin: ApiAdmin): Admin => ({
     email: apiAdmin.email,
     first_name: apiAdmin.first_name,
     last_name: apiAdmin.last_name,
-
+    role : apiAdmin.role,
     wallet: apiAdmin.wallet ?? 0,
 
     settings: {

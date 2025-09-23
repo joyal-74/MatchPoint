@@ -27,7 +27,7 @@ import { PlayerSignupController } from '../http/controllers/authentication/Playe
 import { AdminLoginController } from '../http/controllers/authentication/AdminLoginController';
 import { UserLoginController } from '../http/controllers/authentication/UserLoginController';
 import { AdminRefreshController } from '../http/controllers/authentication/AdminRefreshController';
-import { UserRefreshController } from '../http/controllers/authentication/UserRefreshController';
+import { UserRefreshController } from '../http/controllers/authentication/RefreshTokenController';
 import { ViewerSignupController } from '../http/controllers/authentication/ViewerSignupController';
 import { ManagerSignupController } from '../http/controllers/authentication/ManagerSignupController';
 import { UserLogoutController } from '../http/controllers/authentication/UserLogoutController';
@@ -69,7 +69,7 @@ const logger = new WinstonLogger();
 // Use Cases (Authentication)
 const loginAdmin = new LoginAdmin(adminRepository, jwtService, passwordHasher, logger);
 const loginUser = new LoginUser(userRepository, jwtService, passwordHasher, logger);
-const refreshUser = new RefreshTokenUser(userRepository, jwtService);
+const refreshUser = new RefreshTokenUser(userRepository, jwtService, logger);
 const refreshAdmin = new RefreshTokenAdmin(adminRepository, jwtService);
 const viewerRegister = new SignupViewer(userRepository, otpService, mailService, passwordHasher, otpGenerator);
 const managerRegister = new SignupManager(userRepository, managerRepository, otpService, mailService, passwordHasher, otpGenerator);

@@ -8,12 +8,12 @@ import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
 import RoleRedirect from "./RoleDirect";
 
 export const publicRoutes = [
-  { path: "/admin/login", element: <AdminLoginPage /> },
-  { path: "/", element: <RoleRedirect /> },
-  { path: "/login", element: <LoginPage />},
-  { path: "/signup", element: <SignupPage /> },
-  { path: "/otp-verify", element: <EnterAccountOtpPage /> },
-  { path: "/forgot-password", element: <ForgotPasswordPage /> },
-  { path: "/otp-verification", element: <EnterForgotOtpPage /> },
-  { path: "/reset-password", element: <ResetPasswordPage /> },
+    { path: "/admin/login", element: <AdminLoginPage /> },
+    { path: "/", element: <RoleRedirect /> },
+    { path: "/login", element: <LoginPage /> },
+    { path: "/signup", element: <SignupPage /> },
+    { path: "/otp-verify", element: <EnterAccountOtpPage /> },
+    { path: "/forgot-password", element: <ForgotPasswordPage /> },
+    { path: "/otp-verification", element: <EnterForgotOtpPage /> },
+    { path: "/reset-password", element: <ResetPasswordPage /> },
 ];
