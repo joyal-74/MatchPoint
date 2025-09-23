@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AdminLayout from "../layout/AdminLayout";
 import DataTable from "../../components/admin/DataTable";
@@ -9,6 +9,7 @@ import LoadingOverlay from "../../components/shared/LoadingOverlay";
 import { useDebounce } from "../../hooks/useDebounce";
 import { viewerColumns } from "../../utils/adminColumns";
 import type { SignupRole } from "../../types/UserRoles";
+import type { GetAllUsersParams } from "../../types/api/Params";
 
 const ViewersManagement = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -18,17 +19,19 @@ const ViewersManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebounce(searchTerm, 1000);
 
-    useEffect(() => {
-        dispatch(fetchViewers({
-            page: currentPage,
-            limit: 10,
-            filter: currentFilter === "All" ? undefined : currentFilter,
-            search: debouncedSearch || undefined
-        }));
-    }, [dispatch, currentPage, currentFilter, debouncedSearch]);
+    const params : GetAllUsersParams = useMemo(() => ({
+        page: currentPage,
+        limit: 10,
+        filter: currentFilter === "All" ? undefined : currentFilter,
+        search: debouncedSearch || undefined
+    }), [currentPage, currentFilter, debouncedSearch]);
 
-    const handleStatusChange = (role : SignupRole, userId: string, newStatus: boolean) => {
-        dispatch(userStatusChange({ role, userId, isActive: newStatus }))
+    useEffect(() => {
+        dispatch(fetchViewers(params));
+    }, [dispatch, params]);
+
+    const handleStatusChange = (role: SignupRole, userId: string, newStatus: boolean) => {
+        dispatch(userStatusChange({ role, userId, isActive: newStatus, params }))
     };
 
     const handleFilterChange = (filter: string) => {

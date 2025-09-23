@@ -9,6 +9,7 @@ export const createApiThunk =
                 const result = await apiCall(arg);
                 return transform ? transform(result) : result;
             } catch (err) {
+                console.log(err)
                 return rejectWithValue(getApiErrorMessage(err));
             }
         };

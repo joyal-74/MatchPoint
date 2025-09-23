@@ -1,9 +1,9 @@
 import { SignupRoles, type SignupRole } from "../types/UserRoles";
 
 export const roleToEndpoint: Record<SignupRole, string> = {
-    [SignupRoles.Player]: "/signup/player",
-    [SignupRoles.Manager]: "/signup/manager",
-    [SignupRoles.Viewer]: "/signup/viewer",
+    [SignupRoles.Player]: "/auth/signup/player",
+    [SignupRoles.Manager]: "/auth/signup/manager",
+    [SignupRoles.Viewer]: "/auth/signup/viewer",
 };
 
 export function getEndpoint(role: SignupRole) {

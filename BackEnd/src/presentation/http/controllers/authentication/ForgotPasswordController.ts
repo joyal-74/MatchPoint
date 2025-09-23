@@ -21,7 +21,7 @@ export class ForgotPasswordController implements IController {
 
         return new HttpResponse(
             HttpStatusCode.OK,
-            buildResponse(true, result.message)
+            buildResponse(true, result.message, result.data )
         );
     }
 }

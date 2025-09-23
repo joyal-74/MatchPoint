@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { initialState, type User } from "./userTypes";
-import { fetchManagers, fetchPlayers, fetchViewers } from "./userThunks";
+import { fetchManagers, fetchPlayers, fetchViewers, userStatusChange } from "./userThunks";
 
 
 const userSlice = createSlice({
@@ -47,6 +47,30 @@ const userSlice = createSlice({
                 state.viewers = action.payload;
             })
             .addCase(fetchManagers.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "Something went wrong";
+            })
+
+            // change user status
+            .addCase(userStatusChange.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(userStatusChange.fulfilled, (state, action) => {
+                state.loading = false;
+                switch (action.payload.role) {
+                    case "viewer":
+                        state.viewers = action.payload.users;
+                        break;
+                    case "player":
+                        state.players = action.payload.users;
+                        break;
+                    case "manager":
+                        state.managers = action.payload.users;
+                        break;
+                }
+            })
+            .addCase(userStatusChange.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || "Something went wrong";
             });

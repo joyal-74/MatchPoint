@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { adminRoutes } from "./AdminRoutes";
 import { publicRoutes } from "./publicRoutes";
+import NotFoundPage from "../pages/shared/PageNotFound";
 
 
 const AppRoutes = () => {
@@ -18,6 +19,8 @@ const AppRoutes = () => {
                         element={element}
                     />
                 ))}
+
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </BrowserRouter>
     );

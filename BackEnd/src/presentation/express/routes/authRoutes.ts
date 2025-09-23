@@ -56,6 +56,10 @@ router.post('/admin/logout', async (req: Request, res: Response) => {
 router.post('/resend-otp', async (req: Request, res: Response) => {
     await expressAdapter(req, res, verifyOtpController);
 });
+ 
+router.post('/verify-otp', async (req: Request, res: Response) => {
+    await expressAdapter(req, res, verifyOtpController);
+});
 
 router.post('/forgot-password', async (req: Request, res: Response) => {
     await expressAdapter(req, res, forgotPasswordController);

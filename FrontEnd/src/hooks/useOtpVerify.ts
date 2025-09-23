@@ -2,6 +2,8 @@ import { useAppDispatch } from "../hooks/hooks";
 import { verifyOtp, resendOtp } from "../features/auth/authThunks";
 import { useState } from "react";
 import { getApiErrorMessage } from "../utils/apiError";
+import type { OtpContext } from "../features/auth/authTypes";
+
 
 type OtpPayload = {
     otp: string;
@@ -15,7 +17,7 @@ type OtpResult = {
     errors?: ValidationErrors;
 };
 
-export const useOtpVerify = (email: string) => {
+export const useOtpVerify = (email: string, context: OtpContext) => {
     const dispatch = useAppDispatch();
 
     const validateForm = (payload: OtpPayload): ValidationErrors => {
@@ -33,7 +35,7 @@ export const useOtpVerify = (email: string) => {
         if (!email) return { success: false, errors: { global: "Email is missing" } };
 
         try {
-            const resultAction = await dispatch(verifyOtp({ email, otp: payload.otp }));
+            const resultAction = await dispatch(verifyOtp({ email, otp: payload.otp , context}));
             if (verifyOtp.fulfilled.match(resultAction)) {
                 return { success: true, message: "OTP verification successful!" };
             } else {
@@ -53,7 +55,7 @@ export const useOtpVerify = (email: string) => {
         if (!email) return { success: false, errors: { global: "Email is missing" } };
 
         try {
-            const resultAction = await dispatch(resendOtp(email));
+            const resultAction = await dispatch(resendOtp({email, context}));
             if (resendOtp.fulfilled.match(resultAction)) {
                 return { success: true, message: "OTP sent successfully" };
             } else {

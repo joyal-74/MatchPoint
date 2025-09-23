@@ -1,7 +1,7 @@
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { IOtpRepository } from "app/repositories/interfaces/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
-import { BadRequestError, InternalServerError } from "domain/errors";
+import { BadRequestError } from "domain/errors";
 import { UserRoles } from "domain/enums";
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { IOtpGenerator } from "app/providers/IOtpGenerator";
@@ -64,11 +64,7 @@ export class SignupManager {
         const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
         await this.otpRepository.saveOtp(newUser._id, validData.email, otp, OtpContext.VerifyEmail);
 
-        try {
-            await this.mailRepository.sendVerificationEmail(newUser.email, otp);
-        } catch (err) {
-            throw new InternalServerError("Failed to send verification email");
-        }
+        await this.mailRepository.sendVerificationEmail(newUser.email, otp);
 
         const managerDTO: ManagerRegisterResponseDTO = {
             _id: newUser._id,

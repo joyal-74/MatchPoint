@@ -14,6 +14,8 @@ const ForgotPasswordPage: React.FC = () => {
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const result = await handleSubmit();
+        console.log('---------',result);
+        
         if (result.success) {
             toast.success(result.message || "Otp sent successfully!", {
                 onClose: () =>

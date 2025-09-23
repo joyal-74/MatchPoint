@@ -88,7 +88,7 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload ?? "Login failed";
+                state.error = action.payload ?? action.error.message ?? "Login failed";
             });
 
         // Signup
@@ -146,6 +146,7 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(requestResetOtp.fulfilled, (state, action) => {
+                console.log(action)
                 state.loading = false;
                 state.resetOtpSent = true;
                 state.resetEmail = action.meta.arg;

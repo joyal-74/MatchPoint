@@ -1,9 +1,11 @@
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { ILogger } from "app/providers/ILogger";
-import { UserResponseDTO } from "domain/dtos/User.dto";
-import { PlayerResponseDTO } from "domain/dtos/Player.dto";
+import { UsersResponseDTO } from "domain/dtos/User.dto";
+import { PlayersResponseDTO } from "domain/dtos/Player.dto";
+import { ManagersResponseDTO } from "domain/dtos/Manager.dto";
+import { GetAllUsersParams } from "./GetAllViewers";
 
-type RoleResponseDTO = PlayerResponseDTO | UserResponseDTO;
+type RoleResponseDTO = PlayersResponseDTO | UsersResponseDTO | ManagersResponseDTO;
 
 export class ChangeUserStatus {
     constructor(
@@ -11,17 +13,21 @@ export class ChangeUserStatus {
         private logger: ILogger
     ) { }
 
-    async execute(role: string, userId: string, isActive : boolean): Promise<RoleResponseDTO> {
+    async execute(role: string, userId: string, isActive : boolean, params: GetAllUsersParams): Promise<RoleResponseDTO[]> {
         this.logger.info(`Fetching ${role}`);
 
-        const user = await this.userRepository.update(userId, { isActive });
+        await this.userRepository.update(userId, { isActive });
+        this.logger.info(`User with ID ${userId} status changed to ${isActive}`);
 
-        this.logger.info(`Found ${user?.first_name}`);
-
-        if (role === "player") {
-            return user as PlayerResponseDTO;
+        if (role === "manager") {
+            const users = await this.userRepository.findAllManagers(params);
+            return users as ManagersResponseDTO[];
+        } else if (role === "player") {
+            const users = await this.userRepository.findAllPlayers(params);
+            return users as PlayersResponseDTO[];
         } else {
-            return user as UserResponseDTO;
+            const users = await this.userRepository.findAllViewers(params);
+            return users as UsersResponseDTO[];
         }
     }
 }

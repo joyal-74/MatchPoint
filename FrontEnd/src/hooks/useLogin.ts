@@ -23,6 +23,7 @@ export const useLogin = () => {
 
         try {
             const resultAction = await dispatch(loginUser(payload));
+            console.log(resultAction)
 
             if (loginUser.fulfilled.match(resultAction)) {
                 const role: UserRole = resultAction.payload.role;

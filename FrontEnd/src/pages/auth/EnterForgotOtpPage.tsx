@@ -7,12 +7,12 @@ import { toast, ToastContainer } from "react-toastify";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
 import FormFooter from "../../components/shared/FormFooter";
 
-const EnterOtpPage: React.FC = () => {
+const EnterForgotOtpPage: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { expiresAt, email } = location.state || {};
 
-    const { formData, errors, loading, handleFieldChange, handleSubmit, handleResendOtp } = useOtpVerify(email);
+    const { formData, errors, loading, handleFieldChange, handleSubmit, handleResendOtp } = useOtpVerify(email, 'forgot_password');
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -54,4 +54,4 @@ const EnterOtpPage: React.FC = () => {
     );
 };
 
-export default EnterOtpPage;
+export default EnterForgotOtpPage;

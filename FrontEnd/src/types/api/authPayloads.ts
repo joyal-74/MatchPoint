@@ -6,6 +6,7 @@ export interface LoginPayload {
 export interface OtpPayload {
     email: string;
     otp: string;
+    context : 'verify_email' | 'forgot_password';
 }
 
 export interface ResetPasswordPayload {

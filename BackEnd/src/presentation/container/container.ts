@@ -68,7 +68,7 @@ const logger = new WinstonLogger();
 
 // Use Cases (Authentication)
 const loginAdmin = new LoginAdmin(adminRepository, jwtService, passwordHasher, logger);
-const loginUser = new LoginUser(userRepository, jwtService, passwordHasher);
+const loginUser = new LoginUser(userRepository, jwtService, passwordHasher, logger);
 const refreshUser = new RefreshTokenUser(userRepository, jwtService);
 const refreshAdmin = new RefreshTokenAdmin(adminRepository, jwtService);
 const viewerRegister = new SignupViewer(userRepository, otpService, mailService, passwordHasher, otpGenerator);

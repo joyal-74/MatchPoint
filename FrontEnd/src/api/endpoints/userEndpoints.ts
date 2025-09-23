@@ -1,3 +1,4 @@
+import type { GetAllUsersParams } from '../../types/api/Params';
 import type { SignupRole } from '../../types/UserRoles';
 import { axiosClient } from '../http/axiosClient';
 
@@ -24,8 +25,9 @@ export const userEndpoints = {
         return response.data.data;
     },
 
-    userStatusChange: async (role: SignupRole, userId: string, isActive: boolean) => {
-        const response = await axiosClient.post(`/admin/:${role}/:${userId}`, { isActive });
-        return response.data.data;
+    userStatusChange: async (role: SignupRole, userId: string, isActive: boolean, params : GetAllUsersParams ) => {
+        const response = await axiosClient.patch(`/admin/${role}/${userId}/status`, { isActive, params });
+        const users = response.data.data
+        return { users, role};
     },
 }

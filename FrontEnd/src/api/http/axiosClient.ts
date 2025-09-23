@@ -1,5 +1,4 @@
 import axios from "axios";
-import { getApiErrorMessage } from "../../utils/apiError";
 
 export const axiosClient = axios.create({
     baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
@@ -12,7 +11,7 @@ export const axiosClient = axios.create({
 axiosClient.interceptors.response.use(
     (response) => response,
     (error) => {
-        return Promise.reject(new Error(getApiErrorMessage(error)));
+        return Promise.reject(error);
     }
 );
 

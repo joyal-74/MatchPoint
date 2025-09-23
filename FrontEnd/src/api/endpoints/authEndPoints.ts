@@ -6,6 +6,8 @@ import type { ChangePasswordPayload, LoginPayload, OtpPayload, ResetPasswordPayl
 import { axiosClient } from '../http/axiosClient';
 import { mapApiUserToDomain, mapApiAdminToDomain, mapUserForSignup } from '../../api/mappers/userMappers';
 import { getEndpoint } from '../../services/authEndPoints';
+import type { OtpContext } from '../../features/auth/authTypes';
+
 
 export const authEndpoints = {
     login: async (credentials: LoginPayload): Promise<User> => {
@@ -31,9 +33,10 @@ export const authEndpoints = {
         await axiosClient.post(`/auth/verify-otp`, payload);
     },
 
-    resendOtp: async (email: string) => {
-        await axiosClient.post(`/auth/resend-otp`, { email });
+    resendOtp: async ({ email, context }: { email: string; context: OtpContext }) => {
+        await axiosClient.post(`/auth/resend-otp`, { email, context });
     },
+
 
     logout: async () => {
         await axiosClient.post(`/auth/logout`);

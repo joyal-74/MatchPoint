@@ -3,7 +3,7 @@ import { IOtpRepository } from "app/repositories/interfaces/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
 import { generateViewerId } from "infra/utils/UserIdHelper";
 import { UserRegisterResponseDTO } from "domain/dtos/User.dto";
-import { BadRequestError, InternalServerError } from "domain/errors";
+import { BadRequestError } from "domain/errors";
 import { UserRegister } from "domain/entities/User";
 import { UserRoles } from "domain/enums";
 import { validateUserInput } from "domain/validators/UserValidators";
@@ -54,11 +54,7 @@ export class SignupViewer {
         const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
         await this.otpRepository.saveOtp(newUser._id, validData.email, otp, OtpContext.VerifyEmail);
 
-        try {
-            await this.mailRepository.sendVerificationEmail(newUser.email, otp);
-        } catch (err) {
-            throw new InternalServerError("Failed to send verification email");
-        }
+        await this.mailRepository.sendVerificationEmail(newUser.email, otp);
 
         const userDTO: UserRegisterResponseDTO = {
             _id: newUser._id,

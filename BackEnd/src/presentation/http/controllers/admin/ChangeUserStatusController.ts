@@ -14,11 +14,11 @@ export class ChangeUserStatusController implements IController {
 
     async handle(_httpRequest: IHttpRequest): Promise<IHttpResponse> {
         const { role, userId } = _httpRequest.params;
-        const { isActive } = _httpRequest.body;
+        const { isActive, params } = _httpRequest.body;
 
         this.logger.info(`Controller: change status for ${role} with ID ${userId}`);
 
-        const result = await this.changeUserStatus.execute(role, userId, isActive);
+        const result = await this.changeUserStatus.execute(role, userId, isActive, params);
 
         return new HttpResponse(HttpStatusCode.OK, {
             success: true,

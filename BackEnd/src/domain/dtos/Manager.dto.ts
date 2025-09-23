@@ -42,7 +42,7 @@ export interface ManagerRegisterResponseDTO {
     email: string;
     first_name: string;
     last_name: string;
-    username : string;
+    // username : string;
     role: RoleType; 
 }
 

@@ -12,7 +12,7 @@ const EnterAccountOtpPage: React.FC = () => {
     const location = useLocation();
     const { expiresAt, email } = location.state || {};
 
-    const { formData, errors, loading, handleFieldChange, handleSubmit, handleResendOtp } = useOtpVerify(email);
+    const { formData, errors, loading, handleFieldChange, handleSubmit, handleResendOtp } = useOtpVerify(email, 'verify_email');
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

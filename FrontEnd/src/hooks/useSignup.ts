@@ -29,10 +29,13 @@ export const useSignup = () => {
         return validateSignup(payload);
     };
 
-    const handleFieldChange = <K extends keyof SignUpForm>(field: K, value: SignUpForm[K]) => {
-        setFormData((prev) => ({
-            ...prev,
-            [field]: value,
+    const handleFieldChange = (field: keyof SignUpForm, value: string) => {
+        setFormData({ ...formData, [field]: value });
+
+        const fieldError = validateForm({ ...formData, [field]: value })[field];
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [field]: fieldError,
         }));
     };
 
