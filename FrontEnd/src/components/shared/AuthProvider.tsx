@@ -9,7 +9,7 @@ interface AuthProviderProps {
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
     const dispatch = useAppDispatch();
-    const { user, loading } = useAppSelector((state) => state.auth);
+    const { user, loading, isInitialized } = useAppSelector((state) => state.auth);
 
     useEffect(() => {
         const initializeAuth = async () => {
@@ -25,7 +25,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         initializeAuth();
     }, [dispatch, user]);
 
-    if (loading) {
+    if (loading && !isInitialized) {
         return <LoadingOverlay show={true} />;
     }
 

@@ -37,12 +37,11 @@ export const authEndpoints = {
         await axiosClient.post(`/auth/resend-otp`, { email, context });
     },
 
-
-    logout: async () => {
-        await axiosClient.post(`/auth/logout`);
+    logout: async ({userId, role} : {userId : string | undefined; role : string | undefined }) => {
+        await axiosClient.post(`/auth/logout`, { userId, role });
     },
 
-    refreshToken : async (): Promise<User> => {
+    refreshToken: async (): Promise<User> => {
         const { data } = await axiosClient.get(`/auth/refresh`, { withCredentials: true });
         return mapApiUserToDomain(data.data.user);
     },

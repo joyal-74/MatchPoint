@@ -1,4 +1,4 @@
-import { ThemeType, RoleType, GenderType } from "domain/enums";
+import { ThemeType, RoleType, GenderType, AllRole } from "domain/enums";
 
 export interface UserSettingsDTO {
     location?: string;
@@ -12,7 +12,7 @@ export interface UserResponseDTO {
     _id: string;
     userId: string;
     email: string;
-    role: RoleType;
+    role: AllRole;
     first_name: string;
     last_name: string;
     username: string;

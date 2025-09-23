@@ -16,7 +16,6 @@ import { LogoutAdmin } from 'app/usecases/authentication/LogoutAdmin';
 import { LoginAdmin } from '../../app/usecases/authentication/LoginAdmin';
 import { LoginUser } from '../../app/usecases/authentication/LoginUser';
 import { RefreshTokenUser } from '../../app/usecases/authentication/RefreshTokenUser';
-import { RefreshTokenAdmin } from '../../app/usecases/authentication/RefreshTokenAdmin';
 import { VerifyOtp } from 'app/usecases/authentication/VerifyOtp';
 import { ResetPassword } from 'app/usecases/authentication/ResetPassword';
 import { ForgotPassword } from 'app/usecases/authentication/ForgotPassword';
@@ -26,7 +25,6 @@ import { GetAllPlayers } from 'app/usecases/admin/GetAllPlayers';
 import { PlayerSignupController } from '../http/controllers/authentication/PlayerSignupController';
 import { AdminLoginController } from '../http/controllers/authentication/AdminLoginController';
 import { UserLoginController } from '../http/controllers/authentication/UserLoginController';
-import { AdminRefreshController } from '../http/controllers/authentication/AdminRefreshController';
 import { UserRefreshController } from '../http/controllers/authentication/RefreshTokenController';
 import { ViewerSignupController } from '../http/controllers/authentication/ViewerSignupController';
 import { ManagerSignupController } from '../http/controllers/authentication/ManagerSignupController';
@@ -47,6 +45,7 @@ import { UpdateManagerProfileController } from 'presentation/http/controllers/ma
 import { UpdateManagerProfile } from 'app/usecases/manager/UpdateManagerProfile';
 import { ChangeUserStatus } from 'app/usecases/admin/ChangeUserStatus';
 import { ChangeUserStatusController } from 'presentation/http/controllers/admin/ChangeUserStatusController';
+import { verifyTokenMiddleware } from 'presentation/express/middlewares/verifyTokenMiddleware';
 
 
 // Repositories
@@ -65,16 +64,14 @@ const otpService = new OtpRepositoryMongo();
 const imageKitfileProvider = new ImageKitFileStorage();
 const logger = new WinstonLogger();
 
-
 // Use Cases (Authentication)
 const loginAdmin = new LoginAdmin(adminRepository, jwtService, passwordHasher, logger);
 const loginUser = new LoginUser(userRepository, jwtService, passwordHasher, logger);
-const refreshUser = new RefreshTokenUser(userRepository, jwtService, logger);
-const refreshAdmin = new RefreshTokenAdmin(adminRepository, jwtService);
+const refreshUser = new RefreshTokenUser(userRepository, adminRepository, jwtService, logger);
 const viewerRegister = new SignupViewer(userRepository, otpService, mailService, passwordHasher, otpGenerator);
 const managerRegister = new SignupManager(userRepository, managerRepository, otpService, mailService, passwordHasher, otpGenerator);
 const playerRegister = new SignupPlayer(userRepository, playerRepository, otpService, mailService, passwordHasher, otpGenerator);
-const userLogout = new LogoutUser(userRepository);
+const userLogout = new LogoutUser(userRepository, adminRepository, logger);
 const adminLogout = new LogoutAdmin(adminRepository);
 const verifyOtp = new VerifyOtp(userRepository, otpService);
 const resetPassword = new ResetPassword(userRepository, otpService, passwordHasher);
@@ -98,7 +95,6 @@ deleteUnverifiedUsersCron(scheduler, userRepository, playerRepository, managerRe
 // Controllers
 export const adminLoginController = new AdminLoginController(loginAdmin);
 export const userLoginController = new UserLoginController(loginUser);
-export const adminRefreshController = new AdminRefreshController(refreshAdmin);
 export const userRefreshController = new UserRefreshController(refreshUser);
 export const viewerSignupController = new ViewerSignupController(viewerRegister);
 export const playerSignupController = new PlayerSignupController(playerRegister);
@@ -115,3 +111,8 @@ export const getAllPlayersController = new GetAllPlayersController(getAllPlayers
 
 export const updateManagerProfileController = new UpdateManagerProfileController(updateProfile);
 export const changeUserStatusController = new ChangeUserStatusController(changeUserStatus, logger);
+
+
+export const adminOnly = verifyTokenMiddleware(jwtService, ["admin"]);
+export const playerOnly = verifyTokenMiddleware(jwtService, ["player"]);
+export const managerOnly = verifyTokenMiddleware(jwtService, ["manager"]);

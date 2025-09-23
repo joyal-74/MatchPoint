@@ -6,10 +6,7 @@ import { buildResponse } from "infra/utils/responseBuilder";
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     if (err instanceof AppError) {
 
-        res.status(err.statusCode).json(
-            buildResponse(false, err.message, err.details)
-        );
-        return;
+        return res.status(err.statusCode).json( buildResponse(false, err.message, err.details));
     }
 
     res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json(

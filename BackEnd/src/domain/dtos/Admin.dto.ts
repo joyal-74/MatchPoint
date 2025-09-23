@@ -11,6 +11,6 @@ export interface AdminToResponseDTO {
     email: string;
     first_name: string;
     last_name: string;
-    role : string;
+    role :string;
     wallet: number;
 }

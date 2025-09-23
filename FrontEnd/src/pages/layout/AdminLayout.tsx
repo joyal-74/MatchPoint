@@ -1,6 +1,6 @@
 import Sidebar from "../../components/admin/Sidebar";
-import Navbar from '../../components/admin/Navbar'
 import type { ReactNode } from "react";
+import Navbar from "../../components/shared/Navbar";
 
 interface AdminLayoutProps {
     children: ReactNode;

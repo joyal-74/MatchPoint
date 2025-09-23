@@ -3,7 +3,6 @@ import { expressAdapter } from 'presentation/adaptors/ExpressAdaptor';
 import {
     adminLoginController,
     userLoginController,
-    adminRefreshController,
     userRefreshController,
     viewerSignupController,
     playerSignupController,
@@ -21,9 +20,6 @@ router.post('/admin/login', async (req: Request, res: Response) => {
     await expressAdapter(req, res, adminLoginController);
 });
 
-router.post('/admin/refresh', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, adminRefreshController);
-});
 
 router.post('/login', async (req: Request, res: Response) => {
     await expressAdapter(req, res, userLoginController);

@@ -69,13 +69,11 @@ export const mapApiAdminToDomain = (apiAdmin: ApiAdmin): Admin => ({
     last_name: apiAdmin.last_name,
     role : apiAdmin.role,
     wallet: apiAdmin.wallet ?? 0,
-
     settings: {
         theme: (apiAdmin.settings?.theme as AdminSettings["theme"]) ?? "light",
         language: apiAdmin.settings?.language ?? "en",
         currency: apiAdmin.settings?.currency ?? "USD",
     },
-
     password: apiAdmin.password,
     createdAt: undefined,
     updatedAt: undefined,

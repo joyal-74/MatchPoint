@@ -10,8 +10,9 @@ export class UserLogoutController implements IController {
     constructor(private logoutUserUseCase: LogoutUser) { }
 
     async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-        const userId = httpRequest.body.userId;
-        const result = await this.logoutUserUseCase.execute(userId);
+        const {userId, role} = httpRequest.body;
+
+        const result = await this.logoutUserUseCase.execute(userId, role);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, result.message));
     }

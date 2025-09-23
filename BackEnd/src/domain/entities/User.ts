@@ -1,3 +1,4 @@
+import { UserRole } from "domain/enums/Roles";
 import { GenderType, ThemeType, RoleType } from "../enums";
 
 export interface UserSettings {
@@ -45,4 +46,20 @@ export interface UserRegister {
 export interface UserResponse extends User {
     _id: string;
     sport?: string;
+}
+
+
+export interface UserEntity {
+  _id: string;
+  userId: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  username: string;
+  role: UserRole;
+  gender: GenderType;
+  phone: string | null;
+  wallet: number;
+  logo?: string | null;
+  sport?: string;
 }

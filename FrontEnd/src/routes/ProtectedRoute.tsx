@@ -15,14 +15,12 @@ const ProtectedRoute = ({ children, allowedRoles = [], requireAuth = true, redir
     const { loading, isInitialized, user } = useAppSelector((state) => state.auth);
     const location = useLocation();
 
-
     if (!isInitialized || loading) {
         return <LoadingOverlay show={true} />;
     }
 
     const isAuthenticated = !!user;
     const currentUserRole = user?.role;
-
 
     if (requireAuth && !isAuthenticated) {
         return <Navigate to={redirectTo} state={{ from: location }} replace />;
