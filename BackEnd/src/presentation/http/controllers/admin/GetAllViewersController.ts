@@ -21,7 +21,10 @@ export class GetAllViewersController implements IController {
         return new HttpResponse(HttpStatusCode.OK, {
             success: true,
             message: "Viewers fetched successfully",
-            data: result,
+            data: {
+                users : result.users,
+                totalCount : result.totalCount
+            },
         });
     }
 }

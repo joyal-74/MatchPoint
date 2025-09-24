@@ -12,11 +12,11 @@ export interface IUserRepository {
 
     findByEmail(email: string): Promise<UserResponse | null>;
 
-    findAllPlayers(params: GetAllUsersParams): Promise<PlayersResponseDTO[]>;
+    findAllPlayers(params: GetAllUsersParams): Promise<{users : PlayersResponseDTO[], totalCount : number}>;
 
-    findAllViewers(params : GetAllUsersParams): Promise<UsersResponseDTO[]>;
+    findAllViewers(params : GetAllUsersParams): Promise<{users : UsersResponseDTO[], totalCount : number}>;
 
-    findAllManagers(params: GetAllUsersParams): Promise<ManagersResponseDTO[]>;
+    findAllManagers(params: GetAllUsersParams): Promise<{users : ManagersResponseDTO[], totalCount : number}>;
 
     create(user: UserRegister): Promise<UserRegisterResponseDTO>;
 

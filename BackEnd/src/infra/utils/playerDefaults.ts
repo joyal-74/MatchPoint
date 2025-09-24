@@ -1,25 +1,38 @@
-import { sportProfileConfig, sportCareerStatsConfig } from './sportsConfig'
-
+// infra/utils/playerDefaults.ts
+import { sportProfileConfig, sportCareerStatsConfig } from '../../infra/utils/sportsConfig'
 
 export function getDefaultProfile(sport: string) {
-    const config = sportProfileConfig[sport] || [];
-    return config.reduce((acc, field) => {
-        acc[field.key] = null;
-        return acc;
-    }, {} as Record<string, any>);
+    const key = sport.toLowerCase();
+    const profileConfig = sportProfileConfig[key];
+    if (!profileConfig) return {};
+
+    const profile: Record<string, any> = {};
+    profileConfig.forEach(field => {
+        switch (field.type) {
+            case "number":
+                profile[field.key] = 0;
+                break;
+            default:
+                profile[field.key] = "";
+        }
+    });
+
+    return profile;
 }
 
-
 export function getDefaultCareerStats(sport: string) {
-    const config = sportCareerStatsConfig[sport] || {};
-    const stats: Record<string, Record<string, number>> = {};
+    const key = sport.toLowerCase();
+    const statsConfig = sportCareerStatsConfig[key];
+    if (!statsConfig) return {};
 
-    for (const category in config) {
+    const stats: Record<string, any> = {};
+
+    Object.entries(statsConfig).forEach(([category, fields]) => {
         stats[category] = {};
-        for (const field of config[category]) {
+        fields.forEach(field => {
             stats[category][field.key] = 0;
-        }
-    }
+        });
+    });
 
     return stats;
 }

@@ -36,4 +36,4 @@ const ProfileCard: React.FC<SidebarMenuProps> = ({ onLogout }) => {
 };
 
 
-export default ProfileCard
+export default ProfileCard;

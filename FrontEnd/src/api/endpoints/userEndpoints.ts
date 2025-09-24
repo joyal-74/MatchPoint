@@ -15,6 +15,8 @@ export const userEndpoints = {
         const response = await axiosClient.get(`/admin/players`, {
             params: { page, limit, filter, search },
         });
+
+        console.log(response.data)
         return response.data.data;
     },
 
@@ -27,7 +29,8 @@ export const userEndpoints = {
 
     userStatusChange: async (role: SignupRole, userId: string, isActive: boolean, params : GetAllUsersParams ) => {
         const response = await axiosClient.patch(`/admin/${role}/${userId}/status`, { isActive, params });
-        const users = response.data.data
-        return { users, role};
+        const users = response.data.data.users
+        const totalCount = response.data.data.totalCount
+        return { users, role, totalCount};
     },
 }

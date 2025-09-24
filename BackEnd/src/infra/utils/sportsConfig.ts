@@ -56,4 +56,3 @@ export const sportCareerStatsConfig: Record<string, Record<string, CareerStatFie
         ]
     }
 };
-

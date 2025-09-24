@@ -14,6 +14,9 @@ export class UserLogoutController implements IController {
 
         const result = await this.logoutUserUseCase.execute(userId, role);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, result.message));
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, result.message, { clearCookies: result.clearCookies })
+        );
     }
 }

@@ -15,13 +15,13 @@ export class GetAllViewers {
         private logger: ILogger
     ) { }
 
-    async execute(params: GetAllUsersParams): Promise<UsersResponseDTO[]> {
+    async execute(params: GetAllUsersParams): Promise<{users : UsersResponseDTO[], totalCount : number}> {
         this.logger.info("Fetching all viewers");
 
-        const data = await this.userRepository.findAllViewers(params);
+        const {users, totalCount} = await this.userRepository.findAllViewers(params);
 
-        this.logger.info(`Found ${data.length} viewers`);
+        this.logger.info(`Found ${totalCount} viewers`);
 
-        return data;
+        return {users, totalCount};
     }
 }

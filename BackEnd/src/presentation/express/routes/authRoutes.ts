@@ -8,7 +8,6 @@ import {
     playerSignupController,
     managerSignupController,
     userLogoutController,
-    adminLogoutController,
     verifyOtpController,
     resetPasswordController,
     forgotPasswordController
@@ -19,7 +18,6 @@ const router = Router();
 router.post('/admin/login', async (req: Request, res: Response) => {
     await expressAdapter(req, res, adminLoginController);
 });
-
 
 router.post('/login', async (req: Request, res: Response) => {
     await expressAdapter(req, res, userLoginController);
@@ -43,10 +41,6 @@ router.post('/signup/player', async (req: Request, res: Response) => {
 
 router.post('/logout', async (req: Request, res: Response) => {
     await expressAdapter(req, res, userLogoutController);
-});
-
-router.post('/admin/logout', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, adminLogoutController);
 });
 
 router.post('/resend-otp', async (req: Request, res: Response) => {

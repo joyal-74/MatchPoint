@@ -13,21 +13,34 @@ export class ChangeUserStatus {
         private logger: ILogger
     ) { }
 
-    async execute(role: string, userId: string, isActive : boolean, params: GetAllUsersParams): Promise<RoleResponseDTO[]> {
+    async execute(role: string, userId: string, isActive: boolean, params: GetAllUsersParams): Promise<{ users: RoleResponseDTO[], totalCount: number }> {
         this.logger.info(`Fetching ${role}`);
+        this.logger.info(`Status ${isActive}`);
+        this.logger.info(`Params: ${JSON.stringify(params)}`);
 
         await this.userRepository.update(userId, { isActive });
         this.logger.info(`User with ID ${userId} status changed to ${isActive}`);
 
+        let users;
+        let totalCount;
         if (role === "manager") {
-            const users = await this.userRepository.findAllManagers(params);
-            return users as ManagersResponseDTO[];
+            const result = await this.userRepository.findAllManagers(params);
+            users = result.users;
+            totalCount = result.totalCount;
+            this.logger.info(`Managers count: ${users.length}`);
         } else if (role === "player") {
-            const users = await this.userRepository.findAllPlayers(params);
-            return users as PlayersResponseDTO[];
+            const result = await this.userRepository.findAllPlayers(params);
+            users = result.users;
+            totalCount = result.totalCount;
+            this.logger.info(`Players count: ${users.length}`);
         } else {
-            const users = await this.userRepository.findAllViewers(params);
-            return users as UsersResponseDTO[];
+            const result = await this.userRepository.findAllViewers(params);
+            users = result.users;
+            totalCount = result.totalCount;
+            this.logger.info(`Viewers count: ${users.length}`);
         }
+
+        return { users, totalCount };
+
     }
 }

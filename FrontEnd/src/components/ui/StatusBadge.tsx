@@ -11,7 +11,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({
     isActive,
     className = "",
     activeText = "Active",
-    inactiveText = "Inactive"
+    inactiveText = "Blocked"
 }) => {
     return (
         <span

@@ -30,7 +30,10 @@ const Navbar: React.FC = () => {
 
     const handleLogout = async () => {
         try {
-            await dispatch(logoutUser({userId : user?._id, role : user?.role})).unwrap();
+            await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
+            if (user?.role === 'admin') {
+                navigate("/admin/login");
+            }
             navigate("/login");
         } catch (error) {
             console.error("Logout failed:", error);

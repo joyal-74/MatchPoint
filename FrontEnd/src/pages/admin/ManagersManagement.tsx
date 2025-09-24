@@ -7,13 +7,13 @@ import { fetchManagers, userStatusChange } from "../../features/admin/users/user
 import type { RootState, AppDispatch } from "../../app/store";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
 import { useDebounce } from "../../hooks/useDebounce";
-import { viewerColumns } from "../../utils/adminColumns";
+import { managerColumns } from "../../utils/adminColumns";
 import type { SignupRole } from "../../types/UserRoles";
 import type { GetAllUsersParams } from "../../types/api/Params";
 
 const ManagersManagement = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { viewers, loading, totalCount } = useSelector((state: RootState) => state.users);
+    const { managers, loading, totalCount } = useSelector((state: RootState) => state.users);
     const [currentPage, setCurrentPage] = useState(1);
     const [currentFilter, setCurrentFilter] = useState("All");
     const [searchTerm, setSearchTerm] = useState("");
@@ -49,7 +49,7 @@ const ManagersManagement = () => {
             <LoadingOverlay show={loading} />
             <DataTable<User>
                 title="Managers Management"
-                data={viewers}
+                data={managers}
                 totalCount={totalCount}
                 currentPage={currentPage}
                 onPageChange={setCurrentPage}
@@ -57,7 +57,7 @@ const ManagersManagement = () => {
                 currentFilter={currentFilter}
                 onFilterChange={handleFilterChange}
                 onSearch={handleSearch}
-                columns={viewerColumns(handleStatusChange)}
+                columns={managerColumns(handleStatusChange)}
             />
         </AdminLayout>
     );

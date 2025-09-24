@@ -5,6 +5,7 @@ import { Schema, model, Document, Types } from 'mongoose';
 interface UserDocument extends Omit<User, 'userId'>, Document {
     _id: Types.ObjectId;
     userId: string;
+    sport : string;
     refreshToken?: string | null;
     settings: UserSettings;
 }
@@ -20,6 +21,7 @@ const UserSchema = new Schema<UserDocument>({
     role: { type: String, enum: RoleValues, required: true },
     refreshToken: { type: String, default: null },
     wallet: { type: Number, default: 0 },
+    sport : {type : String},
     settings: {
         location: { type: String },
         country: { type: String },

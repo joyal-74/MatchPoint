@@ -27,8 +27,8 @@ export class UserRepositoryMongo implements IUserRepository {
     }
 
     // Find users by role
-    async findAllManagers(params: GetAllUsersParams): Promise<ManagersResponseDTO[]> {
-        const query: Record<string, unknown> = { role: "player" };
+    async findAllManagers(params: GetAllUsersParams): Promise<{ users: ManagersResponseDTO[], totalCount: number }> {
+        const query: Record<string, unknown> = { role: "manager" };
         const andConditions: Record<string, unknown>[] = [];
 
         // Filter logic
@@ -53,16 +53,19 @@ export class UserRepositoryMongo implements IUserRepository {
         }
 
 
-        const data = await UserModel.find(query)
+        const users = await UserModel.find(query)
             .skip((Number(params.page) - 1) * Number(params.limit))
+            .sort({ createdAt: -1 })
             .limit(Number(params.limit))
             .lean<ManagersResponseDTO[]>()
             .exec();
 
-        return data;
+        const totalCount = await UserModel.countDocuments({ role: 'manager' })
+
+        return { users, totalCount };
     }
 
-    async findAllPlayers(params: GetAllUsersParams): Promise<PlayersResponseDTO[]> {
+    async findAllPlayers(params: GetAllUsersParams): Promise<{ users: PlayersResponseDTO[], totalCount: number }> {
         const query: Record<string, unknown> = { role: "player" };
         const andConditions: Record<string, unknown>[] = [];
 
@@ -87,17 +90,19 @@ export class UserRepositoryMongo implements IUserRepository {
             query.$and = andConditions;
         }
 
-
-        const data = await UserModel.find(query)
+        const users = await UserModel.find(query)
             .skip((Number(params.page) - 1) * Number(params.limit))
+            .sort({ createdAt: -1 })
             .limit(Number(params.limit))
             .lean<PlayersResponseDTO[]>()
             .exec();
 
-        return data;
+        const totalCount = await UserModel.countDocuments({ role: 'player' })
+
+        return { users, totalCount };
     }
 
-    async findAllViewers(params: GetAllUsersParams): Promise<UsersResponseDTO[]> {
+    async findAllViewers(params: GetAllUsersParams): Promise<{ users: UsersResponseDTO[], totalCount: number }> {
         const query: Record<string, unknown> = { role: "viewer" };
         const andConditions: Record<string, unknown>[] = [];
 
@@ -123,13 +128,16 @@ export class UserRepositoryMongo implements IUserRepository {
         }
 
 
-        const data = await UserModel.find(query)
+        const users = await UserModel.find(query)
             .skip((Number(params.page) - 1) * Number(params.limit))
+            .sort({ createdAt: -1 })
             .limit(Number(params.limit))
             .lean<UsersResponseDTO[]>()
             .exec();
 
-        return data;
+        const totalCount = await UserModel.countDocuments({ role: 'viewer' })
+
+        return { users, totalCount };
     }
 
     // Create new user

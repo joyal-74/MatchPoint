@@ -41,6 +41,7 @@ export interface UserRegister {
     wallet: number;
     isActive: boolean;
     isVerified: boolean;
+    sport?: string
 }
 
 export interface UserResponse extends User {

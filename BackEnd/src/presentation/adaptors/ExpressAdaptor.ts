@@ -14,6 +14,7 @@ export async function expressAdapter(request: Request, response: Response, apiRo
     const httpResponse: IHttpResponse = await apiRoute.handle(httpRequest);
 
     const { accessToken, refreshToken } = httpResponse.body;
+    const clearCookies = httpResponse.body.data?.clearCookies;
 
     if (accessToken) {
         response.cookie('accessToken', accessToken, {
@@ -33,6 +34,12 @@ export async function expressAdapter(request: Request, response: Response, apiRo
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
         delete httpResponse.body.refreshToken;
+    }
+
+    if (clearCookies) {
+        response.clearCookie("accessToken");
+        response.clearCookie("refreshToken");
+        delete httpResponse.body.clearCookies;
     }
 
     response.status(httpResponse.statusCode).json(httpResponse.body);

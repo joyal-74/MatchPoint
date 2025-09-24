@@ -13,7 +13,7 @@ export class LogoutUser {
     async execute(
         userId: string,
         role: string
-    ): Promise<{ success: boolean; message: string }> {
+    ): Promise<{ success: boolean; message: string, clearCookies : boolean }> {
         this.logger.info(`Logout attempt for userId: ${userId}, role: ${role}`);
 
         let user;
@@ -37,6 +37,6 @@ export class LogoutUser {
 
         this.logger.info(`Logout successful for userId=${userId}, role=${role}`);
 
-        return { success: true, message: "Logout successful" };
+        return { success: true, message: "Logout successful", clearCookies : true };
     }
 }

@@ -9,13 +9,13 @@ export class GetAllPlayers {
         private logger: ILogger
     ) { }
 
-    async execute(params: GetAllUsersParams): Promise<PlayersResponseDTO[]> {
+    async execute(params: GetAllUsersParams): Promise<{users : PlayersResponseDTO[], totalCount : number}> {
         this.logger.info("Fetching all players");
 
-        const players = await this.userRepository.findAllPlayers(params);
+        const {totalCount, users} = await this.userRepository.findAllPlayers(params);
 
-        this.logger.info(`Found ${players.length} players`);
+        this.logger.info(`Found ${totalCount} players`);
 
-        return players;
+        return {users, totalCount};
     }
 }

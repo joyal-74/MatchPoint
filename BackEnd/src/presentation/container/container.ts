@@ -12,7 +12,6 @@ import { SignupViewer } from '../../app/usecases/authentication/SignupViewer';
 import { SignupPlayer } from '../../app/usecases/authentication/SignupPlayer';
 import { SignupManager } from '../../app/usecases/authentication/SignUpManager';
 import { LogoutUser } from 'app/usecases/authentication/LogoutUser';
-import { LogoutAdmin } from 'app/usecases/authentication/LogoutAdmin';
 import { LoginAdmin } from '../../app/usecases/authentication/LoginAdmin';
 import { LoginUser } from '../../app/usecases/authentication/LoginUser';
 import { RefreshTokenUser } from '../../app/usecases/authentication/RefreshTokenUser';
@@ -29,7 +28,6 @@ import { UserRefreshController } from '../http/controllers/authentication/Refres
 import { ViewerSignupController } from '../http/controllers/authentication/ViewerSignupController';
 import { ManagerSignupController } from '../http/controllers/authentication/ManagerSignupController';
 import { UserLogoutController } from '../http/controllers/authentication/UserLogoutController';
-import { AdminLogoutController } from 'presentation/http/controllers/authentication/AdminLogoutController';
 import { ResetPasswordController } from 'presentation/http/controllers/authentication/ResetPasswordController';
 import { VerifyOtpController } from 'presentation/http/controllers/authentication/VerifyOtpController';
 import { ForgotPasswordController } from 'presentation/http/controllers/authentication/ForgotPasswordController';
@@ -72,7 +70,6 @@ const viewerRegister = new SignupViewer(userRepository, otpService, mailService,
 const managerRegister = new SignupManager(userRepository, managerRepository, otpService, mailService, passwordHasher, otpGenerator);
 const playerRegister = new SignupPlayer(userRepository, playerRepository, otpService, mailService, passwordHasher, otpGenerator);
 const userLogout = new LogoutUser(userRepository, adminRepository, logger);
-const adminLogout = new LogoutAdmin(adminRepository);
 const verifyOtp = new VerifyOtp(userRepository, otpService);
 const resetPassword = new ResetPassword(userRepository, otpService, passwordHasher);
 const forgotPassword = new ForgotPassword(userRepository, otpService, mailService, otpGenerator);
@@ -100,7 +97,6 @@ export const viewerSignupController = new ViewerSignupController(viewerRegister)
 export const playerSignupController = new PlayerSignupController(playerRegister);
 export const managerSignupController = new ManagerSignupController(managerRegister);
 export const userLogoutController = new UserLogoutController(userLogout);
-export const adminLogoutController = new AdminLogoutController(adminLogout);
 export const verifyOtpController = new VerifyOtpController(verifyOtp);
 export const resetPasswordController = new ResetPasswordController(resetPassword);
 export const forgotPasswordController = new ForgotPasswordController(forgotPassword);

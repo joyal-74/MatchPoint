@@ -2,7 +2,7 @@ import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { IOtpRepository } from "app/repositories/interfaces/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
 import { generatePlayerId } from "infra/utils/UserIdHelper";
-import { BadRequestError, InternalServerError } from "domain/errors";
+import { BadRequestError } from "domain/errors";
 import { UserRoles } from "domain/enums";
 import { IPlayerRepository } from "app/repositories/interfaces/IPlayerRepository";
 import { PlayerRegister } from "domain/entities/Player";
@@ -42,6 +42,7 @@ export class SignupPlayer {
             role: UserRoles.Player,
             password: hashedPassword,
             wallet: 0,
+            sport : validData.sport,
             isActive: true,
             isVerified: false,
             settings: {
@@ -51,7 +52,6 @@ export class SignupPlayer {
                 location: validData.settings?.location,
                 country: validData.settings?.country,
             }
-
         });
 
         const newPlayer = await this.playerRepository.create({
@@ -65,11 +65,7 @@ export class SignupPlayer {
         const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
         await this.otpRepository.saveOtp(newUser._id, validData.email, otp, OtpContext.VerifyEmail);
 
-        try {
-            await this.mailRepository.sendVerificationEmail(newUser.email, otp);
-        } catch (err) {
-            throw new InternalServerError("Failed to send verification email");
-        }
+        await this.mailRepository.sendVerificationEmail(newUser.email, otp);
 
         const userDTO: PlayerRegisterResponseDTO = {
             _id: newUser._id,

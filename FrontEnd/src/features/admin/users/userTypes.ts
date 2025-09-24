@@ -9,10 +9,14 @@ export interface User {
     isActive : boolean;
 }
 
+export interface Player extends User {
+    sport : string;
+}
+
 
 export interface UserState {
     viewers: User[];
-    players: User[];
+    players: Player[];
     managers: User[];
     loading: boolean;
     error: string | null;
