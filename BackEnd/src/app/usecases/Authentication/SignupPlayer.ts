@@ -16,24 +16,30 @@ import { OtpContext } from "domain/enums/OtpContext";
 
 export class SignupPlayer {
     constructor(
-        private userRepository: IUserRepository,
-        private playerRepository: IPlayerRepository,
-        private otpRepository: IOtpRepository,
-        private mailRepository: IMailRepository,
-        private passwordHasher: IPasswordHasher,
-        private otpGenerator: IOtpGenerator,
+        private _userRepository: IUserRepository,
+        private _playerRepository: IPlayerRepository,
+        private _otpRepository: IOtpRepository,
+        private _mailRepository: IMailRepository,
+        private _passwordHasher: IPasswordHasher,
+        private _otpGenerator: IOtpGenerator,
     ) { }
 
     async execute(userData: PlayerRegister): Promise<{ user: PlayerRegisterResponseDTO; expiresAt: Date }> {
+        // validate player input data
         const validData = validatePlayerInput(userData);
 
-        const existingUser = await this.userRepository.findByEmail(validData.email);
+        // check user already exist or not
+        const existingUser = await this._userRepository.findByEmail(validData.email);
         if (existingUser) throw new BadRequestError("User with this email already exists");
 
-        const hashedPassword = await this.passwordHasher.hashPassword(validData.password);
+        // Hash password before saving
+        const hashedPassword = await this._passwordHasher.hashPassword(validData.password);
+
+        // Custom player ID generation
         const userId = generatePlayerId();
 
-        const newUser = await this.userRepository.create({
+        // Create new player
+        const newUser = await this._userRepository.create({
             userId: userId,
             email: validData.email,
             first_name: validData.first_name,
@@ -42,7 +48,7 @@ export class SignupPlayer {
             role: UserRoles.Player,
             password: hashedPassword,
             wallet: 0,
-            sport : validData.sport,
+            sport: validData.sport,
             isActive: true,
             isVerified: false,
             settings: {
@@ -54,18 +60,21 @@ export class SignupPlayer {
             }
         });
 
-        const newPlayer = await this.playerRepository.create({
+        // save player stats in collection
+        const newPlayer = await this._playerRepository.create({
             userId: newUser._id,
             sport: userData.sport,
             profile: getDefaultProfile(userData.sport),
             stats: getDefaultCareerStats(userData.sport),
         });
 
-        const otp = this.otpGenerator.generateOtp();
+        // generate and save otp in db (TTL)
+        const otp = this._otpGenerator.generateOtp();
         const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
-        await this.otpRepository.saveOtp(newUser._id, validData.email, otp, OtpContext.VerifyEmail);
+        await this._otpRepository.saveOtp(newUser._id, validData.email, otp, OtpContext.VerifyEmail);
 
-        await this.mailRepository.sendVerificationEmail(newUser.email, otp);
+        // send account verification otp to email
+        await this._mailRepository.sendVerificationEmail(newUser.email, otp);
 
         const userDTO: PlayerRegisterResponseDTO = {
             _id: newUser._id,
@@ -77,6 +86,7 @@ export class SignupPlayer {
             role: newUser.role,
         };
 
+        // return response to frontend
         return { user: userDTO, expiresAt };
     }
 }

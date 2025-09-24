@@ -5,16 +5,17 @@ import { GetAllUsersParams } from "./GetAllViewers";
 
 export class GetAllManagers {
     constructor(
-        private userRepository: IUserRepository,
-        private logger: ILogger
+        private _userRepository: IUserRepository,
+        private _logger: ILogger
     ) { }
 
     async execute(params: GetAllUsersParams): Promise<{ users: ManagersResponseDTO[]; totalCount: number }> {
-        this.logger.info("Fetching all managers");
+        this._logger.info("Fetching all managers");
 
-        const { users, totalCount } = await this.userRepository.findAllManagers(params);
+        // Fetch managers from db
+        const { users, totalCount } = await this._userRepository.findAllManagers(params);
 
-        this.logger.info(`Found ${totalCount} managers`);
+        this._logger.info(`Found ${totalCount} managers`);
 
         return { users, totalCount };
     }

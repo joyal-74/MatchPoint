@@ -7,6 +7,6 @@ export interface IAdminRepository {
     // Find Admin by email
     findByEmail(email: string): Promise<AdminResponse | null>;
 
-    update(_id: string, data: Partial<Admin>): Promise<AdminResponse>;
+    update(_id: string, data: Partial<Admin>): Promise<AdminResponse | null>;
 
 }

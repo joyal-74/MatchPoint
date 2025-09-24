@@ -5,17 +5,18 @@ import { GetAllUsersParams } from "./GetAllViewers";
 
 export class GetAllPlayers {
     constructor(
-        private userRepository: IUserRepository,
-        private logger: ILogger
+        private _userRepository: IUserRepository,
+        private _logger: ILogger
     ) { }
 
-    async execute(params: GetAllUsersParams): Promise<{users : PlayersResponseDTO[], totalCount : number}> {
-        this.logger.info("Fetching all players");
+    async execute(params: GetAllUsersParams): Promise<{ users: PlayersResponseDTO[], totalCount: number }> {
+        this._logger.info("Fetching all players");
 
-        const {totalCount, users} = await this.userRepository.findAllPlayers(params);
+        // Fetch players from db
+        const { totalCount, users } = await this._userRepository.findAllPlayers(params);
 
-        this.logger.info(`Found ${totalCount} players`);
+        this._logger.info(`Found ${totalCount} players`);
 
-        return {users, totalCount};
+        return { users, totalCount };
     }
 }

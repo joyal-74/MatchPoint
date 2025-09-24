@@ -9,31 +9,31 @@ import { ILogger } from "app/providers/ILogger";
 
 export class LoginUser {
     constructor(
-        private userRepository: IUserRepository,
-        private jwtService: IJWTRepository,
-        private passwordHasher: IPasswordHasher,
-        private logger: ILogger,
+        private _userRepository: IUserRepository,
+        private _jwtService: IJWTRepository,
+        private _passwordHasher: IPasswordHasher,
+        private _logger: ILogger,
     ) { }
 
     async execute(email: string, password: string): Promise<LoginDTOUser> {
-        this.logger.info("User login attempt", { email });
+        this._logger.info("User login attempt", { email });
 
-        const user = await this.userRepository.findByEmail(email);
+        const user = await this._userRepository.findByEmail(email);
         if (!user) throw new NotFoundError("User not found");
 
         if(!user.isActive) throw new UnauthorizedError('User is blocked please contact admin');
 
-        const match = await this.passwordHasher.comparePasswords(password, user.password);
+        const match = await this._passwordHasher.comparePasswords(password, user.password);
         if (!match) throw new UnauthorizedError("Invalid credentials");
 
-        this.logger.info("User login successful", { email, adminId: user._id });
+        this._logger.info("User login successful", { email, adminId: user._id });
 
         const payload: JwtPayload = { userId: user._id, role: user.role };
 
-        const accessToken = await this.jwtService.generateAccessToken(payload);
-        const refreshToken = await this.jwtService.generateRefreshToken(payload);
+        const accessToken = await this._jwtService.generateAccessToken(payload);
+        const refreshToken = await this._jwtService.generateRefreshToken(payload);
 
-        await this.userRepository.update(user._id, { refreshToken });
+        await this._userRepository.update(user._id, { refreshToken });
 
         const userDTO: UserResponseDTO = {
             _id: user._id,

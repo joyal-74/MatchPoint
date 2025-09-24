@@ -3,17 +3,20 @@ import { DeleteUnverifiedUsers } from "app/usecases/authentication/DeleteUnverif
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { IPlayerRepository } from "app/repositories/interfaces/IPlayerRepository";
 import { IManagerRepository } from "app/repositories/interfaces/IManagerRepository";
+import { ILogger } from "app/providers/ILogger";
 
 export const deleteUnverifiedUsersCron = (
     scheduler: IScheduler,
     userRepo: IUserRepository,
     playerRepo: IPlayerRepository,
-    managerRepo: IManagerRepository
+    managerRepo: IManagerRepository,
+    logger: ILogger
 ) => {
     const deleteUnverifiedUsers = new DeleteUnverifiedUsers(
         userRepo,
         playerRepo,
-        managerRepo
+        managerRepo,
+        logger
     );
 
     scheduler.schedule("0 * * * *", async () => {

@@ -9,38 +9,38 @@ type RoleResponseDTO = PlayersResponseDTO | UsersResponseDTO | ManagersResponseD
 
 export class ChangeUserStatus {
     constructor(
-        private userRepository: IUserRepository,
-        private logger: ILogger
+        private _userRepository: IUserRepository,
+        private _logger: ILogger
     ) { }
 
     async execute(role: string, userId: string, isActive: boolean, params: GetAllUsersParams): Promise<{ users: RoleResponseDTO[], totalCount: number }> {
-        this.logger.info(`Fetching ${role}`);
-        this.logger.info(`Status ${isActive}`);
-        this.logger.info(`Params: ${JSON.stringify(params)}`);
+        this._logger.info(`Fetching ${role}`);
 
-        await this.userRepository.update(userId, { isActive });
-        this.logger.info(`User with ID ${userId} status changed to ${isActive}`);
+        // Update user status
+        await this._userRepository.update(userId, { isActive });
+        this._logger.info(`User with ID ${userId} status changed to ${isActive}`);
 
         let users;
         let totalCount;
+
+        // Fetch users based on role
         if (role === "manager") {
-            const result = await this.userRepository.findAllManagers(params);
+            const result = await this._userRepository.findAllManagers(params);
             users = result.users;
             totalCount = result.totalCount;
-            this.logger.info(`Managers count: ${users.length}`);
+            this._logger.info(`Managers count: ${users.length}`);
         } else if (role === "player") {
-            const result = await this.userRepository.findAllPlayers(params);
+            const result = await this._userRepository.findAllPlayers(params);
             users = result.users;
             totalCount = result.totalCount;
-            this.logger.info(`Players count: ${users.length}`);
+            this._logger.info(`Players count: ${users.length}`);
         } else {
-            const result = await this.userRepository.findAllViewers(params);
+            const result = await this._userRepository.findAllViewers(params);
             users = result.users;
             totalCount = result.totalCount;
-            this.logger.info(`Viewers count: ${users.length}`);
+            this._logger.info(`Viewers count: ${users.length}`);
         }
 
         return { users, totalCount };
-
     }
 }

@@ -15,24 +15,28 @@ import { OtpContext } from "domain/enums/OtpContext";
 
 export class SignupManager {
     constructor(
-        private userRepository: IUserRepository,
-        private managerRepository: IManagerRepository,
-        private otpRepository: IOtpRepository,
-        private mailRepository: IMailRepository,
-        private passwordHasher: IPasswordHasher,
-        private otpGenerator: IOtpGenerator,
+        private _userRepository: IUserRepository,
+        private _managerRepository: IManagerRepository,
+        private _otpRepository: IOtpRepository,
+        private _mailRepository: IMailRepository,
+        private _passwordHasher: IPasswordHasher,
+        private _otpGenerator: IOtpGenerator,
     ) { }
 
     async execute(userData: ManagerRegister): Promise<{ user: ManagerRegisterResponseDTO; expiresAt: Date }> {
+        // validate input data
         const validData = validateUserInput(userData);
 
-        const existingUser = await this.userRepository.findByEmail(validData.email);
+        // check user already exist or not
+        const existingUser = await this._userRepository.findByEmail(validData.email);
         if (existingUser) throw new BadRequestError("User with this email already exists");
 
-        const hashedPassword = await this.passwordHasher.hashPassword(validData.password);
+        // Hash password before saving
+        const hashedPassword = await this._passwordHasher.hashPassword(validData.password);
         const userId = generateManagerId();
 
-        const newUser = await this.userRepository.create({
+        // Create new manager
+        const newUser = await this._userRepository.create({
             userId: userId,
             email: validData.email,
             first_name: validData.first_name,
@@ -53,18 +57,21 @@ export class SignupManager {
 
         });
 
-        await this.managerRepository.create({
+        // create required fields in manager collection
+        await this._managerRepository.create({
             userId: newUser._id,
             wallet: 0,
             tournaments: [],
             teams: [],
         });
 
-        const otp = this.otpGenerator.generateOtp();
+        // Generate OTP & save in DB
+        const otp = this._otpGenerator.generateOtp();
         const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
-        await this.otpRepository.saveOtp(newUser._id, validData.email, otp, OtpContext.VerifyEmail);
+        await this._otpRepository.saveOtp(newUser._id, validData.email, otp, OtpContext.VerifyEmail);
 
-        await this.mailRepository.sendVerificationEmail(newUser.email, otp);
+        // Verification otp to user email account
+        await this._mailRepository.sendVerificationEmail(newUser.email, otp);
 
         const managerDTO: ManagerRegisterResponseDTO = {
             _id: newUser._id,

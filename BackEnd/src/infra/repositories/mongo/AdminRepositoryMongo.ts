@@ -15,9 +15,7 @@ export class AdminRepositoryMongo implements IAdminRepository {
     }
 
 
-    async update(_id: string, data: Partial<Admin>): Promise<AdminResponse> {
-        const updated = await AdminModel.findByIdAndUpdate(_id, data, { new: true }).lean<AdminResponse>().exec();
-        if (!updated) throw new Error("User not found");
-        return updated;
+    async update(_id: string, data: Partial<Admin>): Promise<AdminResponse | null> {
+        return AdminModel.findByIdAndUpdate(_id, data, { new: true }).lean<AdminResponse>().exec();
     }
 }

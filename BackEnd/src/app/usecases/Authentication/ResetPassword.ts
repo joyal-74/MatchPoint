@@ -6,24 +6,24 @@ import { OtpContext } from "domain/enums/OtpContext";
 
 export class ResetPassword {
     constructor(
-        private userRepository: IUserRepository,
-        private otpRepository: IOtpRepository,
-        private passwordHasher: IPasswordHasher
+        private _userRepository: IUserRepository,
+        private _otpRepository: IOtpRepository,
+        private _passwordHasher: IPasswordHasher
     ) {}
 
     async execute(email: string, newPassword: string): Promise<{ success: boolean; message: string }> {
         // 1. Find user
-        const user = await this.userRepository.findByEmail(email);
+        const user = await this._userRepository.findByEmail(email);
         if (!user) throw new BadRequestError("User not found");
 
         // 2. Hash new password
-        const hashedPassword = await this.passwordHasher.hashPassword(newPassword);
+        const hashedPassword = await this._passwordHasher.hashPassword(newPassword);
 
         // 3. Update password in DB
-        await this.userRepository.update(user._id, { password: hashedPassword, refreshToken: null });
+        await this._userRepository.update(user._id, { password: hashedPassword, refreshToken: null });
 
         // 4. Clear OTP for forgot password context
-        await this.otpRepository.deleteOtp(user._id, OtpContext.ForgotPassword);
+        await this._otpRepository.deleteOtp(user._id, OtpContext.ForgotPassword);
 
         return { success: true, message: "Password has been reset successfully" };
     }

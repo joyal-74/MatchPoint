@@ -7,25 +7,25 @@ import { OtpContext } from "domain/enums/OtpContext";
 
 export class ResendOtp {
     constructor(
-        private userRepository: IUserRepository,
-        private otpRepository: IOtpRepository,
-        private mailRepository: IMailRepository,
-        private otpGenerator: IOtpGenerator
+        private _userRepository: IUserRepository,
+        private _otpRepository: IOtpRepository,
+        private _mailRepository: IMailRepository,
+        private _otpGenerator: IOtpGenerator
     ) { }
 
     async execute(email: string, context: OtpContext): Promise<{ success: boolean; message: string }> {
         // 1. Find user
-        const user = await this.userRepository.findByEmail(email);
+        const user = await this._userRepository.findByEmail(email);
         if (!user) throw new BadRequestError("User not found");
 
         // 2. Generate new OTP
-        const otp = this.otpGenerator.generateOtp();
+        const otp = this._otpGenerator.generateOtp();
 
         // 3. Save OTP in DB with context
-        await this.otpRepository.saveOtp(user._id, email, otp, context);
+        await this._otpRepository.saveOtp(user._id, email, otp, context);
 
         // 4. Send OTP email with context
-        await this.mailRepository.sendVerificationEmail(email, otp, context);
+        await this._mailRepository.sendVerificationEmail(email, otp, context);
 
         return { success: true, message: "OTP resent successfully" };
     }

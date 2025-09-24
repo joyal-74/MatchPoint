@@ -14,10 +14,10 @@ type TokenUserResponse = UserResponseDTO | AdminToResponseDTO;
 
 export class RefreshTokenUser {
     constructor(
-        private userRepository: IUserRepository,
-        private adminRepository: IAdminRepository,
-        private jwtService: IJWTRepository,
-        private logger: ILogger
+        private _userRepository: IUserRepository,
+        private _adminRepository: IAdminRepository,
+        private _jwtService: IJWTRepository,
+        private _logger: ILogger
     ) { }
 
     async execute(refreshToken: string): Promise<{
@@ -26,31 +26,31 @@ export class RefreshTokenUser {
         user: TokenUserResponse;
     }> {
         if (!refreshToken) {
-            this.logger.info("Refresh token missing");
+            this._logger.info("Refresh token missing");
             throw new UnauthorizedError("Refresh token missing");
         }
 
-        const payload : JwtPayload = await this.jwtService.verifyRefreshToken(refreshToken);
+        const payload : JwtPayload = await this._jwtService.verifyRefreshToken(refreshToken);
 
-        this.logger.info(
+        this._logger.info(
             `Checking refresh token for userId: ${payload?.userId}, role: ${payload.role || "unknown"}`
         );
 
         let user: UserResponse | AdminResponse | null;
 
         if (payload.role === "admin") {
-            user = await this.adminRepository.findById(payload.userId);
+            user = await this._adminRepository.findById(payload.userId);
         } else {
-            user = await this.userRepository.findById(payload.userId);
+            user = await this._userRepository.findById(payload.userId);
         }
 
         if (!user) throw new NotFoundError("User not found");
 
-        const newAccessToken = await this.jwtService.generateAccessToken({
+        const newAccessToken = await this._jwtService.generateAccessToken({
             userId: user._id,
             role: user.role,
         });
-        const newRefreshToken = await this.jwtService.generateRefreshToken({
+        const newRefreshToken = await this._jwtService.generateRefreshToken({
             userId: user._id,
             role: user.role,
         });

@@ -87,7 +87,7 @@ const updateProfile = new UpdateManagerProfile(userRepository, imageKitfileProvi
 const scheduler = new NodeCronScheduler();
 
 // Cron job wiring
-deleteUnverifiedUsersCron(scheduler, userRepository, playerRepository, managerRepository);
+deleteUnverifiedUsersCron(scheduler, userRepository, playerRepository, managerRepository, logger);
 
 // Controllers
 export const adminLoginController = new AdminLoginController(loginAdmin);

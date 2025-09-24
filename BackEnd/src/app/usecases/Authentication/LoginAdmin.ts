@@ -9,32 +9,33 @@ import { ILogger } from "app/providers/ILogger";
 
 export class LoginAdmin {
     constructor(
-        private userRepository: IAdminRepository,
-        private jwtService: IJWTRepository,
-        private passwordHasher: IPasswordHasher,
-        private logger: ILogger,
+        private _adminRepository: IAdminRepository,
+        private _jwtService: IJWTRepository,
+        private _passwordHasher: IPasswordHasher,
+        private _logger: ILogger,
     ) { }
 
     async execute(email: string, password: string): Promise<LoginDTOAdmin> {
-        this.logger.info("Admin login attempt", { email });
+        this._logger.info("Admin login attempt", { email });
 
-        const admin = await this.userRepository.findByEmail(email);
+        const admin = await this._adminRepository.findByEmail(email);
         if (!admin) throw new NotFoundError("Admin not found");
 
-        const match = await this.passwordHasher.comparePasswords(password, admin.password);
+        const match = await this._passwordHasher.comparePasswords(password, admin.password);
         if (!match) {
-            this.logger.warn("Invalid credentials for admin", { email });
+            this._logger.warn("Invalid credentials for admin", { email });
             throw new UnauthorizedError("Invalid credentials");
         }
 
-        this.logger.info("Admin login successful", { email, adminId: admin._id });
+        this._logger.info("Admin login successful", { email, adminId: admin._id });
 
         const payload: JwtPayload = { userId: admin._id, role: admin.role };
 
-        const accessToken = await this.jwtService.generateAccessToken(payload);
-        const refreshToken = await this.jwtService.generateRefreshToken(payload);
+        const accessToken = await this._jwtService.generateAccessToken(payload);
+        const refreshToken = await this._jwtService.generateRefreshToken(payload);
 
-        await this.userRepository.update(admin._id, { refreshToken });
+        const updatedAdmin = await this._adminRepository.update(admin._id, { refreshToken });
+        if (!updatedAdmin) throw new NotFoundError("Admin not found");
 
         const adminDTO: AdminToResponseDTO = {
             _id: admin._id,
