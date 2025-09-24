@@ -18,7 +18,7 @@ MatchPoint is a **sports tournament management platform** designed to simplify t
 
 ### 🏟 Tournament Management
 
-* Create & manage tournaments (league, knockout, or hybrid formats).
+* Create & manage tournaments (league, knockout, friendly).
 * Define tournament rules, categories, and match schedules.
 * Automated bracket generation & standings.
 * Easy team registration & player assignment.
@@ -27,7 +27,7 @@ MatchPoint is a **sports tournament management platform** designed to simplify t
 
 * **Real-time score updates** with seamless refresh.
 * **Live streaming integration** for an immersive fan experience.
-* **Commentary support** (text or audio) for detailed updates.
+* **Commentary support** text for detailed updates.
 * Match statistics: runs, goals, fouls, wickets, possession, etc. (customizable per sport).
 
 ### 💬 Communication
@@ -46,18 +46,18 @@ MatchPoint is a **sports tournament management platform** designed to simplify t
 
 * Mobile-first design for accessibility on all devices.
 * Dashboard view for quick insights into tournaments, teams, and matches.
-* Dark/light mode support (optional).
+* Dark/light mode support.
 
 ---
 
-## 🔧 Tech Stack (Example – adjust to your actual stack)
+## 🔧 Tech Stack
 
-* **Frontend**: React.js / Next.js, Redux, Tailwind CSS / Bootstrap
-* **Backend**: Node.js, Express.js
+* **Frontend**: React.js, Redux, Tailwind CSS
+* **Backend**: Node.js, Express.js, clean architecture
 * **Database**: MongoDB / PostgreSQL
-* **Authentication**: JWT (Access & Refresh Tokens), Role-Based Access Control
+* **Authentication**: JWT, Role-Based Access Control
 * **Real-time Features**: Socket.io (for live chat, live scores)
-* **Streaming**: WebRTC / third-party streaming integration (e.g., YouTube Live, Twitch, or custom RTMP).
+* **Streaming**: WebRTC.
 * **Deployment**: Docker, AWS EC2 / Vercel / Netlify
 * **Payment**: Razorpay / Stripe
 
@@ -101,7 +101,7 @@ MatchPoint/
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/matchpoint.git
+   git clone https://github.com/joyalk-74/matchpoint.git
    cd matchpoint
    ```
 
@@ -136,7 +136,6 @@ MatchPoint/
    cd ../frontend
    npm start
    ```
-
 
 
 ## 🔮 Future Enhancements
