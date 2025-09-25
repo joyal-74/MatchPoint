@@ -11,9 +11,10 @@ import { ManagerRegister } from "domain/entities/Manager";
 import { ManagerRegisterResponseDTO } from "domain/dtos/Manager.dto";
 import { validateUserInput } from "domain/validators/UserValidators";
 import { OtpContext } from "domain/enums/OtpContext";
+import { IManagerSignupUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
 
 
-export class SignupManager {
+export class SignupManager implements IManagerSignupUseCase {
     constructor(
         private _userRepository: IUserRepository,
         private _managerRepository: IManagerRepository,
@@ -23,19 +24,21 @@ export class SignupManager {
         private _otpGenerator: IOtpGenerator,
     ) { }
 
-    async execute(userData: ManagerRegister): Promise<{ user: ManagerRegisterResponseDTO; expiresAt: Date }> {
-        // validate input data
+    /**
+     * 
+     * @param userData 
+     * @returns 
+     */
+
+    async execute(userData: ManagerRegister) {
         const validData = validateUserInput(userData);
 
-        // check user already exist or not
         const existingUser = await this._userRepository.findByEmail(validData.email);
         if (existingUser) throw new BadRequestError("User with this email already exists");
 
-        // Hash password before saving
         const hashedPassword = await this._passwordHasher.hashPassword(validData.password);
         const userId = generateManagerId();
 
-        // Create new manager
         const newUser = await this._userRepository.create({
             userId: userId,
             email: validData.email,
@@ -54,10 +57,8 @@ export class SignupManager {
                 location: validData.settings?.location,
                 country: validData.settings?.country,
             }
-
         });
 
-        // create required fields in manager collection
         await this._managerRepository.create({
             userId: newUser._id,
             wallet: 0,
@@ -65,12 +66,10 @@ export class SignupManager {
             teams: [],
         });
 
-        // Generate OTP & save in DB
         const otp = this._otpGenerator.generateOtp();
         const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
         await this._otpRepository.saveOtp(newUser._id, validData.email, otp, OtpContext.VerifyEmail);
 
-        // Verification otp to user email account
         await this._mailRepository.sendVerificationEmail(newUser.email, otp);
 
         const managerDTO: ManagerRegisterResponseDTO = {
@@ -82,6 +81,6 @@ export class SignupManager {
             role: newUser.role,
         };
 
-        return { user: managerDTO, expiresAt };
+        return { success: true, message: "Manager Registered successfully", user: managerDTO, expiresAt };
     }
 }

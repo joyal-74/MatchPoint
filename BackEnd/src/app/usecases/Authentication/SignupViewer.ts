@@ -2,7 +2,6 @@ import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { IOtpRepository } from "app/repositories/interfaces/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
 import { generateViewerId } from "infra/utils/UserIdHelper";
-import { UserRegisterResponseDTO } from "domain/dtos/User.dto";
 import { BadRequestError } from "domain/errors";
 import { UserRegister } from "domain/entities/User";
 import { UserRoles } from "domain/enums";
@@ -10,9 +9,11 @@ import { validateUserInput } from "domain/validators/UserValidators";
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { IOtpGenerator } from "app/providers/IOtpGenerator";
 import { OtpContext } from "domain/enums/OtpContext";
+import { IViewerSignupUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
+import { UserMapper } from "app/mappers/UserMapper";
 
 
-export class SignupViewer {
+export class SignupViewer implements IViewerSignupUseCase {
     constructor(
         private userRepository: IUserRepository,
         private otpRepository: IOtpRepository,
@@ -21,7 +22,7 @@ export class SignupViewer {
         private otpGenerator: IOtpGenerator,
     ) { }
 
-    async execute(userData: UserRegister): Promise<{ user: UserRegisterResponseDTO; expiresAt: Date }> {
+    async execute(userData: UserRegister) {
         const validData = validateUserInput(userData);
 
         const existingUser = await this.userRepository.findByEmail(validData.email);
@@ -44,9 +45,9 @@ export class SignupViewer {
             settings: {
                 theme: validData.settings?.theme || "dark",
                 language: validData.settings?.language || "en",
-                currency: validData.settings?.currency || "USD",
+                currency: validData.settings?.currency || "INR",
                 location: validData.settings?.location,
-                country: validData.settings?.country,
+                country: validData.settings?.country || 'India',
             }
         });
 
@@ -56,15 +57,9 @@ export class SignupViewer {
 
         await this.mailRepository.sendVerificationEmail(newUser.email, otp);
 
-        const userDTO: UserRegisterResponseDTO = {
-            _id: newUser._id,
-            userId: newUser.userId,
-            email: newUser.email,
-            first_name: newUser.first_name,
-            last_name: newUser.last_name,
-            role: newUser.role,
-        };
+        const userDTO = UserMapper.toUserRegisterDTO(newUser);
 
-        return { user: userDTO, expiresAt };
+
+        return { success: true, message : "Viewer registered successfully", user: userDTO, expiresAt };
     }
 }

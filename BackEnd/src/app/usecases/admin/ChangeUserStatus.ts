@@ -1,19 +1,17 @@
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { ILogger } from "app/providers/ILogger";
-import { UsersResponseDTO } from "domain/dtos/User.dto";
-import { PlayersResponseDTO } from "domain/dtos/Player.dto";
-import { ManagersResponseDTO } from "domain/dtos/Manager.dto";
 import { GetAllUsersParams } from "./GetAllViewers";
+import { IChangeStatusUsecase } from "app/repositories/interfaces/IAdminUsecases";
 
-type RoleResponseDTO = PlayersResponseDTO | UsersResponseDTO | ManagersResponseDTO;
 
-export class ChangeUserStatus {
+
+export class ChangeUserStatus implements IChangeStatusUsecase{
     constructor(
         private _userRepository: IUserRepository,
         private _logger: ILogger
     ) { }
 
-    async execute(role: string, userId: string, isActive: boolean, params: GetAllUsersParams): Promise<{ users: RoleResponseDTO[], totalCount: number }> {
+    async execute(role: string, userId: string, isActive: boolean, params: GetAllUsersParams) {
         this._logger.info(`Fetching ${role}`);
 
         // Update user status

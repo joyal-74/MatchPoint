@@ -11,20 +11,20 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }: Pag
     if (totalPages <= 1) return null;
 
     return (
-        <div className="flex justify-center items-center mt-4 gap-2">
+        <div className="flex justify-center items-center text-sm gap-1">
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-3 py-1 rounded-md bg-[var(--color-background-secondary)] disabled:opacity-50"
+                className="px-3 py-1 rounded bg-[var(--color-background-secondary)] disabled:opacity-50"
             >
-                Previous
+                {'<'}
             </button>
 
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                     key={page}
                     onClick={() => onPageChange(page)}
-                    className={`px-3 py-1 rounded-md ${currentPage === page
+                    className={`px-3 py-1 rounded ${currentPage === page
                             ? "bg-[var(--color-primary)] text-white"
                             : "bg-[var(--color-background-secondary)]"
                         }`}
@@ -36,9 +36,9 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }: Pag
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="px-3 py-1 rounded-md bg-[var(--color-background-secondary)] disabled:opacity-50"
+                className="px-3 py-1 rounded bg-[var(--color-background-secondary)] disabled:opacity-50"
             >
-                Next
+                {'>'}
             </button>
         </div>
     );

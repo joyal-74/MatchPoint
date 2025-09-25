@@ -12,9 +12,10 @@ import { getDefaultCareerStats, getDefaultProfile } from "infra/utils/playerDefa
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { IOtpGenerator } from "app/providers/IOtpGenerator";
 import { OtpContext } from "domain/enums/OtpContext";
+import { IPlayerSignupUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
 
 
-export class SignupPlayer {
+export class SignupPlayer implements IPlayerSignupUseCase {
     constructor(
         private _userRepository: IUserRepository,
         private _playerRepository: IPlayerRepository,
@@ -24,21 +25,16 @@ export class SignupPlayer {
         private _otpGenerator: IOtpGenerator,
     ) { }
 
-    async execute(userData: PlayerRegister): Promise<{ user: PlayerRegisterResponseDTO; expiresAt: Date }> {
-        // validate player input data
+    async execute(userData: PlayerRegister) {
         const validData = validatePlayerInput(userData);
 
-        // check user already exist or not
         const existingUser = await this._userRepository.findByEmail(validData.email);
         if (existingUser) throw new BadRequestError("User with this email already exists");
 
-        // Hash password before saving
         const hashedPassword = await this._passwordHasher.hashPassword(validData.password);
 
-        // Custom player ID generation
         const userId = generatePlayerId();
 
-        // Create new player
         const newUser = await this._userRepository.create({
             userId: userId,
             email: validData.email,
@@ -60,7 +56,6 @@ export class SignupPlayer {
             }
         });
 
-        // save player stats in collection
         const newPlayer = await this._playerRepository.create({
             userId: newUser._id,
             sport: userData.sport,
@@ -68,12 +63,10 @@ export class SignupPlayer {
             stats: getDefaultCareerStats(userData.sport),
         });
 
-        // generate and save otp in db (TTL)
         const otp = this._otpGenerator.generateOtp();
         const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
         await this._otpRepository.saveOtp(newUser._id, validData.email, otp, OtpContext.VerifyEmail);
 
-        // send account verification otp to email
         await this._mailRepository.sendVerificationEmail(newUser.email, otp);
 
         const userDTO: PlayerRegisterResponseDTO = {
@@ -86,7 +79,6 @@ export class SignupPlayer {
             role: newUser.role,
         };
 
-        // return response to frontend
-        return { user: userDTO, expiresAt };
+        return { success : true, message : "Player registered successfully", user: userDTO, expiresAt };
     }
 }

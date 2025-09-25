@@ -4,8 +4,19 @@ import { IMailRepository } from "app/providers/IMailRepository";
 import { BadRequestError } from "domain/errors";
 import { IOtpGenerator } from "app/providers/IOtpGenerator";
 import { OtpContext } from "domain/enums/OtpContext";
+import { IResendOtpUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
 
-export class ResendOtp {
+/**
+ * Use case for resending OTP (One-Time Password) to a user.
+ * 
+ * Flow:
+ * 1. Find the user by email.
+ * 2. Generate a new OTP.
+ * 3. Delete any previous OTPs for the user and context.
+ * 4. Save the new OTP.
+ * 5. Send the OTP via email.
+ */
+export class ResendOtp implements IResendOtpUseCase {
     constructor(
         private _userRepository: IUserRepository,
         private _otpRepository: IOtpRepository,
@@ -13,18 +24,24 @@ export class ResendOtp {
         private _otpGenerator: IOtpGenerator
     ) { }
 
-    async execute(email: string, context: OtpContext): Promise<{ success: boolean; message: string }> {
-        // 1. Find user
+    /**
+     * Executes the resend OTP flow.
+     *
+     * @param email - The email of the user requesting OTP resend
+     * @param context - The OTP context (ACCOUNT_VERIFICATION, FORGOT_PASSWORD)
+     * @returns A success response with a confirmation message
+     * @throws BadRequestError if the user is not found
+     *
+     */
+    async execute(email: string, context: OtpContext) {
         const user = await this._userRepository.findByEmail(email);
         if (!user) throw new BadRequestError("User not found");
 
-        // 2. Generate new OTP
         const otp = this._otpGenerator.generateOtp();
 
-        // 3. Save OTP in DB with context
+        await this._otpRepository.deleteOtp(user._id, context);
         await this._otpRepository.saveOtp(user._id, email, otp, context);
 
-        // 4. Send OTP email with context
         await this._mailRepository.sendVerificationEmail(email, otp, context);
 
         return { success: true, message: "OTP resent successfully" };

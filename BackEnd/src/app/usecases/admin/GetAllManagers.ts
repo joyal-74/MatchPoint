@@ -1,15 +1,15 @@
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
-import { ManagersResponseDTO } from "domain/dtos/Manager.dto";
 import { ILogger } from "app/providers/ILogger";
 import { GetAllUsersParams } from "./GetAllViewers";
+import { IGetManagersUsecase } from "app/repositories/interfaces/IAdminUsecases";
 
-export class GetAllManagers {
+export class GetAllManagers implements IGetManagersUsecase {
     constructor(
         private _userRepository: IUserRepository,
         private _logger: ILogger
     ) { }
 
-    async execute(params: GetAllUsersParams): Promise<{ users: ManagersResponseDTO[]; totalCount: number }> {
+    async execute(params: GetAllUsersParams) {
         this._logger.info("Fetching all managers");
 
         // Fetch managers from db

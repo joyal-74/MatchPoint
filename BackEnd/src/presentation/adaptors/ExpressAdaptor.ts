@@ -1,9 +1,8 @@
-import { Request, Response } from 'express';
-import { IController } from '../http/interfaces/IController';
-import { IHttpRequest } from '../http/interfaces/IHttpRequest';
-import { IHttpResponse } from 'presentation/http/interfaces/IHttpResponse';
+import { Request, Response } from "express";
+import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
+import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 
-export async function expressAdapter(request: Request, response: Response, apiRoute: IController,): Promise<void> {
+export async function expressAdapter(request: Request, response: Response, controller: (req: IHttpRequest) => Promise<IHttpResponse> ): Promise<void> {
     const httpRequest: IHttpRequest = {
         headers: request.headers,
         body: request.body,
@@ -11,7 +10,7 @@ export async function expressAdapter(request: Request, response: Response, apiRo
         query: request.query,
     };
 
-    const httpResponse: IHttpResponse = await apiRoute.handle(httpRequest);
+    const httpResponse: IHttpResponse = await controller(httpRequest);
 
     const { accessToken, refreshToken } = httpResponse.body;
     const clearCookies = httpResponse.body.data?.clearCookies;

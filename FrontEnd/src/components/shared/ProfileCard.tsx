@@ -8,7 +8,7 @@ interface SidebarMenuProps {
 const ProfileCard: React.FC<SidebarMenuProps> = ({ onLogout }) => {
     
     return (
-        <div className="w-40 bg-[var(--color-background)] text-white flex flex-col gap-1 rounded-md shadow-lg">
+        <div className="w-40 bg-[var(--color-background)] text-white text-sm flex flex-col gap-1 rounded-md shadow-lg">
             <button className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--color-background-secondary)] rounded-md w-full text-left">
                 <FiUser className="text-[var(--color-primary)] text-lg" />
                 <span>Profile</span>

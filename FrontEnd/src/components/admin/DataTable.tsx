@@ -27,7 +27,6 @@ const DataTable = <T extends { _id: string; status?: string }>({
         <div className="p-3 sm:p-6 text-[var(--color-text-primary)] w-full max-w-full">
             <h1 className="text-xl sm:text-2xl font-bold mb-4">{title}</h1>
 
-            {/* Header with search and filters */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4 sm:gap-0">
                 <div className="w-full sm:w-auto">
                     <SearchBar
@@ -134,12 +133,12 @@ const DataTable = <T extends { _id: string; status?: string }>({
 
             {/* Empty state for desktop table */}
             {data.length === 0 && (
-                <div className="hidden xl:block text-center py-8 text-[var(--color-text-secondary)] border border-[var(--color-border)] rounded-lg">
+                <div className="hidden xl:block text-center py-8 text-[var(--color-text-secondary)] border border-[var(--color-border)] rounded-b-lg">
                     <p>No data available</p>
                 </div>
             )}
 
-            <div className="mt-6">
+            <div className="mt-5">
                 <Pagination
                     totalItems={totalCount}
                     itemsPerPage={itemsPerPage}

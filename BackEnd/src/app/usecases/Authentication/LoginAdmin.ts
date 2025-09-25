@@ -2,12 +2,13 @@ import { IAdminRepository } from "app/repositories/interfaces/IAdminRepository";
 import { AdminToResponseDTO } from "domain/dtos/Admin.dto";
 import { JwtPayload } from "domain/entities/JwtPayload";
 import { IJWTRepository } from "app/repositories/interfaces/IjwtRepository";
-import { LoginDTOAdmin } from "domain/dtos/Login.dto";
 import { NotFoundError, UnauthorizedError } from "domain/errors";
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { ILogger } from "app/providers/ILogger";
+import { IAdminAuthUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
+import { AdminMapper } from "app/mappers/AdminMapper";
 
-export class LoginAdmin {
+export class LoginAdmin implements IAdminAuthUseCase {
     constructor(
         private _adminRepository: IAdminRepository,
         private _jwtService: IJWTRepository,
@@ -15,7 +16,7 @@ export class LoginAdmin {
         private _logger: ILogger,
     ) { }
 
-    async execute(email: string, password: string): Promise<LoginDTOAdmin> {
+    async execute(email: string, password: string) {
         this._logger.info("Admin login attempt", { email });
 
         const admin = await this._adminRepository.findByEmail(email);
@@ -37,15 +38,8 @@ export class LoginAdmin {
         const updatedAdmin = await this._adminRepository.update(admin._id, { refreshToken });
         if (!updatedAdmin) throw new NotFoundError("Admin not found");
 
-        const adminDTO: AdminToResponseDTO = {
-            _id: admin._id,
-            email: admin.email,
-            first_name: admin.first_name,
-            last_name: admin.last_name,
-            role: admin.role,
-            wallet: admin.wallet,
-        };
+        const adminDTO: AdminToResponseDTO = AdminMapper.toAdminDTO(admin);
 
-        return { accessToken, refreshToken, admin: adminDTO };
+        return { accessToken, refreshToken, account: adminDTO };
     }
 }

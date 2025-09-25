@@ -7,6 +7,8 @@ export type ValidationErrors = Partial<Record<string, string>>;
 export const validateSignup = (payload: SignUpForm): ValidationErrors => {
     const errors: ValidationErrors = {};
 
+    console.log(payload)
+
     if (!payload.first_name) errors.first_name = AuthMessages.FIRST_NAME_REQUIRED;
     if (!payload.last_name) errors.last_name = AuthMessages.LAST_NAME_REQUIRED;
 
@@ -29,8 +31,8 @@ export const validateSignup = (payload: SignUpForm): ValidationErrors => {
     else if (payload.password !== payload.confirmPassword) errors.confirmPassword = AuthMessages.PASSWORDS_DO_NOT_MATCH
 
     // Optional field for players
-    if ("sports" in payload && (!payload.sports)) {
-        errors.sports = AuthMessages.SPORTS_REQUIRED;
+    if ("sport" in payload && (!payload.sport)) {
+        errors.sport = AuthMessages.SPORTS_REQUIRED;
     }
 
     return errors;

@@ -1,7 +1,7 @@
 import { GetAllUsersParams } from "app/usecases/admin/GetAllViewers";
 import { ManagersResponseDTO } from "domain/dtos/Manager.dto";
 import { PlayersResponseDTO } from "domain/dtos/Player.dto";
-import { UserRegisterResponseDTO, UsersResponseDTO } from "domain/dtos/User.dto";
+import { UsersResponseDTO } from "domain/dtos/User.dto";
 import { User, UserRegister, UserResponse } from "domain/entities/User";
 
 
@@ -18,7 +18,7 @@ export interface IUserRepository {
 
     findAllManagers(params: GetAllUsersParams): Promise<{users : ManagersResponseDTO[], totalCount : number}>;
 
-    create(user: UserRegister): Promise<UserRegisterResponseDTO>;
+    create(user: UserRegister): Promise<UserRegister & { _id: string }>;
 
     update(_id: string, data: Partial<User>): Promise<UserResponse>;
 

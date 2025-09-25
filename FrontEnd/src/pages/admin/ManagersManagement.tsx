@@ -5,7 +5,6 @@ import DataTable from "../../components/admin/DataTable";
 import type { User } from "../../features/admin/users/userTypes";
 import { fetchManagers, userStatusChange } from "../../features/admin/users/userThunks";
 import type { RootState, AppDispatch } from "../../app/store";
-import LoadingOverlay from "../../components/shared/LoadingOverlay";
 import { useDebounce } from "../../hooks/useDebounce";
 import { managerColumns } from "../../utils/adminColumns";
 import type { SignupRole } from "../../types/UserRoles";
@@ -13,7 +12,7 @@ import type { GetAllUsersParams } from "../../types/api/Params";
 
 const ManagersManagement = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { managers, loading, totalCount } = useSelector((state: RootState) => state.users);
+    const { managers, totalCount } = useSelector((state: RootState) => state.users);
     const [currentPage, setCurrentPage] = useState(1);
     const [currentFilter, setCurrentFilter] = useState("All");
     const [searchTerm, setSearchTerm] = useState("");
@@ -46,7 +45,6 @@ const ManagersManagement = () => {
 
     return (
         <AdminLayout>
-            <LoadingOverlay show={loading} />
             <DataTable<User>
                 title="Managers Management"
                 data={managers}

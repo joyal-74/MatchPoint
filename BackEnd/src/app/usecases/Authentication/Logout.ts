@@ -2,18 +2,16 @@ import { IAdminRepository } from "app/repositories/interfaces/IAdminRepository";
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { ILogger } from "app/providers/ILogger";
 import { BadRequestError } from "domain/errors";
+import { ILogoutUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
 
-export class LogoutUser {
+export class LogoutUser implements ILogoutUseCase {
     constructor(
         private _userRepository: IUserRepository,
         private _adminRepository: IAdminRepository,
         private _logger: ILogger
     ) { }
 
-    async execute(
-        userId: string,
-        role: string
-    ): Promise<{ success: boolean; message: string, clearCookies : boolean }> {
+    async execute(userId: string, role: string) {
         this._logger.info(`Logout attempt for userId: ${userId}, role: ${role}`);
 
         let user;
@@ -37,6 +35,6 @@ export class LogoutUser {
 
         this._logger.info(`Logout successful for userId=${userId}, role=${role}`);
 
-        return { success: true, message: "Logout successful", clearCookies : true };
+        return { success: true, message: "Logout successful", clearCookies: true };
     }
 }

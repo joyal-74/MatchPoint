@@ -2,12 +2,12 @@ import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { IJWTRepository } from "app/repositories/interfaces/IjwtRepository";
 import { JwtPayload } from "domain/entities/JwtPayload";
 import { UserResponseDTO } from "domain/dtos/User.dto";
-import { LoginDTOUser } from "domain/dtos/Login.dto";
 import { NotFoundError, UnauthorizedError } from "domain/errors";
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { ILogger } from "app/providers/ILogger";
+import { IUserAuthUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
 
-export class LoginUser {
+export class LoginUser implements IUserAuthUseCase {
     constructor(
         private _userRepository: IUserRepository,
         private _jwtService: IJWTRepository,
@@ -15,7 +15,7 @@ export class LoginUser {
         private _logger: ILogger,
     ) { }
 
-    async execute(email: string, password: string): Promise<LoginDTOUser> {
+    async execute(email: string, password: string) {
         this._logger.info("User login attempt", { email });
 
         const user = await this._userRepository.findByEmail(email);
@@ -26,7 +26,7 @@ export class LoginUser {
         const match = await this._passwordHasher.comparePasswords(password, user.password);
         if (!match) throw new UnauthorizedError("Invalid credentials");
 
-        this._logger.info("User login successful", { email, adminId: user._id });
+        this._logger.info("User login successful", { email, userId: user._id });
 
         const payload: JwtPayload = { userId: user._id, role: user.role };
 
@@ -48,6 +48,6 @@ export class LoginUser {
             wallet: user.wallet,
         };
 
-        return { accessToken, refreshToken, user: userDTO };
+        return { accessToken, refreshToken, account: userDTO };
     }
 }
