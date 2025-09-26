@@ -1,5 +1,6 @@
 import { createLogger, format, transports } from "winston";
-import { ILogger } from "app/providers/ILogger"; 
+import DailyRotateFile from "winston-daily-rotate-file";
+import { ILogger } from "app/providers/ILogger";
 
 export class WinstonLogger implements ILogger {
     private logger;
@@ -16,8 +17,23 @@ export class WinstonLogger implements ILogger {
             ),
             transports: [
                 new transports.Console(),
-                new transports.File({ filename: "logs/error.log", level: "error" }),
-                new transports.File({ filename: "logs/combined.log" }),
+
+                new DailyRotateFile({
+                    filename: "logs/error-%DATE%.log",
+                    datePattern: "YYYY-MM-DD",
+                    level: "error",
+                    zippedArchive: true,
+                    maxSize: "20m",
+                    maxFiles: "7d",
+                }),
+
+                new DailyRotateFile({
+                    filename: "logs/combined-%DATE%.log",
+                    datePattern: "YYYY-MM-DD",
+                    zippedArchive: true,
+                    maxSize: "20m",
+                    maxFiles: "14d",
+                }),
             ],
         });
     }
