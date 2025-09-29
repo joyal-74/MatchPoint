@@ -1,20 +1,22 @@
 import { Request, Response } from "express";
-import { IController } from "presentation/http/interfaces/IController";
 import { File } from "domain/entities/File";
+import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
+import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 
-export const expressProfileUpdateHandler = <C extends IController>(controller: C) => async (req: Request, res: Response) => {
+export const expressFileUpdateHandler = (controllerMethod: (httpRequest: IHttpRequest) => Promise<IHttpResponse>) =>
+    async (req: Request, res: Response) => {
+        const file: File | undefined = req.file
+            ? { buffer: req.file.buffer, name: req.file.originalname, type: req.file.mimetype }
+            : undefined;
 
-    const file: File | undefined = req.file
-        ? { buffer: req.file.buffer, name: req.file.originalname, type: req.file.mimetype }
-        : undefined;
+        const httpRequest: IHttpRequest = {
+            body: req.body,
+            headers: req.headers,
+            params: req.params,
+            query: req.query,
+            file,
+        };
 
-    const httpRequest = {
-        body: req.body,
-        headers: req.headers,
-        params: req.params,
-        file,
+        const response = await controllerMethod(httpRequest);
+        res.status(response.statusCode).json(response.body);
     };
-
-    const response = await controller.handle(httpRequest);
-    res.status(response.statusCode).json(response.body);
-};

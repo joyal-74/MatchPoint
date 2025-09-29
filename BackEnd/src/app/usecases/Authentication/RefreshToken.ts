@@ -1,7 +1,7 @@
 import { AdminMapper } from "app/mappers/AdminMapper";
 import { UserMapper } from "app/mappers/UserMapper";
 import { ILogger } from "app/providers/ILogger";
-import { IAdminRepository } from "app/repositories/interfaces/IAdminRepository";
+import { IAdminRepository } from "app/repositories/interfaces/admin/IAdminRepository";
 import { IRefreshTokenUseCase, TokenUserResponse } from "app/repositories/interfaces/IAuthenticationUseCase";
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { IJWTRepository } from "app/repositories/interfaces/IjwtRepository";

@@ -1,4 +1,4 @@
-import { IAdminRepository } from "app/repositories/interfaces/IAdminRepository";
+import { IAdminRepository } from "app/repositories/interfaces/admin/IAdminRepository";
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { ILogger } from "app/providers/ILogger";
 import { BadRequestError } from "domain/errors";

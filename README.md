@@ -63,7 +63,7 @@ MatchPoint is a **sports tournament management platform** designed to simplify t
 
 ---
 
-## 📂 Project Structure (Example)
+## 📂 Project Structure
 
 ```
 MatchPoint/

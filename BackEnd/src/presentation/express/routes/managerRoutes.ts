@@ -1,11 +1,18 @@
 import { Router } from "express";
 import multer from "multer";
-import { expressProfileUpdateHandler } from "presentation/adaptors/ExpressFileAdaptor";
-import { updateManagerProfileController } from "presentation/container/container"; 
+import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
+import { expressFileUpdateHandler } from "presentation/adaptors/ExpressFileAdaptor";
+import { teamManagementController, updateManagerProfileController } from "presentation/container/container";
 
 const router = Router();
 const upload = multer();
 
-router.put("/profile", upload.single("logo"), expressProfileUpdateHandler(updateManagerProfileController));
+router.put("/profile", upload.single("logo"), expressFileUpdateHandler(updateManagerProfileController.updateProfile));
+
+router.post('/teams/change', expressAdapter(teamManagementController.changePlayerStatus));
+
+router.get('/teams/:managerId', expressAdapter(teamManagementController.getAllTeams));
+
+router.post("/teams", expressFileUpdateHandler(teamManagementController.addNewTeam));
 
 export default router;

@@ -4,15 +4,15 @@ import { NotFoundError } from "domain/errors";
 
 export class GetManagerProfile {
     constructor(
-        private userRepo: IUserRepository,
+        private _userRepo: IUserRepository,
     ) { }
 
     async execute(id: string): Promise<ManagerResponseDTO> {
-        const manager = await this.userRepo.findById(id);
+        const manager = await this._userRepo.findById(id);
         if (!manager) {
             throw new NotFoundError("Manager account not found");
         }
 
         return manager;
-    }
+    } 
 }

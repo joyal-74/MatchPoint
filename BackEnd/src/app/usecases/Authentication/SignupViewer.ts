@@ -1,7 +1,6 @@
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { IOtpRepository } from "app/repositories/interfaces/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
-import { generateViewerId } from "infra/utils/UserIdHelper";
 import { BadRequestError } from "domain/errors";
 import { UserRegister } from "domain/entities/User";
 import { UserRoles } from "domain/enums";
@@ -11,27 +10,29 @@ import { IOtpGenerator } from "app/providers/IOtpGenerator";
 import { OtpContext } from "domain/enums/OtpContext";
 import { IViewerSignupUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
 import { UserMapper } from "app/mappers/UserMapper";
+import { IUserIdGenerator } from "app/providers/IIdGenerator";
 
 
 export class SignupViewer implements IViewerSignupUseCase {
     constructor(
-        private userRepository: IUserRepository,
-        private otpRepository: IOtpRepository,
-        private mailRepository: IMailRepository,
-        private passwordHasher: IPasswordHasher,
-        private otpGenerator: IOtpGenerator,
+        private _userRepository: IUserRepository,
+        private _otpRepository: IOtpRepository,
+        private _mailRepository: IMailRepository,
+        private _passwordHasher: IPasswordHasher,
+        private _otpGenerator: IOtpGenerator,
+        private _idGenerator: IUserIdGenerator,
     ) { }
 
     async execute(userData: UserRegister) {
         const validData = validateUserInput(userData);
 
-        const existingUser = await this.userRepository.findByEmail(validData.email);
+        const existingUser = await this._userRepository.findByEmail(validData.email);
         if (existingUser) throw new BadRequestError("User with this email already exists");
 
-        const hashedPassword = await this.passwordHasher.hashPassword(validData.password);
-        const userId = generateViewerId();
+        const hashedPassword = await this._passwordHasher.hashPassword(validData.password);
+        const userId = this._idGenerator.generate();
 
-        const newUser = await this.userRepository.create({
+        const newUser = await this._userRepository.create({
             userId: userId,
             email: validData.email,
             first_name: validData.first_name,
@@ -51,11 +52,11 @@ export class SignupViewer implements IViewerSignupUseCase {
             }
         });
 
-        const otp = this.otpGenerator.generateOtp();
+        const otp = this._otpGenerator.generateOtp();
         const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
-        await this.otpRepository.saveOtp(newUser._id, validData.email, otp, OtpContext.VerifyEmail);
+        await this._otpRepository.saveOtp(newUser._id, validData.email, otp, OtpContext.VerifyEmail);
 
-        await this.mailRepository.sendVerificationEmail(newUser.email, otp);
+        await this._mailRepository.sendVerificationEmail(newUser.email, otp);
 
         const userDTO = UserMapper.toUserRegisterDTO(newUser);
 

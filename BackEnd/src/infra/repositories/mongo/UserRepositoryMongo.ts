@@ -3,7 +3,7 @@ import { GetAllUsersParams } from "app/usecases/admin/GetAllViewers";
 import { ManagersResponseDTO } from "domain/dtos/Manager.dto";
 import { PlayersResponseDTO } from "domain/dtos/Player.dto";
 import { UsersResponseDTO } from "domain/dtos/User.dto";
-import { User, UserResponse } from "domain/entities/User";
+import { User, UserRegister, UserResponse } from "domain/entities/User";
 import { UserModel } from "infra/databases/mongo/models/UserModel";
 
 
@@ -141,7 +141,7 @@ export class UserRepositoryMongo implements IUserRepository {
     }
 
     // Create new user
-    async create(user: User): Promise<UserResponse> {
+    async create(user: UserRegister): Promise<UserResponse> {
         const created = await UserModel.create(user);
         return { ...created.toObject(), _id: created._id.toString() };
     }

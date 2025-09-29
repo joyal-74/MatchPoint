@@ -26,3 +26,12 @@ export interface Player extends User {
     career_stats: PlayerStatsField[];
     tournaments: PlayerTournament[];
 }
+
+
+export interface PlayerCardProps {
+    player: Player;
+    onAction: (action: "swap" | "makeSubstitute" | "makeBench" | "view", player: Player) => void;
+    isSelected: boolean;
+    swapMode: boolean;
+    compact?: boolean;
+}

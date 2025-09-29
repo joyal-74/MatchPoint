@@ -1,4 +1,4 @@
-import { IAdminRepository } from "app/repositories/interfaces/IAdminRepository";
+import { IAdminRepository } from "app/repositories/interfaces/admin/IAdminRepository";
 import { AdminToResponseDTO } from "domain/dtos/Admin.dto";
 import { JwtPayload } from "domain/entities/JwtPayload";
 import { IJWTRepository } from "app/repositories/interfaces/IjwtRepository";

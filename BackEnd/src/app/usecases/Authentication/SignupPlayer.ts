@@ -1,10 +1,9 @@
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { IOtpRepository } from "app/repositories/interfaces/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
-import { generatePlayerId } from "infra/utils/UserIdHelper";
 import { BadRequestError } from "domain/errors";
 import { UserRoles } from "domain/enums";
-import { IPlayerRepository } from "app/repositories/interfaces/IPlayerRepository";
+import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 import { PlayerRegister } from "domain/entities/Player";
 import { PlayerRegisterResponseDTO } from "domain/dtos/Player.dto";
 import { validatePlayerInput } from "domain/validators/PlayerValidators";
@@ -13,6 +12,7 @@ import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { IOtpGenerator } from "app/providers/IOtpGenerator";
 import { OtpContext } from "domain/enums/OtpContext";
 import { IPlayerSignupUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
+import { IPlayerIdGenerator } from "app/providers/IIdGenerator";
 
 
 export class SignupPlayer implements IPlayerSignupUseCase {
@@ -23,6 +23,7 @@ export class SignupPlayer implements IPlayerSignupUseCase {
         private _mailRepository: IMailRepository,
         private _passwordHasher: IPasswordHasher,
         private _otpGenerator: IOtpGenerator,
+        private _idGenerator: IPlayerIdGenerator,
     ) { }
 
     async execute(userData: PlayerRegister) {
@@ -33,7 +34,7 @@ export class SignupPlayer implements IPlayerSignupUseCase {
 
         const hashedPassword = await this._passwordHasher.hashPassword(validData.password);
 
-        const userId = generatePlayerId();
+        const userId = this._idGenerator.generate();
 
         const newUser = await this._userRepository.create({
             userId: userId,

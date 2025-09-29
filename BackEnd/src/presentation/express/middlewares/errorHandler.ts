@@ -9,6 +9,8 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
         return res.status(err.statusCode).json( buildResponse(false, err.message, err.details));
     }
 
+    console.log(err)
+
     res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json(
         buildResponse(false, err.message, undefined, "Something went wrong")
     );

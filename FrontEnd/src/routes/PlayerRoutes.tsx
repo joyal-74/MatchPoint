@@ -1,4 +1,4 @@
-import Dashboard from "../pages/player/Dashboard";
+import Dashboard from "../pages/player/Profile";
 import ProtectedRoute from "./ProtectedRoute";
 
 export const playerRoutes = [

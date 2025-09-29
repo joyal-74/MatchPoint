@@ -1,4 +1,4 @@
-import { IManagerRepository } from "app/repositories/interfaces/IManagerRepository";
+import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
 import { UserRole } from "domain/enums/Roles";
 import { ManagerModel } from "infra/databases/mongo/models/ManagerModel";
 import { Manager, ManagerRegister, ManagerResponse } from "domain/entities/Manager";

@@ -1,4 +1,4 @@
-import { IAdminRepository } from "app/repositories/interfaces/IAdminRepository";
+import { IAdminRepository } from "app/repositories/interfaces/admin/IAdminRepository";
 import { Admin, AdminResponse } from "domain/entities/Admin";
 import { AdminModel } from "infra/databases/mongo/models/AdminModel";
 

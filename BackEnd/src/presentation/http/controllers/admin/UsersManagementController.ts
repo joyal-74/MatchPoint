@@ -1,4 +1,4 @@
-import { IChangeStatusUsecase, IGetManagersUsecase, IGetPlayersUsecase, IGetViewersUsecase } from "app/repositories/interfaces/IAdminUsecases";
+import { IChangeStatusUsecase, IGetManagersUsecase, IGetPlayersUsecase, IGetViewersUsecase } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";

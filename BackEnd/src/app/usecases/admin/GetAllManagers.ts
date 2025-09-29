@@ -1,7 +1,7 @@
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { ILogger } from "app/providers/ILogger";
 import { GetAllUsersParams } from "./GetAllViewers";
-import { IGetManagersUsecase } from "app/repositories/interfaces/IAdminUsecases";
+import { IGetManagersUsecase } from "app/repositories/interfaces/admin/IAdminUsecases";
 
 export class GetAllManagers implements IGetManagersUsecase {
     constructor(

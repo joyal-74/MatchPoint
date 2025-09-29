@@ -1,0 +1,45 @@
+import { TeamData, TeamMember } from "domain/dtos/Team.dto";
+import { TeamDocument } from "infra/databases/mongo/models/TeamModel";
+
+export class TeamMapper {
+    static toTeamDTO(team: TeamData): TeamData {
+        return {
+            _id: team._id,
+            teamId: team.teamId,
+            managerId: team.managerId,
+            name: team.name,
+            logo: team.logo,
+            sport: team.sport,
+            members: team.members,
+            status: team.status,
+            created: team.created
+        };
+    }
+
+    static toTeamMongoDTO(team: TeamDocument): TeamData {
+        const members: TeamMember[] = team.members.map(m => ({
+            playerId: m.playerId.toString(),
+            status: m.status
+        }));
+
+        return {
+            _id: team._id.toString(),
+            teamId: team.teamId,
+            managerId: team.managerId.toString(),
+            name: team.name,
+            logo: team.logo,
+            sport: team.sport,
+            members,
+            status: team.status,
+            created: team.created
+        };
+    }
+
+    static toTeamDTOs(teams: TeamData[]): TeamData[] {
+        return teams.map(team => this.toTeamDTO(team));
+    }
+
+    static toTeamMongoDTOs(teams: TeamDocument[]): TeamData[] {
+        return teams.map(team => this.toTeamMongoDTO(team));
+    }
+}

@@ -5,13 +5,13 @@ import { BadRequestError } from "domain/errors";
 import { UserRoles } from "domain/enums";
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { IOtpGenerator } from "app/providers/IOtpGenerator";
-import { IManagerRepository } from "app/repositories/interfaces/IManagerRepository";
-import { generateManagerId } from "infra/utils/UserIdHelper";
+import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
 import { ManagerRegister } from "domain/entities/Manager";
 import { ManagerRegisterResponseDTO } from "domain/dtos/Manager.dto";
 import { validateUserInput } from "domain/validators/UserValidators";
 import { OtpContext } from "domain/enums/OtpContext";
 import { IManagerSignupUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
+import { IManagerIdGenerator } from "app/providers/IIdGenerator";
 
 
 export class SignupManager implements IManagerSignupUseCase {
@@ -22,6 +22,7 @@ export class SignupManager implements IManagerSignupUseCase {
         private _mailRepository: IMailRepository,
         private _passwordHasher: IPasswordHasher,
         private _otpGenerator: IOtpGenerator,
+        private _idGenerator: IManagerIdGenerator,
     ) { }
 
     /**
@@ -37,7 +38,7 @@ export class SignupManager implements IManagerSignupUseCase {
         if (existingUser) throw new BadRequestError("User with this email already exists");
 
         const hashedPassword = await this._passwordHasher.hashPassword(validData.password);
-        const userId = generateManagerId();
+        const userId = this._idGenerator.generate();
 
         const newUser = await this._userRepository.create({
             userId: userId,
