@@ -6,16 +6,6 @@ import { IOtpGenerator } from "app/providers/IOtpGenerator";
 import { OtpContext } from "domain/enums/OtpContext";
 import { IResendOtpUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
 
-/**
- * Use case for resending OTP (One-Time Password) to a user.
- * 
- * Flow:
- * 1. Find the user by email.
- * 2. Generate a new OTP.
- * 3. Delete any previous OTPs for the user and context.
- * 4. Save the new OTP.
- * 5. Send the OTP via email.
- */
 export class ResendOtp implements IResendOtpUseCase {
     constructor(
         private _userRepository: IUserRepository,

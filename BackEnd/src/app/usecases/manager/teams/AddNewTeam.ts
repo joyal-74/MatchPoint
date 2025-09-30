@@ -17,17 +17,16 @@ export class AddNewTeamUseCase implements IAddTeamUseCase {
         private _logger: ILogger,
     ) { }
 
-    async execute(teamData: TeamRegister, file: File): Promise<TeamData[]> {
+    async execute(teamData: TeamRegister, file: File): Promise<TeamData> {
         this._logger.info(`Adding new team initiated.. for ${teamData.managerId}`);
 
         if (file) {
             const fileKey = await this._fileStorage.upload(file);
+            console.log(fileKey)
             teamData.logo = fileKey;
         } else if (!teamData.logo) {
             throw new BadRequestError("Logo is required");
         }
-
-        console.log(teamData, file);
 
         const teamExist = await this._teamRepo.findByName(teamData.name);
 
@@ -35,20 +34,18 @@ export class AddNewTeamUseCase implements IAddTeamUseCase {
 
         const teamId = this._idGenerator.generate();
 
-        await this._teamRepo.create({
+        const newTeam = await this._teamRepo.create({
             teamId: teamId,
             managerId: teamData.managerId,
             name: teamData.name,
             sport: teamData.sport,
+            description: teamData.description,
+            maxPlayers : teamData.maxPlayers,
             members: teamData.members,
             status: teamData.status,
             logo: teamData.logo,
         })
 
-        const allTeams = await this._teamRepo.findAll(teamData.managerId);
-
-        this._logger.info(`Total ${allTeams.length} teams found for manager ${teamData.managerId}`);
-
-        return TeamMapper.toTeamDTOs(allTeams);
+        return TeamMapper.toTeamDTO(newTeam);
     }
 }

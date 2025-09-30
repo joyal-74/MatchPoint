@@ -40,9 +40,9 @@ const AppRoutes = () => {
                 <Route path="/profile1" element={<PlayerProfile />} />
                 <Route path="/landing" element={<PlayerLanding />} />
                 <Route path="/player/tournament" element={<TournamentsPage />} />
-                <Route path="/player/teams" element={<TeamsListPage />} />
-                <Route path="/player/teams/members" element={<ManageMembersPage teamId={13453} />} />
-                <Route path="/player/tournament/details" element={<TournamentDetailsPage />} />
+                <Route path="/manager/teams" element={<TeamsListPage />} />
+                <Route path="/manager/teams/members" element={<ManageMembersPage teamId={13453} />} />
+                <Route path="/manager/tournament/details" element={<TournamentDetailsPage />} />
             </Routes>
         </BrowserRouter>
     );

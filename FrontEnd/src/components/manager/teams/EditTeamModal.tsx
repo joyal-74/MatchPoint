@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useState, useEffect } from "react";
 import ModalBackdrop from "../../ui/ModalBackdrop";
 import ModalHeader from "./Modal/ModalHeader";
 import LogoUpload from "./Modal/LogoUpload";
@@ -7,26 +7,50 @@ import FormSelect from "./Modal/FormSelect";
 import FormActions from "./Modal/FormActions";
 import FormTextarea from "./Modal/FormTextarea";
 
-export interface CreateTeamModalProps {
+export interface EditTeamModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onCreateTeam: (teamData: FormData) => void;
-    managerId: string;
+    onEditTeam: (teamId: string, formData: FormData) => void;
+    teamData: {
+        teamId: string;
+        updatedData: {
+            name: string;
+            sport: string;
+            status: boolean;
+            managerId: string;
+            description?: string;
+            logo?: string;
+            maxPlayers?: number;
+        };
+    };
 }
 
-export default function CreateTeamModal({
+export default function EditTeamModal({
     isOpen,
     onClose,
-    onCreateTeam,
-    managerId,
-}: CreateTeamModalProps) {
+    onEditTeam,
+    teamData,
+}: EditTeamModalProps) {
     const [name, setName] = useState("");
     const [sport, setSport] = useState("Cricket");
-    const [maxPlayers, setMaxPlayers] = useState(0);
+    const [status, setStatus] = useState(true);
     const [description, setDescription] = useState("");
     const [logo, setLogo] = useState<File | null>(null);
     const [logoPreview, setLogoPreview] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (teamData) {
+            setName(teamData.updatedData.name);
+            setSport(teamData.updatedData.sport);
+            setStatus(teamData.updatedData.status);
+            setDescription(teamData.updatedData.description || "");
+
+            if (teamData.updatedData.logo) {
+                setLogoPreview(teamData.updatedData.logo);
+            }
+        }
+    }, [teamData]);
 
     const handleLogoChange = (file: File) => {
         setLogo(file);
@@ -35,14 +59,14 @@ export default function CreateTeamModal({
 
     const handleLogoRemove = () => {
         setLogo(null);
-        setLogoPreview("");
+        setLogoPreview(teamData.updatedData.logo || "");
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!name.trim() || !logo || !managerId) {
-            alert('Please fill all required fields');
+        if (!name.trim()) {
+            alert('Please enter a team name');
             return;
         }
 
@@ -50,26 +74,24 @@ export default function CreateTeamModal({
 
         try {
             const formData = new FormData();
+
             formData.append("name", name.trim());
             formData.append("sport", sport);
-            formData.append("maxPlayers", maxPlayers.toString());
-            formData.append("managerId", managerId);
+            formData.append("status", status.toString());
+            formData.append("managerId", teamData.updatedData.managerId);
             formData.append("description", description);
-            formData.append("logo", logo);
 
-            await onCreateTeam(formData);
-            
-            // Reset and close
-            setName("");
-            setSport("Cricket");
-            setMaxPlayers(0);
-            setDescription("");
-            setLogo(null);
-            setLogoPreview("");
+            // Append logo only if a new file was selected
+            if (logo) {
+                formData.append("logo", logo);
+            }
+
+            await onEditTeam(teamData.teamId, formData);
+
             onClose();
         } catch (error) {
-            console.error('Error creating team:', error);
-            alert('Failed to create team. Please try again.');
+            console.error('Error updating team:', error);
+            alert('Failed to update team. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -80,10 +102,10 @@ export default function CreateTeamModal({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <ModalBackdrop onClick={onClose} />
-            
+
             <div className="relative w-full max-w-md bg-neutral-900 rounded-xl border border-neutral-700 shadow-2xl z-50">
-                <ModalHeader 
-                    title="Create New Team" 
+                <ModalHeader
+                    title="Edit Team"
                     onClose={onClose}
                     disabled={isLoading}
                 />
@@ -110,20 +132,12 @@ export default function CreateTeamModal({
                         label="Sport"
                         value={sport}
                         onChange={setSport}
-                        options={[{ value: "Cricket", label: "Cricket" }]}
+                        options={[
+                            { value: "Cricket", label: "Cricket" },
+                            { value: "Football", label: "Football" },
+                            { value: "Basketball", label: "Basketball" }
+                        ]}
                         disabled={isLoading}
-                    />
-
-                    <FormInput
-                        label="Max Players"
-                        type="number"
-                        value={maxPlayers}
-                        onChange={(value) => setMaxPlayers(Number(value))}
-                        placeholder="Enter max players"
-                        required
-                        disabled={isLoading}
-                        min={2}
-                        max={50}
                     />
 
                     <FormTextarea
@@ -135,10 +149,20 @@ export default function CreateTeamModal({
                         disabled={isLoading}
                     />
 
+                    <FormSelect
+                        label="Status"
+                        value={status.toString()}
+                        onChange={(value) => setStatus(value === "true")}
+                        options={[
+                            { value: "true", label: "Active" },
+                            { value: "false", label: "Inactive" }
+                        ]}
+                        disabled={isLoading}
+                    />
+
                     <FormActions
-                        submitLabel="Create Team"
+                        submitLabel="Update Team"
                         onCancel={onClose}
-                        disabled={!logo}
                         loading={isLoading}
                     />
                 </form>

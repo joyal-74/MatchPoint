@@ -7,6 +7,8 @@ export interface TeamDocument extends Document {
     name: string;
     logo: string;
     sport: string;
+    description : string;
+    maxPlayers : number;
     members: {
         playerId: Types.ObjectId;
         status: "playing" | "sub";
@@ -21,6 +23,8 @@ const TeamSchema = new Schema<TeamDocument>({
     name: { type: String, required: true },
     logo: { type: String, required: true },
     sport: { type: String, required: true },
+    description: { type: String, required: true },
+    maxPlayers: { type: Number, required: true },
     members: {
         type: [
             {

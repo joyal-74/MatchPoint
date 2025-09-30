@@ -6,6 +6,7 @@ import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 import { ITeamController } from "presentation/http/interfaces/ITeamController";
 import { ILogger } from "app/providers/ILogger";
+import { BadRequestError } from "domain/errors";
 
 export class TeamController implements ITeamController {
     constructor(
@@ -18,6 +19,13 @@ export class TeamController implements ITeamController {
     addNewTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const teamData = httpRequest.body;
         const file = httpRequest.file;
+
+        console.log("req.file", httpRequest.file);
+        console.log("req.body", httpRequest.body);
+
+        if(!httpRequest.file) throw new BadRequestError("No logo");
+        
+
 
         this._logger.info(`[Controller] addNewTeam → managerId=${teamData.managerId}, team=${teamData?.name}`);
 

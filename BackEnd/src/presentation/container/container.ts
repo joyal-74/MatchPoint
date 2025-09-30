@@ -33,10 +33,10 @@ import { AuthController } from 'presentation/http/controllers/authentication/Aut
 import { UsersManagementController } from 'presentation/http/controllers/admin/UsersManagementController';
 import { ManagerIdGenerator, PlayerIdGenerator, TeamIdGenerator, UserIdGenerator } from 'infra/providers/IdGenerator';
 import { TeamController } from 'presentation/http/controllers/manager/TeamController';
-import { AddNewTeamUseCase } from 'app/usecases/manager/AddNewTeam';
+import { AddNewTeamUseCase } from 'app/usecases/manager/teams/AddNewTeam';
 import { TeamRepositoryMongo } from 'infra/repositories/mongo/TeamRepositoryMongo';
 import { GetAllTeamsUseCase } from 'app/usecases/manager/GetTeamList';
-import { ChangePlayerStatusUseCase } from 'app/usecases/manager/ChangePlayerStatus';
+import { ChangePlayerStatusUseCase } from 'app/usecases/manager/teams/ChangePlayerStatus';
 
 // Repositories
 const userRepository = new UserRepositoryMongo();

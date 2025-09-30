@@ -12,15 +12,12 @@ export class DeleteUnverifiedUsers {
     ) { }
 
     async execute(): Promise<number> {
-        // Calculate threshold date (24 hours ago)
         const threshold = new Date(Date.now() - 24 * 60 * 60 * 1000);
         this._logger.info("Deleting unverified users older than 24 hours", { threshold });
 
-        // Fetch all unverified users before the threshold
         const unverifiedUsers = await this._userRepo.findUnverifiedUsers(threshold);
         this._logger.info(`Found ${unverifiedUsers.length} unverified users to delete`);
 
-        // Loop through each unverified user and delete from all relevant collections
         for (const user of unverifiedUsers) {
             this._logger.info("Deleting user", { userId: user._id, role: user.role });
 

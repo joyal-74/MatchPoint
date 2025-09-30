@@ -1,0 +1,26 @@
+import React from "react";
+import TeamCard from "./TeamCard/TeamCard";
+import type { Team, EditTeamPayload } from "../../../features/manager/managerTypes";
+
+interface TeamsGridProps {
+    teams: Team[];
+    handlers: {
+        edit: (teamId: string, updatedData: EditTeamPayload) => void;
+        delete: (teamId: string) => void;
+        manage: (teamId: string) => void;
+    };
+}
+
+export const TeamsGrid: React.FC<TeamsGridProps> = ({ teams, handlers }) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {teams.map(team => (
+            <TeamCard
+                key={team._id}
+                {...team}
+                onEdit={(updatedData) => handlers.edit(team._id, updatedData)}
+                onDelete={() => handlers.delete(team._id)}
+                onManageMembers={() => handlers.manage(team._id)}
+            />
+        ))}
+    </div>
+);

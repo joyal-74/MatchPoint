@@ -9,6 +9,8 @@ export interface TeamRegister {
     name: string;
     logo: string;
     sport: string;
+    description: string;
+    maxPlayers : number;
     members: TeamMember[];
     status: boolean
 }

@@ -6,7 +6,7 @@ export interface IGetAllTeamsUseCase {
 }
 
 export interface IAddTeamUseCase {
-    execute(teamData: TeamRegister, file : File): Promise<TeamData[]>;
+    execute(teamData: TeamRegister, file : File): Promise<TeamData>;
 }
 
 export interface IChangePlayerStatusUseCase {

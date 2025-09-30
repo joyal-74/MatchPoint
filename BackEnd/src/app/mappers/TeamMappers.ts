@@ -10,6 +10,8 @@ export class TeamMapper {
             name: team.name,
             logo: team.logo,
             sport: team.sport,
+            description : team.description,
+            maxPlayers : team.maxPlayers,
             members: team.members,
             status: team.status,
             created: team.created
@@ -29,6 +31,8 @@ export class TeamMapper {
             name: team.name,
             logo: team.logo,
             sport: team.sport,
+            description : team.description,
+            maxPlayers : team.maxPlayers,
             members,
             status: team.status,
             created: team.created
