@@ -14,12 +14,12 @@ export const managerEndpoints = {
     },
 
     deleteTeam: async (teamId: string): Promise<string> => {
-        const { data } = await axiosClient.patch(MANAGER_ROUTES.DELETE_TEAM, teamId);
+        const { data } = await axiosClient.patch(MANAGER_ROUTES.DELETE_TEAM(teamId));
         return data.data;
     },
 
     editTeam: async ({ teamId, updatedData }: { teamId: string; updatedData: FormData }): Promise<Team> => {
-        const { data } = await axiosClient.patch(MANAGER_ROUTES.EDIT_TEAM(teamId), updatedData);
+        const { data } = await axiosClient.put(MANAGER_ROUTES.EDIT_TEAM(teamId), updatedData);
         return data.data;
     },
 }

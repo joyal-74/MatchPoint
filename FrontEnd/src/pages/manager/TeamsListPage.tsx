@@ -48,7 +48,6 @@ const TeamsListPage: React.FC = () => {
                     )}
                 </section>
 
-                {/* Create Team Modal */}
                 <CreateTeamModal
                     isOpen={isCreateModalOpen}
                     onClose={closeCreateModal}
@@ -58,7 +57,6 @@ const TeamsListPage: React.FC = () => {
                     managerId={managerId!}
                 />
 
-                {/* Edit Team Modal */}
                 {selectedTeam && (
                     <EditTeamModal
                         isOpen={isEditModalOpen}

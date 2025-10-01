@@ -8,6 +8,7 @@ export interface TeamMenuProps {
     onAction: (action: MenuAction) => void;
     teamId: string;
     onEdit: (payload: EditTeamPayload) => void;
+    onDelete: (teamId: string) => void;
     name: string;
     sport: string;
     members : Members[];
@@ -17,7 +18,7 @@ export interface TeamMenuProps {
     className?: string;
 }
 
-export default function TeamMenu({ onAction, teamId, onEdit, name, sport, status, members, logo, managerId, className = "" }: TeamMenuProps) {
+export default function TeamMenu({ onAction, teamId, onEdit, onDelete, name, sport, status, members, logo, managerId, className = "" }: TeamMenuProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -40,6 +41,9 @@ export default function TeamMenu({ onAction, teamId, onEdit, name, sport, status
                     teamId,
                     updatedData: { name, sport, status, logo, managerId, members }
                 });
+                break;
+            case 'delete':
+                onDelete(teamId);
                 break;
             default:
                 onAction(action);

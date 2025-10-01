@@ -1,4 +1,4 @@
-import { IAddTeamUseCase, IChangePlayerStatusUseCase, IGetAllTeamsUseCase } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
+import { IAddTeamUseCase, IChangePlayerStatusUseCase, IChangeTeamStatusUseCase, IEditTeamUseCase, IGetAllTeamsUseCase } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -11,6 +11,8 @@ import { BadRequestError } from "domain/errors";
 export class TeamController implements ITeamController {
     constructor(
         private _addTeamUsecase: IAddTeamUseCase,
+        private _editTeamUsecase: IEditTeamUseCase,
+        private _deleteTeamUsecase: IChangeTeamStatusUseCase,
         private _getTeamsUsecase: IGetAllTeamsUseCase,
         private _changeStatusUsecase: IChangePlayerStatusUseCase,
         private _logger: ILogger,
@@ -20,12 +22,7 @@ export class TeamController implements ITeamController {
         const teamData = httpRequest.body;
         const file = httpRequest.file;
 
-        console.log("req.file", httpRequest.file);
-        console.log("req.body", httpRequest.body);
-
-        if(!httpRequest.file) throw new BadRequestError("No logo");
-        
-
+        if (!httpRequest.file) throw new BadRequestError("No logo");
 
         this._logger.info(`[Controller] addNewTeam → managerId=${teamData.managerId}, team=${teamData?.name}`);
 
@@ -34,6 +31,32 @@ export class TeamController implements ITeamController {
         this._logger.info(`[Controller] Team created successfully → managerId=${teamData.managerId}`);
 
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Team created successfully", team));
+    }
+
+    editTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const teamData = httpRequest.body;
+        const file = httpRequest.file;
+        const { teamId } = httpRequest.params;
+
+        this._logger.info(`[Controller] editTeam → teamId=${teamId}, team=${teamData?.name}`);
+
+        const team = await this._editTeamUsecase.execute(teamData, teamId, file);
+
+        this._logger.info(`[Controller] Team created successfully → managerId=${teamData.managerId}`);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team Edited successfully", team));
+    }
+
+    deleteTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { teamId } = httpRequest.params;
+
+        this._logger.info(`[Controller] editTeam → teamId=${teamId}`);
+
+        const id = await this._deleteTeamUsecase.execute(teamId);
+
+        this._logger.info(`[Controller] Team Deleted successfully → TeamID=${teamId}`);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team deleted successfully", id));
     }
 
     getAllTeams = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {

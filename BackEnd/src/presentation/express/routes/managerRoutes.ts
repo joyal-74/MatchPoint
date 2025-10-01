@@ -13,6 +13,10 @@ router.post('/teams/change', expressAdapter(teamManagementController.changePlaye
 
 router.get('/teams/:managerId', expressAdapter(teamManagementController.getAllTeams));
 
+router.patch('/team/:teamId', expressAdapter(teamManagementController.deleteTeam));
+
 router.post("/team", upload.single("logo"), expressFileUpdateHandler(teamManagementController.addNewTeam));
+
+router.put("/team/:teamId", upload.single("logo"), expressFileUpdateHandler(teamManagementController.editTeam));
 
 export default router;

@@ -20,7 +20,7 @@ export interface EditTeamModalProps {
             managerId: string;
             description?: string;
             logo?: string;
-            maxPlayers?: number;
+            maxPlayers?: string;
         };
     };
 }
@@ -35,6 +35,7 @@ export default function EditTeamModal({
     const [sport, setSport] = useState("Cricket");
     const [status, setStatus] = useState(true);
     const [description, setDescription] = useState("");
+    const [maxPlayers, setMaxPlayers] = useState('');
     const [logo, setLogo] = useState<File | null>(null);
     const [logoPreview, setLogoPreview] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -45,6 +46,7 @@ export default function EditTeamModal({
             setSport(teamData.updatedData.sport);
             setStatus(teamData.updatedData.status);
             setDescription(teamData.updatedData.description || "");
+            setMaxPlayers(teamData.updatedData.maxPlayers || '');
 
             if (teamData.updatedData.logo) {
                 setLogoPreview(teamData.updatedData.logo);
@@ -80,6 +82,7 @@ export default function EditTeamModal({
             formData.append("status", status.toString());
             formData.append("managerId", teamData.updatedData.managerId);
             formData.append("description", description);
+            formData.append("maxPlayers", maxPlayers.toString());
 
             // Append logo only if a new file was selected
             if (logo) {
@@ -128,6 +131,16 @@ export default function EditTeamModal({
                         disabled={isLoading}
                     />
 
+                    <FormInput
+                        label="Max Players"
+                        type="text"
+                        value={maxPlayers}
+                        onChange={setMaxPlayers}
+                        placeholder="Enter Maximum player limit"
+                        required
+                        disabled={isLoading}
+                    />
+
                     <FormSelect
                         label="Sport"
                         value={sport}
@@ -146,17 +159,6 @@ export default function EditTeamModal({
                         onChange={setDescription}
                         placeholder="Describe your team, playing style, achievements..."
                         rows={3}
-                        disabled={isLoading}
-                    />
-
-                    <FormSelect
-                        label="Status"
-                        value={status.toString()}
-                        onChange={(value) => setStatus(value === "true")}
-                        options={[
-                            { value: "true", label: "Active" },
-                            { value: "false", label: "Inactive" }
-                        ]}
                         disabled={isLoading}
                     />
 

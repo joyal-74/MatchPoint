@@ -12,7 +12,7 @@ export interface TeamCardProps {
     sport: string;
     members: Members[];
     created: string;
-    maxPlayers: number;
+    maxPlayers: string;
     managerId: string
     status: boolean;
     logo?: string;
@@ -52,6 +52,7 @@ export default function TeamCard({ _id, name, sport, members, created, status, l
                                 members={members}
                                 teamId={_id}
                                 onEdit={onEdit}
+                                onDelete={onDelete}
                                 name={name}
                                 managerId={managerId}
                                 sport={sport}

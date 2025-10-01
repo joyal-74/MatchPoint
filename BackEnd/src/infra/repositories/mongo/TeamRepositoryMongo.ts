@@ -1,6 +1,7 @@
 import { TeamMapper } from "app/mappers/TeamMappers";
 import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
 import { TeamData, TeamRegister } from "domain/dtos/Team.dto";
+import { BadRequestError } from "domain/errors";
 import { TeamModel } from "infra/databases/mongo/models/TeamModel";
 
 export class TeamRepositoryMongo implements ITeamRepository {
@@ -10,7 +11,7 @@ export class TeamRepositoryMongo implements ITeamRepository {
     }
 
     async findAll(managerId: string): Promise<TeamData[]> {
-        const players = await TeamModel.find({ managerId }).lean();
+        const players = await TeamModel.find({ managerId , status : true}).lean();
         return TeamMapper.toTeamMongoDTOs(players);
     }
 
@@ -42,14 +43,20 @@ export class TeamRepositoryMongo implements ITeamRepository {
         return TeamMapper.toTeamMongoDTO(team);
     }
 
-    async update(teamId: string, updates: Partial<TeamRegister>): Promise<TeamData | null> {
+    async update(teamId: string, updates: Partial<TeamRegister>): Promise<TeamData> {
         const updated = await TeamModel.findByIdAndUpdate(
             teamId,
             { $set: updates },
             { new: true, runValidators: true }
         );
 
-        return updated ? TeamMapper.toTeamMongoDTO(updated) : null;
+        console.log(updated)
+
+        if (!updated) {
+            throw new BadRequestError("Team not found or update failed");
+        }
+
+        return TeamMapper.toTeamMongoDTO(updated);
 
     }
 }

@@ -3,7 +3,7 @@ export interface Team {
     managerId: string;
     name: string;
     sport: string;
-    maxPlayers: number;
+    maxPlayers: string;
     members: Members[];
     created: string;
     status: boolean;
@@ -38,7 +38,7 @@ export type EditTeamData = {
     members: Members[];
     description?: string;
     logo?: string;
-    maxPlayers?: number;
+    maxPlayers?: string;
 };
 
 export type TeamData = Omit<Team, "_id">;

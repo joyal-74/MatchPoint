@@ -58,6 +58,7 @@ const managerSlice = createSlice({
                 state.error = null;
             })
             .addCase(deleteTeam.fulfilled, (state, action) => {
+                console.log(action.payload)
                 state.teams = state.teams.filter(team => team._id !== action.payload);
                 state.loading = false;
                 state.error = null;

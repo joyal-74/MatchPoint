@@ -18,7 +18,7 @@ import { RefreshToken } from '../../app/usecases/Authentication/RefreshToken';
 import { VerifyOtp } from 'app/usecases/Authentication/VerifyOtp';
 import { ResetPassword } from 'app/usecases/Authentication/ResetPassword';
 import { ForgotPassword } from 'app/usecases/Authentication/ForgotPassword';
-import { ResendOtp } from 'app/usecases/Authentication/ResendOtp'; 
+import { ResendOtp } from 'app/usecases/Authentication/ResendOtp';
 import { GetAllViewers } from 'app/usecases/admin/GetAllViewers';
 import { GetAllManagers } from 'app/usecases/admin/GetAllManagers';
 import { GetAllPlayers } from 'app/usecases/admin/GetAllPlayers';
@@ -37,6 +37,8 @@ import { AddNewTeamUseCase } from 'app/usecases/manager/teams/AddNewTeam';
 import { TeamRepositoryMongo } from 'infra/repositories/mongo/TeamRepositoryMongo';
 import { GetAllTeamsUseCase } from 'app/usecases/manager/GetTeamList';
 import { ChangePlayerStatusUseCase } from 'app/usecases/manager/teams/ChangePlayerStatus';
+import { EditTeamUseCase } from 'app/usecases/manager/teams/EditTeam';
+import { SoftDeleteTeam } from 'app/usecases/manager/teams/ChangeTeamStatus';
 
 // Repositories
 const userRepository = new UserRepositoryMongo();
@@ -79,8 +81,10 @@ const changeUserStatus = new ChangeUserStatus(userRepository, logger);
 
 // use case (manager)
 const updateManagerProfile = new UpdateManagerProfile(userRepository, imageKitfileProvider);
-const addNewTeam = new AddNewTeamUseCase(teamRepository, teamId, imageKitfileProvider , logger,);
-const getallTeams = new GetAllTeamsUseCase(teamRepository,logger);
+const addNewTeam = new AddNewTeamUseCase(teamRepository, teamId, imageKitfileProvider, logger);
+const editTeam = new EditTeamUseCase(teamRepository, imageKitfileProvider, logger);
+const deleteTeam = new SoftDeleteTeam(teamRepository, logger);
+const getallTeams = new GetAllTeamsUseCase(teamRepository, logger);
 const changeTeamStatus = new ChangePlayerStatusUseCase(teamRepository);
 
 
@@ -95,7 +99,7 @@ export const authController = new AuthController(loginUser, loginAdmin, logout, 
 
 export const usersManagementController = new UsersManagementController(getAllManagers, getAllPlayers, getAllViewers, changeUserStatus);
 
-export const teamManagementController = new TeamController(addNewTeam, getallTeams, changeTeamStatus, logger);
+export const teamManagementController = new TeamController(addNewTeam, editTeam, deleteTeam, getallTeams, changeTeamStatus, logger);
 
 export const updateManagerProfileController = new ProfileController(updateManagerProfile);
 
