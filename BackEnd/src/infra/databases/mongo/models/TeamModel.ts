@@ -1,4 +1,5 @@
 import { Schema, model, Types, Document } from "mongoose";
+import { playerStatus, TeamStatus } from "../types/Team";
 
 export interface TeamDocument extends Document {
     _id: Types.ObjectId;
@@ -7,13 +8,13 @@ export interface TeamDocument extends Document {
     name: string;
     logo: string;
     sport: string;
-    description : string;
-    maxPlayers : number;
+    description: string;
+    maxPlayers: number;
     members: {
         playerId: Types.ObjectId;
-        status: "playing" | "sub";
+        status: playerStatus;
     }[];
-    status: boolean;
+    status: TeamStatus;
     created: Date;
 }
 
@@ -26,15 +27,13 @@ const TeamSchema = new Schema<TeamDocument>({
     description: { type: String, required: true },
     maxPlayers: { type: Number, required: true },
     members: {
-        type: [
-            {
-                playerId: { type: Schema.Types.ObjectId, ref: "Player" },
-                status: { type: String, enum: ["playing", "sub"], default: "sub" }
-            }
-        ],
+        type: [{
+            playerId: { type: Schema.Types.ObjectId, ref: "Player" },
+            status: { type: String, enum: ["playing", "sub"], default: "sub" }
+        }],
         default: []
     },
-    status: { type: Boolean, default: true },
+    status: { type: String, enum: ["active", "blocked", "deleted"], default: "active" },
     created: { type: Date, default: Date.now }
 });
 

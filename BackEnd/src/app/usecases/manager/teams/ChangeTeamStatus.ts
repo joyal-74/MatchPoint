@@ -16,7 +16,7 @@ export class SoftDeleteTeam implements IChangeTeamStatusUseCase {
 
         if (!teamExist) throw new BadRequestError('No team exist with this teamId');
 
-        const teamData = await this._teamRepo.update(teamId, { status: false })
+        const teamData = await this._teamRepo.update(teamId, { status: "deleted" })
 
         this._logger.info(`Successfully deleted team with Id :  ${teamId}`);
 

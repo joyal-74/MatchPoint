@@ -84,7 +84,7 @@ const Navbar: React.FC = () => {
 
                         {showProfileCard && (
                             <div className="absolute right-0 mt-2">
-                                <ProfileCard onLogout={handleLogout} />
+                                <ProfileCard onLogout={handleLogout} onTeams={() => navigate("/manager/teams")} />
                             </div>
                         )}
                     </div>

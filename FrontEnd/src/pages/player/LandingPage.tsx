@@ -3,7 +3,7 @@ import Navbar from '../../components/viewer/Navbar';
 import Footer from '../../components/viewer/Footer';
 import image from '../../assets/images/cricket-4.png'
 
-export default function CricketPlayerDashboard() {
+export const PlayerDashboard: React.FC = () => {
     const features = [
         {
             icon: Trophy,
@@ -128,14 +128,13 @@ export default function CricketPlayerDashboard() {
 
                                     <div className="space-y-4">
                                         <p className="text-xl font-semibold text-neutral-700 dark:text-neutral-200 text-left leading-relaxed">
-                                            Discover upcoming cricket tournaments, join your teammates in live matches
+                                            Discover upcoming sports tournaments, join your teammates in live matches
                                         </p>
 
                                         <p className="text-lg text-neutral-400 text-left leading-relaxed">
-                                            Join the ultimate cricket experience. Track matches, follow players,
-                                            and immerse yourself in the world of competitive cricket.
+                                            Join the ultimate sports experience. Track matches, follow players,
+                                            and immerse yourself in the world of competitive sports.
                                         </p>
-
                                     </div>
                                 </div>
 
@@ -168,7 +167,7 @@ export default function CricketPlayerDashboard() {
 
                             <div className="relative flex justify-end">
 
-                                <div className="w-75 h-75 lg:w-80 lg:h-96 bg-emerald-700 rounded-2xl transform rotate-15 bottom-4 top-4 absolute" />
+                                <div className="w-75 h-75 lg:w-80 lg:h-96 bg-green-400/20 rounded-2xl transform right-10 rotate-15 bottom-4 top-4 absolute" />
 
                                 <img
                                     src={image}
@@ -190,10 +189,10 @@ export default function CricketPlayerDashboard() {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-12">
                             <h2 className="text-3xl lg:text-4xl font-bold mb-4 py-2 bg-gradient-to-r from-neutral-900 to-neutral-700 dark:from-neutral-0 dark:to-neutral-300 bg-clip-text text-transparent">
-                                Everything You Need for Cricket
+                                Everything You Need for Sports
                             </h2>
                             <p className="text-lg text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto">
-                                From tournament participation to live streaming and team coordination - your complete cricket companion.
+                                From tournament participation to live streaming and team coordination - your complete sports companion.
                             </p>
                         </div>
 
@@ -372,3 +371,5 @@ export default function CricketPlayerDashboard() {
         </div >
     );
 }
+
+export default PlayerDashboard;

@@ -11,7 +11,7 @@ export class TeamRepositoryMongo implements ITeamRepository {
     }
 
     async findAll(managerId: string): Promise<TeamData[]> {
-        const players = await TeamModel.find({ managerId , status : true}).lean();
+        const players = await TeamModel.find({ managerId , status : 'active'}).lean();
         return TeamMapper.toTeamMongoDTOs(players);
     }
 
@@ -24,7 +24,7 @@ export class TeamRepositoryMongo implements ITeamRepository {
 
 
     async findByName(name: string): Promise<TeamData | null> {
-        const team = await TeamModel.findOne({ name }).lean();
+        const team = await TeamModel.findOne({ name, status : true }).lean();
         if (!team) return null;
 
         return TeamMapper.toTeamMongoDTO(team);
@@ -50,13 +50,10 @@ export class TeamRepositoryMongo implements ITeamRepository {
             { new: true, runValidators: true }
         );
 
-        console.log(updated)
-
         if (!updated) {
             throw new BadRequestError("Team not found or update failed");
         }
 
         return TeamMapper.toTeamMongoDTO(updated);
-
     }
 }

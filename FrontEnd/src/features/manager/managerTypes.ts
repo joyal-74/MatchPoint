@@ -1,3 +1,7 @@
+export type TeamStatus = 'active' | 'blocked' | 'deleted'
+export type playerStatus = "playing" | "sub";
+
+
 export interface Team {
     _id: string;
     managerId: string;
@@ -6,14 +10,14 @@ export interface Team {
     maxPlayers: string;
     members: Members[];
     created: string;
-    status: boolean;
+    status: TeamStatus;
     logo: string;
     description?: string;
 }
 
 export interface Members {
     playerId: string;
-    status: "playing" | "sub";
+    status: playerStatus;
 }
 
 export interface EditTeamPayload {
@@ -33,7 +37,7 @@ export type CreateTeamData = {
 export type EditTeamData = {
     name: string;
     sport: string;
-    status: boolean;
+    status: TeamStatus;
     managerId: string;
     members: Members[];
     description?: string;

@@ -18,7 +18,7 @@ const Sidebar: React.FC = () => {
 
     const menuItems: MenuItem[] = [
         { name: "Profile", path: "/manager/profile", icon: <User size={20} /> },
-        { name: "My Teams", path: "/manager/groups", icon: <Users2 size={20} /> },
+        { name: "My Teams", path: "/manager/teams", icon: <Users2 size={20} /> },
         { name: "Subscription", path: "/manager/subscription", icon: <CreditCard size={20} /> },
         { name: "Payments", path: "/manager/payments", icon: <DollarSign size={20} /> },
         { name: "Settings", path: "/manager/settings", icon: <Settings size={20} /> },

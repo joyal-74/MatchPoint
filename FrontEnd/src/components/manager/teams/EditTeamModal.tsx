@@ -16,7 +16,6 @@ export interface EditTeamModalProps {
         updatedData: {
             name: string;
             sport: string;
-            status: boolean;
             managerId: string;
             description?: string;
             logo?: string;
@@ -33,7 +32,6 @@ export default function EditTeamModal({
 }: EditTeamModalProps) {
     const [name, setName] = useState("");
     const [sport, setSport] = useState("Cricket");
-    const [status, setStatus] = useState(true);
     const [description, setDescription] = useState("");
     const [maxPlayers, setMaxPlayers] = useState('');
     const [logo, setLogo] = useState<File | null>(null);
@@ -44,7 +42,6 @@ export default function EditTeamModal({
         if (teamData) {
             setName(teamData.updatedData.name);
             setSport(teamData.updatedData.sport);
-            setStatus(teamData.updatedData.status);
             setDescription(teamData.updatedData.description || "");
             setMaxPlayers(teamData.updatedData.maxPlayers || '');
 
@@ -79,7 +76,6 @@ export default function EditTeamModal({
 
             formData.append("name", name.trim());
             formData.append("sport", sport);
-            formData.append("status", status.toString());
             formData.append("managerId", teamData.updatedData.managerId);
             formData.append("description", description);
             formData.append("maxPlayers", maxPlayers.toString());
