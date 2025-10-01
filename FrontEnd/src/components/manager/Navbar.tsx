@@ -41,33 +41,27 @@ const Navbar: React.FC = () => {
     };
 
     return (
-        <div>
+        <>
             <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-20 py-3 bg-[var(--color-surface)] border-b border-[var(--color-border)] shadow-[var(--shadow-sm)]">
-                <h1 className="text-[var(--color-text-primary)] text-2xl font-rowdies">
-                    <span className="text-[var(--color-primary)]">M</span>
-                    atch
-                    <span className="text-[var(--color-primary)]">P</span>
-                    oint
-                </h1>
+                <div className="flex items-center justify-between w-1/3">
+                    <h1 className="text-[var(--color-text-primary)] text-2xl font-rowdies">
+                        <span className="text-[var(--color-primary)]">M</span>atch
+                        <span className="text-[var(--color-primary)]">P</span>oint
+                    </h1>
 
-                <ul className="hidden md:flex gap-8 lg:gap-12 ml-12 text-[var(--color-text-primary)] font-medium">
-                    <li>
-                        <a
-                            href="#"
-                            className="text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors duration-200 font-semibold"
-                        >
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="#"
-                            className="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors duration-200"
-                        >
-                            Tournaments
-                        </a>
-                    </li>
-                </ul>
+                    <ul className="hidden md:flex gap-8 lg:gap-12 ml-12 text-[var(--color-text-primary)] font-medium">
+                        <li>
+                            <a onClick={() => navigate('/manager/dashboard')}
+                                className="text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors duration-200 font-semibold"
+                            > Home </a>
+                        </li>
+                        <li>
+                            <a onClick={() => navigate('/manager/tournaments')}
+                                className="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors duration-200"
+                            > Tournaments </a>
+                        </li>
+                    </ul>
+                </div>
 
                 <div className="flex items-center gap-3 md:gap-4 relative">
                     <button className="relative p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-secondary)] rounded-full transition-all duration-200">
@@ -90,7 +84,7 @@ const Navbar: React.FC = () => {
                     </div>
                 </div>
             </nav>
-        </div>
+        </>
     );
 };
 

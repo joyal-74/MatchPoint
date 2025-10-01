@@ -1,25 +1,25 @@
-import { TeamMapper } from "app/mappers/TeamMappers";
 import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
 import { TeamData, TeamRegister } from "domain/dtos/Team.dto";
 import { BadRequestError } from "domain/errors";
 import { TeamModel } from "infra/databases/mongo/models/TeamModel";
+import { TeamMongoMapper } from "infra/utils/mappers/TeamMongoMapper";
 
 export class TeamRepositoryMongo implements ITeamRepository {
     async create(teamData: TeamRegister): Promise<TeamData> {
         const created = await TeamModel.create(teamData);
-        return TeamMapper.toTeamMongoDTO(created);
+        return TeamMongoMapper.toDomain(created);
     }
 
     async findAll(managerId: string): Promise<TeamData[]> {
         const players = await TeamModel.find({ managerId , status : 'active'}).lean();
-        return TeamMapper.toTeamMongoDTOs(players);
+        return TeamMongoMapper.toDomainArray(players);
     }
 
     async findById(id: string): Promise<TeamData | null> {
         const team = await TeamModel.findById(id).lean();
         if (!team) return null;
 
-        return TeamMapper.toTeamMongoDTO(team);
+        return TeamMongoMapper.toDomain(team);
     }
 
 
@@ -27,7 +27,7 @@ export class TeamRepositoryMongo implements ITeamRepository {
         const team = await TeamModel.findOne({ name, status : true }).lean();
         if (!team) return null;
 
-        return TeamMapper.toTeamMongoDTO(team);
+        return TeamMongoMapper.toDomain(team);
     }
 
     async togglePlayerStatus(teamId: string, playerId: string): Promise<TeamData | null> {
@@ -40,7 +40,7 @@ export class TeamRepositoryMongo implements ITeamRepository {
         member.status = member.status === "playing" ? "sub" : "playing";
 
         await team.save();
-        return TeamMapper.toTeamMongoDTO(team);
+        return TeamMongoMapper.toDomain(team);
     }
 
     async update(teamId: string, updates: Partial<TeamRegister>): Promise<TeamData> {
@@ -54,6 +54,6 @@ export class TeamRepositoryMongo implements ITeamRepository {
             throw new BadRequestError("Team not found or update failed");
         }
 
-        return TeamMapper.toTeamMongoDTO(updated);
+        return TeamMongoMapper.toDomain(updated);
     }
 }

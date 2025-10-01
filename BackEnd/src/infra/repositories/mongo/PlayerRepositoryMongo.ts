@@ -1,10 +1,7 @@
 import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
-import { PlayerRegisterResponseDTO } from "domain/dtos/Player.dto";
 import { Player, PlayerRegister, PlayerResponse } from "domain/entities/Player";
-import { User, UserResponse } from "domain/entities/User";
 import { UserRole } from "domain/enums/Roles";
 import { PlayerModel } from "infra/databases/mongo/models/PlayerModel";
-import { UserModel } from "infra/databases/mongo/models/UserModel";
 
 
 export class PlayerRepositoryMongo implements IPlayerRepository {

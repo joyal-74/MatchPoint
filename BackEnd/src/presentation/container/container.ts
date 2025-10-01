@@ -31,7 +31,7 @@ import { ChangeUserStatus } from 'app/usecases/admin/ChangeUserStatus';
 import { verifyTokenMiddleware } from 'presentation/express/middlewares/verifyTokenMiddleware';
 import { AuthController } from 'presentation/http/controllers/authentication/AuthController';
 import { UsersManagementController } from 'presentation/http/controllers/admin/UsersManagementController';
-import { ManagerIdGenerator, PlayerIdGenerator, TeamIdGenerator, UserIdGenerator } from 'infra/providers/IdGenerator';
+import { ManagerIdGenerator, PlayerIdGenerator, TeamIdGenerator, TournamentIdGenerator, UserIdGenerator } from 'infra/providers/IdGenerator';
 import { TeamController } from 'presentation/http/controllers/manager/TeamController';
 import { AddNewTeamUseCase } from 'app/usecases/manager/teams/AddNewTeam';
 import { TeamRepositoryMongo } from 'infra/repositories/mongo/TeamRepositoryMongo';
@@ -39,6 +39,12 @@ import { GetAllTeamsUseCase } from 'app/usecases/manager/GetTeamList';
 import { ChangePlayerStatusUseCase } from 'app/usecases/manager/teams/ChangePlayerStatus';
 import { EditTeamUseCase } from 'app/usecases/manager/teams/EditTeam';
 import { SoftDeleteTeam } from 'app/usecases/manager/teams/ChangeTeamStatus';
+import { TournamentController } from 'presentation/http/controllers/manager/TournamentController';
+import { GetMyTournamentsUseCase } from 'app/usecases/manager/tournaments/GetMyTournaments';
+import { TournamentRepositoryMongo } from 'infra/repositories/mongo/TournamentRepoMongo';
+import { GetExploreTournamentsUseCase } from 'app/usecases/manager/tournaments/GetExploreTournaments';
+import { AddTournamentUseCase } from 'app/usecases/manager/tournaments/AddTournament';
+import { EditTournamentUseCase } from 'app/usecases/manager/tournaments/EditTournament';
 
 // Repositories
 const userRepository = new UserRepositoryMongo();
@@ -46,6 +52,7 @@ const adminRepository = new AdminRepositoryMongo();
 const playerRepository = new PlayerRepositoryMongo();
 const managerRepository = new ManagerRepositoryMongo();
 const teamRepository = new TeamRepositoryMongo();
+const tournamentRepository = new TournamentRepositoryMongo();
 
 // Infra Services
 const jwtService = new JWTService();
@@ -56,6 +63,7 @@ const otpService = new OtpRepositoryMongo();
 const imageKitfileProvider = new ImageKitFileStorage();
 const logger = new WinstonLogger();
 const teamId = new TeamIdGenerator();
+const tournamentId = new TournamentIdGenerator();
 const userId = new UserIdGenerator();
 const playerId = new PlayerIdGenerator();
 const managerId = new ManagerIdGenerator();
@@ -87,6 +95,11 @@ const deleteTeam = new SoftDeleteTeam(teamRepository, logger);
 const getallTeams = new GetAllTeamsUseCase(teamRepository, logger);
 const changeTeamStatus = new ChangePlayerStatusUseCase(teamRepository);
 
+const getMyTournaments = new GetMyTournamentsUseCase(tournamentRepository, logger);
+const getExploreTournaments = new GetExploreTournamentsUseCase(tournamentRepository, logger)
+const addTournament = new AddTournamentUseCase(tournamentRepository, tournamentId, logger);
+const editTournament = new EditTournamentUseCase(tournamentRepository, logger);
+
 
 const scheduler = new NodeCronScheduler();
 
@@ -100,6 +113,8 @@ export const authController = new AuthController(loginUser, loginAdmin, logout, 
 export const usersManagementController = new UsersManagementController(getAllManagers, getAllPlayers, getAllViewers, changeUserStatus);
 
 export const teamManagementController = new TeamController(addNewTeam, editTeam, deleteTeam, getallTeams, changeTeamStatus, logger);
+
+export const tournamentManagementController = new TournamentController(getMyTournaments, getExploreTournaments, addTournament, editTournament, logger);
 
 export const updateManagerProfileController = new ProfileController(updateManagerProfile);
 

@@ -1,36 +1,35 @@
 export type Formats = {
-    Knockout : 'knockout',
-    League : 'league',
-    Friendly : 'friendly',
+    Knockout: 'knockout',
+    League: 'league',
+    Friendly: 'friendly',
 }
 
+export type Status = "upcoming" | "ongoing" | "ended"
 
 export interface Tournament {
-    id: string;
-    managerId : string;
+    _id : string;
+    tourId: string;
+    managerId: string;
     name: string;
     logo: string;
-    sport : string;
-    description : string;
-    start_date : Date;
-    registration_end : Date;
-    location : string;
-    max_teams : number;
-    entry_fee : string;
-    format : Formats;
-    price_pool : number;
+    sport: string;
+    description: string;
+    startDate: Date;
+    endDate: Date;
+    location: string;
+    maxTeams: number;
+    prizePool: number;
+    entry_fee: string;
+    status: Status;
+    format: Formats;
+    price_pool: number;
+    isDeleted : boolean;
     date: string;
     venue: string;
 }
 
-export interface ITournamentsResponse {
-    myTournaments: Tournament[];
-    exploreTournaments: Tournament[];
-}
-
-
 export interface TournamentRegister {
-    id: string;
+    tourId: string;
     name: string;
     date: string;
     venue: string;

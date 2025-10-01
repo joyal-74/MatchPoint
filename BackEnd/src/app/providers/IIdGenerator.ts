@@ -13,3 +13,7 @@ export interface IPlayerIdGenerator {
 export interface ITeamIdGenerator {
     generate(): string;
 }
+
+export interface ITournamentIdGenerator {
+    generate(): string;
+}

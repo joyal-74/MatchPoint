@@ -1,73 +1,61 @@
-import { Calendar, Edit, Eye, MapPin, Star, Trash2, Users } from "lucide-react";
+import { Calendar, DollarSign, MapPin, Users } from "lucide-react";
+import { completedColorScheme, getColorScheme } from "../teams/TeamCard/teamColors";
+import { ActionButtons } from "./TournamentCard/ActionButtons";
+import { CardActionButton } from "./TournamentCard/CardActionButton";
+import { InfoRow } from "./TournamentCard/InfoRow";
+import { StatusBadge } from "./TournamentCard/StatusBadge";
+import PrizePoolBadge from "./TournamentCard/PricePoolBadge";
 
-interface Tournament {
-    id: string;
-    name: string;
-    type: string;
-    status: 'active' | 'upcoming' | 'completed';
-    participants: number;
-    maxParticipants: number;
-    startDate: string;
-    location: string;
-    prize: string;
-    image: string;
-    organizer: string;
+
+interface TournamentCardProps {
+    title: string;
+    date: string;
+    venue: string;
+    teams: string;
+    fee: string;
+    status: "upcoming" | "ongoing" | "completed";
+    type: "manage" | "explore";
+    index: number;
 }
 
-const TournamentCard: React.FC<{ tournament: Tournament; showActions?: boolean }> = ({
-    tournament,
-    showActions = true
-}) => (
-    <div className="tournament-card p-6">
-        <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center space-x-4">
-                <div className="text-4xl">{tournament.image}</div>
-                <div>
-                    <h3 className="font-bold text-lg text-white">{tournament.name}</h3>
-                    <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                        {tournament.type} • {tournament.organizer}
-                    </p>
+export default function TournamentCard({ title, date, venue, teams, fee, status, type, index, }: TournamentCardProps) {
+    const colorScheme = status === "completed" ? completedColorScheme : getColorScheme(index);
+
+    return (
+        <div
+            className={` group relative p-6 rounded-2xl border backdrop-blur-sm bg-gradient-to-br ${colorScheme.cardGradient} ${colorScheme.cardBorder}
+                transition-all duration-300 hover:scale-[1.02] hover:shadow-xl
+            `}
+        > {status === "ongoing" && (
+            <div
+                className={` absolute inset-0 rounded-2xl bg-gradient-to-br ${colorScheme.bg} 
+                    opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                `}
+            />
+        )}
+
+            <div className="relative z-10">
+                <div className="flex justify-between items-start mb-4">
+                    <h3 className="font-bold text-lg text-white pr-2 line-clamp-2 leading-tight">{title}</h3>
+                    {type === "manage" && <ActionButtons status={status} colorScheme={colorScheme} />}
+                </div>
+
+                {/* Info */}
+                <div className="space-y-3 mb-4">
+                    <InfoRow icon={<Calendar size={14} />} label={date} completed={status === "completed"} />
+                    <InfoRow icon={<MapPin size={14} />} label={venue} completed={status === "completed"} />
+                    <InfoRow icon={<Users size={14} />} label={teams} completed={status === "completed"} />
+                    <InfoRow icon={<DollarSign size={14} />} label={`${fee} Entry Fee`} completed={status === "completed"} />
+
+                </div>
+
+                <PrizePoolBadge colorScheme={colorScheme} amount="₹50,000" />
+
+                <div className="flex items-center justify-between mt-4">
+                    <StatusBadge status={status} colorScheme={colorScheme} />
+                    <CardActionButton status={status} type={type} colorScheme={colorScheme} />
                 </div>
             </div>
-            <span className={`status-badge status-${tournament.status}`}>
-                {tournament.status}
-            </span>
         </div>
-
-        <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
-            <div className="flex items-center space-x-2">
-                <Users className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                <span>{tournament.participants}/{tournament.maxParticipants}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-                <Calendar className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                <span>{tournament.startDate}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                <span>{tournament.location}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-                <Star className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                <span>{tournament.prize}</span>
-            </div>
-        </div>
-
-        {showActions && (
-            <div className="flex space-x-2">
-                <button className="flex-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center justify-center space-x-2 transition-colors">
-                    <Eye className="w-4 h-4" />
-                    <span>View</span>
-                </button>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition-colors">
-                    <Edit className="w-4 h-4" />
-                </button>
-                <button className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-colors">
-                    <Trash2 className="w-4 h-4" />
-                </button>
-            </div>
-        )}
-    </div>
-);
-
-export default TournamentCard;
+    );
+}

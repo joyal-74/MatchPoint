@@ -1,9 +1,15 @@
-import { IManagerIdGenerator, IPlayerIdGenerator, ITeamIdGenerator, IUserIdGenerator } from "app/providers/IIdGenerator";
+import { IManagerIdGenerator, IPlayerIdGenerator, ITeamIdGenerator, ITournamentIdGenerator, IUserIdGenerator } from "app/providers/IIdGenerator";
 import { nanoid } from 'nanoid';
 
 export class TeamIdGenerator implements ITeamIdGenerator {
     generate(): string {
         return `TM-${nanoid(10)}`;
+    }
+}
+
+export class TournamentIdGenerator implements ITournamentIdGenerator {
+    generate(): string {
+        return `TMT-${nanoid(10)}`;
     }
 }
 

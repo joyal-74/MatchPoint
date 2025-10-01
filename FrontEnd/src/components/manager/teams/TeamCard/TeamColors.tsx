@@ -1,5 +1,3 @@
-
-// teamColors.ts - Shared color palette
 export interface ColorScheme {
     bg: string;
     border: string;
@@ -12,6 +10,8 @@ export interface ColorScheme {
     buttonHoverBg: string;
     buttonBorder: string;
     buttonHoverBorder: string;
+    cardGradient: string;
+    cardBorder: string;
 }
 
 export const colorPalette: ColorScheme[] = [
@@ -26,7 +26,9 @@ export const colorPalette: ColorScheme[] = [
         buttonBg: 'bg-blue-500/10',
         buttonHoverBg: 'hover:bg-blue-500/20',
         buttonBorder: 'border-blue-500/30',
-        buttonHoverBorder: 'hover:border-blue-500/50'
+        buttonHoverBorder: 'hover:border-blue-500/50',
+        cardGradient: 'from-blue-900/30 to-blue-800/20',
+        cardBorder: 'border-blue-700/30'
     },
     {
         bg: 'from-emerald-500/10 to-emerald-600/5',
@@ -39,7 +41,9 @@ export const colorPalette: ColorScheme[] = [
         buttonBg: 'bg-emerald-500/10',
         buttonHoverBg: 'hover:bg-emerald-500/20',
         buttonBorder: 'border-emerald-500/30',
-        buttonHoverBorder: 'hover:border-emerald-500/50'
+        buttonHoverBorder: 'hover:border-emerald-500/50',
+        cardGradient: 'from-emerald-900/30 to-emerald-800/20',
+        cardBorder: 'border-emerald-700/30'
     },
     {
         bg: 'from-purple-500/10 to-purple-600/5',
@@ -52,7 +56,9 @@ export const colorPalette: ColorScheme[] = [
         buttonBg: 'bg-purple-500/10',
         buttonHoverBg: 'hover:bg-purple-500/20',
         buttonBorder: 'border-purple-500/30',
-        buttonHoverBorder: 'hover:border-purple-500/50'
+        buttonHoverBorder: 'hover:border-purple-500/50',
+        cardGradient: 'from-purple-900/30 to-violet-800/20',
+        cardBorder: 'border-purple-700/30'
     },
     {
         bg: 'from-pink-500/10 to-pink-600/5',
@@ -65,7 +71,9 @@ export const colorPalette: ColorScheme[] = [
         buttonBg: 'bg-pink-500/10',
         buttonHoverBg: 'hover:bg-pink-500/20',
         buttonBorder: 'border-pink-500/30',
-        buttonHoverBorder: 'hover:border-pink-500/50'
+        buttonHoverBorder: 'hover:border-pink-500/50',
+        cardGradient: 'from-pink-900/30 to-rose-800/20',
+        cardBorder: 'border-pink-700/30'
     },
     {
         bg: 'from-orange-500/10 to-orange-600/5',
@@ -78,7 +86,9 @@ export const colorPalette: ColorScheme[] = [
         buttonBg: 'bg-orange-500/10',
         buttonHoverBg: 'hover:bg-orange-500/20',
         buttonBorder: 'border-orange-500/30',
-        buttonHoverBorder: 'hover:border-orange-500/50'
+        buttonHoverBorder: 'hover:border-orange-500/50',
+        cardGradient: 'from-orange-900/30 to-amber-800/20',
+        cardBorder: 'border-orange-700/30'
     },
     {
         bg: 'from-cyan-500/10 to-cyan-600/5',
@@ -91,7 +101,9 @@ export const colorPalette: ColorScheme[] = [
         buttonBg: 'bg-cyan-500/10',
         buttonHoverBg: 'hover:bg-cyan-500/20',
         buttonBorder: 'border-cyan-500/30',
-        buttonHoverBorder: 'hover:border-cyan-500/50'
+        buttonHoverBorder: 'hover:border-cyan-500/50',
+        cardGradient: 'from-cyan-900/30 to-cyan-800/20',
+        cardBorder: 'border-cyan-700/30'
     },
     {
         bg: 'from-amber-500/10 to-amber-600/5',
@@ -104,7 +116,9 @@ export const colorPalette: ColorScheme[] = [
         buttonBg: 'bg-amber-500/10',
         buttonHoverBg: 'hover:bg-amber-500/20',
         buttonBorder: 'border-amber-500/30',
-        buttonHoverBorder: 'hover:border-amber-500/50'
+        buttonHoverBorder: 'hover:border-amber-500/50',
+        cardGradient: 'from-amber-900/30 to-yellow-800/20',
+        cardBorder: 'border-amber-700/30'
     },
     {
         bg: 'from-teal-500/10 to-teal-600/5',
@@ -117,7 +131,9 @@ export const colorPalette: ColorScheme[] = [
         buttonBg: 'bg-teal-500/10',
         buttonHoverBg: 'hover:bg-teal-500/20',
         buttonBorder: 'border-teal-500/30',
-        buttonHoverBorder: 'hover:border-teal-500/50'
+        buttonHoverBorder: 'hover:border-teal-500/50',
+        cardGradient: 'from-teal-900/30 to-teal-800/20',
+        cardBorder: 'border-teal-700/30'
     },
     {
         bg: 'from-indigo-500/10 to-indigo-600/5',
@@ -130,7 +146,9 @@ export const colorPalette: ColorScheme[] = [
         buttonBg: 'bg-indigo-500/10',
         buttonHoverBg: 'hover:bg-indigo-500/20',
         buttonBorder: 'border-indigo-500/30',
-        buttonHoverBorder: 'hover:border-indigo-500/50'
+        buttonHoverBorder: 'hover:border-indigo-500/50',
+        cardGradient: 'from-indigo-900/30 to-indigo-800/20',
+        cardBorder: 'border-indigo-700/30'
     },
     {
         bg: 'from-rose-500/10 to-rose-600/5',
@@ -143,7 +161,9 @@ export const colorPalette: ColorScheme[] = [
         buttonBg: 'bg-rose-500/10',
         buttonHoverBg: 'hover:bg-rose-500/20',
         buttonBorder: 'border-rose-500/30',
-        buttonHoverBorder: 'hover:border-rose-500/50'
+        buttonHoverBorder: 'hover:border-rose-500/50',
+        cardGradient: 'from-rose-900/30 to-rose-800/20',
+        cardBorder: 'border-rose-700/30'
     },
     {
         bg: 'from-violet-500/10 to-violet-600/5',
@@ -156,7 +176,9 @@ export const colorPalette: ColorScheme[] = [
         buttonBg: 'bg-violet-500/10',
         buttonHoverBg: 'hover:bg-violet-500/20',
         buttonBorder: 'border-violet-500/30',
-        buttonHoverBorder: 'hover:border-violet-500/50'
+        buttonHoverBorder: 'hover:border-violet-500/50',
+        cardGradient: 'from-violet-900/30 to-violet-800/20',
+        cardBorder: 'border-violet-700/30'
     },
     {
         bg: 'from-lime-500/10 to-lime-600/5',
@@ -169,10 +191,28 @@ export const colorPalette: ColorScheme[] = [
         buttonBg: 'bg-lime-500/10',
         buttonHoverBg: 'hover:bg-lime-500/20',
         buttonBorder: 'border-lime-500/30',
-        buttonHoverBorder: 'hover:border-lime-500/50'
+        buttonHoverBorder: 'hover:border-lime-500/50',
+        cardGradient: 'from-lime-900/30 to-lime-800/20',
+        cardBorder: 'border-lime-700/30'
     }
 ];
 
 export const getColorScheme = (index: number): ColorScheme => {
     return colorPalette[index % colorPalette.length];
+};
+
+export const completedColorScheme: ColorScheme = {
+    bg: 'from-neutral-500/10 to-neutral-600/5',
+    border: 'border-neutral-500/30',
+    hoverBorder: 'hover:border-neutral-500/50',
+    accent: 'bg-neutral-500',
+    glow: 'shadow-neutral-500/10',
+    text: 'text-neutral-400',
+    hoverText: 'hover:text-neutral-300',
+    buttonBg: 'bg-neutral-500/10',
+    buttonHoverBg: 'hover:bg-neutral-500/20',
+    buttonBorder: 'border-neutral-500/30',
+    buttonHoverBorder: 'hover:border-neutral-500/50',
+    cardGradient: 'from-neutral-800/80 to-neutral-700/60',
+    cardBorder: 'border-neutral-700'
 };

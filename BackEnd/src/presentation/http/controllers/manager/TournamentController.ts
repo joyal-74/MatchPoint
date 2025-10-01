@@ -1,5 +1,5 @@
 import { ILogger } from "app/providers/ILogger";
-import { IAddTournament, IEditTournament, IGetAllTournaments } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { IAddTournament, IEditTournament, IGetExploreTournaments, IGetMyTournaments } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -9,20 +9,29 @@ import { ITournamentController } from "presentation/http/interfaces/ITournamentC
 
 export class TournamentController implements ITournamentController {
     constructor(
-        private _getAllTournamentsUsecase: IGetAllTournaments,
+        private _getMyTournamentsUsecase: IGetMyTournaments,
+        private _getExploreTournamentsUsecase: IGetExploreTournaments,
         private _addTournamentsUsecase: IAddTournament,
         private _editTournamentsUsecase: IEditTournament,
         private _logger: ILogger
     ) { }
 
-    getAllTournament = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+    getMyTournaments = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { managerId } = httpRequest.params;
 
-        this._logger.info(
-            `[TournamentController] getAllTournament → managerId=${managerId}`
-        );
+        this._logger.info(`[TournamentController] getAllTournament → managerId=${managerId}`);
 
-        const result = await this._getAllTournamentsUsecase.execute(managerId);
+        const result = await this._getMyTournamentsUsecase.execute(managerId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournaments fetched successfully", result));
+    };
+
+    getExploreTournaments = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { managerId } = httpRequest.params;
+
+        this._logger.info(`[TournamentController] getAllTournament → managerId=${managerId}`);
+
+        const result = await this._getExploreTournamentsUsecase.execute(managerId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournaments fetched successfully", result));
     };
@@ -30,9 +39,7 @@ export class TournamentController implements ITournamentController {
     addNewTournament = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentData = httpRequest.body;
 
-        this._logger.info(
-            `[TournamentController] addNewTournament → managerId=${tournamentData.managerId}, name=${tournamentData.name}`
-        );
+        this._logger.info(  `[TournamentController] addNewTournament → managerId=${tournamentData.managerId}`);
 
         const result = await this._addTournamentsUsecase.execute(tournamentData);
 
@@ -42,9 +49,7 @@ export class TournamentController implements ITournamentController {
     editTournament = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentData = httpRequest.body;
 
-        this._logger.info(
-            `[TournamentController] editTournament → managerId=${tournamentData.managerId}, name=${tournamentData.name}`
-        );
+        this._logger.info(`[TournamentController] editTournament → managerId=${tournamentData.managerId}`);
 
         const result = await this._editTournamentsUsecase.execute(tournamentData)
 
