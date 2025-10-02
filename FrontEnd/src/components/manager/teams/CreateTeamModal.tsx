@@ -1,10 +1,10 @@
 import { type FormEvent, useState } from "react";
 import ModalBackdrop from "../../ui/ModalBackdrop";
-import ModalHeader from "./Modal/ModalHeader";
+import ModalHeader from "../../shared/modal/ModalHeader";
 import LogoUpload from "./Modal/LogoUpload";
 import FormInput from "./Modal/FormInput";
 import FormSelect from "./Modal/FormSelect";
-import FormActions from "./Modal/FormActions";
+import FormActions from "../../shared/modal/FormActions";
 import FormTextarea from "./Modal/FormTextarea";
 
 export interface CreateTeamModalProps {

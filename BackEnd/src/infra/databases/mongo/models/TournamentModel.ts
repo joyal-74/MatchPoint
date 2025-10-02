@@ -13,13 +13,19 @@ const TournamentSchema = new Schema<TournamentDocument>(
         sport: { type: String, required: true },
         description: { type: String },
         maxTeams: { type: Number, required: true },
+        entryFee: { type: String, required: true },
         prizePool: { type: Number, required: true },
         startDate: { type: Date, required: true },
         endDate: { type: Date, required: true },
         managerId: { type: String, required: true },
         location: { type: String },
         status: { type: String, enum: ["upcoming", "ongoing", "ended"], default: "upcoming" },
+        format: { type: String, enum: ['knockout', 'friendly', 'league'], default: 'friendly' },
         isDeleted: { type: Boolean, default: false },
+        teams: {
+            type: [{  teamId: { type: String, required: true }}],
+            default: []
+        }
     },
     {
         timestamps: true,

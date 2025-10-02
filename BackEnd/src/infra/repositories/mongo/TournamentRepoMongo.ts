@@ -12,17 +12,17 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
     }
 
     async findAll(managerId: string): Promise<Tournament[]> {
-        const tournaments = await TournamentModel.find({ managerId }).lean();
+        const tournaments = await TournamentModel.find({ managerId });
         return TournamentMongoMapper.toDomainArray(tournaments);
     }
 
     async findById(id: string): Promise<Tournament | null> {
-        const tournament = await TournamentModel.findById(id).lean();
+        const tournament = await TournamentModel.findById(id);
         return tournament as Tournament | null;
     }
 
     async getByManager(managerId: string): Promise<Tournament[] | null> {
-        const tournaments = await TournamentModel.find({ managerId }).lean();
+        const tournaments = await TournamentModel.find({ managerId });
         return (tournaments?.length ? tournaments : null) as Tournament[] | null;
     }
 
@@ -33,7 +33,7 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
             query.managerId = { $ne: filters.managerId };
         }
 
-        const data = await TournamentModel.find(query).lean();
+        const data = await TournamentModel.find(query);
 
         return TournamentMongoMapper.toDomainArray(data);
     }
@@ -42,7 +42,7 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
         const updated = await TournamentModel.findByIdAndUpdate(
             tournamentId,
             { $set: updates },
-            { new: true, lean: true }
+            { new: true}
         );
         return TournamentMongoMapper.toDomain(updated!);
     }

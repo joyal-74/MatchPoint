@@ -1,14 +1,15 @@
+import type { Status } from "../../../../features/manager/managerTypes";
 import type { ColorScheme } from "../../teams/TeamCard/teamColors";
 
 interface CardActionButtonProps {
-    status: "upcoming" | "ongoing" | "completed";
+    status: Status
     type: "manage" | "explore";
     colorScheme: ColorScheme;
 }
 
 export function CardActionButton({ status, type, colorScheme }: CardActionButtonProps) {
     const isExplore = type === "explore";
-    const isDisabled = isExplore && status === "completed";
+    const isDisabled = isExplore && status === "ended";
 
     return (
         <button

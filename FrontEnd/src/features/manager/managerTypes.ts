@@ -46,3 +46,42 @@ export type EditTeamData = {
 };
 
 export type TeamData = Omit<Team, "_id">;
+
+
+export type Formats = 'knockout' | 'league' | 'friendly';
+
+export type Status = "upcoming" | "ongoing" | "ended"
+
+export type Tournament = {
+    _id: string;
+    tourId: string;
+    managerId: string;
+    name: string;
+    sport: string;
+    description: string;
+    startDate: string;
+    endDate: string;
+    location: string;
+    maxTeams: number;
+    minTeams: number;
+    prizePool: number;
+    entryFee: string;
+    status: Status;
+    format: Formats;
+}
+
+
+export type TournamentRegister = {
+    managerId: string;
+    name: string;
+    sport: string;
+    description: string;
+    startDate: string;
+    endDate: string;
+    location: string;
+    maxTeams: number;
+    minTeams: number;
+    prizePool: number;
+    entryFee: string;
+    format: Formats;
+}

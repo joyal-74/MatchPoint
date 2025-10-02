@@ -151,21 +151,6 @@ export const colorPalette: ColorScheme[] = [
         cardBorder: 'border-indigo-700/30'
     },
     {
-        bg: 'from-rose-500/10 to-rose-600/5',
-        border: 'border-rose-500/30',
-        hoverBorder: 'hover:border-rose-500/50',
-        accent: 'bg-rose-500',
-        glow: 'shadow-rose-500/10',
-        text: 'text-rose-400',
-        hoverText: 'hover:text-rose-300',
-        buttonBg: 'bg-rose-500/10',
-        buttonHoverBg: 'hover:bg-rose-500/20',
-        buttonBorder: 'border-rose-500/30',
-        buttonHoverBorder: 'hover:border-rose-500/50',
-        cardGradient: 'from-rose-900/30 to-rose-800/20',
-        cardBorder: 'border-rose-700/30'
-    },
-    {
         bg: 'from-violet-500/10 to-violet-600/5',
         border: 'border-violet-500/30',
         hoverBorder: 'hover:border-violet-500/50',
@@ -194,8 +179,25 @@ export const colorPalette: ColorScheme[] = [
         buttonHoverBorder: 'hover:border-lime-500/50',
         cardGradient: 'from-lime-900/30 to-lime-800/20',
         cardBorder: 'border-lime-700/30'
+    },
+    {
+        bg: 'from-rose-500/10 to-rose-600/5',
+        border: 'border-rose-500/30',
+        hoverBorder: 'hover:border-rose-500/50',
+        accent: 'bg-rose-500',
+        glow: 'shadow-rose-500/10',
+        text: 'text-rose-400',
+        hoverText: 'hover:text-rose-300',
+        buttonBg: 'bg-rose-500/10',
+        buttonHoverBg: 'hover:bg-rose-500/20',
+        buttonBorder: 'border-rose-500/30',
+        buttonHoverBorder: 'hover:border-rose-500/50',
+        cardGradient: 'from-rose-900/30 to-rose-800/20',
+        cardBorder: 'border-rose-700/30'
     }
 ];
+
+export const length = colorPalette.length - 1
 
 export const getColorScheme = (index: number): ColorScheme => {
     return colorPalette[index % colorPalette.length];

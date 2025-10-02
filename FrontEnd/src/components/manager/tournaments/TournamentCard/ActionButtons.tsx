@@ -1,13 +1,15 @@
 import { Pencil, Trash2 } from "lucide-react";
 import type { ColorScheme } from "../../teams/TeamCard/teamColors";
+import type { Status } from "../../../../features/manager/managerTypes";
 
 interface ActionButtonsProps {
-    status: "upcoming" | "ongoing" | "completed";
+    status: Status
     colorScheme: ColorScheme;
+    openModal : () => void;
 }
 
-export function ActionButtons({ status, colorScheme }: ActionButtonsProps) {
-    const disabled = status === "completed";
+export function ActionButtons({ status, colorScheme, openModal }: ActionButtonsProps) {
+    const disabled = status === "ended";
 
     return (
         <div className="flex gap-2 flex-shrink-0" >
@@ -20,6 +22,7 @@ export function ActionButtons({ status, colorScheme }: ActionButtonsProps) {
                         : `${colorScheme.buttonBg} ${colorScheme.buttonHoverBg} ${colorScheme.text}`}
         `}
                 disabled={disabled}
+                onClick={openModal}
             >
                 <Pencil size={16} />
             </button>

@@ -10,17 +10,17 @@ export class EditTournamentUseCase implements IEditTournament {
     ) { }
 
     async execute(data: Partial<Tournament>): Promise<Tournament> {
-        if (!data.id) throw new Error("Tournament ID is required for edit");
+        if (!data._id) throw new Error("Tournament ID is required for edit");
 
-        this._logger.info(`[EditTournamentUseCase] Editing tournament id=${data.id}`);
-        const updated = await this._tournamentRepo.update(data.id, data);
+        this._logger.info(`[EditTournamentUseCase] Editing tournament id=${data._id}`);
+        const updated = await this._tournamentRepo.update(data._id, data);
 
         if (!updated) {
-            this._logger.warn(`[EditTournamentUseCase] Tournament not found id=${data.id}`);
-            throw new Error(`Tournament with id=${data.id} not found`);
+            this._logger.warn(`[EditTournamentUseCase] Tournament not found id=${data._id}`);
+            throw new Error(`Tournament with id=${data._id} not found`);
         }
 
-        this._logger.info(`[EditTournamentUseCase] Tournament updated id=${data.id}`);
+        this._logger.info(`[EditTournamentUseCase] Tournament updated id=${data._id}`);
         return updated;
     }
 }

@@ -1,108 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TournamentCard from "../../components/manager/tournaments/TournamentCard";
 import TournamentFilter, { type FilterStatus } from "../../components/manager/tournaments/TournamentFilter";
 import Navbar from "../../components/manager/Navbar";
-import CreateTournamentModal from "../../components/manager/tournaments/CreateTournamentModal";
+import CreateTournamentModal from "../../components/manager/tournaments/TournamentModal/CreateTournamentModal";
 import SecondaryButton from "../../components/ui/SecondaryButton";
 import ManagementHeader from "../../components/manager/teams/TeamsHeader";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import type { RootState } from "../../app/store";
+import { getExploreTournaments, getMyTournaments } from "../../features/manager/Tournaments/tournamentThunks";
+import LoadingOverlay from "../../components/shared/LoadingOverlay";
+import { length } from "../../components/manager/teams/TeamCard/teamColors";
+import EditTournamentModal from "../../components/manager/tournaments/TournamentModal/EditTournamentModal";
+import type { Tournament } from "../../features/manager/managerTypes";
 
-interface Tournament {
-    id: string;
-    title: string;
-    date: string;
-    venue: string;
-    teams: string;
-    fee: string;
-    status: "ongoing" | "completed";
-}
 
 export default function TournamentsPage() {
     const [activeFilter, setActiveFilter] = useState<FilterStatus>("all");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingTournament, setEditingTournament] = useState<Tournament | null>(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-    // My Tournaments Data
-    const myTournaments: Tournament[] = [
-        {
-            id: "1",
-            title: "All Kerala Cricket League Cup",
-            date: "15 January 2025",
-            venue: "Sports Complex",
-            teams: "14/16 Teams",
-            fee: "₹1000",
-            status: "ongoing"
-        },
-        {
-            id: "2",
-            title: "State Football Championship",
-            date: "20 January 2025",
-            venue: "Central Stadium",
-            teams: "12/16 Teams",
-            fee: "₹1500",
-            status: "ongoing"
-        },
-        {
-            id: "3",
-            title: "District Badminton Tournament",
-            date: "25 January 2025",
-            venue: "Indoor Sports Arena",
-            teams: "8/12 Teams",
-            fee: "₹800",
-            status: "ongoing"
-        },
-        {
-            id: "4",
-            title: "Summer Basketball League",
-            date: "5 February 2025",
-            venue: "Community Court",
-            teams: "16/16 Teams",
-            fee: "₹1200",
-            status: "completed"
-        }
-    ];
 
-    // Explore Tournaments Data
-    const exploreTournaments: Tournament[] = [
-        {
-            id: "5",
-            title: "National Cricket Premier League",
-            date: "10 February 2025",
-            venue: "National Stadium",
-            teams: "20/24 Teams",
-            fee: "₹2000",
-            status: "ongoing"
-        },
-        {
-            id: "6",
-            title: "City Tennis Open",
-            date: "15 February 2025",
-            venue: "Tennis Academy",
-            teams: "32/32 Teams",
-            fee: "₹1800",
-            status: "completed"
-        },
-        {
-            id: "7",
-            title: "Regional Volleyball Cup",
-            date: "20 February 2025",
-            venue: "Sports Complex B",
-            teams: "10/12 Teams",
-            fee: "₹900",
-            status: "ongoing"
-        },
-        {
-            id: "8",
-            title: "Inter-School Athletics Meet",
-            date: "25 February 2025",
-            venue: "Athletics Track",
-            teams: "18/20 Teams",
-            fee: "₹500",
-            status: "ongoing"
+    const dispatch = useAppDispatch();
+
+    const { myTournaments, exploreTournaments, loading } = useAppSelector((state: RootState) => state.managerTournaments);
+    const managerId = useAppSelector((state) => state.auth.user?._id);
+
+    useEffect(() => {
+        if (managerId) {
+            dispatch(getMyTournaments(managerId));
+            dispatch(getExploreTournaments(managerId));
         }
-    ];
+    }, [dispatch, managerId]);
 
     return (
         <>
+            <LoadingOverlay show={loading} />
             <Navbar />
+
             <div className="min-h-screen bg-neutral-900 text-white p-8 mt-12 mx-10">
 
                 <ManagementHeader buttontitle="Create Tournament +" title="Manage & Explore Tournaments" onCreateClick={() => setIsModalOpen(true)} />
@@ -121,17 +56,17 @@ export default function TournamentsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                         {myTournaments.map((tournament, index) => (
                             <TournamentCard
-                                key={tournament.id}
-                                title={tournament.title}
-                                date={tournament.date}
-                                venue={tournament.venue}
-                                teams={tournament.teams}
-                                fee={tournament.fee}
-                                status={tournament.status}
+                                key={tournament._id}
+                                tournament={tournament}
                                 type="manage"
                                 index={index}
+                                onEdit={() => {
+                                    setEditingTournament(tournament);
+                                    setIsEditModalOpen(true);
+                                }}
                             />
                         ))}
+
                     </div>
                 </section>
 
@@ -169,15 +104,10 @@ export default function TournamentsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                         {exploreTournaments.map((tournament, index) => (
                             <TournamentCard
-                                key={tournament.id}
-                                title={tournament.title}
-                                date={tournament.date}
-                                venue={tournament.venue}
-                                teams={tournament.teams}
-                                fee={tournament.fee}
-                                status={tournament.status}
+                                key={tournament._id}
+                                tournament={tournament}
                                 type="explore"
-                                index={index}
+                                index={length - index}
                             />
                         ))}
                     </div>
@@ -201,8 +131,19 @@ export default function TournamentsPage() {
 
                 <CreateTournamentModal
                     isOpen={isModalOpen}
+                    managerId={managerId!}
                     onClose={() => setIsModalOpen(false)}
                 />
+                {editingTournament && (
+                    <EditTournamentModal
+                        isOpen={isEditModalOpen}
+                        managerId={managerId!}
+                        tournament={editingTournament}
+                        onClose={() => setIsEditModalOpen(false)}
+                    />
+                )}
+
+
             </div>
         </>
     );

@@ -21,10 +21,10 @@ router.put("/team/:teamId", upload.single("logo"), expressFileUpdateHandler(team
 
 router.post("/tournament", expressAdapter(tournamentManagementController.addNewTournament));
 
-router.put("/tournament", expressAdapter(tournamentManagementController.editTournament));
+router.put("/tournament/:managerId", expressAdapter(tournamentManagementController.editTournament));
 
-router.get("/tournaments/:managerId", expressAdapter(tournamentManagementController.getMyTournaments));
+router.get("/tournament/:managerId", expressAdapter(tournamentManagementController.getMyTournaments));
 
-router.get("/tournaments/explore/:managerId", expressAdapter(tournamentManagementController.getExploreTournaments));
+router.get("/tournament/explore/:managerId", expressAdapter(tournamentManagementController.getExploreTournaments));
 
 export default router;

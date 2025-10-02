@@ -1,7 +1,8 @@
+import type { Status } from "../../../../features/manager/managerTypes";
 import type { ColorScheme } from "../../teams/TeamCard/teamColors";
 
 interface StatusBadgeProps {
-    status: "upcoming" | "ongoing" | "completed";
+    status: Status;
     colorScheme: ColorScheme;
 }
 

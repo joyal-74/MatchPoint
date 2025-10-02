@@ -6,12 +6,8 @@ import { managerRoutes } from "./ManagerRoutes";
 import NotFoundPage from "../pages/shared/PageNotFound";
 import Unauthorized from "../pages/shared/Unauthorized";
 import UserProfile from "../components/viewer/ProfileSection";
-import PlayerLanding from "../pages/player/LandingPage";
 import PlayerProfile from "../pages/player/Profile";
-import TournamentsPage from "../pages/manager/TournamentsPage";
 import TournamentDetailsPage from "../components/manager/tournaments/TournamentDetails"; 
-import TeamsListPage from "../pages/manager/TeamsListPage";
-import ManageMembersPage from "../pages/manager/ManageMembers";
 
 
 const AppRoutes = () => {
@@ -38,10 +34,6 @@ const AppRoutes = () => {
                 <Route path="/unauthorized" element={<Unauthorized />} />
                 <Route path="/profile" element={<UserProfile />} />
                 <Route path="/profile1" element={<PlayerProfile />} />
-                <Route path="/landing" element={<PlayerLanding />} />
-                <Route path="/player/tournament" element={<TournamentsPage />} />
-                <Route path="/manager/teams" element={<TeamsListPage />} />
-                <Route path="/manager/teams/members" element={<ManageMembersPage teamId={13453} />} />
                 <Route path="/manager/tournament/details" element={<TournamentDetailsPage />} />
             </Routes>
         </BrowserRouter>
