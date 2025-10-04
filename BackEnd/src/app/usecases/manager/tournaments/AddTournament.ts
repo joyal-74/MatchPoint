@@ -12,14 +12,14 @@ export class AddTournamentUseCase implements IAddTournament {
     ) { }
 
     async execute(data: Tournament): Promise<Tournament> {
-        this._logger.info(`[AddTournamentUseCase] Adding new tournament: ${data.name}`);
+        this._logger.info(`[AddTournamentUseCase] Adding new tournament: ${data.title}`);
 
         const tourId = this._tournamentId.generate();
         const newData = { ...data, tourId }
 
         const tournament = await this._tournamentRepo.create(newData);
 
-        this._logger.info(`[AddTournamentUseCase] Tournament added: ${data.name}`);
+        this._logger.info(`[AddTournamentUseCase] Tournament added: ${data.title}`);
 
         return tournament
     }

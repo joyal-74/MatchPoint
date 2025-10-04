@@ -46,7 +46,7 @@ const EnterForgotOtpPage: React.FC = () => {
                 subtitle="We’ve sent a one-time password (OTP) to your email. Please enter it below to verify your account."
                 buttonText={loading ? "Verifying..." : "Verify OTP"}
                 onSubmit={onSubmit}
-                footer={  <FormFooter text="Didn’t receive the OTP?" linkText="Resend" onClick={resendOtp} /> }
+                footer={<FormFooter text="Didn’t receive the OTP?" linkText="Resend" onClick={resendOtp} expiresAt={expiresAt} />}
             >
                 <OtpVerify otp={formData.otp} setOtp={(val) => handleFieldChange("otp", val)} expiresAt={expiresAt} error={errors.otp} />
             </AuthForm>

@@ -1,5 +1,5 @@
 import { ILogger } from "app/providers/ILogger";
-import { IAddTournament, IEditTournament, IGetExploreTournaments, IGetMyTournaments } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { IAddTournament, ICancelTournament, IEditTournament, IGetExploreTournaments, IGetMyTournaments } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -13,6 +13,7 @@ export class TournamentController implements ITournamentController {
         private _getExploreTournamentsUsecase: IGetExploreTournaments,
         private _addTournamentsUsecase: IAddTournament,
         private _editTournamentsUsecase: IEditTournament,
+        private _cancelTournamentsUsecase: ICancelTournament,
         private _logger: ILogger
     ) { }
 
@@ -39,7 +40,7 @@ export class TournamentController implements ITournamentController {
     addNewTournament = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentData = httpRequest.body;
 
-        this._logger.info(  `[TournamentController] addNewTournament → managerId=${tournamentData.managerId}`);
+        this._logger.info(`[TournamentController] addNewTournament → managerId=${tournamentData.managerId}`);
 
         const result = await this._addTournamentsUsecase.execute(tournamentData);
 
@@ -52,6 +53,18 @@ export class TournamentController implements ITournamentController {
         this._logger.info(`[TournamentController] editTournament → managerId=${tournamentData.managerId}`);
 
         const result = await this._editTournamentsUsecase.execute(tournamentData)
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournaments added successfully", result));
+    }
+
+
+    cancelTournament = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const tournamentId = httpRequest.params.tournamentId;
+        const { reason } = httpRequest.body;
+
+        this._logger.info(`[TournamentController] editTournament → tournamentId=${tournamentId}`);
+
+        const result = await this._cancelTournamentsUsecase.execute(tournamentId, reason)
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournaments added successfully", result));
     }

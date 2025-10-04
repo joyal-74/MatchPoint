@@ -7,7 +7,6 @@ import NotFoundPage from "../pages/shared/PageNotFound";
 import Unauthorized from "../pages/shared/Unauthorized";
 import UserProfile from "../components/viewer/ProfileSection";
 import PlayerProfile from "../pages/player/Profile";
-import TournamentDetailsPage from "../components/manager/tournaments/TournamentDetails"; 
 
 
 const AppRoutes = () => {
@@ -34,7 +33,6 @@ const AppRoutes = () => {
                 <Route path="/unauthorized" element={<Unauthorized />} />
                 <Route path="/profile" element={<UserProfile />} />
                 <Route path="/profile1" element={<PlayerProfile />} />
-                <Route path="/manager/tournament/details" element={<TournamentDetailsPage />} />
             </Routes>
         </BrowserRouter>
     );

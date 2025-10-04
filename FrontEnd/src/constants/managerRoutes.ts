@@ -6,6 +6,6 @@ export const MANAGER_ROUTES = {
     CREATE_TOURNAMENT: '/manager/tournament',
     GET_MY_TOURNAMENTS:  (managerId: string) => `/manager/tournament/${managerId}`,
     GET_EXPLORE_TOURNAMENTS:  (managerId: string) => `/manager/tournament/explore/${managerId}`,
-    DELETE_TOURNAMENT:  (tournamentId: string) => `/manager/tournament/${tournamentId}`,
+    CANCEL_TOURNAMENT:  (tournamentId: string) => `/manager/tournament/${tournamentId}`,
     EDIT_TOURNAMENT:  (tournamentId: string) => `/manager/tournament/${tournamentId}`,
 } as const;

@@ -18,9 +18,9 @@ export const createTournament = createAsyncThunk(
     createApiThunk(managerEndpoints.createTournament)
 );
 
-export const deleteTournament = createAsyncThunk(
-    "manager/deleteTournament",
-    createApiThunk(managerEndpoints.deleteTournament)
+export const cancelTournament = createAsyncThunk(
+    "manager/cancelTournament",
+    createApiThunk(managerEndpoints.cancelTournament)
 );
 
 export const editTournament = createAsyncThunk(

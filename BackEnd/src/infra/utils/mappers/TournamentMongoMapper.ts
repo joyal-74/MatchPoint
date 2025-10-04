@@ -1,12 +1,25 @@
 import { Tournament } from "domain/entities/Tournaments";
-import { TournamentDocument } from "infra/databases/mongo/models/TournamentModel"; 
+import { TournamentDocument } from "infra/databases/mongo/models/TournamentModel";
 
 export class TournamentMongoMapper {
     static toDomain(t: TournamentDocument): Tournament {
+        const obj = t.toObject();
+        
+        const currTeams = t.teams?.length;
+        const managerId = obj.managerId._id.toString();
+        const organizer = `${obj.managerId.first_name} ${obj.managerId.last_name}`;
+        const contact = {
+            email: obj.managerId.email,
+            phone: obj.managerId.phone,
+        };
+
         return {
-            ...t.toObject(),
-            _id: t._id.toString(),
-            managerId: t.managerId.toString(),
+            ...obj,
+             _id: obj._id.toString(),
+            managerId,
+            organizer,
+            contact,
+            currTeams
         } as Tournament;
     }
 

@@ -5,19 +5,19 @@ export interface IGetMyTournaments {
 }
 
 export interface IGetExploreTournaments {
-    execute(managerId: string): Promise<Tournament[]>;
+    execute(filters: Partial<Tournament>): Promise<Tournament[]>;
 }
 
 export interface IAddTournament {
-    execute(data : Tournament) : Promise<Tournament>;
+    execute(data: Tournament): Promise<Tournament>;
 }
 
 export interface IEditTournament {
-    execute(data : Partial<Tournament>) : Promise<Tournament>;
+    execute(data: Partial<Tournament>): Promise<Tournament>;
 }
 
-export interface IDeleteTournament {
-    execute(tournamentId: string) : Promise<string>;
+export interface ICancelTournament {
+    execute(tournamentId: string, reason: string): Promise<string>;
 }
 
 export interface IGetTournamentById {

@@ -1,31 +1,41 @@
-export type Status = "upcoming" | "ongoing" | "ended"
+export type Status = "upcoming" | "ongoing" | "ended" | "cancelled"
 export type Format = 'knockout' | 'league' | 'friendly';
+
+export type Contact = {
+    email: string;
+    phone: string;
+}
 
 
 export interface Tournament {
-    _id : string;
+    _id: string;
     tourId: string;
     managerId: string;
-    name: string;
-    sport: string;
+    title: string;
     description: string;
+    sport: string;
     startDate: Date;
     endDate: Date;
+    regDeadline: Date;
     location: string;
     maxTeams: number;
     minTeams: number;
-    prizePool: number;
+    currTeams: number;
     entryFee: string;
+    prizePool: number;
     status: Status;
     format: Format;
-    isDeleted : boolean;
+    organizer: string;
+    contact: Contact;
     teams?: { teamId: string }[];
+    rules: string[];
+    isDeleted : boolean;
 }
 
 export interface TournamentRegister {
     tourId: string;
     managerId: string;
-    name: string;
+    title: string;
     sport: string;
     description: string;
     startDate: Date;
@@ -35,4 +45,5 @@ export interface TournamentRegister {
     minTeams: number;
     prizePool: number;
     entryFee: string;
+    format: Format;
 }

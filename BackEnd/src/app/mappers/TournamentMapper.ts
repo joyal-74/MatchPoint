@@ -1,6 +1,6 @@
 import { Tournament } from "domain/entities/Tournaments";
 
-export class TournamentMongoMapper {
+export class TournamentMapper {
     static toDomain(t: Tournament): Tournament {
         return {
             ...t,

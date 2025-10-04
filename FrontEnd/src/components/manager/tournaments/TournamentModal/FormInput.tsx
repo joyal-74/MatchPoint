@@ -1,5 +1,6 @@
 import type { FormInputProps } from "./types";
 import CustomSelect from "../../../ui/CustomSelect";
+import { normalizeValue } from "../../../../utils/NormalizeDate";
 
 export default function FormInput({
     label, icon, type, name, value, onChange,
@@ -30,16 +31,16 @@ export default function FormInput({
                                 value: selectedOption?.value || ""
                             }
                         } as React.ChangeEvent<HTMLSelectElement>;
-                        
+
                         onChange(syntheticEvent);
                     }}
                     placeholder={placeholder || `Select ${label.toLowerCase()}`}
-                    
+
                 />
             ) : type === "textarea" ? (
                 <textarea
                     name={name}
-                    value={value ?? ""}
+                    value={normalizeValue(value)}
                     onChange={onChange}
                     placeholder={placeholder}
                     rows={rows}
@@ -50,13 +51,14 @@ export default function FormInput({
                 <input
                     type={type}
                     name={name}
-                    value={type === "number" && value === 0 ? "" : value}
+                    value={normalizeValue(value, type)}
                     onChange={onChange}
                     placeholder={placeholder}
                     className={commonClasses}
                     required={required}
                     min={min}
                 />
+
             )}
         </div>
     );

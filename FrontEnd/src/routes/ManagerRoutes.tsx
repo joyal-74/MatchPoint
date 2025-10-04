@@ -1,3 +1,4 @@
+import TournamentDetailsPage from "../components/manager/tournaments/TournamentDetails/TournamentDetails";
 import Dashboard from "../pages/manager/Dashboard";
 import TeamsListPage from "../pages/manager/TeamsListPage";
 import TournamentsPage from "../pages/manager/TournamentsPage";
@@ -7,4 +8,5 @@ export const managerRoutes = [
     { path: "/manager/dashboard", element: <ProtectedRoute allowedRoles={['manager']}><Dashboard /></ProtectedRoute> },
     { path: "/manager/teams", element: <ProtectedRoute allowedRoles={['manager']}><TeamsListPage /></ProtectedRoute> },
     { path: "/manager/tournaments", element: <ProtectedRoute allowedRoles={['manager']}><TournamentsPage /></ProtectedRoute> },
+    { path: "/manager/tournaments/details", element: <ProtectedRoute allowedRoles={['manager']}><TournamentDetailsPage /></ProtectedRoute> },
 ];

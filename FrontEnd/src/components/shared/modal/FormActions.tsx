@@ -6,13 +6,7 @@ interface FormActionsProps {
     loading?: boolean;
 }
 
-export default function FormActions({
-    submitLabel,
-    cancelLabel = "Cancel",
-    onCancel,
-    disabled = false,
-    loading = false
-}: FormActionsProps) {
+export default function FormActions({ submitLabel, cancelLabel = "Cancel", onCancel, disabled = false, loading = false }: FormActionsProps) {
     return (
         <div className="flex gap-2 pt-4">
             <button

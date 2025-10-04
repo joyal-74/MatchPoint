@@ -3,7 +3,7 @@ import {
     getMyTournaments,
     getExploreTournaments,
     createTournament,
-    deleteTournament,
+    cancelTournament,
     editTournament,
 } from "./tournamentThunks";
 import type { Tournament } from "../managerTypes";
@@ -11,6 +11,7 @@ import type { Tournament } from "../managerTypes";
 interface ManagerTournamentState {
     myTournaments: Tournament[];
     exploreTournaments: Tournament[];
+    selectedTournament: Tournament | null;
     loading: boolean;
     error: string | null;
 }
@@ -18,6 +19,7 @@ interface ManagerTournamentState {
 const initialState: ManagerTournamentState = {
     myTournaments: [],
     exploreTournaments: [],
+    selectedTournament: null,
     loading: false,
     error: null,
 };
@@ -25,7 +27,14 @@ const initialState: ManagerTournamentState = {
 const managerTournamentSlice = createSlice({
     name: "managerTournaments",
     initialState,
-    reducers: {},
+    reducers: {
+        setSelectedTournament: (state, action) => {
+            state.selectedTournament = action.payload;
+        },
+        clearSelectedTournament: (state) => {
+            state.selectedTournament = null;
+        },
+    },
     extraReducers: (builder) => {
         // ---------------- My Tournaments ----------------
         builder
@@ -72,19 +81,20 @@ const managerTournamentSlice = createSlice({
                 state.error = action.payload as string;
             });
 
-        // ---------------- Delete Tournament ----------------
+        // Cancel Tournament
         builder
-            .addCase(deleteTournament.pending, (state) => {
+            .addCase(cancelTournament.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(deleteTournament.fulfilled, (state, action) => {
+            .addCase(cancelTournament.fulfilled, (state, action) => {
+                console.log(action.payload)
                 state.myTournaments = state.myTournaments.filter(
-                    (t) => t._id !== action.payload._id
+                    (t) => t._id !== action.payload
                 );
                 state.loading = false;
             })
-            .addCase(deleteTournament.rejected, (state, action) => {
+            .addCase(cancelTournament.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             });
@@ -109,4 +119,6 @@ const managerTournamentSlice = createSlice({
     },
 });
 
+
+export const { setSelectedTournament, clearSelectedTournament } = managerTournamentSlice.actions;
 export default managerTournamentSlice.reducer;

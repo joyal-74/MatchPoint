@@ -25,6 +25,8 @@ router.put("/tournament/:managerId", expressAdapter(tournamentManagementControll
 
 router.get("/tournament/:managerId", expressAdapter(tournamentManagementController.getMyTournaments));
 
+router.patch("/tournament/:tournamentId", expressAdapter(tournamentManagementController.cancelTournament));
+
 router.get("/tournament/explore/:managerId", expressAdapter(tournamentManagementController.getExploreTournaments));
 
 export default router;

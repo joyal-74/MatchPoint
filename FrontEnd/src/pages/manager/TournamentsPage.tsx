@@ -7,11 +7,12 @@ import SecondaryButton from "../../components/ui/SecondaryButton";
 import ManagementHeader from "../../components/manager/teams/TeamsHeader";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import type { RootState } from "../../app/store";
-import { getExploreTournaments, getMyTournaments } from "../../features/manager/Tournaments/tournamentThunks";
+import { cancelTournament, getExploreTournaments, getMyTournaments } from "../../features/manager/Tournaments/tournamentThunks";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
 import { length } from "../../components/manager/teams/TeamCard/teamColors";
 import EditTournamentModal from "../../components/manager/tournaments/TournamentModal/EditTournamentModal";
 import type { Tournament } from "../../features/manager/managerTypes";
+import ConfirmModal from "../../components/shared/modal/ConfirmModal";
 
 
 export default function TournamentsPage() {
@@ -19,9 +20,15 @@ export default function TournamentsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTournament, setEditingTournament] = useState<Tournament | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [cancelId, setCancelId] = useState<string | null>(null);
 
     const dispatch = useAppDispatch();
+
+    const handleCancelClick = (id: string) => {
+        setCancelId(id);
+        setConfirmOpen(true);
+    };
 
     const { myTournaments, exploreTournaments, loading } = useAppSelector((state: RootState) => state.managerTournaments);
     const managerId = useAppSelector((state) => state.auth.user?._id);
@@ -64,6 +71,7 @@ export default function TournamentsPage() {
                                     setEditingTournament(tournament);
                                     setIsEditModalOpen(true);
                                 }}
+                                onCancel={handleCancelClick}
                             />
                         ))}
 
@@ -143,7 +151,19 @@ export default function TournamentsPage() {
                     />
                 )}
 
-
+                <ConfirmModal
+                    isOpen={confirmOpen}
+                    title="Cancel Tournament?"
+                    message="This action cannot be undone. Are you sure you want to cancel this tournament?"
+                    onConfirm={(reason: string) => {
+                        if (cancelId) {
+                            dispatch(cancelTournament({ cancelId, reason }));
+                        }
+                        setConfirmOpen(false);
+                        setCancelId(null);
+                    }}
+                    onCancel={() => setConfirmOpen(false)}
+                />
             </div>
         </>
     );

@@ -52,32 +52,44 @@ export type Formats = 'knockout' | 'league' | 'friendly';
 
 export type Status = "upcoming" | "ongoing" | "ended"
 
-export type Tournament = {
+export type Contact = { email: string; phone: string; }
+
+export interface TournamentCard {
     _id: string;
     tourId: string;
     managerId: string;
-    name: string;
-    sport: string;
+    title: string;
     description: string;
-    startDate: string;
-    endDate: string;
+    sport: string;
+    startDate: Date;
+    endDate: Date;
+    regDeadline: Date;
     location: string;
     maxTeams: number;
     minTeams: number;
-    prizePool: number;
+    currTeams: number;
     entryFee: string;
+    prizePool: number;
     status: Status;
     format: Formats;
+}
+
+export interface Tournament extends TournamentCard {
+    organizer: string;
+    contact: Contact;
+    teams?: { teamId: string }[];
+    rules: string[];
 }
 
 
 export type TournamentRegister = {
     managerId: string;
-    name: string;
+    title: string;
     sport: string;
     description: string;
-    startDate: string;
-    endDate: string;
+    startDate: Date;
+    endDate: Date;
+    regDeadline : Date;
     location: string;
     maxTeams: number;
     minTeams: number;

@@ -38,8 +38,8 @@ export const managerEndpoints = {
         return data.data
     },
 
-    deleteTournament: async (tournamentId: string): Promise<Tournament> => {
-        const { data } = await axiosClient.patch(MANAGER_ROUTES.DELETE_TOURNAMENT(tournamentId))
+    cancelTournament: async ({ cancelId, reason }: { cancelId: string, reason: string }): Promise<string> => {
+        const { data } = await axiosClient.patch(MANAGER_ROUTES.CANCEL_TOURNAMENT(cancelId), reason)
         return data.data
     },
 

@@ -5,6 +5,7 @@ export type ValidationErrors = Partial<Record<string, string>>;
 
 
 export const validateSignup = (payload: SignUpForm): ValidationErrors => {
+    console.log(payload)
     const errors: ValidationErrors = {};
 
     console.log(payload)
@@ -31,7 +32,7 @@ export const validateSignup = (payload: SignUpForm): ValidationErrors => {
     else if (payload.password !== payload.confirmPassword) errors.confirmPassword = AuthMessages.PASSWORDS_DO_NOT_MATCH
 
     // Optional field for players
-    if ("sport" in payload && (!payload.sport)) {
+    if (payload.role === "player" && !payload.sport) {
         errors.sport = AuthMessages.SPORTS_REQUIRED;
     }
 

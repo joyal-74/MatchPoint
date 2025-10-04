@@ -42,9 +42,10 @@ import { SoftDeleteTeam } from 'app/usecases/manager/teams/ChangeTeamStatus';
 import { TournamentController } from 'presentation/http/controllers/manager/TournamentController';
 import { GetMyTournamentsUseCase } from 'app/usecases/manager/tournaments/GetMyTournaments';
 import { TournamentRepositoryMongo } from 'infra/repositories/mongo/TournamentRepoMongo';
-import { GetExploreTournamentsUseCase } from 'app/usecases/manager/tournaments/GetExploreTournaments';
+import { ExploreTournamentsUseCase } from 'app/usecases/manager/tournaments/GetExploreTournaments'; 
 import { AddTournamentUseCase } from 'app/usecases/manager/tournaments/AddTournament';
 import { EditTournamentUseCase } from 'app/usecases/manager/tournaments/EditTournament';
+import { CancelTournamentUsecase } from 'app/usecases/manager/tournaments/CancelTournament';
 
 // Repositories
 const userRepository = new UserRepositoryMongo();
@@ -96,9 +97,10 @@ const getallTeams = new GetAllTeamsUseCase(teamRepository, logger);
 const changeTeamStatus = new ChangePlayerStatusUseCase(teamRepository);
 
 const getMyTournaments = new GetMyTournamentsUseCase(tournamentRepository, logger);
-const getExploreTournaments = new GetExploreTournamentsUseCase(tournamentRepository, logger)
+const getExploreTournaments = new ExploreTournamentsUseCase(tournamentRepository, logger)
 const addTournament = new AddTournamentUseCase(tournamentRepository, tournamentId, logger);
 const editTournament = new EditTournamentUseCase(tournamentRepository, logger);
+const cancelTournament = new CancelTournamentUsecase(tournamentRepository, logger);
 
 
 const scheduler = new NodeCronScheduler();
@@ -114,7 +116,7 @@ export const usersManagementController = new UsersManagementController(getAllMan
 
 export const teamManagementController = new TeamController(addNewTeam, editTeam, deleteTeam, getallTeams, changeTeamStatus, logger);
 
-export const tournamentManagementController = new TournamentController(getMyTournaments, getExploreTournaments, addTournament, editTournament, logger);
+export const tournamentManagementController = new TournamentController(getMyTournaments, getExploreTournaments, addTournament, editTournament, cancelTournament, logger);
 
 export const updateManagerProfileController = new ProfileController(updateManagerProfile);
 

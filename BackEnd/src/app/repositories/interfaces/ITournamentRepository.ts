@@ -7,4 +7,5 @@ export interface ITournamentRepository {
     getExploreTournaments(filters?: Partial<Tournament>): Promise<Tournament[] | null>;
     create(teamData: TournamentRegister): Promise<Tournament>;
     update(teamId: string, updates: Partial<Tournament>): Promise<Tournament>;
+    cancel(teamId: string, reason: string): Promise<Tournament>;
 }

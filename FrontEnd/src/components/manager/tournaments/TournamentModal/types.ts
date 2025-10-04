@@ -1,12 +1,13 @@
 import type { Formats, Tournament } from "../../../../features/manager/managerTypes";
 
 export interface TournamentFormData {
-    name: string;
+    title: string;
     managerId: string;
     description: string;
     sport: string;
-    startDate: string;
-    endDate: string;
+    startDate: Date;
+    endDate: Date;
+    regDeadline: Date;
     location: string;
     maxTeams: number;
     minTeams: number;
@@ -22,16 +23,16 @@ export interface CreateTournamentModalProps {
 }
 
 export interface EditTournamentModalProps extends CreateTournamentModalProps {
-    tournament : Tournament
+    tournament: Tournament
 }
 
 
 export type Status = "upcoming" | "ongoing" | "ended"
 
-export interface updateTournamentFormData extends TournamentFormData{
-    _id : string;
-    tourId : string;
-    status : Status;
+export interface updateTournamentFormData extends TournamentFormData {
+    _id: string;
+    tourId: string;
+    status: Status;
 }
 
 export interface FormInputProps {
@@ -39,7 +40,7 @@ export interface FormInputProps {
     icon?: React.ReactNode;
     type: string;
     name: string;
-    value: string | number;
+    value?: string | number | Date;
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
     placeholder?: string;
     required?: boolean;
