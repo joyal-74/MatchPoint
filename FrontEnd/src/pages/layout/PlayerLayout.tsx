@@ -1,5 +1,5 @@
 import Sidebar from "../../components/player/Sidebar";
-import Navbar from '../../components/shared/Navbar'
+import Navbar from '../../components/player/Navbar'
 import type { ReactNode } from "react";
 
 interface PlayerLayoutProps {

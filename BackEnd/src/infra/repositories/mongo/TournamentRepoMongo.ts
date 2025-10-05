@@ -28,17 +28,37 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
         return TournamentMongoMapper.toDomainArray(tournaments) ?? null;
     }
 
-    async getExploreTournaments(filters?: Partial<Tournament>): Promise<Tournament[] | null> {
-        const query: FilterQuery<Tournament> = { status: { $ne: 'cancelled' } };
+    async getExploreTournaments(managerId: string, page: number = 1, limit: number = 15, search?: string, filter?: string): Promise<Tournament[] | null> {
+        const query: FilterQuery<Tournament> = { };
 
-        if (filters?.managerId) {
-            query.managerId = { $ne: filters.managerId };
+        query.managerId = { $ne: managerId };
+
+        if (search) {
+            const regex = new RegExp(search, "i");
+            query.$or = [
+                { title: regex },
+                { sport: regex },
+                { location: regex }
+            ];
         }
 
-        const data = await TournamentModel.find(query).populate("managerId", "first_name last_name email phone");
+        if (!filter || filter === "all") {
+            query.status = { $ne: "cancelled" };
+        } else {
+            query.status = filter;
+        }
+
+        const skip = (page - 1) * limit;
+
+        const data = await TournamentModel.find(query)
+            .populate("managerId", "first_name last_name email phone")
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 });
 
         return TournamentMongoMapper.toDomainArray(data);
     }
+
 
     async update(tournamentId: string, updates: Partial<Tournament>): Promise<Tournament> {
         const updated = await TournamentModel.findByIdAndUpdate(

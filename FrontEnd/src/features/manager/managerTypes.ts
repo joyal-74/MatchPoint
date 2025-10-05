@@ -9,6 +9,8 @@ export interface Team {
     sport: string;
     maxPlayers: string;
     members: Members[];
+    state: string;
+    city: string;
     created: string;
     status: TeamStatus;
     logo: string;
@@ -30,6 +32,8 @@ export type CreateTeamData = {
     sport: string;
     maxPlayers: number;
     managerId: string;
+    state: string;
+    city: string;
     logo: File;
     description?: string;
 };
@@ -39,6 +43,8 @@ export type EditTeamData = {
     sport: string;
     status: TeamStatus;
     managerId: string;
+    state: string;
+    city: string;
     members: Members[];
     description?: string;
     logo?: string;
@@ -72,6 +78,8 @@ export interface TournamentCard {
     prizePool: number;
     status: Status;
     format: Formats;
+    createdAt: Date,
+    updatedAt: Date,
 }
 
 export interface Tournament extends TournamentCard {
@@ -89,11 +97,15 @@ export type TournamentRegister = {
     description: string;
     startDate: Date;
     endDate: Date;
-    regDeadline : Date;
+    regDeadline: Date;
     location: string;
     maxTeams: number;
     minTeams: number;
+    currTeams: number;
     prizePool: number;
     entryFee: string;
     format: Formats;
+    rules: string[];
 }
+
+export type TournamentUpdate = TournamentRegister & { _id: string }

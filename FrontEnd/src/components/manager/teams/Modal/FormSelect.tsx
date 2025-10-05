@@ -1,6 +1,7 @@
 interface FormSelectProps {
     label: string;
     value: string;
+    placeholder: string;
     onChange: (value: string) => void;
     options: { value: string; label: string }[];
     disabled?: boolean;
@@ -10,6 +11,7 @@ export default function FormSelect({
     label,
     value,
     onChange,
+    placeholder,
     options,
     disabled = false
 }: FormSelectProps) {
@@ -22,6 +24,10 @@ export default function FormSelect({
                 className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white text-sm focus:outline-none focus:border-green-500 transition-colors"
                 disabled={disabled}
             >
+                <option value="" disabled>
+                    {placeholder}
+                </option>
+
                 {options.map(option => (
                     <option key={option.value} value={option.value}>
                         {option.label}

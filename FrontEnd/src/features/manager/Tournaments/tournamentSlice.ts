@@ -66,7 +66,7 @@ const managerTournamentSlice = createSlice({
                 state.error = action.payload as string;
             });
 
-        // ---------------- Create Tournament ----------------
+        // Create Tournament
         builder
             .addCase(createTournament.pending, (state) => {
                 state.loading = true;

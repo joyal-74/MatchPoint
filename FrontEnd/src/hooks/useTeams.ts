@@ -44,6 +44,8 @@ export const useTeams = () => {
                 name: team.name,
                 sport: team.sport,
                 status: team.status,
+                state: team.state,
+                city: team.city,
                 managerId: team.managerId,
                 description: team.description,
                 members : team.members,
@@ -66,6 +68,7 @@ export const useTeams = () => {
         dispatch(editTeam({ teamId, updatedData }));
 
     const handleDeleteTeam = (teamId: string) => dispatch(deleteTeam(teamId));
+    
     const handleManageMembers = (teamId: string) => console.log("Manage members for team:", teamId);
 
     // Combined handlers for TeamCard

@@ -39,6 +39,8 @@ export class AddNewTeamUseCase implements IAddTeamUseCase {
             managerId: teamData.managerId,
             name: teamData.name,
             sport: teamData.sport,
+            state: teamData.state,
+            city: teamData.city,
             description: teamData.description,
             maxPlayers : teamData.maxPlayers,
             members: teamData.members,

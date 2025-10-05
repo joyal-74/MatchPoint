@@ -11,15 +11,18 @@ export interface TournamentFormData {
     location: string;
     maxTeams: number;
     minTeams: number;
+    currTeams: number;
     entryFee: string;
     format: Formats;
     prizePool: number;
+    rules : string[];
 }
 
 export interface CreateTournamentModalProps {
     isOpen: boolean;
     managerId: string;
     onClose: () => void;
+    onShowPrizeInfo: () => void;
 }
 
 export interface EditTournamentModalProps extends CreateTournamentModalProps {
@@ -40,7 +43,7 @@ export interface FormInputProps {
     icon?: React.ReactNode;
     type: string;
     name: string;
-    value?: string | number | Date;
+    value?: string | number | Date | string[];
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
     placeholder?: string;
     required?: boolean;

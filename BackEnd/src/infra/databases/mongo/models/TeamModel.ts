@@ -1,5 +1,6 @@
 import { Schema, model, Types, Document } from "mongoose";
-import { playerStatus, TeamStatus } from "../types/Team";
+import { PhaseStatus, playerStatus, statsType, TeamStatus } from "../types/Team";
+import { PlayerApprovalStatus } from "domain/dtos/Team.dto";
 
 export interface TeamDocument extends Document {
     _id: Types.ObjectId;
@@ -13,8 +14,13 @@ export interface TeamDocument extends Document {
     members: {
         playerId: Types.ObjectId;
         status: playerStatus;
+        approvalStatus: PlayerApprovalStatus;
     }[];
+    state: string;
+    city: string;
+    stats: statsType;
     status: TeamStatus;
+    phase : PhaseStatus;
     created: Date;
 }
 
@@ -29,9 +35,25 @@ const TeamSchema = new Schema<TeamDocument>({
     members: {
         type: [{
             playerId: { type: Schema.Types.ObjectId, ref: "Player" },
-            status: { type: String, enum: ["playing", "sub"], default: "sub" }
+            status: { type: String, enum: ["playing", "sub"], default: "sub" },
+            approvalStatus: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" }
         }],
         default: []
+    },
+    state: { type: String, required: true },
+    city: { type: String, required: true },
+
+    stats: {
+        totalMatches: { type: Number, default: 0 },
+        wins: { type: Number, default: 0 },
+        losses: { type: Number, default: 0 },
+        draws: { type: Number, default: 0 },
+        winRate: { type: Number, default: 0 },
+    },
+    phase: {
+        type: String,
+        enum: ["recruiting", "active", "competing", "inactive"],
+        default: "recruiting"
     },
     status: { type: String, enum: ["active", "blocked", "deleted"], default: "active" },
     created: { type: Date, default: Date.now }

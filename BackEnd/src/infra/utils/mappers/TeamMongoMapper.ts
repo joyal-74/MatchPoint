@@ -5,7 +5,8 @@ export class TeamMongoMapper {
     static toDomain(team: TeamDocument): TeamData {
         const members: TeamMember[] = team.members.map(m => ({
             playerId: m.playerId.toString(),
-            status: m.status
+            status: m.status,
+            approvalStatus: m.approvalStatus
         }));
 
         return {
@@ -15,10 +16,14 @@ export class TeamMongoMapper {
             name: team.name,
             logo: team.logo,
             sport: team.sport,
+            state : team.state,
+            city : team.city,
             description: team.description,
             maxPlayers: team.maxPlayers,
             members,
             status: team.status,
+            phase : team.phase,
+            stats : team.stats,
             created: team.created
         };
     }

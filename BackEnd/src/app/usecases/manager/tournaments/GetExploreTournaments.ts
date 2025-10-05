@@ -7,12 +7,13 @@ export class ExploreTournamentsUseCase implements IGetExploreTournaments {
     constructor(
         private _tournamentRepo: ITournamentRepository,
         private _logger: ILogger
-    ) {}
+    ) { }
 
-    async execute(filters : Partial<Tournament>) {
-        this._logger.info(`[GetExploreTournamentsUseCase] Fetching explore tournaments excluding managerId=${filters.managerId}`);
+    async execute(managerId: string, page: number, limit: number, search: string, filter: string): Promise<Tournament[]> {
 
-        const tournaments = await this._tournamentRepo.getExploreTournaments(filters) ?? [];
+        this._logger.info(`[GetExploreTournamentsUseCase] Fetching explore tournaments based on filters`);
+
+        const tournaments = await this._tournamentRepo.getExploreTournaments(managerId, page, limit, search, filter) ?? [];
 
         this._logger.info(`[GetExploreTournamentsUseCase] Fetched ${tournaments.length} tournaments`);
 

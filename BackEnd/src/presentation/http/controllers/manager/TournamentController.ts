@@ -28,17 +28,19 @@ export class TournamentController implements ITournamentController {
     };
 
     getExploreTournaments = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { managerId } = httpRequest.params;
+        const { managerId, page, limit, search, filter } = httpRequest.query;
 
         this._logger.info(`[TournamentController] getAllTournament → managerId=${managerId}`);
 
-        const result = await this._getExploreTournamentsUsecase.execute(managerId);
+        const result = await this._getExploreTournamentsUsecase.execute(managerId, page, limit, search, filter);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournaments fetched successfully", result));
     };
 
     addNewTournament = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentData = httpRequest.body;
+
+        console.log(tournamentData)
 
         this._logger.info(`[TournamentController] addNewTournament → managerId=${tournamentData.managerId}`);
 
@@ -49,6 +51,8 @@ export class TournamentController implements ITournamentController {
 
     editTournament = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentData = httpRequest.body;
+
+        console.log(tournamentData)
 
         this._logger.info(`[TournamentController] editTournament → managerId=${tournamentData.managerId}`);
 

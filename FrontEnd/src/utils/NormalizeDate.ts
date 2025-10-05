@@ -1,4 +1,4 @@
-export const normalizeValue = (val: string | number | Date | undefined, type?: string) => {
+export const normalizeValue = (val: string | number | Date | string[] | undefined , type?: string) => {
     if (!val) return "";
 
     if (val instanceof Date) {

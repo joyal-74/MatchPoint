@@ -7,36 +7,51 @@ import FormInput from "./FormInput";
 import ModalHeader from "../../../shared/modal/ModalHeader";
 import FormActions from "../../../shared/modal/FormActions";
 
-export default function EditTournamentModal({ isOpen, onClose, tournament, managerId }: EditTournamentModalProps) {
+export default function EditTournamentModal({ isOpen, onClose, tournament, managerId, onShowPrizeInfo }: EditTournamentModalProps) {
     const dispatch = useAppDispatch();
     const [formData, setFormData] = useState<updateTournamentFormData>(initialEditFormData(managerId, tournament._id));
+    const [rulesText, setRulesText] = useState("");
 
     useEffect(() => {
         if (isOpen && tournament) {
+            const mapped = mapTournamentToFormData(tournament);
             setFormData({
-                ...mapTournamentToFormData(tournament),
-                startDate: tournament.startDate.split("T")[0],
-                endDate: tournament.endDate.split("T")[0]
+                ...mapped,
+                startDate: new Date(mapped.startDate),
+                endDate: new Date(mapped.endDate),
+                regDeadline: new Date(mapped.regDeadline),
             });
+            setRulesText(mapped.rules.join("\n"));
         }
     }, [isOpen, tournament]);
 
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        dispatch(editTournament(formData));
+        const formattedData = {
+            ...formData,
+            rules: rulesText.split("\n").map(r => r.trim()).filter(r => r),
+        };
+        dispatch(editTournament({formData : formattedData, managerId}));
         handleClose();
     };
 
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({
+
+        if (name === "rules") {
+            setRulesText(value);
+            return;
+        }
+
+        setFormData(prev => ({
             ...prev,
             [name]: name.includes("Teams") || name === "prizePool" || name === "entryFee"
                 ? Number(value)
                 : value
         }));
     };
+
 
     const handleClose = () => {
         onClose();
@@ -45,16 +60,16 @@ export default function EditTournamentModal({ isOpen, onClose, tournament, manag
     if (!isOpen) return null;
 
     const fields = [
-        { label: "Tournament Name", type: "text", name: "name", placeholder: "Enter tournament name" },
+        { label: "Tournament Name", type: "text", name: "title", placeholder: "Enter tournament name" },
         { label: "Sport", type: "select", name: "sport", options: sports },
         { label: "Tournament Start Date", type: "date", name: "startDate" },
-        { label: "Registration Deadline", type: "date", name: "endDate" },
+        { label: "Tournament End Date", type: "date", name: "endDate" },
+        { label: "Registration Deadline", type: "date", name: "regDeadline" },
         { label: "Location", type: "text", name: "location", placeholder: "Enter tournament location" },
-        { label: "Tournament Format", type: "select", name: "format", options: formats },
         { label: "Max Participants", type: "number", name: "maxTeams", placeholder: "Maximum number of teams", min: "2" },
         { label: "Min Participants", type: "number", name: "minTeams", placeholder: "Minimum number of teams", min: "2" },
         { label: "Entry Fee", type: "number", name: "entryFee", placeholder: "Enter minimum entry fee", min: "0" },
-        { label: "Prize Pool", type: "number", name: "prizePool", placeholder: "Enter your prize pool", min: "0" },
+        { label: "Tournament Format", type: "select", name: "format", options: formats },
     ];
 
     return (
@@ -80,6 +95,31 @@ export default function EditTournamentModal({ isOpen, onClose, tournament, manag
                                 />
                             ))}
                         </div>
+
+                        <div className="flex items-end gap-2 mt-1">
+                            <button
+                                type="button"
+                                onClick={onShowPrizeInfo}
+                                className="text-xs text-center text-blue-400 hover:text-blue-300 transition-colors"
+                            >
+                                💡 How prize pool is calculated?
+                            </button>
+                        </div>
+
+                        <div className="mt-6">
+                            <FormInput
+                                label="Rules"
+                                type="textarea"
+                                name="rules"
+                                value={rulesText}
+                                onChange={handleChange}
+                                placeholder="Rules about the tournament"
+                                rows={3}
+                            />
+                        </div>
+                        <p className="text-xs text-green-400 mt-1">
+                            Enter each rule on a separate line. Each line will become an individual rule.
+                        </p>
 
                         <div className="mt-6">
                             <FormInput

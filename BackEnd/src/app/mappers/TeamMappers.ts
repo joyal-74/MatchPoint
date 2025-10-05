@@ -9,6 +9,8 @@ export class TeamMapper {
             name: team.name,
             logo: team.logo,
             sport: team.sport,
+            state: team.state,
+            city: team.city,
             description: team.description,
             maxPlayers: team.maxPlayers,
             members: team.members,

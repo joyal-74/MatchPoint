@@ -7,42 +7,57 @@ import FormInput from "./FormInput";
 import ModalHeader from "../../../shared/modal/ModalHeader";
 import FormActions from "../../../shared/modal/FormActions";
 
-export default function CreateTournamentModal({ isOpen, onClose, managerId }: CreateTournamentModalProps) {
+export default function CreateTournamentModal({ isOpen, onClose, managerId, onShowPrizeInfo }: CreateTournamentModalProps) {
     const dispatch = useAppDispatch();
     const [formData, setFormData] = useState<TournamentFormData>(initialFormData(managerId));
+    const [rulesText, setRulesText] = useState("");
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        dispatch(createTournament(formData));
+        const formattedData = {
+            ...formData,
+            rules: rulesText.split("\n").map(r => r.trim()).filter(r => r),
+        };
+
+        dispatch(createTournament({ formData: formattedData, managerId }));
         handleClose();
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+
+        if (name === "rules") {
+            setRulesText(value); // ✅ keep rules as string
+            return;
+        }
+
         setFormData(prev => ({
             ...prev,
-            [name]: name.includes("Teams") || name === "prizePool" ? Number(value) : value
+            [name]: name.includes("Teams") || name === "prizePool"
+                ? Number(value)
+                : value
         }));
     };
 
     const handleClose = () => {
         setFormData(initialFormData(managerId));
+        setRulesText(""); // ✅ reset rules text
         onClose();
     };
 
     if (!isOpen) return null;
 
     const fields = [
-        { label: "Tournament Name", type: "text", name: "name", placeholder: "Enter tournament name" },
+        { label: "Tournament Name", type: "text", name: "title", placeholder: "Enter tournament name" },
         { label: "Sport", type: "select", name: "sport", options: sports },
         { label: "Tournament Start Date", type: "date", name: "startDate" },
-        { label: "Registration Deadline", type: "date", name: "endDate" },
+        { label: "Tournament End Date", type: "date", name: "endDate" },
+        { label: "Registration Deadline", type: "date", name: "regDeadline" },
         { label: "Location", type: "text", name: "location", placeholder: "Enter tournament location" },
-        { label: "Tournament Format", type: "select", name: "format", options: formats },
         { label: "Max Participants", type: "number", name: "maxTeams", placeholder: "Maximum number of teams", min: "2" },
         { label: "Min Participants", type: "number", name: "minTeams", placeholder: "Minimum number of teams", min: "2" },
         { label: "Entry Fee", type: "number", name: "entryFee", placeholder: "Enter minimum entry fee", min: "0" },
-        { label: "Prize Pool", type: "number", name: "prizePool", placeholder: "Enter your prize pool", min: "0" },
+        { label: "Tournament Format", type: "select", name: "format", options: formats },
     ];
 
     return (
@@ -68,6 +83,31 @@ export default function CreateTournamentModal({ isOpen, onClose, managerId }: Cr
                                 />
                             ))}
                         </div>
+
+                        <div className="flex items-end gap-2 mt-1">
+                            <button
+                                type="button"
+                                onClick={onShowPrizeInfo}
+                                className="text-xs text-center text-blue-400 hover:text-blue-300 transition-colors"
+                            >
+                                💡 How prize pool is calculated?
+                            </button>
+                        </div>
+
+                        <div className="mt-6">
+                            <FormInput
+                                label="Rules"
+                                type="textarea"
+                                name="rules"
+                                value={rulesText} // ✅ controlled by separate state
+                                onChange={handleChange}
+                                placeholder="Rules about the tournament"
+                                rows={3}
+                            />
+                        </div>
+                        <p className="text-xs text-green-400 mt-1">
+                            Enter each rule on a separate line. Each line will become an individual rule.
+                        </p>
 
                         <div className="mt-6">
                             <FormInput

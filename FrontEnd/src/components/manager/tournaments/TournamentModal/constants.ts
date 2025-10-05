@@ -15,9 +15,11 @@ export const initialFormData = (managerId: string): TournamentFormData => ({
     location: "",
     maxTeams: 0,
     minTeams: 0,
+    currTeams: 0,
     entryFee: "",
     format: 'knockout',
-    prizePool: 0
+    prizePool: 0,
+    rules : []
 });
 
 export const initialEditFormData = (managerId: string, id: string): updateTournamentFormData => ({
@@ -33,10 +35,12 @@ export const initialEditFormData = (managerId: string, id: string): updateTourna
     location: "",
     maxTeams: 0,
     minTeams: 0,
+    currTeams: 0,
     entryFee: "",
     format: 'knockout',
     prizePool: 0,
-    status: 'ongoing'
+    status: 'ongoing',
+    rules : []
 });
 
 
@@ -53,8 +57,10 @@ export const mapTournamentToFormData = (tournament: Tournament): updateTournamen
     location: tournament.location,
     maxTeams: tournament.maxTeams,
     minTeams: tournament.minTeams,
+    currTeams: tournament.minTeams,
     entryFee: tournament.entryFee,
     format: tournament.format,
     prizePool: tournament.prizePool,
-    status: tournament.status
+    status: tournament.status,
+    rules : tournament.rules
 });

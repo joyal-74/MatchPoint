@@ -42,10 +42,13 @@ import { SoftDeleteTeam } from 'app/usecases/manager/teams/ChangeTeamStatus';
 import { TournamentController } from 'presentation/http/controllers/manager/TournamentController';
 import { GetMyTournamentsUseCase } from 'app/usecases/manager/tournaments/GetMyTournaments';
 import { TournamentRepositoryMongo } from 'infra/repositories/mongo/TournamentRepoMongo';
-import { ExploreTournamentsUseCase } from 'app/usecases/manager/tournaments/GetExploreTournaments'; 
+import { ExploreTournamentsUseCase } from 'app/usecases/manager/tournaments/GetExploreTournaments';
 import { AddTournamentUseCase } from 'app/usecases/manager/tournaments/AddTournament';
 import { EditTournamentUseCase } from 'app/usecases/manager/tournaments/EditTournament';
 import { CancelTournamentUsecase } from 'app/usecases/manager/tournaments/CancelTournament';
+import { TeamsController } from 'presentation/http/controllers/player/TeamsController';
+import { FetchAllTeams } from 'app/usecases/player/FetchPlayerTeams';
+import { JoinTeamUseCase } from 'app/usecases/player/JoinTeams';
 
 // Repositories
 const userRepository = new UserRepositoryMongo();
@@ -103,6 +106,11 @@ const editTournament = new EditTournamentUseCase(tournamentRepository, logger);
 const cancelTournament = new CancelTournamentUsecase(tournamentRepository, logger);
 
 
+// use case player
+const getAllTeams = new FetchAllTeams(teamRepository, logger)
+const joinTeams = new JoinTeamUseCase(teamRepository, logger)
+
+
 const scheduler = new NodeCronScheduler();
 
 // Cron job wiring
@@ -112,13 +120,18 @@ deleteUnverifiedUsersCron(scheduler, userRepository, playerRepository, managerRe
 export const authController = new AuthController(loginUser, loginAdmin, logout, viewerRegister,
     playerRegister, managerRegister, refreshUser, forgotPassword, verifyOtp, resendOtp, resetPassword);
 
+// admin
 export const usersManagementController = new UsersManagementController(getAllManagers, getAllPlayers, getAllViewers, changeUserStatus);
 
+
+// Manager
 export const teamManagementController = new TeamController(addNewTeam, editTeam, deleteTeam, getallTeams, changeTeamStatus, logger);
-
 export const tournamentManagementController = new TournamentController(getMyTournaments, getExploreTournaments, addTournament, editTournament, cancelTournament, logger);
-
 export const updateManagerProfileController = new ProfileController(updateManagerProfile);
+
+
+// player
+export const playerTeamController = new TeamsController(getAllTeams, joinTeams, logger);
 
 // role specific access
 export const adminOnly = verifyTokenMiddleware(jwtService, ["admin"]);

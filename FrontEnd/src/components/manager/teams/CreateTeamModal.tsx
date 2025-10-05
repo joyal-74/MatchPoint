@@ -24,6 +24,8 @@ export default function CreateTeamModal({
     const [sport, setSport] = useState("Cricket");
     const [maxPlayers, setMaxPlayers] = useState(0);
     const [description, setDescription] = useState("");
+    const [state, setState] = useState("");
+    const [city, setCity] = useState("");
     const [logo, setLogo] = useState<File | null>(null);
     const [logoPreview, setLogoPreview] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -41,8 +43,8 @@ export default function CreateTeamModal({
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!name.trim() || !logo || !managerId) {
-            alert('Please fill all required fields');
+        if (!name.trim() || !logo || !managerId || !state.trim() || !city.trim()) {
+            alert("Please fill all required fields");
             return;
         }
 
@@ -55,21 +57,25 @@ export default function CreateTeamModal({
             formData.append("maxPlayers", maxPlayers.toString());
             formData.append("managerId", managerId);
             formData.append("description", description);
+            formData.append("state", state);
+            formData.append("city", city);
             formData.append("logo", logo);
 
             await onCreateTeam(formData);
-            
-            // Reset and close
+
+            // Reset fields
             setName("");
             setSport("Cricket");
             setMaxPlayers(0);
             setDescription("");
+            setState("");
+            setCity("");
             setLogo(null);
             setLogoPreview("");
             onClose();
         } catch (error) {
-            console.error('Error creating team:', error);
-            alert('Failed to create team. Please try again.');
+            console.error("Error creating team:", error);
+            alert("Failed to create team. Please try again.");
         } finally {
             setIsLoading(false);
         }
@@ -77,18 +83,27 @@ export default function CreateTeamModal({
 
     if (!isOpen) return null;
 
+    const stateOptions = [
+        { value: "Maharashtra", label: "Maharashtra" },
+        { value: "Karnataka", label: "Karnataka" },
+        { value: "Delhi", label: "Delhi" },
+        { value: "Tamil Nadu", label: "Tamil Nadu" },
+        { value: "Gujarat", label: "Gujarat" },
+        { value: "West Bengal", label: "West Bengal" },
+    ];
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <ModalBackdrop onClick={onClose} />
-            
-            <div className="relative w-full max-w-md bg-neutral-900 rounded-xl border border-neutral-700 shadow-2xl z-50">
-                <ModalHeader 
-                    title="Create New Team" 
-                    onClose={onClose}
-                    disabled={isLoading}
-                />
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <div
+                className="relative w-full max-w-2xl bg-neutral-900 rounded-xl 
+                   border border-neutral-700 shadow-2xl z-50"
+            >
+                <ModalHeader title="Create New Team" onClose={onClose} disabled={isLoading} />
+
+                <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                    {/* Logo Upload - full width */}
                     <LogoUpload
                         logoPreview={logoPreview}
                         onLogoChange={handleLogoChange}
@@ -106,26 +121,50 @@ export default function CreateTeamModal({
                         disabled={isLoading}
                     />
 
-                    <FormSelect
-                        label="Sport"
-                        value={sport}
-                        onChange={setSport}
-                        options={[{ value: "Cricket", label: "Cricket" }]}
-                        disabled={isLoading}
-                    />
+                    {/* Grid layout for form fields */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormSelect
+                            label="State"
+                            value={state}
+                            onChange={setState}
+                            options={stateOptions}
+                            placeholder="Select your state"
+                            disabled={isLoading}
+                        />
 
-                    <FormInput
-                        label="Max Players"
-                        type="number"
-                        value={maxPlayers}
-                        onChange={(value) => setMaxPlayers(Number(value))}
-                        placeholder="Enter max players"
-                        required
-                        disabled={isLoading}
-                        min={2}
-                        max={50}
-                    />
+                        <FormInput
+                            label="Region / City"
+                            type="text"
+                            value={city}
+                            onChange={setCity}
+                            placeholder="Enter your city or region"
+                            required
+                            disabled={isLoading}
+                        />
 
+                        <FormSelect
+                            label="Sport"
+                            value={sport}
+                            onChange={setSport}
+                            options={[{ value: "Cricket", label: "Cricket" }]}
+                            placeholder="Select your sport"
+                            disabled={isLoading}
+                        />
+
+                        <FormInput
+                            label="Max Players"
+                            type="number"
+                            value={maxPlayers}
+                            onChange={(value) => setMaxPlayers(Number(value))}
+                            placeholder="Enter max players"
+                            required
+                            disabled={isLoading}
+                            min={2}
+                            max={50}
+                        />
+                    </div>
+
+                    {/* Description - full width */}
                     <FormTextarea
                         label="Description"
                         value={description}
@@ -135,10 +174,11 @@ export default function CreateTeamModal({
                         disabled={isLoading}
                     />
 
+                    {/* Actions - full width */}
                     <FormActions
                         submitLabel="Create Team"
                         onCancel={onClose}
-                        disabled={!logo}
+                        disabled={!logo || isLoading}
                         loading={isLoading}
                     />
                 </form>

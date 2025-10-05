@@ -4,7 +4,7 @@ interface TeamsHeaderProps {
     onCreateClick: () => void;
     title?: string;
     subtitle?: string;
-    buttontitle: string;
+    buttontitle?: string;
 }
 
 export default function ManagementHeader({

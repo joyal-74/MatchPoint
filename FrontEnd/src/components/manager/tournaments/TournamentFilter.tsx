@@ -1,4 +1,4 @@
-export type FilterStatus = "all" | "ongoing" | "completed";
+export type FilterStatus = "all" | "upcoming" | "ongoing" | "completed";
 
 interface TournamentFilterProps {
     activeFilter: FilterStatus;
@@ -12,12 +12,12 @@ export default function TournamentFilter({
 }: TournamentFilterProps) {
     const filterOptions = [
         { key: "all" as const, label: "All" },
+        { key: "upcoming" as const, label: "Upcoming" },
         { key: "ongoing" as const, label: "Active" },
         { key: "completed" as const, label: "Completed" }
     ];
 
     return (
-
         <div className="flex items-center gap-3">
             <div className="flex gap-2">
                 {filterOptions.map((filter) => (
@@ -34,6 +34,5 @@ export default function TournamentFilter({
                 ))}
             </div>
         </div>
-
     );
 }

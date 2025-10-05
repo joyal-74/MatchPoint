@@ -5,7 +5,7 @@ export interface IGetMyTournaments {
 }
 
 export interface IGetExploreTournaments {
-    execute(filters: Partial<Tournament>): Promise<Tournament[]>;
+    execute(managerId : string, page : number, limit : number, search : string, filter : string): Promise<Tournament[]>;
 }
 
 export interface IAddTournament {
