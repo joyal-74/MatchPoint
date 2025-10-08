@@ -35,7 +35,7 @@ import { ManagerIdGenerator, PlayerIdGenerator, TeamIdGenerator, TournamentIdGen
 import { TeamController } from 'presentation/http/controllers/manager/TeamController';
 import { AddNewTeamUseCase } from 'app/usecases/manager/teams/AddNewTeam';
 import { TeamRepositoryMongo } from 'infra/repositories/mongo/TeamRepositoryMongo';
-import { GetAllTeamsUseCase } from 'app/usecases/manager/GetTeamList';
+import { GetAllTeamUseCase } from 'app/usecases/manager/teams/GetAllTeamsUseCase';
 import { ChangePlayerStatusUseCase } from 'app/usecases/manager/teams/ChangePlayerStatus';
 import { EditTeamUseCase } from 'app/usecases/manager/teams/EditTeam';
 import { SoftDeleteTeam } from 'app/usecases/manager/teams/ChangeTeamStatus';
@@ -49,6 +49,16 @@ import { CancelTournamentUsecase } from 'app/usecases/manager/tournaments/Cancel
 import { TeamsController } from 'presentation/http/controllers/player/TeamsController';
 import { FetchAllTeams } from 'app/usecases/player/FetchPlayerTeams';
 import { JoinTeamUseCase } from 'app/usecases/player/JoinTeams';
+import { GetMyTeamsUseCase } from 'app/usecases/player/GetMyTeams';
+import { GetMyTeamDetails } from 'app/usecases/player/GetMyTeamDetails';
+import { GetTournamentDetails } from 'app/usecases/manager/tournaments/TournamentDetails';
+import { InitiateTournamentPayment } from 'app/usecases/manager/tournaments/InitiateTournamentPayment';
+import { UpdateTournamentTeam } from 'app/usecases/manager/tournaments/UpdateTournamentTeam';
+import { RegistrationRepository } from 'infra/repositories/mongo/RegistrationRepository';
+import { WalletProvider } from 'infra/providers/WalletProvider';
+import { WalletRepository } from 'infra/services/WalletRepository';
+import { RazorpayProvider } from 'infra/providers/RazorpayProvider';
+import { GetRegisteredTeams } from 'app/usecases/manager/tournaments/GetRegisteredTeams';
 
 // Repositories
 const userRepository = new UserRepositoryMongo();
@@ -57,6 +67,8 @@ const playerRepository = new PlayerRepositoryMongo();
 const managerRepository = new ManagerRepositoryMongo();
 const teamRepository = new TeamRepositoryMongo();
 const tournamentRepository = new TournamentRepositoryMongo();
+const registrationRepository = new RegistrationRepository();
+const walletRepository = new WalletRepository();
 
 // Infra Services
 const jwtService = new JWTService();
@@ -71,6 +83,9 @@ const tournamentId = new TournamentIdGenerator();
 const userId = new UserIdGenerator();
 const playerId = new PlayerIdGenerator();
 const managerId = new ManagerIdGenerator();
+const walletProvider = new WalletProvider(walletRepository, registrationRepository);
+const razorpayProvider = new RazorpayProvider(process.env.RAZOR_API_KEY!, process.env.RAZOR_API_SECRET!)
+
 
 // Use Cases (Authentication)
 const loginAdmin = new LoginAdmin(adminRepository, jwtService, passwordHasher, logger);
@@ -96,7 +111,7 @@ const updateManagerProfile = new UpdateManagerProfile(userRepository, imageKitfi
 const addNewTeam = new AddNewTeamUseCase(teamRepository, teamId, imageKitfileProvider, logger);
 const editTeam = new EditTeamUseCase(teamRepository, imageKitfileProvider, logger);
 const deleteTeam = new SoftDeleteTeam(teamRepository, logger);
-const getallTeams = new GetAllTeamsUseCase(teamRepository, logger);
+const getallTeams = new GetAllTeamUseCase(teamRepository, logger);
 const changeTeamStatus = new ChangePlayerStatusUseCase(teamRepository);
 
 const getMyTournaments = new GetMyTournamentsUseCase(tournamentRepository, logger);
@@ -104,11 +119,17 @@ const getExploreTournaments = new ExploreTournamentsUseCase(tournamentRepository
 const addTournament = new AddTournamentUseCase(tournamentRepository, tournamentId, logger);
 const editTournament = new EditTournamentUseCase(tournamentRepository, logger);
 const cancelTournament = new CancelTournamentUsecase(tournamentRepository, logger);
+const fetchTournamentDetails = new GetTournamentDetails(tournamentRepository, logger);
+const getRegisteredTeams = new GetRegisteredTeams(registrationRepository, logger)
 
 
 // use case player
 const getAllTeams = new FetchAllTeams(teamRepository, logger)
-const joinTeams = new JoinTeamUseCase(teamRepository, logger)
+const joinTeams = new JoinTeamUseCase(teamRepository, playerRepository, logger)
+const getMyTeams = new GetMyTeamsUseCase(teamRepository, logger)
+const getMyTeamDetails = new GetMyTeamDetails(teamRepository, logger)
+const initiatePayment = new InitiateTournamentPayment(tournamentRepository, registrationRepository, logger, razorpayProvider, walletProvider)
+const updateTournamentTeam = new UpdateTournamentTeam(tournamentRepository, registrationRepository, logger)
 
 
 const scheduler = new NodeCronScheduler();
@@ -126,12 +147,13 @@ export const usersManagementController = new UsersManagementController(getAllMan
 
 // Manager
 export const teamManagementController = new TeamController(addNewTeam, editTeam, deleteTeam, getallTeams, changeTeamStatus, logger);
-export const tournamentManagementController = new TournamentController(getMyTournaments, getExploreTournaments, addTournament, editTournament, cancelTournament, logger);
+export const tournamentManagementController = new TournamentController(getMyTournaments, getExploreTournaments, addTournament, editTournament, cancelTournament,
+    fetchTournamentDetails, initiatePayment, updateTournamentTeam, getRegisteredTeams, logger);
 export const updateManagerProfileController = new ProfileController(updateManagerProfile);
 
 
 // player
-export const playerTeamController = new TeamsController(getAllTeams, joinTeams, logger);
+export const playerTeamController = new TeamsController(getAllTeams, joinTeams, getMyTeams, getMyTeamDetails, logger);
 
 // role specific access
 export const adminOnly = verifyTokenMiddleware(jwtService, ["admin"]);

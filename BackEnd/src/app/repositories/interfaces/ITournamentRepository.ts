@@ -1,8 +1,9 @@
-import { Tournament, TournamentRegister } from "domain/entities/Tournaments";
+import { Tournament, TournamentRegister, TournamentTeam } from "domain/entities/Tournaments";
 
 export interface ITournamentRepository {
     getByManager(managerId: string): Promise<Tournament[] | null>;
     findById(id: string): Promise<Tournament | null>;
+    updateTeams(tournamentId: string, teams: TournamentTeam[]): Promise<Tournament>;
     findAll(managerId: string): Promise<Tournament[]>;
     getExploreTournaments(managerId: string, page: number, limit: number, search?: string, filter?: string): Promise<Tournament[] | null>;
     create(teamData: TournamentRegister): Promise<Tournament>;

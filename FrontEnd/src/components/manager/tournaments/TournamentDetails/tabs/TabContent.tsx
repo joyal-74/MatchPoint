@@ -1,0 +1,37 @@
+import type { Tournament } from "../../../../../features/manager/managerTypes";
+import FixturesTab from "./FixturesTab";
+import GroupsTab from "./GroupsTab";
+import InfoTab from "./InfoTab";
+import LeaderboardTab from "./LeaderboardTab";
+import MatchesTab from "./MatchesTab";
+import ResultsTab from "./ResultsTab";
+import TeamsTab from "./TeamsTab";
+
+export type TabType = "info" | "teams" | "fixtures" | "matches" | "results" | "groups" | "leaderboard";
+
+export interface RegisteredTeam {
+    name: string;
+    captain: string;
+    registeredOn: string;
+}
+
+export const renderTabContent = (selectedTournament: Tournament, registeredTeams: RegisteredTeam[], activeTab: TabType) => {
+    switch (activeTab) {
+        case "info":
+            return <InfoTab tournamentData={selectedTournament} registeredTeams={registeredTeams} />;
+        case "teams":
+            return <TeamsTab registeredTeams={registeredTeams} />;
+        case "fixtures":
+            return <FixturesTab />;
+        case "matches":
+            return <MatchesTab />;
+        case "results":
+            return <ResultsTab />;
+        case "groups":
+            return <GroupsTab />;
+        case "leaderboard":
+            return <LeaderboardTab />;
+        default:
+            return <InfoTab tournamentData={selectedTournament} registeredTeams={registeredTeams} />;
+    }
+};

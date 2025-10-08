@@ -1,3 +1,5 @@
+export type playerStatus = "playing" | "sub";
+
 export interface Team {
     _id: string;
     teamId: string;
@@ -7,7 +9,8 @@ export interface Team {
     sport: string;
     description: string;
     maxPlayers: number;
-    members: string[];
+    members: Members[];
+    membersCount: number;
     state: string;
     city: string;
     stats: {
@@ -18,6 +21,15 @@ export interface Team {
     created: string;
 }
 
+
+export interface Members {
+    _id : string;
+    playerId: string;
+    userId: string;
+    firstName : string;
+    lastName : string;
+    status: playerStatus;
+}
 
 export interface Filters {
     sport?: string;

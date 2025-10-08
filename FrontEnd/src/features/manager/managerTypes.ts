@@ -1,26 +1,4 @@
-export type TeamStatus = 'active' | 'blocked' | 'deleted'
-export type playerStatus = "playing" | "sub";
-
-
-export interface Team {
-    _id: string;
-    managerId: string;
-    name: string;
-    sport: string;
-    maxPlayers: string;
-    members: Members[];
-    state: string;
-    city: string;
-    created: string;
-    status: TeamStatus;
-    logo: string;
-    description?: string;
-}
-
-export interface Members {
-    playerId: string;
-    status: playerStatus;
-}
+import type { Team, TeamStatus } from "../../components/manager/teams/Types";
 
 export interface EditTeamPayload {
     teamId: string;
@@ -45,7 +23,7 @@ export type EditTeamData = {
     managerId: string;
     state: string;
     city: string;
-    members: Members[];
+    membersCount: number;
     description?: string;
     logo?: string;
     maxPlayers?: string;
@@ -109,3 +87,8 @@ export type TournamentRegister = {
 }
 
 export type TournamentUpdate = TournamentRegister & { _id: string }
+
+export interface PaymentUrls {
+    success: string;
+    cancel: string;
+}

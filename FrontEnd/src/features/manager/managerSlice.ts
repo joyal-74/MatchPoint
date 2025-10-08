@@ -1,16 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getAllTeams, createTeam, deleteTeam, editTeam } from "./managerThunks";
-import type { Team } from "./managerTypes";
+import type { Team } from "../../components/manager/teams/Types";
 
 interface ManagerState {
     teams: Team[];
     loading: boolean;
+    fetched: boolean,
     error: string | null;
 }
 
 const initialState: ManagerState = {
     teams: [],
     loading: false,
+    fetched: false,
     error: null,
 };
 
@@ -26,8 +28,10 @@ const managerSlice = createSlice({
                 state.error = null;
             })
             .addCase(getAllTeams.fulfilled, (state, action) => {
+                console.log(action.payload)
                 state.teams = action.payload;
                 state.loading = false;
+                state.fetched = true;
                 state.error = null;
             })
             .addCase(getAllTeams.rejected, (state, action) => {
@@ -58,7 +62,6 @@ const managerSlice = createSlice({
                 state.error = null;
             })
             .addCase(deleteTeam.fulfilled, (state, action) => {
-                console.log(action.payload)
                 state.teams = state.teams.filter(team => team._id !== action.payload);
                 state.loading = false;
                 state.error = null;
@@ -70,10 +73,10 @@ const managerSlice = createSlice({
 
         // editTeam
         builder
-            .addCase(editTeam.pending, (state) => { 
+            .addCase(editTeam.pending, (state) => {
                 state.loading = true;
-                 state.error = null; 
-                })
+                state.error = null;
+            })
             .addCase(editTeam.fulfilled, (state, action) => {
                 const updatedTeam = action.payload;
                 state.teams = state.teams.map(team => team._id === updatedTeam._id ? updatedTeam : team);

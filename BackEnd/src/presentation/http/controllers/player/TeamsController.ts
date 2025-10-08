@@ -1,5 +1,5 @@
 import { ILogger } from "app/providers/ILogger";
-import { IGetAllTeamsUseCase, IJoinTeamUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
+import { IGetAllTeamsUseCase, IGetMyTeamDetailsUseCase, IGetMyTeamsUseCase, IJoinTeamUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -11,6 +11,8 @@ export class TeamsController implements IPlayerTeamController {
     constructor(
         private _getAllTeamsUsecase: IGetAllTeamsUseCase,
         private _joinTeamsUsecase: IJoinTeamUseCase,
+        private _getmyTeamsUsecase: IGetMyTeamsUseCase,
+        private _getmyTeamsDetailsUsecase: IGetMyTeamDetailsUseCase,
         private _logger: ILogger
     ) { }
 
@@ -32,6 +34,25 @@ export class TeamsController implements IPlayerTeamController {
         const result = await this._joinTeamsUsecase.execute(teamId, playerId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Joined to team successfully", result));
+    };
+
+    getMyTeams = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { playerId } = httpRequest.params;
+
+        this._logger.info(`[TeamController] Join to team Id → managerId=${playerId}`);
+
+        const result = await this._getmyTeamsUsecase.execute(playerId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team fetched successfully", result));
     }
 
+    getTeamDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { teamId } = httpRequest.params;
+
+        this._logger.info(`[TeamController] Join to team Id → teamId=${teamId}`);
+
+        const result = await this._getmyTeamsDetailsUsecase.execute(teamId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team detailed fetched successfully", result));
+    }
 }

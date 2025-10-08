@@ -1,76 +1,56 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../Navbar";
 import TournamentHeader from "./TournamentHeader";
 import TournamentTabs from "./TournamentTabs";
-import { InfoTab, TeamsTab, FixturesTab, MatchesTab, ResultsTab, GroupsTab, LeaderboardTab } from "./tabs";
 import { ArrowLeft } from "lucide-react";
-import { useAppSelector } from "../../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/hooks";
 import type { RootState } from "../../../../app/store";
-
-export type TabType = "info" | "teams" | "fixtures" | "matches" | "results" | "groups" | "leaderboard";
+import { fetchTournament, getRegisteredTeams } from "../../../../features/manager/Tournaments/tournamentThunks";
+import LoadingOverlay from "../../../shared/LoadingOverlay";
+import { renderTabContent, type TabType } from "./tabs/TabContent";
+import RegisterTeamModal from "./RegisterTeamModal";
+import { getAllTeams } from "../../../../features/manager";
 
 export default function TournamentDetailsPage() {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const [activeTab, setActiveTab] = useState<TabType>("info");
-    const selectedTournament = useAppSelector(
-        (state: RootState) => state.managerTournaments.selectedTournament
-    );
+    const { selectedTournament, loading, registeredTeams } = useAppSelector((state: RootState) => state.managerTournaments);
+    const { id, type } = useParams<{ id: string; type: "manage" | 'explore' }>();
 
-    // Sample tournament data
-    if (!selectedTournament) return <p className="text-white">No tournament selected.</p>;
-    const tournamentData = selectedTournament;
+    const [showModal, setShowModal] = useState(false);
 
-    const registeredTeams = [
-        {
-            name: "Kochi Kings",
-            captain: "Rahul Sharma",
-            registeredOn: "05 Jan 2025",
-        },
-        {
-            name: "Trivandrum Titans",
-            captain: "Vikram Nair",
-            registeredOn: "06 Jan 2025",
-        },
-        {
-            name: "Kozhikode Warriors",
-            captain: "Arjun Menon",
-            registeredOn: "07 Jan 2025",
-        },
-        {
-            name: "Thrissur Lions",
-            captain: "Suresh Kumar",
-            registeredOn: "08 Jan 2025",
-        },
-    ];
+    const { teams, fetched, loading: teamsLoading } = useAppSelector(state => state.manager);
+    const { user } = useAppSelector(state => state.auth);
 
-    // Tab content
-    const renderTabContent = () => {
-        switch (activeTab) {
-            case "info":
-                return <InfoTab tournamentData={tournamentData} registeredTeams={registeredTeams} />;
-            case "teams":
-                return <TeamsTab registeredTeams={registeredTeams} />;
-            case "fixtures":
-                return <FixturesTab />;
-            case "matches":
-                return <MatchesTab />;
-            case "results":
-                return <ResultsTab />;
-            case "groups":
-                return <GroupsTab />;
-            case "leaderboard":
-                return <LeaderboardTab />;
-            default:
-                return <InfoTab tournamentData={tournamentData} registeredTeams={registeredTeams} />;
+    if (!user) throw new Error('User not found')
+
+    useEffect(() => {
+        if (!fetched && !teamsLoading) {
+            dispatch(getAllTeams(user._id));
         }
-    };
+    }, [teams, dispatch, user, fetched, teamsLoading]);
+
+
+    useEffect(() => {
+        if (id) dispatch(fetchTournament(id));
+    }, [id, dispatch]);
+
+
+    useEffect(() => {
+        if (id) dispatch(getRegisteredTeams(id));
+    }, [id, dispatch]);
+
+
+    if (loading || !selectedTournament) {
+        return <LoadingOverlay show={true} />;
+    }
 
     return (
         <>
             <Navbar />
             <div className="min-h-screen bg-neutral-900 text-white p-8 mt-10 mx-12">
-                {/* Header */}
                 <div className="flex items-center gap-4 mb-6">
                     <button
                         onClick={() => navigate(-1)}
@@ -82,14 +62,23 @@ export default function TournamentDetailsPage() {
                     <h1 className="text-2xl font-bold">Tournament Details</h1>
                 </div>
 
-                <TournamentHeader tournamentData={tournamentData} />
-
-                {/* Tabs */}
+                <TournamentHeader
+                    tournamentData={selectedTournament}
+                    type={type!}
+                    onClick={() => setShowModal(true)}
+                />
                 <TournamentTabs activeTab={activeTab} onTabChange={setActiveTab} />
-
-                {/* Tab Content */}
-                <div className="animate-fade-in">{renderTabContent()}</div>
+                <div className="animate-fade-in">{renderTabContent(selectedTournament, registeredTeams, activeTab)}</div>
             </div>
+
+            <RegisterTeamModal
+                show={showModal}
+                onClose={() => setShowModal(false)}
+                entryFee={Number(selectedTournament.entryFee)}
+                tournament={selectedTournament}
+                teams={teams}
+                managerId={user._id}
+            />
         </>
     );
 }

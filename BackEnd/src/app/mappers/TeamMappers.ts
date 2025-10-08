@@ -1,7 +1,7 @@
-import { TeamData } from "domain/dtos/Team.dto";
+import { TeamDataFull } from "domain/dtos/Team.dto";
 
 export class TeamMapper {
-    static toTeamDTO(team: TeamData): TeamData {
+    static toTeamDTO(team: TeamDataFull): TeamDataFull {
         return {
             _id: team._id,
             teamId: team.teamId,
@@ -14,12 +14,15 @@ export class TeamMapper {
             description: team.description,
             maxPlayers: team.maxPlayers,
             members: team.members,
+            membersCount : team.membersCount,
             status: team.status,
-            created: team.created
+            createdAt: team.createdAt,
+            stats : team.stats,
+            phase : team.phase
         };
     }
 
-    static toTeamDTOs(teams: TeamData[]): TeamData[] {
+    static toTeamDTOs(teams: TeamDataFull[]): TeamDataFull[] {
         return teams.map(team => this.toTeamDTO(team));
     }
 }

@@ -1,5 +1,5 @@
 import { ITournamentRepository } from "app/repositories/interfaces/ITournamentRepository";
-import { TournamentRegister, Tournament } from "domain/entities/Tournaments";
+import { TournamentRegister, Tournament, TournamentTeam } from "domain/entities/Tournaments";
 import { BadRequestError } from "domain/errors";
 import { TournamentModel } from "infra/databases/mongo/models/TournamentModel";
 import { TournamentMongoMapper } from "infra/utils/mappers/TournamentMongoMapper";
@@ -29,7 +29,7 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
     }
 
     async getExploreTournaments(managerId: string, page: number = 1, limit: number = 15, search?: string, filter?: string): Promise<Tournament[] | null> {
-        const query: FilterQuery<Tournament> = { };
+        const query: FilterQuery<Tournament> = {};
 
         query.managerId = { $ne: managerId };
 
@@ -86,9 +86,19 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
         ).populate("managerId", "first_name last_name email phone");
 
         if (!tournament) {
-            throw new BadRequestError("Cannot cancel a tournament that has ended or is already cancelled");
+            throw new BadRequestError("Cannot cancel a tournament that has ended or does not exist");
         }
 
         return TournamentMongoMapper.toDomain(tournament);
     }
+
+    async updateTeams(tournamentId: string, teams: TournamentTeam[]): Promise<Tournament> {
+        const updated = await TournamentModel.findByIdAndUpdate(
+            tournamentId,
+            { $set: { teams } },
+            { new: true }
+        );
+        return TournamentMongoMapper.toDomain(updated!);
+    }
+
 }

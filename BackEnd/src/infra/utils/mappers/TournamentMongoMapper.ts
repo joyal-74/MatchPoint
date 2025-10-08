@@ -5,7 +5,6 @@ export class TournamentMongoMapper {
     static toDomain(t: TournamentDocument): Tournament {
         const obj = t.toObject();
         
-        const currTeams = t.teams?.length;
         const managerId = obj.managerId._id.toString();
         const organizer = `${obj.managerId.first_name} ${obj.managerId.last_name}`;
         const contact = {
@@ -19,7 +18,6 @@ export class TournamentMongoMapper {
             managerId,
             organizer,
             contact,
-            currTeams
         } as Tournament;
     }
 

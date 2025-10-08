@@ -13,6 +13,7 @@ export interface TeamDocument extends Document {
     maxPlayers: number;
     members: {
         playerId: Types.ObjectId;
+        userId: Types.ObjectId;
         status: playerStatus;
         approvalStatus: PlayerApprovalStatus;
     }[];
@@ -20,8 +21,9 @@ export interface TeamDocument extends Document {
     city: string;
     stats: statsType;
     status: TeamStatus;
-    phase : PhaseStatus;
-    created: Date;
+    phase: PhaseStatus;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const TeamSchema = new Schema<TeamDocument>({
@@ -35,6 +37,7 @@ const TeamSchema = new Schema<TeamDocument>({
     members: {
         type: [{
             playerId: { type: Schema.Types.ObjectId, ref: "Player" },
+            userId: { type: Schema.Types.ObjectId, ref: "User" },
             status: { type: String, enum: ["playing", "sub"], default: "sub" },
             approvalStatus: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" }
         }],
@@ -56,7 +59,7 @@ const TeamSchema = new Schema<TeamDocument>({
         default: "recruiting"
     },
     status: { type: String, enum: ["active", "blocked", "deleted"], default: "active" },
-    created: { type: Date, default: Date.now }
-});
+
+}, { timestamps: true });
 
 export const TeamModel = model<TeamDocument>("Team", TeamSchema);

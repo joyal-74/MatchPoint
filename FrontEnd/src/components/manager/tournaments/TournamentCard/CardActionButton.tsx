@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import type { Status, Tournament } from "../../../../features/manager/managerTypes";
-import { setSelectedTournament } from "../../../../features/manager/Tournaments/TournamentSlice";
+import { setSelectedTournament } from "../../../../features/manager/Tournaments/tournamentSlice";
 import { useAppDispatch } from "../../../../hooks/hooks";
 import type { ColorScheme } from "../../teams/TeamCard/teamColors";
 
@@ -17,7 +17,7 @@ const CardActionButton = ({ status, type, colorScheme, tournament }: CardActionB
 
     const handleViewDetails = () => {
         dispatch(setSelectedTournament(tournament));
-        navigate('/manager/tournaments/details')
+        navigate(`/manager/tournaments/${tournament._id}/${type}`);
     };
 
     const isExplore = type === "explore";

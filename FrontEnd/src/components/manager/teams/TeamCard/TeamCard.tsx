@@ -1,4 +1,4 @@
-import type { EditTeamPayload, Members, TeamStatus } from "../../../../features/manager/managerTypes";
+import type { EditTeamPayload, TeamStatus } from "../../../../features/manager/managerTypes";
 import SecondaryButton from "../../../ui/SecondaryButton";
 import TeamDetailItem from "./TeamDetailItem";
 import TeamInfo from "./TeamInfo";
@@ -11,12 +11,14 @@ export interface TeamCardProps {
     _id: string;
     name: string;
     sport: string;
-    members: Members[];
+    membersCount: number;
     created: string;
     maxPlayers: string;
     managerId: string;
     status: TeamStatus;
     logo?: string;
+    state: string;
+    city: string;
     index: number;
     onEdit: (id: EditTeamPayload) => void;
     onDelete: (id: string) => void;
@@ -28,9 +30,11 @@ export default function TeamCard({
     _id, 
     name, 
     sport, 
-    members, 
+    membersCount, 
     created, 
     status, 
+    state,
+    city,
     logo, 
     managerId, 
     maxPlayers, 
@@ -77,11 +81,13 @@ export default function TeamCard({
 
                                 <TeamMenu
                                     onAction={handleMenuAction}
-                                    members={members}
+                                    membersCount={membersCount}
                                     teamId={_id}
                                     onEdit={onEdit}
                                     onDelete={onDelete}
                                     name={name}
+                                    state={state}
+                                    city={city}
                                     managerId={managerId}
                                     sport={sport}
                                     status={status}
@@ -101,7 +107,7 @@ export default function TeamCard({
                                 </svg>
                             }
                         >
-                            {members.length}/{maxPlayers} players
+                            {membersCount}/{maxPlayers} players
                         </TeamDetailItem>
 
                         <div className="flex justify-between items-center">
@@ -112,7 +118,7 @@ export default function TeamCard({
                                     </svg>
                                 }
                             >
-                                Created: {new Date(created).toLocaleDateString()}
+                                Created: {created}
                             </TeamDetailItem>
 
                             <SecondaryButton 

@@ -1,7 +1,7 @@
 import { TeamMapper } from "app/mappers/TeamMappers";
 import { ILogger } from "app/providers/ILogger";
 import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
-import { TeamData } from "domain/dtos/Team.dto";
+import { TeamDataFull } from "domain/dtos/Team.dto";
 import { IGetAllTeamsUseCase } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
 
 
@@ -11,13 +11,13 @@ export class GetAllTeamUseCase implements IGetAllTeamsUseCase {
         private _logger: ILogger,
     ) { }
 
-    async execute(managerId : string): Promise<TeamData[]> {
+    async execute(managerId : string): Promise<TeamDataFull[]> {
         this._logger.info(`Fetching teams.. for ${managerId}`);
 
         const allTeams = await this._teamRepo.findAll(managerId);
 
         this._logger.info(`Total ${allTeams.length} teams found for manager ${managerId}`);
-
+        
         return TeamMapper.toTeamDTOs(allTeams);
     }
 }

@@ -1,7 +1,8 @@
 import { Users, Download } from "lucide-react";
+import type { RegisteredTeam } from "./TabContent";
 
 interface TeamsTabProps {
-    registeredTeams: any[];
+    registeredTeams: RegisteredTeam[];
 }
 
 export default function TeamsTab({ registeredTeams }: TeamsTabProps) {
@@ -17,7 +18,7 @@ export default function TeamsTab({ registeredTeams }: TeamsTabProps) {
                     Export List
                 </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {registeredTeams.map((team, i) => (
                     <div
                         key={i}
@@ -31,7 +32,7 @@ export default function TeamsTab({ registeredTeams }: TeamsTabProps) {
                         </div>
                         <div className="text-sm text-neutral-400">
                             <div>Captain: {team.captain}</div>
-                            <div>Registered: {team.cr}</div>
+                            <div>Registered: {team.registeredOn}</div>
                         </div>
                     </div>
                 ))}

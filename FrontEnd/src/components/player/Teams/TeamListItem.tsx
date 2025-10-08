@@ -1,14 +1,12 @@
-import { MapPin, Users, Heart, ChevronRight } from 'lucide-react';
+import { MapPin, Users, ChevronRight } from 'lucide-react';
 import type { Team } from './Types';
 
 interface TeamListItemProps {
     team: Team;
-    isSaved: boolean;
-    onSaveToggle: (teamId: string) => void;
     onViewDetails: (team: Team) => void;
 }
 
-const TeamListItem: React.FC<TeamListItemProps> = ({ team, isSaved, onSaveToggle, onViewDetails }) => {
+const TeamListItem: React.FC<TeamListItemProps> = ({ team, onViewDetails }) => {
     return (
         <div className="p-5 border-b border-neutral-100 dark:border-neutral-700 last:border-b-0 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors duration-200">
             <div className="flex items-center justify-between">
@@ -47,7 +45,7 @@ const TeamListItem: React.FC<TeamListItemProps> = ({ team, isSaved, onSaveToggle
                             </div>
                             <div className="flex items-center space-x-1">
                                 <Users className="w-3 h-3" />
-                                <span>{team.members}/{team.maxPlayers} players</span>
+                                <span>{team.membersCount || 0}/{team.maxPlayers} players</span>
                             </div>
                         </div>
                     </div>
@@ -61,18 +59,8 @@ const TeamListItem: React.FC<TeamListItemProps> = ({ team, isSaved, onSaveToggle
                     </div>
 
                     <button
-                        onClick={() => onSaveToggle(team._id)}
-                        className={`p-2 rounded-lg transition-colors duration-200 ${isSaved
-                                ? 'bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400'
-                                : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400 hover:bg-pink-100 dark:hover:bg-pink-900/30'
-                            }`}
-                    >
-                        <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
-                    </button>
-
-                    <button
                         onClick={() => onViewDetails(team)}
-                        className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2"
                     >
                         <span>View Team</span>
                         <ChevronRight className="w-4 h-4" />

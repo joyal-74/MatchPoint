@@ -19,7 +19,6 @@ const TeamFinder = () => {
     const { user } = useSelector((state: RootState) => state.auth);
 
     const [filteredTeams, setFilteredTeams] = useState<Team[]>([]);
-    const [savedTeams, setSavedTeams] = useState<string[]>([]);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,7 +36,6 @@ const TeamFinder = () => {
     const [sortBy, setSortBy] = useState('mostActive');
     const [showFilters, setShowFilters] = useState(false);
 
-    // Fetch teams from backend whenever filters/search/sort/page changes
     useEffect(() => {
         const params = {
             ...filters,
@@ -66,10 +64,6 @@ const TeamFinder = () => {
         setCurrentPage(1);
     };
 
-    // Other handlers remain the same
-    const toggleSavedTeam = (teamId: string) => {
-        setSavedTeams(prev => prev.includes(teamId) ? prev.filter(id => id !== teamId) : [...prev, teamId]);
-    };
 
     const openTeamDetails = (team: Team) => { setSelectedTeam(team); setIsModalOpen(true); };
     const closeModal = () => { setIsModalOpen(false); setSelectedTeam(null); };
@@ -130,14 +124,14 @@ const TeamFinder = () => {
                             sortBy={sortBy}
                             onSortChange={setSortBy}
                             showFilters={showFilters}
-                            teams={allTeams}
+                            teams={Array.isArray(allTeams) ? allTeams : []}
                         />
                     </div>
 
                     {/* Results Summary */}
                     <div className="flex justify-between items-center mb-6">
                         <div>
-                            <h2 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">Cricket Teams</h2>
+                            <h2 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">Pick your Teams</h2>
                             <p className="text-neutral-600 dark:text-neutral-400">{filteredTeams.length} teams found</p>
                         </div>
 
@@ -168,8 +162,6 @@ const TeamFinder = () => {
                                 <TeamCard
                                     key={team._id}
                                     team={team}
-                                    isSaved={savedTeams.includes(team._id)}
-                                    onSaveToggle={toggleSavedTeam}
                                     onViewDetails={openTeamDetails}
                                 />
                             ))}
@@ -180,8 +172,6 @@ const TeamFinder = () => {
                                 <TeamListItem
                                     key={team._id}
                                     team={team}
-                                    isSaved={savedTeams.includes(team._id)}
-                                    onSaveToggle={toggleSavedTeam}
                                     onViewDetails={openTeamDetails}
                                 />
                             ))}

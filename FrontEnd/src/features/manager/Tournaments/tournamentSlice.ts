@@ -5,13 +5,20 @@ import {
     createTournament,
     cancelTournament,
     editTournament,
+    fetchTournament,
+    paymentInitiate,
+    verifyTournamentPayment,
+    getRegisteredTeams,
 } from "./tournamentThunks";
 import type { Tournament } from "../managerTypes";
+import type { RegisteredTeam } from "../../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
 
 interface ManagerTournamentState {
     myTournaments: Tournament[];
     exploreTournaments: Tournament[];
     selectedTournament: Tournament | null;
+    registeredTeams : RegisteredTeam[],
+    paymentStatus : boolean;
     loading: boolean;
     error: string | null;
 }
@@ -20,6 +27,8 @@ const initialState: ManagerTournamentState = {
     myTournaments: [],
     exploreTournaments: [],
     selectedTournament: null,
+    registeredTeams :[],
+    paymentStatus : false,
     loading: false,
     error: null,
 };
@@ -31,6 +40,7 @@ const managerTournamentSlice = createSlice({
         setSelectedTournament: (state, action) => {
             state.selectedTournament = action.payload;
         },
+
         clearSelectedTournament: (state) => {
             state.selectedTournament = null;
         },
@@ -113,6 +123,66 @@ const managerTournamentSlice = createSlice({
                 state.loading = false;
             })
             .addCase(editTournament.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            });
+
+        builder
+            .addCase(fetchTournament.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchTournament.fulfilled, (state, action) => {
+                console.log(action.payload)
+                state.selectedTournament = action.payload;
+                state.loading = false;
+            })
+            .addCase(fetchTournament.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            });
+
+        builder
+            .addCase(paymentInitiate.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(paymentInitiate.fulfilled, (state, action) => {
+                console.log(action.payload)
+
+                state.selectedTournament = action.payload.tournament;
+                state.loading = false;
+            })
+            .addCase(paymentInitiate.rejected, (state, action) => {
+                console.log(action.payload)
+                state.loading = false;
+                state.error = action.payload as string;
+            });
+
+        builder
+            .addCase(verifyTournamentPayment.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(verifyTournamentPayment.fulfilled, (state, action) => {
+                state.paymentStatus = action.payload;
+                state.loading = false;
+            })
+            .addCase(verifyTournamentPayment.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            });
+
+        builder
+            .addCase(getRegisteredTeams.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getRegisteredTeams.fulfilled, (state, action) => {
+                state.registeredTeams = action.payload;
+                state.loading = false;
+            })
+            .addCase(getRegisteredTeams.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             });

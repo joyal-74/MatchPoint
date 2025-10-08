@@ -1,3 +1,23 @@
+import type { playerStatus } from "../manager/managerTypes";
+
+type profileType =  {
+    position : string
+}
+
+export interface Members {
+    playerId: string;
+    userId: string;
+    firstName: string;
+    lastName: string;
+    logo: string;
+    profile: profileType;
+    email: string;
+    phone: string;
+    isCaptain: boolean;
+    status: playerStatus;
+}
+
+
 export interface Team {
     _id: string;
     teamId: string;
@@ -7,7 +27,8 @@ export interface Team {
     sport: string;
     description: string;
     maxPlayers: number;
-    members: string[];
+    members: Members[];
+    membersCount: number;
     state: string;
     city: string;
     stats: {

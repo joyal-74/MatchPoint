@@ -46,6 +46,8 @@ export class AddNewTeamUseCase implements IAddTeamUseCase {
             members: teamData.members,
             status: teamData.status,
             logo: teamData.logo,
+            phase : teamData.phase,
+            stats : teamData.stats
         })
 
         return TeamMapper.toTeamDTO(newTeam);

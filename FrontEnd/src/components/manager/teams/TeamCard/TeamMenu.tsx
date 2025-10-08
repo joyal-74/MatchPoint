@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import type { EditTeamPayload, Members, TeamStatus } from "../../../../features/manager/managerTypes";
+import type { EditTeamPayload, TeamStatus } from "../../../../features/manager/managerTypes";
 import { menuItems } from "./TeamMenuItems";
 import type { ColorScheme } from "./teamColors";
 
@@ -12,7 +12,9 @@ export interface TeamMenuProps {
     onDelete: (teamId: string) => void;
     name: string;
     sport: string;
-    members: Members[];
+    state: string;
+    city: string;
+    membersCount: number;
     status: TeamStatus;
     managerId: string;
     logo?: string;
@@ -27,8 +29,10 @@ export default function TeamMenu({
     onDelete,
     name,
     sport,
+    state,
+    city,
     status,
-    members,
+    membersCount,
     logo,
     managerId,
     colorScheme,
@@ -54,7 +58,7 @@ export default function TeamMenu({
             case 'edit':
                 onEdit({
                     teamId,
-                    updatedData: { name, sport, status, logo, managerId, members }
+                    updatedData: { name, sport, status, logo, state, city, managerId, membersCount }
                 });
                 break;
             case 'delete':

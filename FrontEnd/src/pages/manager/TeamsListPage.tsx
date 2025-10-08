@@ -44,7 +44,7 @@ const TeamsListPage: React.FC = () => {
                     {teams.length === 0 && !loading ? (
                         <EmptyTeams onCreate={openCreateModal} />
                     ) : (
-                        <TeamsGrid teams={teams} handlers={handlers} />
+                        <TeamsGrid teams={Array.isArray(teams) ? teams : []} handlers={handlers} />
                     )}
                 </section>
 

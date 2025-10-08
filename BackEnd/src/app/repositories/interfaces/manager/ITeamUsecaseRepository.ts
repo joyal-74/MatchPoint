@@ -1,8 +1,8 @@
-import { TeamData, TeamRegister } from "domain/dtos/Team.dto";
+import { TeamData, TeamDataFull, TeamRegister } from "domain/dtos/Team.dto";
 import { File } from "domain/entities/File";
 
 export interface IGetAllTeamsUseCase {
-    execute(managerId: string): Promise<TeamData[]>;
+    execute(managerId: string): Promise<TeamDataFull[]>;
 }
 
 export interface IAddTeamUseCase {

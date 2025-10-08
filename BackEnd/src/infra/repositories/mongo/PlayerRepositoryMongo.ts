@@ -9,6 +9,10 @@ export class PlayerRepositoryMongo implements IPlayerRepository {
         return PlayerModel.findById(id).lean<PlayerResponse>().exec();
     }
 
+    async findByUserId(userId: string): Promise<PlayerResponse | null> {
+        return PlayerModel.findOne({ userId }).lean<PlayerResponse>().exec();
+    }
+
     async findByEmail(email: string): Promise<PlayerResponse | null> {
         return PlayerModel.findOne({ email }).lean<PlayerResponse>().exec();
     }

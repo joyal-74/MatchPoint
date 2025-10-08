@@ -1,6 +1,9 @@
+import type { Team } from "../../components/manager/teams/Types";
+import type { RegisteredTeam } from "../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
 import type { TournamentFormData, updateTournamentFormData } from "../../components/manager/tournaments/TournamentModal/types";
+import type { PaymentInitiateResponse } from "../../components/manager/tournaments/Types";
 import { MANAGER_ROUTES } from "../../constants/managerRoutes";
-import type { Team, Tournament, TournamentRegister, TournamentUpdate } from "../../features/manager/managerTypes";
+import type { Tournament, TournamentRegister, TournamentUpdate } from "../../features/manager/managerTypes";
 import axiosClient from "../http/axiosClient";
 import { TournamentMapper } from "../mappers/TournamentMapper";
 
@@ -50,8 +53,31 @@ export const managerEndpoints = {
         return TournamentMapper.toTournamentResponseArray(data.data);
     },
 
-    getExploreTournaments: async ({ managerId, page, limit, search, filter }: { managerId: string, page: number, limit: number, search: string, filter: string }): Promise<Tournament[]> => {
+    fetchTournamentDetails: async (tourId: string): Promise<Tournament> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.TOURNAMENT_DETAILS(tourId))
+        return TournamentMapper.toTournamentResponse(data.data);
+    },
+
+    getExploreTournaments: async ({ managerId, page, limit, search, filter }: { managerId: string, page: number, limit: number, search: string, filter: string })
+        : Promise<Tournament[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_EXPLORE_TOURNAMENTS(managerId), { params: { managerId, page, limit, search, filter } })
         return TournamentMapper.toTournamentResponseArray(data.data);
     },
+
+    paymentInitiate: async ({ tournamentId, teamId, captainId, managerId, paymentMethod }: { tournamentId: string; teamId: string; captainId: string; managerId: string, paymentMethod: 'razorpay' | 'wallet' })
+        : Promise<PaymentInitiateResponse> => {
+        const { data } = await axiosClient.post(MANAGER_ROUTES.TOUTNAMENT_PAYMENT(tournamentId), { teamId, captainId, managerId, paymentMethod });
+        console.log(data.data)
+        return data.data;
+    },
+
+    verifyTournamentPayment: async ({ registrationId, paymentId, paymentStatus }: { registrationId: string, paymentId: string, paymentStatus: string }): Promise<boolean> => {
+        const { data } = await axiosClient.post(MANAGER_ROUTES.PAYMENT_STATUS(registrationId), { paymentId, paymentStatus });
+        return data.data;
+    },
+
+    getRegisteredTeams: async (tournamentId: string): Promise<RegisteredTeam[]> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.REGISTERED_TEAMS(tournamentId));
+        return data.data;
+    }
 }

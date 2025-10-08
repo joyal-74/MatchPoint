@@ -35,15 +35,6 @@ const TournamentSchema = new Schema<TournamentDocument>(
             reason: { type: String, default: null },
             canceledAt: { type: Date, default: null }
         },
-        teams: {
-            type: [
-                {
-                    teamId: { type: Types.ObjectId, ref: 'Team', required: true },
-                    captainId: { type: Types.ObjectId, ref: 'User', required: true }
-                }
-            ],
-            default: []
-        },
         rules: { type: [String], default: [] }
     },
     { timestamps: true, }

@@ -5,12 +5,15 @@ import { getAllTeams, createTeam, editTeam, deleteTeam } from "../features/manag
 import type { EditTeamPayload, Team } from "../features/manager/managerTypes";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAppSelector } from "./hooks";
 
 export const useTeams = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
-    const { teams, loading, error } = useSelector((state: RootState) => state.manager);
+    const { teams, loading, error } = useAppSelector((state) => state.manager);
+    console.log(teams)
+    
     const { user, isInitialized } = useSelector((state: RootState) => state.auth);
     const managerId = user?._id;
 
@@ -48,7 +51,7 @@ export const useTeams = () => {
                 city: team.city,
                 managerId: team.managerId,
                 description: team.description,
-                members : team.members,
+                membersCount : team.membersCount,
                 maxPlayers: team.maxPlayers,
                 logo : team.logo
             }

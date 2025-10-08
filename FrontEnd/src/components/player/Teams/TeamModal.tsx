@@ -82,7 +82,7 @@ const TeamModal: React.FC<TeamModalProps> = ({ team, isOpen, onClose, onSubmit }
                                 <span className="text-xs text-neutral-500 dark:text-neutral-400">Players</span>
                             </div>
                             <div className="font-semibold text-neutral-800 dark:text-white">
-                                {team.members.length || 0}/{team.maxPlayers}
+                                {team.membersCount || 0}/{team.maxPlayers}
                             </div>
                         </div>
 
@@ -126,13 +126,13 @@ const TeamModal: React.FC<TeamModalProps> = ({ team, isOpen, onClose, onSubmit }
                         <div className="flex justify-between text-sm mb-2">
                             <span className="text-neutral-600 dark:text-neutral-400">Team Capacity</span>
                             <span className="font-medium text-neutral-800 dark:text-white">
-                                {Math.round((team.members.length / team.maxPlayers) * 100)}%
+                                {Math.round((team.membersCount / team.maxPlayers) * 100)}%
                             </span>
                         </div>
                         <div className="w-full bg-neutral-200/50 dark:bg-neutral-700/50 rounded-full h-2">
                             <div
                                 className="bg-emerald-500 h-2 rounded-full transition-all duration-500"
-                                style={{ width: `${(team.members.length / team.maxPlayers) * 100}%` }}
+                                style={{ width: `${(team.membersCount / team.maxPlayers) * 100}%` }}
                             />
                         </div>
                     </div>

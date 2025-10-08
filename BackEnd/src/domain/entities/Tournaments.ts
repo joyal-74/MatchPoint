@@ -1,3 +1,5 @@
+import { paymentStatus } from "./Payment";
+
 export type Status = "upcoming" | "ongoing" | "ended" | "cancelled"
 export type Format = 'knockout' | 'league' | 'friendly';
 
@@ -6,6 +8,13 @@ export type Contact = {
     phone: string;
 }
 
+export interface TournamentTeam {
+    teamId: string;
+    captainId: string;
+    managerId: string;
+    paymentStatus: paymentStatus;
+    paymentId?: string | null;
+}
 
 export interface Tournament {
     _id: string;
@@ -27,7 +36,6 @@ export interface Tournament {
     format: Format;
     organizer: string;
     contact: Contact;
-    teams?: { teamId: string }[];
     rules: string[];
     isDeleted : boolean;
 }

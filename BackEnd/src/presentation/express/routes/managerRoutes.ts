@@ -27,6 +27,14 @@ router.get("/tournament/:managerId", expressAdapter(tournamentManagementControll
 
 router.patch("/tournament/:tournamentId", expressAdapter(tournamentManagementController.cancelTournament));
 
+router.get("/tournament/:tournamentId/details", expressAdapter(tournamentManagementController.tournamentDetails));
+
 router.get("/tournament/explore/:managerId", expressAdapter(tournamentManagementController.getExploreTournaments));
+
+router.post("/tournament/:tournamentId/payment", expressAdapter(tournamentManagementController.entryFeePayment));
+
+router.post("/registration/:registrationId/status", expressAdapter(tournamentManagementController.updateTounamentTeam));
+
+router.get("/tournament/:tournamentId/teams", expressAdapter(tournamentManagementController.getTournamentTeams));
 
 export default router;

@@ -27,3 +27,23 @@ export const editTournament = createAsyncThunk(
     "manager/editTournament",
     createApiThunk(managerEndpoints.editTournament)
 );
+
+export const fetchTournament = createAsyncThunk(
+    "manager/fetchTournament",
+    createApiThunk(managerEndpoints.fetchTournamentDetails)
+)
+
+export const paymentInitiate = createAsyncThunk(
+    "manager/paymentInitiate",
+    createApiThunk(managerEndpoints.paymentInitiate)
+)
+
+export const verifyTournamentPayment = createAsyncThunk(
+    "manager/verifyTournamentPayment",
+    createApiThunk(managerEndpoints.verifyTournamentPayment)
+)
+
+export const getRegisteredTeams = createAsyncThunk(
+    "manager/getRegisteredTeams",
+    createApiThunk(managerEndpoints.getRegisteredTeams)
+)
