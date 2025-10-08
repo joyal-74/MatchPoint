@@ -1,6 +1,7 @@
 import React from "react";
-import type { Team } from "../Types";
+
 import TeamCard from "./TeamCard";
+import type { Team } from "../Types";
 
 interface TeamsGridProps {
     teams: Team[];
@@ -22,7 +23,7 @@ export const TeamsGrid: React.FC<TeamsGridProps> = ({ teams, onLeft }) => {
                     sport={team.sport}
                     membersCount={team.membersCount}
                     maxPlayers={team.maxPlayers.toString()}
-                    created={team.created}
+                    created={team.createdAt}
                     onLeft={onLeft}
                 />
             ))}

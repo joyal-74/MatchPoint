@@ -22,7 +22,7 @@ export default function CreateTeamModal({
 }: CreateTeamModalProps) {
     const [name, setName] = useState("");
     const [sport, setSport] = useState("Cricket");
-    const [maxPlayers, setMaxPlayers] = useState(0);
+    const [maxPlayers, setMaxPlayers] = useState("");
     const [description, setDescription] = useState("");
     const [state, setState] = useState("");
     const [city, setCity] = useState("");
@@ -66,7 +66,7 @@ export default function CreateTeamModal({
             // Reset fields
             setName("");
             setSport("Cricket");
-            setMaxPlayers(0);
+            setMaxPlayers("");
             setDescription("");
             setState("");
             setCity("");
@@ -84,10 +84,11 @@ export default function CreateTeamModal({
     if (!isOpen) return null;
 
     const stateOptions = [
-        { value: "Maharashtra", label: "Maharashtra" },
-        { value: "Karnataka", label: "Karnataka" },
-        { value: "Delhi", label: "Delhi" },
+        { value: "Kerala", label: "Kerala" },
         { value: "Tamil Nadu", label: "Tamil Nadu" },
+        { value: "Karnataka", label: "Karnataka" },
+        { value: "Maharashtra", label: "Maharashtra" },
+        { value: "Delhi", label: "Delhi" },
         { value: "Gujarat", label: "Gujarat" },
         { value: "West Bengal", label: "West Bengal" },
     ];
@@ -155,7 +156,7 @@ export default function CreateTeamModal({
                             label="Max Players"
                             type="number"
                             value={maxPlayers}
-                            onChange={(value) => setMaxPlayers(Number(value))}
+                            onChange={(value) => setMaxPlayers(value)}
                             placeholder="Enter max players"
                             required
                             disabled={isLoading}

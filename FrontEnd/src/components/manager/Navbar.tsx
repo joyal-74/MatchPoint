@@ -40,6 +40,26 @@ const Navbar: React.FC = () => {
         }
     };
 
+    const handleProfileAction = (action: "logout" | "teams" | "profile") => {
+        switch (action) {
+            case "logout":
+                handleLogout();
+                break;
+            case "teams":
+                navigate("/manager/teams");
+                break;
+            case "profile":
+                navigate("/manager/profile");
+                break;
+        }
+    };
+
+
+    const menuItems = [
+        { name: "Home", path: "/manager/dashboard" },
+        { name: "Tournaments", path: "/manager/tournaments" },
+    ];
+
     return (
         <>
             <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-20 py-3 bg-[var(--color-surface)] border-b border-[var(--color-border)] shadow-[var(--shadow-sm)]">
@@ -49,17 +69,15 @@ const Navbar: React.FC = () => {
                         <span className="text-[var(--color-primary)]">P</span>oint
                     </h1>
 
-                    <ul className="hidden md:flex gap-8 lg:gap-12 ml-12 text-[var(--color-text-primary)] font-medium">
-                        <li>
-                            <a onClick={() => navigate('/manager/dashboard')}
-                                className="text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors duration-200 font-semibold"
-                            > Home </a>
-                        </li>
-                        <li>
-                            <a onClick={() => navigate('/manager/tournaments')}
-                                className="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors duration-200"
-                            > Tournaments </a>
-                        </li>
+                    <ul className="hidden md:flex gap-8 lg:gap-12 ml-12 text-[var(--color-text-primary)] text-sm font-medium">
+                        {menuItems.map(item => (
+                            <li key={item.path}>
+                                <h1 onClick={() => navigate(item.path)} className={`${location.pathname === item.path ? 'text-[var(--color-primary)] font-semibold' :
+                                    'text-[var(--color-text-secondary)]'} hover:text-[var(--color-primary)] transition-colors duration-200 cursor-pointer`}>
+                                    {item.name}
+                                </h1>
+                            </li>
+                        ))}
                     </ul>
                 </div>
 
@@ -78,7 +96,7 @@ const Navbar: React.FC = () => {
 
                         {showProfileCard && (
                             <div className="absolute right-0 mt-2">
-                                <ProfileCard onLogout={handleLogout} onTeams={() => navigate("/manager/teams")} />
+                                <ProfileCard onAction={handleProfileAction} />
                             </div>
                         )}
                     </div>

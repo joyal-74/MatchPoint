@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../app/store";
 import { getAllTeams, createTeam, editTeam, deleteTeam } from "../features/manager/managerThunks";
-import type { EditTeamPayload, Team } from "../features/manager/managerTypes";
+import type { EditTeamPayload } from "../features/manager/managerTypes";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppSelector } from "./hooks";
+import type { Team } from "../components/manager/teams/Types";
 
 export const useTeams = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
     const { teams, loading, error } = useAppSelector((state) => state.manager);
-    console.log(teams)
     
     const { user, isInitialized } = useSelector((state: RootState) => state.auth);
     const managerId = user?._id;

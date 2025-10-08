@@ -10,6 +10,7 @@ export const usePlayerTeams = () => {
     const navigate = useNavigate();
 
     const { teams, loading, error } = useSelector((state: RootState) => state.player);
+    console.log(teams)
     
     const { user, isInitialized } = useSelector((state: RootState) => state.auth);
     const playerId = user?._id;

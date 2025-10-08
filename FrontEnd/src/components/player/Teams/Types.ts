@@ -18,7 +18,7 @@ export interface Team {
         winRate: number;
     };
     phase: "recruiting" | "active" | "completed";
-    created: string;
+    createdAt: string;
 }
 
 

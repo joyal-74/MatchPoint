@@ -1,6 +1,6 @@
 import { ITournamentRepository } from "app/repositories/interfaces/ITournamentRepository";
 import { TournamentRegister, Tournament, TournamentTeam } from "domain/entities/Tournaments";
-import { BadRequestError } from "domain/errors";
+import { BadRequestError, NotFoundError } from "domain/errors";
 import { TournamentModel } from "infra/databases/mongo/models/TournamentModel";
 import { TournamentMongoMapper } from "infra/utils/mappers/TournamentMongoMapper";
 import { FilterQuery } from "mongoose";
@@ -101,4 +101,12 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
         return TournamentMongoMapper.toDomain(updated!);
     }
 
+    async incrementCurrTeams(tournamentId: string): Promise<boolean> {
+        const updated = await TournamentModel.findByIdAndUpdate(tournamentId, {
+            $inc: { currTeams: 1 }
+        });
+        if (!updated) throw new NotFoundError("Tournament not found for currTeams increment");
+
+        return true
+    }
 }

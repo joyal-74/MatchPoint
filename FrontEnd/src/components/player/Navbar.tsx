@@ -24,6 +24,20 @@ const Navbar: React.FC = () => {
         navigate(user?.role === 'admin' ? "/admin/login" : "/login");
     };
 
+    const handleProfileAction = (action: "logout" | "teams" | "profile") => {
+        switch (action) {
+            case "logout":
+                handleLogout();
+                break;
+            case "teams":
+                navigate("/player/myteams");
+                break;
+            case "profile":
+                navigate("/player/profile");
+                break;
+        }
+    };
+
     const menuItems = [
         { name: "Home", path: "/player/dashboard" },
         { name: "Tournaments", path: "/player/tournaments" },
@@ -57,7 +71,8 @@ const Navbar: React.FC = () => {
                 <div ref={profileRef}>
                     <img src="https://i.pravatar.cc/40" alt="Profile" className="w-8 h-8 rounded-full border-2 border-[var(--color-border)] hover:border-[var(--color-primary)] transition-colors duration-200 cursor-pointer"
                         onClick={() => setShowProfileCard(prev => !prev)} />
-                    {showProfileCard && <div className="absolute right-0 mt-2"><ProfileCard onLogout={handleLogout} onTeams={() => navigate('/player/myteams')} /></div>}
+                    {showProfileCard && <div className="absolute right-0 mt-2">
+                        <ProfileCard onAction={handleProfileAction} /></div>}
                 </div>
             </div>
         </nav>

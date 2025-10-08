@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getMyTeams } from "./playerThunks";
-import type { Team } from "./playerTypes";
+import type { Team } from "../../components/player/Teams/Types";
+
 
 interface playerState {
     teams: Team[];

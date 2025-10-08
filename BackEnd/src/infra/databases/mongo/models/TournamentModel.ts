@@ -26,6 +26,7 @@ const TournamentSchema = new Schema<TournamentDocument>(
         location: { type: String },
         maxTeams: { type: Number, required: true },
         minTeams: { type: Number, required: true },
+        currTeams: { type: Number, default: 0 },
         entryFee: { type: String, required: true },
         prizePool: { type: Number, required: true },
         format: { type: String, enum: ['knockout', 'friendly', 'league'], default: 'friendly' },

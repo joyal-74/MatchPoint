@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 const TeamFinder = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { allTeams, loading } = useSelector((state: RootState) => state.playerTeams);
+    console.log(allTeams)
     const { user } = useSelector((state: RootState) => state.auth);
 
     const [filteredTeams, setFilteredTeams] = useState<Team[]>([]);

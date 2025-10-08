@@ -1,7 +1,8 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { Team } from "../playerTypes";
+
 import { fetchTeams, joinTeam } from "./teamThunks";
 import { getMyTeamDetails } from "../playerThunks";
+import type { Team } from "../../../components/player/Teams/Types";
 
 
 interface TeamsState {

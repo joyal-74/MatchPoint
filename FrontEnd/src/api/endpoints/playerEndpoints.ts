@@ -1,7 +1,7 @@
 import { PLAYER_ROUTES } from "../../constants/playerRoutes";
-import type { Team } from "../../features/player/playerTypes";
+
 import axiosClient from "../http/axiosClient";
-import type { Filters } from "../../components/player/Teams/Types";
+import type { Filters, Team } from "../../components/player/Teams/Types";
 
 export const playerEndpoints = {
     getAllTeams: async (filters: Filters): Promise<{ teams: Team[], totalTeams: number }> => {

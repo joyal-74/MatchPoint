@@ -1,21 +1,20 @@
 import React from 'react'
 import { FiGlobe, FiLogOut, FiUser, FiUsers } from 'react-icons/fi';
 
-interface SidebarMenuProps {
-    onLogout: () => void;
-    onTeams: () => void;
+interface ProfileCardProps {
+    onAction: (action: "logout" | "teams" | "profile") => void;
 }
 
-const ProfileCard: React.FC<SidebarMenuProps> = ({ onLogout, onTeams }) => {
-    
+const ProfileCard: React.FC<ProfileCardProps> = ({ onAction }) => {
+
     return (
-        <div className="w-40 bg-[var(--color-background)] text-white text-sm flex flex-col gap-1 rounded-md shadow-lg" onClick={onTeams}>
-            <button className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--color-background-secondary)] w-full text-left">
+        <div className="w-40 bg-[var(--color-background)] text-white text-sm flex flex-col gap-1 rounded-md shadow-lg">
+            <button onClick={() => onAction("profile")} className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--color-background-secondary)] w-full text-left">
                 <FiUser className="text-[var(--color-primary)] text-lg" />
                 <span>Profile</span>
             </button>
 
-            <button className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--color-background-secondary)]  w-full text-left">
+            <button onClick={() => onAction("teams")} className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--color-background-secondary)]  w-full text-left">
                 <FiUsers className="text-[var(--color-primary)] text-lg" />
                 <span>My Teams</span>
             </button>
@@ -26,7 +25,7 @@ const ProfileCard: React.FC<SidebarMenuProps> = ({ onLogout, onTeams }) => {
             </button>
 
             <button
-                onClick={onLogout}
+                onClick={() => onAction("logout")}
                 className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--color-background-secondary)]  w-full text-left"
             >
                 <FiLogOut className="text-[var(--color-primary)] text-lg" />

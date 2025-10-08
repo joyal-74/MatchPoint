@@ -19,13 +19,13 @@ interface MenuItem {
 const Sidebar: React.FC = () => {
 
     const menuItems: MenuItem[] = [
-        { name: "Profile", path: "/admin/profile", icon: <User size={20} /> },
-        { name: "My Groups", path: "/admin/groups", icon: <Users2 size={20} /> },
-        { name: "Tournaments", path: "/admin/tournaments", icon: <Trophy size={20} /> },
-        { name: "My Statistics", path: "/admin/statistics", icon: <BarChart3 size={20} /> },
-        { name: "Subscription", path: "/admin/subscription", icon: <CreditCard size={20} /> },
-        { name: "Payments", path: "/admin/payments", icon: <DollarSign size={20} /> },
-        { name: "Settings", path: "/admin/settings", icon: <Settings size={20} /> },
+        { name: "Profile", path: "/player/profile", icon: <User size={20} /> },
+        { name: "My Teams", path: "/player/myteams", icon: <Users2 size={20} /> },
+        { name: "Tournaments", path: "/player/tournaments", icon: <Trophy size={20} /> },
+        { name: "My Statistics", path: "/player/statistics", icon: <BarChart3 size={20} /> },
+        { name: "Subscription", path: "/player/subscription", icon: <CreditCard size={20} /> },
+        { name: "Payments", path: "/player/payments", icon: <DollarSign size={20} /> },
+        { name: "Settings", path: "/player/settings", icon: <Settings size={20} /> },
     ];
 
     return (
