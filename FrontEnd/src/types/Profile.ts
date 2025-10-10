@@ -3,11 +3,10 @@ export interface UserProfile {
     lastName: string;
     email: string;
     username: string;
-    phone: string;
-    gender: string;
+    phone?: string;
+    gender?: string;
     bio: string;
-    location: string;
-    country: string;
+    profileImage : string
 }
 
 export type profileData = {

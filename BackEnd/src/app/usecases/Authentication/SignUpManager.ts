@@ -7,11 +7,11 @@ import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { IOtpGenerator } from "app/providers/IOtpGenerator";
 import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
 import { ManagerRegister } from "domain/entities/Manager";
-import { ManagerRegisterResponseDTO } from "domain/dtos/Manager.dto";
 import { validateUserInput } from "domain/validators/UserValidators";
 import { OtpContext } from "domain/enums/OtpContext";
 import { IManagerSignupUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
 import { IManagerIdGenerator } from "app/providers/IIdGenerator";
+import { UserMapper } from "app/mappers/UserMapper";
 
 
 export class SignupManager implements IManagerSignupUseCase {
@@ -25,14 +25,9 @@ export class SignupManager implements IManagerSignupUseCase {
         private _idGenerator: IManagerIdGenerator,
     ) { }
 
-    /**
-     * 
-     * @param userData 
-     * @returns 
-     */
-
     async execute(userData: ManagerRegister) {
         const validData = validateUserInput(userData);
+        console.log("====", userData)
 
         const existingUser = await this._userRepository.findByEmail(validData.email);
         if (existingUser) throw new BadRequestError("User with this email already exists");
@@ -43,11 +38,12 @@ export class SignupManager implements IManagerSignupUseCase {
         const newUser = await this._userRepository.create({
             userId: userId,
             email: validData.email,
-            first_name: validData.first_name,
-            last_name: validData.last_name,
+            firstName: validData.firstName,
+            lastName: validData.lastName,
             gender: validData.gender,
             role: UserRoles.Manager,
             password: hashedPassword,
+            username: `user-${Date.now()}`,
             wallet: 0,
             isActive: true,
             isVerified: false,
@@ -62,7 +58,6 @@ export class SignupManager implements IManagerSignupUseCase {
 
         await this._managerRepository.create({
             userId: newUser._id,
-            wallet: 0,
             tournaments: [],
             teams: [],
         });
@@ -73,14 +68,7 @@ export class SignupManager implements IManagerSignupUseCase {
 
         await this._mailRepository.sendVerificationEmail(newUser.email, otp);
 
-        const managerDTO: ManagerRegisterResponseDTO = {
-            _id: newUser._id,
-            userId: newUser.userId,
-            email: newUser.email,
-            first_name: newUser.first_name,
-            last_name: newUser.last_name,
-            role: newUser.role,
-        };
+        const managerDTO  = UserMapper.toUserLoginResponseDTO(newUser)
 
         return { success: true, message: "Manager Registered successfully", user: managerDTO, expiresAt };
     }

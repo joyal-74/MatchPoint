@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getMyTeams } from "./playerThunks";
+import { fetchPlayerData, getMyTeams } from "./playerThunks";
 import type { Team } from "../../components/player/Teams/Types";
+import type { User } from "../../types/User";
 
 
 interface playerState {
     teams: Team[];
+    player : User | null;
     totalTeams: number;
     loading: boolean;
     error: string | null;
@@ -12,6 +14,7 @@ interface playerState {
 
 const initialState: playerState = {
     teams: [],
+    player : null,
     totalTeams : 0,
     loading: false,
     error: null,
@@ -35,6 +38,21 @@ const playerSlice = createSlice({
                 state.error = null;
             })
             .addCase(getMyTeams.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? "Team get failed";
+            });
+
+        builder
+            .addCase(fetchPlayerData.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchPlayerData.fulfilled, (state, action) => {
+                state.player = action.payload;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(fetchPlayerData.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? "Team get failed";
             });

@@ -1,20 +1,33 @@
-import { ManagerResponseDTO } from "domain/dtos/Manager.dto";
+import { ManagerLoginResponseDTO, ManagerResponseDTO } from "domain/dtos/Manager.dto";
 
 
 export class ManagerMapper {
-    static toResponseDTO(manager: ManagerResponseDTO, fileStorage?: { getUrl: (key: string) => string }): ManagerResponseDTO {
+    static toLoginResponseDTO(manager: ManagerLoginResponseDTO): ManagerLoginResponseDTO {
+        return {
+            _id: manager._id,
+            firstName: manager.firstName,
+            lastName: manager.lastName,
+            email: manager.email,
+            role: manager.role,
+            wallet: manager.wallet,
+            profileImage: manager.profileImage,
+        };
+    }
+
+    static toProfileResponseDTO(manager: ManagerResponseDTO): ManagerResponseDTO {
         return {
             _id: manager._id,
             userId: manager.userId,
             email: manager.email,
-            first_name: manager.first_name,
-            last_name: manager.last_name,
+            firstName: manager.firstName,
+            lastName: manager.lastName,
             username: manager.username,
             role: manager.role,
             gender: manager.gender,
             phone: manager.phone || null,
             wallet: manager.wallet,
-            logo: manager.logo && fileStorage ? fileStorage.getUrl(manager.logo) : null
+            bio: manager.bio,
+            profileImage: manager.profileImage
         };
     }
 }

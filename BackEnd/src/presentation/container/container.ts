@@ -59,6 +59,7 @@ import { WalletProvider } from 'infra/providers/WalletProvider';
 import { WalletRepository } from 'infra/services/WalletRepository';
 import { RazorpayProvider } from 'infra/providers/RazorpayProvider';
 import { GetRegisteredTeams } from 'app/usecases/manager/tournaments/GetRegisteredTeams';
+import { GetManagerProfile } from 'app/usecases/manager/GetManagerProfile';
 
 // Repositories
 const userRepository = new UserRepositoryMongo();
@@ -108,6 +109,7 @@ const changeUserStatus = new ChangeUserStatus(userRepository, logger);
 
 // use case (manager)
 const updateManagerProfile = new UpdateManagerProfile(userRepository, imageKitfileProvider);
+const getManagerProfile = new GetManagerProfile(userRepository);
 const addNewTeam = new AddNewTeamUseCase(teamRepository, teamId, imageKitfileProvider, logger);
 const editTeam = new EditTeamUseCase(teamRepository, imageKitfileProvider, logger);
 const deleteTeam = new SoftDeleteTeam(teamRepository, logger);
@@ -149,7 +151,8 @@ export const usersManagementController = new UsersManagementController(getAllMan
 export const teamManagementController = new TeamController(addNewTeam, editTeam, deleteTeam, getallTeams, changeTeamStatus, logger);
 export const tournamentManagementController = new TournamentController(getMyTournaments, getExploreTournaments, addTournament, editTournament, cancelTournament,
     fetchTournamentDetails, initiatePayment, updateTournamentTeam, getRegisteredTeams, logger);
-export const updateManagerProfileController = new ProfileController(updateManagerProfile);
+    
+export const managerProfileController = new ProfileController(getManagerProfile, updateManagerProfile);
 
 
 // player

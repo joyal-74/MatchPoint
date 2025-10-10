@@ -3,7 +3,7 @@ import type { SignupRole } from '../../types/UserRoles';
 import { axiosClient } from '../http/axiosClient';
 import { ADMIN_ROUTES } from '../../constants/adminRoutes';
 
-export const userEndpoints = {
+export const adminEndpoints = {
     fetchViewers: async (page = 1, limit = 10, filter?: string, search?: string) => {
         const response = await axiosClient.get(ADMIN_ROUTES.VIEWERS, {
             params: { page, limit, filter, search },

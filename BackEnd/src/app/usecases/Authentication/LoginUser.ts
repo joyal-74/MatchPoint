@@ -1,11 +1,11 @@
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { IJWTRepository } from "app/repositories/interfaces/IjwtRepository";
 import { JwtPayload } from "domain/entities/JwtPayload";
-import { UserResponseDTO } from "domain/dtos/User.dto";
 import { NotFoundError, UnauthorizedError } from "domain/errors";
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { ILogger } from "app/providers/ILogger";
 import { IUserAuthUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
+import { UserMapper } from "app/mappers/UserMapper";
 
 export class LoginUser implements IUserAuthUseCase {
     constructor(
@@ -21,7 +21,7 @@ export class LoginUser implements IUserAuthUseCase {
         const user = await this._userRepository.findByEmail(email);
         if (!user) throw new NotFoundError("User not found");
 
-        if(!user.isActive) throw new UnauthorizedError('User is blocked please contact admin');
+        if (!user.isActive) throw new UnauthorizedError('User is blocked please contact admin');
 
         const match = await this._passwordHasher.comparePasswords(password, user.password);
         if (!match) throw new UnauthorizedError("Invalid credentials");
@@ -35,18 +35,7 @@ export class LoginUser implements IUserAuthUseCase {
 
         await this._userRepository.update(user._id, { refreshToken });
 
-        const userDTO: UserResponseDTO = {
-            _id: user._id,
-            userId: user.userId,
-            email: user.email,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            username: user.username,
-            role: user.role,
-            gender: user.gender,
-            phone: user.phone,
-            wallet: user.wallet,
-        };
+        const userDTO = UserMapper.toUserLoginResponseDTO(user)
 
         return { accessToken, refreshToken, account: userDTO };
     }

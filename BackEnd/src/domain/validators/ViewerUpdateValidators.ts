@@ -1,10 +1,8 @@
-import { ManagerUpdateDTO } from "domain/dtos/Manager.dto";
 import { Validators } from "./common";
 import { BadRequestError } from "domain/errors";
 import { File } from "domain/entities/File";
-import { UserUpdateDTO } from "domain/dtos/User.dto";
 
-export function validateViewerUpdate(data: UserUpdateDTO, file?: File) {
+export function validateViewerUpdate(data: any, file?: File) {
     const errors: Record<string, string> = {};
 
     const id = data._id?.trim();

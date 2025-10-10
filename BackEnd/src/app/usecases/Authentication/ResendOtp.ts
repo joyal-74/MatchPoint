@@ -14,15 +14,6 @@ export class ResendOtp implements IResendOtpUseCase {
         private _otpGenerator: IOtpGenerator
     ) { }
 
-    /**
-     * Executes the resend OTP flow.
-     *
-     * @param email - The email of the user requesting OTP resend
-     * @param context - The OTP context (ACCOUNT_VERIFICATION, FORGOT_PASSWORD)
-     * @returns A success response with a confirmation message
-     * @throws BadRequestError if the user is not found
-     *
-     */
     async execute(email: string, context: OtpContext) {
         const user = await this._userRepository.findByEmail(email);
         if (!user) throw new BadRequestError("User not found");

@@ -1,4 +1,4 @@
-import { Filters, TeamData, TeamDataSummary } from "domain/dtos/Team.dto";
+import { Filters, TeamData, TeamDataFull, TeamDataSummary } from "domain/dtos/Team.dto";
 
 export interface IGetAllTeamsUseCase {
     execute(filters: Filters): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
@@ -9,7 +9,7 @@ export interface IGetMyTeamsUseCase {
 }
 
 export interface IGetMyTeamDetailsUseCase {
-    execute(teamId: string): Promise<TeamData>;
+    execute(teamId: string): Promise<TeamDataFull>;
 }
 
 export interface IJoinTeamUseCase {

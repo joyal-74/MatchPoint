@@ -11,8 +11,8 @@ export const useSignup = () => {
     const dispatch = useAppDispatch();
 
     const [formData, setFormData] = useState<SignUpForm>({
-        first_name: "",
-        last_name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         phone: "",
         gender: "" as Gender,

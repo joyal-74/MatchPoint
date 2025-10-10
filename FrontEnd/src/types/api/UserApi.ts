@@ -25,8 +25,8 @@ export interface ApiUser {
 }
 
 export interface UserRegister {
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     role: SignupRole;

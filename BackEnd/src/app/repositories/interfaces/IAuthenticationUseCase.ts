@@ -1,7 +1,5 @@
 import { AdminToResponseDTO } from "domain/dtos/Admin.dto";
-import { ManagerRegisterResponseDTO } from "domain/dtos/Manager.dto";
-import { PlayerRegisterResponseDTO } from "domain/dtos/Player.dto";
-import { UserRegisterResponseDTO, UserResponseDTO } from "domain/dtos/User.dto";
+import { UserLoginResponseDTO } from "domain/dtos/User.dto";
 import { ManagerRegister } from "domain/entities/Manager";
 import { PlayerRegister } from "domain/entities/Player";
 import { UserRegister } from "domain/entities/User";
@@ -33,7 +31,7 @@ export interface ILogoutUseCase {
     }>;
 }
 
-export type TokenUserResponse = UserResponseDTO | AdminToResponseDTO;
+export type TokenUserResponse = UserLoginResponseDTO | AdminToResponseDTO;
 
 export interface IRefreshTokenUseCase {
     execute(refreshToken: string): Promise<{
@@ -70,10 +68,10 @@ export interface IResetPasswordUseCase {
 
 // Auth (login) aliases
 export type IAdminAuthUseCase = IAuthUseCase<AdminToResponseDTO>;
-export type IUserAuthUseCase = IAuthUseCase<UserResponseDTO>;
+export type IUserAuthUseCase = IAuthUseCase<UserLoginResponseDTO>;
 
 
 // Signup aliases
-export type IViewerSignupUseCase = ISignupUseCase<UserRegister, UserRegisterResponseDTO>;
-export type IPlayerSignupUseCase = ISignupUseCase<PlayerRegister, PlayerRegisterResponseDTO>;
-export type IManagerSignupUseCase = ISignupUseCase<ManagerRegister, ManagerRegisterResponseDTO>;
+export type IViewerSignupUseCase = ISignupUseCase<UserRegister, UserLoginResponseDTO>;
+export type IPlayerSignupUseCase = ISignupUseCase<PlayerRegister, UserLoginResponseDTO>;
+export type IManagerSignupUseCase = ISignupUseCase<ManagerRegister, UserLoginResponseDTO>;

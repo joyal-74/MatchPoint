@@ -4,10 +4,27 @@ import type { TournamentFormData, updateTournamentFormData } from "../../compone
 import type { PaymentInitiateResponse } from "../../components/manager/tournaments/Types";
 import { MANAGER_ROUTES } from "../../constants/managerRoutes";
 import type { Tournament, TournamentRegister, TournamentUpdate } from "../../features/manager/managerTypes";
+import type { User } from "../../types/User";
 import axiosClient from "../http/axiosClient";
 import { TournamentMapper } from "../mappers/TournamentMapper";
 
 export const managerEndpoints = {
+    fetchManagerData: async (managerId: string): Promise<User> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.GET_DETAILS(managerId));
+        console.log(data.data)
+        return data.data;
+    },
+    updateManagerData: async ({ userData, userId }: { userData: FormData; userId: string }): Promise<User> => {
+        const { data } = await axiosClient.put( MANAGER_ROUTES.EDIT_DETAILS(userId),
+            userData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            }
+        );
+
+        return data.data;
+    },
+
+
     getAllTeams: async (managerId: string): Promise<Team[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_TEAMS(managerId));
         return data.data;

@@ -11,13 +11,7 @@ import { rows, type SignUpForm } from "../../utils/helpers/SignupFields";
 
 const SignupPage: React.FC = () => {
     const navigate = useNavigate();
-    const {
-        formData,
-        handleFieldChange,
-        handleSubmit,
-        errors,
-        loading,
-    } = useSignup();
+    const { formData, handleFieldChange, handleSubmit, errors, loading, } = useSignup();
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

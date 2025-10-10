@@ -1,9 +1,20 @@
 import { PLAYER_ROUTES } from "../../constants/playerRoutes";
-
 import axiosClient from "../http/axiosClient";
 import type { Filters, Team } from "../../components/player/Teams/Types";
+import type { User } from "../../types/User";
 
 export const playerEndpoints = {
+
+    fetchPlayerData: async (playerId: string): Promise<User> => {
+        const { data } = await axiosClient.get(PLAYER_ROUTES.GET_DETAILS(playerId));
+        return data.data;
+    },
+
+    updatePlayerData: async (userData: User): Promise<User> => {
+        const { data } = await axiosClient.put(PLAYER_ROUTES.EDIT_DETAILS(userData._id));
+        return data.data;
+    },
+
     getAllTeams: async (filters: Filters): Promise<{ teams: Team[], totalTeams: number }> => {
         const { data } = await axiosClient.get(PLAYER_ROUTES.GET_TEAMS, {
             params: filters,

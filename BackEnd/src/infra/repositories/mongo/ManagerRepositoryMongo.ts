@@ -2,6 +2,7 @@ import { IManagerRepository } from "app/repositories/interfaces/manager/IManager
 import { UserRole } from "domain/enums/Roles";
 import { ManagerModel } from "infra/databases/mongo/models/ManagerModel";
 import { Manager, ManagerRegister, ManagerResponse } from "domain/entities/Manager";
+import { NotFoundError } from "domain/errors";
 
 
 export class ManagerRepositoryMongo implements IManagerRepository {
@@ -32,14 +33,14 @@ export class ManagerRepositoryMongo implements IManagerRepository {
             _id: created._id.toString(),
             userId: created.userId.toString(),
             wallet: obj.wallet ?? 0,
-            tournaments: obj.tournaments?.map((id: any) => id.toString()) ?? [],
-            teams: obj.teams?.map((id: any) => id.toString()) ?? [],
+            tournaments: obj.tournaments?.map(id => id.toString()) ?? [],
+            teams: obj.teams?.map(id => id.toString()) ?? [],
         };
     }
 
     async update(_id: string, data: Partial<Manager>): Promise<ManagerResponse> {
         const updated = await ManagerModel.findByIdAndUpdate(_id, data, { new: true }).lean<ManagerResponse>().exec();
-        if (!updated) throw new Error("Player not found");
+        if (!updated) throw new NotFoundError("Manager not found");
         return updated;
     }
 

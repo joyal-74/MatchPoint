@@ -31,15 +31,6 @@ export interface PlayersResponseDTO {
     createdAt: Date
 }
 
-export interface PlayerRegisterResponseDTO {
-    _id: string;
-    userId: string;
-    email: string;
-    sport: string;
-    role: RoleType;
-    first_name: string;
-    last_name: string;
-}
 
 export interface PlayerUpdateDTO {
     _id: string;
@@ -48,8 +39,8 @@ export interface PlayerUpdateDTO {
     logo: string;
     phone: string;
     role: RoleType;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     username: string;
     gender: GenderType;
 }

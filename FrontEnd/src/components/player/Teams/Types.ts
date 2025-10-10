@@ -28,6 +28,7 @@ export interface Members {
     userId: string;
     firstName : string;
     lastName : string;
+    profileImage : string;
     status: playerStatus;
 }
 

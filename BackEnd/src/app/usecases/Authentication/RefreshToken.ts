@@ -44,7 +44,7 @@ export class RefreshToken implements IRefreshTokenUseCase {
         } else {
             const user = await this._userRepository.findById(payload.userId);
             if (!user) throw new NotFoundError("User not found");
-            userDTO = UserMapper.toUserDTO(user);
+            userDTO = UserMapper.toUserLoginResponseDTO(user);
         }
 
         return { accessToken: newAccessToken, refreshToken: newRefreshToken, user: userDTO };

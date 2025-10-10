@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllTeams, createTeam, deleteTeam, editTeam } from "./managerThunks";
+import { getAllTeams, createTeam, deleteTeam, editTeam, fetchManagerData, updateManagerData } from "./managerThunks";
 import type { Team } from "../../components/manager/teams/Types";
+import type { User } from "../../types/User";
 
 interface ManagerState {
     teams: Team[];
+    manager : User | null;
     loading: boolean;
     fetched: boolean,
     error: string | null;
@@ -11,6 +13,7 @@ interface ManagerState {
 
 const initialState: ManagerState = {
     teams: [],
+    manager : null,
     loading: false,
     fetched: false,
     error: null,
@@ -84,6 +87,36 @@ const managerSlice = createSlice({
                 state.error = null;
             })
             .addCase(editTeam.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? "Edit failed";
+            });
+
+        builder
+            .addCase(fetchManagerData.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchManagerData.fulfilled, (state, action) => {
+                state.manager = action.payload;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(fetchManagerData.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? "Fetch manager details failed";
+            });
+
+        builder
+            .addCase(updateManagerData.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateManagerData.fulfilled, (state, action) => {
+                state.manager = action.payload;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(updateManagerData.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? "Edit failed";
             });

@@ -11,6 +11,7 @@ export class GetTournamentDetails implements IGetTournamentDetails {
     ) { }
 
     async execute(tournamentId: string): Promise<Tournament> {
+        
         const tournament = await this._tournamentRepo.findById(tournamentId);
 
         if (!tournament) {

@@ -102,6 +102,8 @@ export class AuthController implements IAuthController {
      */
 
     signupViewer = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        console.log(httpRequest.body)
+
         const result = await this._signupViewerUseCase.execute(httpRequest.body);
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, 'Viewer account created', {
             user: result.user,
@@ -117,6 +119,7 @@ export class AuthController implements IAuthController {
      */
 
     signupPlayer = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        console.log(httpRequest.body)
         const result = await this._signupPlayerUseCase.execute(httpRequest.body);
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, 'Player account created', {
             user: result.user,
@@ -132,6 +135,7 @@ export class AuthController implements IAuthController {
      */
 
     signupManager = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        console.log(httpRequest.body)
         const result = await this._signupManagerUseCase.execute(httpRequest.body);
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, 'Manager account created', {
             user: result.user,

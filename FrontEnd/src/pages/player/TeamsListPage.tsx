@@ -36,7 +36,6 @@ const TeamsListPage: React.FC = () => {
                                 Pending
                             </button>
                         </div>
-
                     </div>
 
                     {teams.length === 0 && !loading ? (

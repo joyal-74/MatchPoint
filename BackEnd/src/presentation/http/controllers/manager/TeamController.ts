@@ -1,4 +1,10 @@
-import { IAddTeamUseCase, IChangePlayerStatusUseCase, IChangeTeamStatusUseCase, IEditTeamUseCase, IGetAllTeamsUseCase } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
+import {
+    IAddTeamUseCase,
+    IChangePlayerStatusUseCase,
+    IChangeTeamStatusUseCase,
+    IEditTeamUseCase,
+    IGetAllTeamsUseCase
+} from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -18,6 +24,12 @@ export class TeamController implements ITeamController {
         private _logger: ILogger,
     ) { }
 
+    /**
+     * @description Create a new team for a manager.
+     * @param {IHttpRequest} httpRequest - The request containing team data in body and logo file in `file`.
+     * @throws {BadRequestError} Throws if no logo file is uploaded.
+     * @returns {Promise<IHttpResponse>} - Returns the newly created team data.
+     */
     addNewTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const teamData = httpRequest.body;
         const file = httpRequest.file;
@@ -33,6 +45,11 @@ export class TeamController implements ITeamController {
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Team created successfully", team));
     }
 
+    /**
+     * @description Edit existing team details.
+     * @param {IHttpRequest} httpRequest - The request containing updated team data in body, logo file in `file`, and teamId in params.
+     * @returns {Promise<IHttpResponse>} - Returns the updated team data.
+     */
     editTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const teamData = httpRequest.body;
         const file = httpRequest.file;
@@ -42,25 +59,36 @@ export class TeamController implements ITeamController {
 
         const team = await this._editTeamUsecase.execute(teamData, teamId, file);
 
-        this._logger.info(`[Controller] Team created successfully → managerId=${teamData.managerId}`);
+        this._logger.info(`[Controller] Team updated successfully → managerId=${teamData.managerId}`);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team Edited successfully", team));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team edited successfully", team));
     }
 
+    /**
+     * @description Soft delete or deactivate a team by its ID.
+     * @param {IHttpRequest} httpRequest - The request containing teamId in params.
+     * @returns {Promise<IHttpResponse>} - Returns the deleted team’s ID.
+     */
     deleteTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { teamId } = httpRequest.params;
 
-        this._logger.info(`[Controller] editTeam → teamId=${teamId}`);
+        this._logger.info(`[Controller] deleteTeam → teamId=${teamId}`);
 
         const id = await this._deleteTeamUsecase.execute(teamId);
 
-        this._logger.info(`[Controller] Team Deleted successfully → TeamID=${teamId}`);
+        this._logger.info(`[Controller] Team deleted successfully → TeamID=${teamId}`);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team deleted successfully", id));
     }
 
+    /**
+     * @description Retrieve all teams created by a specific manager.
+     * @param {IHttpRequest} httpRequest - The request containing managerId in params.
+     * @returns {Promise<IHttpResponse>} - Returns a list of teams under that manager.
+     */
     getAllTeams = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { managerId } = httpRequest.params;
+
         this._logger.info(`[Controller] getAllTeams → managerId=${managerId}`);
 
         const teams = await this._getTeamsUsecase.execute(managerId);
@@ -70,12 +98,15 @@ export class TeamController implements ITeamController {
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Teams fetched successfully", teams));
     }
 
+    /**
+     * @description Change the active/blocked status of a specific player within a team.
+     * @param {IHttpRequest} httpRequest - The request containing `teamId` and `playerId` in body.
+     * @returns {Promise<IHttpResponse>} - Returns updated list of players for that team.
+     */
     changePlayerStatus = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { teamId, playerId } = httpRequest.body;
 
         this._logger.info(`[Controller] changePlayerStatus → teamId=${teamId} playerId=${playerId}`);
-
-        console.log(teamId, playerId)
 
         const players = await this._changeStatusUsecase.execute(teamId, playerId);
 

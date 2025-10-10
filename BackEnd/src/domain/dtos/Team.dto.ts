@@ -28,9 +28,10 @@ export interface MapMember {
     };
     userId: {
         _id: string;
-        first_name: string;
-        last_name: string;
+        firstName: string;
+        lastName: string;
         email: string;
+        profileImage: string;
     };
     status: playerStatus;
     approvalStatus: PlayerApprovalStatus;

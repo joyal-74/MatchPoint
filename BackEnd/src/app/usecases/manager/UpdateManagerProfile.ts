@@ -13,12 +13,12 @@ export class UpdateManagerProfile implements IUpdateManagerProfile {
         private fileStorage: IFileStorage
     ) { }
 
-    async execute(updateData: ManagerUpdateDTO, file?: File): Promise<{ user: ManagerResponseDTO }> {
+    async execute(updateData: ManagerUpdateDTO, file?: File): Promise<ManagerResponseDTO> {
         const validData = validateManagerUpdate(updateData, file);
 
         if (file) {
             const fileKey = await this.fileStorage.upload(file);
-            validData.logo = fileKey;
+            validData.profileImage = fileKey;
         }
 
         if (!validData._id) {
@@ -26,8 +26,9 @@ export class UpdateManagerProfile implements IUpdateManagerProfile {
         }
 
         const manager = await this.userRepo.update(validData._id, validData);
-        const managerDTO = ManagerMapper.toResponseDTO(manager, this.fileStorage);
 
-        return { user: managerDTO };
+        const managerDTO = ManagerMapper.toProfileResponseDTO(manager, this.fileStorage);
+
+        return managerDTO;
     }
 }

@@ -1,28 +1,28 @@
-import type { User } from '../../types/User';
-import type { Admin } from '../../types/Admin';
+import type { LoginUser, User } from '../../types/User';
 import type { UserRegister } from '../../types/api/UserApi';
 import type { ChangePasswordPayload, LoginPayload, OtpPayload, ResetPasswordPayload } from '../../types/api/authPayloads';
 import { axiosClient } from '../http/axiosClient';
-import { mapApiUserToDomain, mapApiAdminToDomain, mapUserForSignup } from '../../api/mappers/userMappers';
+import { UserMapper } from '../../api/mappers/userMappers';
 import type { OtpContext } from '../../features/auth/authTypes';
 import { AUTH_ROUTES } from '../../constants/authRoutes';
+import type { LoginAdmin } from '../../types/Admin';
 
 export const authEndpoints = {
-    login: async (credentials: LoginPayload): Promise<User> => {
+    login: async (credentials: LoginPayload): Promise<LoginUser> => {
         const { data } = await axiosClient.post(AUTH_ROUTES.LOGIN, credentials);
-        return mapApiUserToDomain(data.data.user);
+        return UserMapper.toLoginResponseDTO(data.data.user);
     },
 
-    adminLogin: async (credentials: LoginPayload): Promise<Admin> => {
+    adminLogin: async (credentials: LoginPayload): Promise<LoginAdmin> => {
         const { data } = await axiosClient.post(AUTH_ROUTES.ADMIN_LOGIN, credentials);
-        return mapApiAdminToDomain(data.data.admin);
+        return UserMapper.toLoginResponseDTO(data.data.admin);
     },
 
-    signup: async (data: UserRegister): Promise<{ user: User; expiresAt: string }> => {
-        const { data: response } = await axiosClient.post(AUTH_ROUTES.SIGNUP(data.role), mapUserForSignup(data));
+    signup: async (userData: UserRegister): Promise<{ user: User; expiresAt: string }> => {
+        const { data } = await axiosClient.post(AUTH_ROUTES.SIGNUP(userData.role), userData);
         return {
-            user: mapApiUserToDomain(response.data.user),
-            expiresAt: response.data.expiresAt,
+            user: data.user,
+            expiresAt: data.data.expiresAt,
         };
     },
 
@@ -38,9 +38,9 @@ export const authEndpoints = {
         await axiosClient.post(AUTH_ROUTES.LOGOUT, { userId, role });
     },
 
-    refreshToken: async (): Promise<User> => {
+    refreshToken: async (): Promise<LoginUser> => {
         const { data } = await axiosClient.get(AUTH_ROUTES.REFRESH, { withCredentials: true });
-        return mapApiUserToDomain(data.data.user);
+        return UserMapper.toLoginResponseDTO(data.data.user);
     },
 
     forgotPassword: async (email: string): Promise<{ expiresAt: string }> => {

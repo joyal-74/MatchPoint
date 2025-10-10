@@ -5,7 +5,7 @@ import Dashboard from "../pages/manager/Dashboard";
 import TeamsListPage from "../pages/manager/TeamsListPage";
 import TournamentsPage from "../pages/manager/TournamentsPage";
 import ProtectedRoute from "./ProtectedRoute";
-import UserProfile from "../components/manager/ProfileSection";
+import UserProfile from "../components/manager/profile/ProfileSection";
 
 
 export const managerRoutes = [

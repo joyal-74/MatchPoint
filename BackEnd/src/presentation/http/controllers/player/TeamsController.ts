@@ -29,7 +29,9 @@ export class TeamsController implements IPlayerTeamController {
     joinTeams = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { teamId, playerId } = httpRequest.body;
 
-        this._logger.info(`[TeamController] Join to team Id → managerId=${playerId}`);
+        console.log(httpRequest.body, "-----")
+
+        this._logger.info(`[TeamController] Join to team Id → playerId=${playerId}`);
 
         const result = await this._joinTeamsUsecase.execute(teamId, playerId);
 

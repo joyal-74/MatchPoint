@@ -5,8 +5,7 @@ import { playerRoutes } from "./PlayerRoutes";
 import { managerRoutes } from "./ManagerRoutes";
 import NotFoundPage from "../pages/shared/PageNotFound";
 import Unauthorized from "../pages/shared/Unauthorized";
-import UserProfile from "../components/viewer/ProfileSection";
-import PlayerProfile from "../pages/player/Profile";
+import { viewerRoutes } from "./ViewerRoutes";
 
 
 const AppRoutes = () => {
@@ -29,10 +28,12 @@ const AppRoutes = () => {
                     <Route key={path} path={path} element={element} />
                 ))}
 
+                {viewerRoutes.map(({ path, element }) => (
+                    <Route key={path} path={path} element={element} />
+                ))}
+
                 <Route path="*" element={<NotFoundPage />} />
                 <Route path="/unauthorized" element={<Unauthorized />} />
-                <Route path="/profile" element={<UserProfile />} />
-                <Route path="/profile1" element={<PlayerProfile />} />
             </Routes>
         </BrowserRouter>
     );

@@ -12,6 +12,7 @@ const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const user = useAppSelector(s => s.auth.user);
+    const role = user?.role ?? "guest";
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => profileRef.current && !profileRef.current.contains(e.target as Node) && setShowProfileCard(false);
@@ -69,10 +70,12 @@ const Navbar: React.FC = () => {
                 </button>
 
                 <div ref={profileRef}>
-                    <img src="https://i.pravatar.cc/40" alt="Profile" className="w-8 h-8 rounded-full border-2 border-[var(--color-border)] hover:border-[var(--color-primary)] transition-colors duration-200 cursor-pointer"
+                    <img src={user?.profileImage}
+                        alt="Profile"
+                        className="w-8 h-8 rounded-full border-2 border-[var(--color-border)] hover:border-[var(--color-primary)] transition-colors duration-200 cursor-pointer"
                         onClick={() => setShowProfileCard(prev => !prev)} />
                     {showProfileCard && <div className="absolute right-0 mt-2">
-                        <ProfileCard onAction={handleProfileAction} /></div>}
+                        <ProfileCard role={role} onAction={handleProfileAction} /></div>}
                 </div>
             </div>
         </nav>

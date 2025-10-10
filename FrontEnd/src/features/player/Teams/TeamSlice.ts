@@ -63,8 +63,9 @@ const teamsSlice = createSlice({
                 state.allTeams = state.allTeams.map(t => t._id === action.payload._id ? action.payload : t);
             })
             .addCase(joinTeam.rejected, (state, action) => {
+                console.log(action.payload)
                 state.loading = false;
-                state.error = action.error.message || "Failed to fetch teams";
+                state.error = action.payload || "Failed to join team";
             });
 
         builder
@@ -78,7 +79,7 @@ const teamsSlice = createSlice({
             })
             .addCase(getMyTeamDetails.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message || "Failed to fetch teams";
+                state.error = action.payload || "Failed to fetch teams";
             });
     },
 });

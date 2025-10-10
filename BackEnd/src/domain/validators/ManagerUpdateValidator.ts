@@ -1,9 +1,8 @@
-import { ManagerUpdateDTO } from "domain/dtos/Manager.dto";
 import { Validators } from "./common";
 import { BadRequestError } from "domain/errors";
 import { File } from "domain/entities/File";
 
-export function validateManagerUpdate(data: ManagerUpdateDTO, file?: File) {
+export function validateManagerUpdate(data: any, file?: File) {
     const errors: Record<string, string> = {};
 
     const id = data._id?.trim();

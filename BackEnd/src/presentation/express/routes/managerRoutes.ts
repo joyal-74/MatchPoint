@@ -2,12 +2,14 @@ import { Router } from "express";
 import multer from "multer";
 import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
 import { expressFileUpdateHandler } from "presentation/adaptors/ExpressFileAdaptor";
-import { teamManagementController, tournamentManagementController, updateManagerProfileController } from "presentation/container/container";
+import { teamManagementController, tournamentManagementController, managerProfileController } from "presentation/container/container";
 
 const router = Router();
 const upload = multer();
 
-router.put("/profile", upload.single("logo"), expressFileUpdateHandler(updateManagerProfileController.updateProfile));
+router.put("/:managerId", upload.single("file"), expressFileUpdateHandler(managerProfileController.updateProfile));
+
+router.get('/:managerId', expressAdapter(managerProfileController.getProfile));
 
 router.post('/teams/change', expressAdapter(teamManagementController.changePlayerStatus));
 

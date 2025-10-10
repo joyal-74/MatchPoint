@@ -1,4 +1,6 @@
 export const MANAGER_ROUTES = {
+    GET_DETAILS: (managerId: string) => `/manager/${managerId}`,
+    EDIT_DETAILS: (managerId: string) => `/manager/${managerId}`,
     GET_TEAMS: (managerId: string) => `/manager/teams/${managerId}`,
     CREATE_TEAM: '/manager/team',
     DELETE_TEAM: (teamId: string) => `/manager/team/${teamId}`,

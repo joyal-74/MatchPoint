@@ -13,3 +13,15 @@ export const getMyTeamDetails = createAsyncThunk(
     "manager/getMyTeamDetails",
     createApiThunk(playerEndpoints.getMyTeamDetails)
 );
+
+
+export const fetchPlayerData = createAsyncThunk(
+    "manager/fetchPlayerData",
+    createApiThunk(playerEndpoints.fetchPlayerData)
+);
+
+
+export const updatePlayerData = createAsyncThunk(
+    "manager/getMyTeamDetails",
+    createApiThunk(playerEndpoints.updatePlayerData)
+);

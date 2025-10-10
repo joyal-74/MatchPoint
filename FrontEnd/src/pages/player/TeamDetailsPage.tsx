@@ -139,14 +139,9 @@ const ViewTeam = () => {
                                 <div className="p-3 border-b border-neutral-200 dark:border-neutral-700">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <h2 className="text-lg font-semibold text-neutral-800 dark:text-white">Team Roster</h2>
                                             <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
                                                 {team.membersCount} of {team.maxPlayers} players
                                             </p>
-                                        </div>
-                                        <div className="flex items-center space-x-2 text-sm text-neutral-500 dark:text-neutral-400">
-                                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                            <span>{team.membersCount} active</span>
                                         </div>
                                     </div>
                                 </div>
@@ -161,7 +156,7 @@ const ViewTeam = () => {
                                             >
                                                 <div className="relative">
                                                     <img
-                                                        src={player.logo}
+                                                        src={player.profileImage}
                                                         alt={player.firstName}
                                                         className="w-12 h-12 rounded-full object-cover border border-neutral-300 dark:border-neutral-500"
                                                     />

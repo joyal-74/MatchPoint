@@ -5,7 +5,6 @@ import { BadRequestError } from "domain/errors";
 import { UserRoles } from "domain/enums";
 import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 import { PlayerRegister } from "domain/entities/Player";
-import { PlayerRegisterResponseDTO } from "domain/dtos/Player.dto";
 import { validatePlayerInput } from "domain/validators/PlayerValidators";
 import { getDefaultCareerStats, getDefaultProfile } from "infra/utils/playerDefaults";
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
@@ -13,6 +12,7 @@ import { IOtpGenerator } from "app/providers/IOtpGenerator";
 import { OtpContext } from "domain/enums/OtpContext";
 import { IPlayerSignupUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
 import { IPlayerIdGenerator } from "app/providers/IIdGenerator";
+import { UserMapper } from "app/mappers/UserMapper";
 
 
 export class SignupPlayer implements IPlayerSignupUseCase {
@@ -39,11 +39,12 @@ export class SignupPlayer implements IPlayerSignupUseCase {
         const newUser = await this._userRepository.create({
             userId: userId,
             email: validData.email,
-            first_name: validData.first_name,
-            last_name: validData.last_name,
+            firstName: validData.firstName,
+            lastName: validData.lastName,
             gender: validData.gender,
             role: UserRoles.Player,
             password: hashedPassword,
+            username: "",
             wallet: 0,
             sport: validData.sport,
             isActive: true,
@@ -57,7 +58,7 @@ export class SignupPlayer implements IPlayerSignupUseCase {
             }
         });
 
-        const newPlayer = await this._playerRepository.create({
+        await this._playerRepository.create({
             userId: newUser._id,
             sport: userData.sport,
             profile: getDefaultProfile(userData.sport),
@@ -70,15 +71,7 @@ export class SignupPlayer implements IPlayerSignupUseCase {
 
         await this._mailRepository.sendVerificationEmail(newUser.email, otp);
 
-        const userDTO: PlayerRegisterResponseDTO = {
-            _id: newUser._id,
-            userId: newUser.userId,
-            email: newUser.email,
-            sport: newPlayer.sport,
-            first_name: newUser.first_name,
-            last_name: newUser.last_name,
-            role: newUser.role,
-        };
+        const userDTO = UserMapper.toUserLoginResponseDTO(newUser)
 
         return { success : true, message : "Player registered successfully", user: userDTO, expiresAt };
     }

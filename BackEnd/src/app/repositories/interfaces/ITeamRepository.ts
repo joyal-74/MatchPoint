@@ -2,7 +2,7 @@ import { Filters, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "
 
 export interface ITeamRepository {
     findByName(name: string): Promise<TeamData | null>;
-    findById(id: string): Promise<TeamData | null>;
+    findById(id: string): Promise<TeamDataFull | null>;
     findAllWithFilters(filters: Filters): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
     findAllWithUserId(userId: string): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
     findAll(managerId: string): Promise<TeamDataFull[]>;

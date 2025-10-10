@@ -16,9 +16,9 @@ interface MenuItem {
 const Sidebar: React.FC = () => {
 
     const menuItems: MenuItem[] = [
-        { name: "Profile", path: "/admin/dashboard", icon: <User size={20} /> },
-        { name: "Settings", path: "/admin/viewers", icon: <Settings size={20} /> },
-        { name: "Subscriptions", path: "/admin/subscriptions", icon: <DollarSign size={20} /> },
+        { name: "Profile", path: "/profile", icon: <User size={20} /> },
+        { name: "Settings", path: "/settings", icon: <Settings size={20} /> },
+        { name: "Subscriptions", path: "/subscriptions", icon: <DollarSign size={20} /> },
     ];
 
     return (

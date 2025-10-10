@@ -35,11 +35,12 @@ export class SignupViewer implements IViewerSignupUseCase {
         const newUser = await this._userRepository.create({
             userId: userId,
             email: validData.email,
-            first_name: validData.first_name,
-            last_name: validData.last_name,
+            firstName: validData.firstName,
+            lastName: validData.lastName,
             gender: validData.gender,
             role: UserRoles.Viewer,
             password: hashedPassword,
+            username: "",
             wallet: 0,
             isActive: true,
             isVerified: false,
@@ -58,8 +59,7 @@ export class SignupViewer implements IViewerSignupUseCase {
 
         await this._mailRepository.sendVerificationEmail(newUser.email, otp);
 
-        const userDTO = UserMapper.toUserRegisterDTO(newUser);
-
+        const userDTO = UserMapper.toUserLoginResponseDTO(newUser);
 
         return { success: true, message : "Viewer registered successfully", user: userDTO, expiresAt };
     }

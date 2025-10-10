@@ -15,7 +15,7 @@ interface AuthState {
     resetOtpVerified: boolean;
     passwordReset: boolean;
     resetEmail?: string;
-    isInitialized: boolean
+    isInitialized: boolean;
 }
 
 const initialState: AuthState = {

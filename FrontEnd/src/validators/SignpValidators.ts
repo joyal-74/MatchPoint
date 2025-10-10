@@ -8,10 +8,8 @@ export const validateSignup = (payload: SignUpForm): ValidationErrors => {
     console.log(payload)
     const errors: ValidationErrors = {};
 
-    console.log(payload)
-
-    if (!payload.first_name) errors.first_name = AuthMessages.FIRST_NAME_REQUIRED;
-    if (!payload.last_name) errors.last_name = AuthMessages.LAST_NAME_REQUIRED;
+    if (!payload.firstName) errors.first_name = AuthMessages.FIRST_NAME_REQUIRED;
+    if (!payload.lastName) errors.last_name = AuthMessages.LAST_NAME_REQUIRED;
 
     if (!payload.email || !payload.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
         errors.email = AuthMessages.INVALID_EMAIL;

@@ -8,16 +8,29 @@ export interface UserSettings {
     currency: string;
 }
 
-// Full DB user (all roles)
+
+export interface LoginUser {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    profileImage: string
+    role: UserRole;
+    wallet: number;
+}
+
 export interface User {
     _id: string;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    bio: string;
     email: string;
     password?: string;
     phone?: string;
     gender?: Gender;
     sport?: string;
+    profileImage: string
     role: UserRole;
     wallet: number;
     settings: UserSettings;
@@ -26,10 +39,11 @@ export interface User {
     updatedAt?: Date;
 }
 
+
 // Registration payload
 export interface RegisterUser {
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
     gender: Gender;
@@ -40,4 +54,4 @@ export interface RegisterUser {
 }
 
 
-export type AuthUser = Pick<User, "_id" | "first_name" | "last_name" | "email" | "role" | "phone" | "gender">;
+export type AuthUser = Pick<User, "_id" | "firstName" | "lastName" | "email" | "role" | "phone" | "gender" | "profileImage">;

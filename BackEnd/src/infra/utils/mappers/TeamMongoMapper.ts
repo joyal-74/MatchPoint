@@ -35,8 +35,9 @@ export class TeamMongoMapper {
         const members: TeamMember[] = team.members.map((m) => ({
             playerId: m.playerId._id.toString(),
             userId: m.userId._id.toString(),
-            firstName: m.userId.first_name,
-            lastName: m.userId.last_name,
+            firstName: m.userId.firstName,
+            lastName: m.userId.lastName,
+            profileImage: m.userId.profileImage,
             email: m.userId.email,
             profile: m.playerId.profile,
             stats: m.playerId.stats,

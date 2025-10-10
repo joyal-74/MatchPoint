@@ -6,6 +6,16 @@ export interface AdminSettings {
     currency: string;
 }
 
+export interface LoginAdmin {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    profileImage: string
+    role: UserRole;
+    wallet: number;
+}
+
 export interface Admin {
     _id: string;
     first_name: string;

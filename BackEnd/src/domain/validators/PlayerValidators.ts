@@ -8,8 +8,8 @@ export function validatePlayerInput(data: any) {
 
     const gender = data.gender?.trim();
     const sport = data.sport?.trim();
-    const first_name = data.first_name?.trim();
-    const last_name = data.last_name?.trim();
+    const firstName = data.firstName?.trim();
+    const lastName = data.lastName?.trim();
     const password = data.password?.trim();
 
     if (!Validators.notEmpty(email)) {
@@ -24,9 +24,8 @@ export function validatePlayerInput(data: any) {
         errors.password = "Password must be at least 6 characters";
     }
 
-    if (!Validators.notEmpty(first_name)) errors.first_name = "First name is required";
-    if (!Validators.notEmpty(last_name)) errors.last_name = "Last name is required";
-    if (!Validators.notEmpty(last_name)) errors.last_name = "Last name is required";
+    if (!Validators.notEmpty(firstName)) errors.firstName = "First name is required";
+    if (!Validators.notEmpty(lastName)) errors.lastName = "Last name is required";
 
     if (!Validators.notEmpty(sport)) {
         errors.sport = "Sport is required";

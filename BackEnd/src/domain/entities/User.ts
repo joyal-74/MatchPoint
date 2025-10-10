@@ -12,14 +12,15 @@ export interface UserSettings {
 export interface User {
     userId: string;
     email: string;
-    logo: string;
+    profileImage: string;
     role: RoleType;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     username: string;
     gender: GenderType;
     phone: string;
     password: string;
+    bio: string;
     settings: UserSettings;
     wallet: number;
     refreshToken?: string | null;
@@ -33,8 +34,9 @@ export interface UserRegister {
     userId: string;
     email: string;
     role: RoleType;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
+    username: string;
     gender: GenderType;
     password: string;
     settings: UserSettings;
@@ -51,16 +53,16 @@ export interface UserResponse extends User {
 
 
 export interface UserEntity {
-  _id: string;
-  userId: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  username: string;
-  role: UserRole;
-  gender: GenderType;
-  phone: string | null;
-  wallet: number;
-  logo?: string | null;
-  sport?: string;
+    _id: string;
+    userId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    role: UserRole;
+    gender: GenderType;
+    phone: string;
+    wallet: number;
+    profileImage?: string;
+    sport?: string;
 }

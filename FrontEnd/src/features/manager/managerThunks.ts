@@ -26,3 +26,13 @@ export const editTeam = createAsyncThunk(
     "manager/editTeam",
     createApiThunk(managerEndpoints.editTeam)
 );
+
+export const fetchManagerData = createAsyncThunk(
+    "manager/fetchManagerData",
+    createApiThunk(managerEndpoints.fetchManagerData)
+);
+
+export const updateManagerData = createAsyncThunk(
+    "manager/updateManagerData",
+    createApiThunk(managerEndpoints.updateManagerData)
+);
