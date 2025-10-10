@@ -1,22 +1,24 @@
 import { Router } from 'express';
 import { expressAdapter } from 'presentation/adaptors/ExpressAdaptor';
-import { authController } from '../../container/container';
+import { authControllers } from 'presentation/composition';
+
+
 
 const router = Router();
 
-router.post('/admin/login', expressAdapter(authController.loginAdmin));
-router.post('/login', expressAdapter(authController.loginUser));
-router.get('/refresh', expressAdapter(authController.refreshToken));
+router.post('/admin/login', expressAdapter(authControllers.loginAdmin));
+router.post('/login', expressAdapter(authControllers.loginUser));
+router.get('/refresh', expressAdapter(authControllers.refreshToken));
 
-router.post('/signup/viewer', expressAdapter(authController.signupViewer));
-router.post('/signup/manager', expressAdapter(authController.signupManager));
-router.post('/signup/player', expressAdapter(authController.signupPlayer));
+router.post('/signup/viewer', expressAdapter(authControllers.signupViewer));
+router.post('/signup/manager', expressAdapter(authControllers.signupManager));
+router.post('/signup/player', expressAdapter(authControllers.signupPlayer));
 
-router.post('/logout', expressAdapter(authController.logout));
-router.post('/resend-otp', expressAdapter(authController.resendOtp));
-router.post('/verify-otp', expressAdapter(authController.verifyOtp));
+router.post('/logout', expressAdapter(authControllers.logout));
+router.post('/resend-otp', expressAdapter(authControllers.resendOtp));
+router.post('/verify-otp', expressAdapter(authControllers.verifyOtp));
 
-router.post('/forgot-password', expressAdapter(authController.forgotPassword));
-router.post('/reset-password', expressAdapter(authController.resetPassword));
+router.post('/forgot-password', expressAdapter(authControllers.forgotPassword));
+router.post('/reset-password', expressAdapter(authControllers.resetPassword));
 
 export default router;

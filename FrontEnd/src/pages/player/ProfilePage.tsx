@@ -1,11 +1,12 @@
-import ProfileHeader from "../../shared/ProfileHeader";
-import ProfileForm from "../../shared/ProfileForm";
-import ProfileActions from "../../shared/ProfileActions";
-import PremiumCard from "../../shared/PremiumCard";
-import LoadingOverlay from "../../shared/LoadingOverlay";
-import ProfileError from "./ProfileError";
-import { useProfile } from "../../../hooks/manager/useProfile";
-import PlayerLayout from "../../../pages/layout/PlayerLayout";
+import ProfileHeader from "../../components/shared/ProfileHeader";
+import ProfileActions from "../../components/shared/ProfileActions";
+import PremiumCard from "../../components/shared/PremiumCard";
+import LoadingOverlay from "../../components/shared/LoadingOverlay";
+import ProfileError from "../../components/player/profile/ProfileError";
+
+import PlayerLayout from "../layout/PlayerLayout";
+import ProfileForm from "../../components/player/profile/ProfileForm";
+import { useProfile } from "../../hooks/player/useProfile";
 
 const PlayerProfilePage: React.FC = () => {
     const {

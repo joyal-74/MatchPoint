@@ -4,11 +4,11 @@ import { playerEndpoints } from "../../../api/endpoints/playerEndpoints";
 
 
 export const fetchTeams = createAsyncThunk(
-    "manager/getAllTeams",
+    "player/getAllTeams",
     createApiThunk(playerEndpoints.getAllTeams)
 );
 
 export const joinTeam = createAsyncThunk(
-    "manager/joinTeam",
+    "player/joinTeam",
     createApiThunk(playerEndpoints.joinTeam)
 );

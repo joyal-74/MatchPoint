@@ -33,3 +33,16 @@ export interface UserResponseDTO {
     phone: string | null;
     wallet: number;
 }
+
+export interface UserUpdateDTO {
+    _id: string;
+    userId: string;
+    email: string;
+    logo: string;
+    phone: string;
+    role: RoleType;
+    firstName: string;
+    lastName: string;
+    username: string;
+    gender: GenderType;
+}

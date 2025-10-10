@@ -48,7 +48,7 @@ export class TeamRepositoryMongo implements ITeamRepository {
     }
 
 
-    async findById(id: string): Promise<TeamData | null> {
+    async findById(id: string): Promise<TeamDataFull | null> {
         const team = await TeamModel.findById(id)
             .populate('members.playerId')
             .populate('members.userId');

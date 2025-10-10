@@ -27,8 +27,6 @@ export class UpdateManagerProfile implements IUpdateManagerProfile {
 
         const manager = await this.userRepo.update(validData._id, validData);
 
-        const managerDTO = ManagerMapper.toProfileResponseDTO(manager, this.fileStorage);
-
-        return managerDTO;
+        return ManagerMapper.toProfileResponseDTO(manager);
     }
 }

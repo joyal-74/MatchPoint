@@ -5,6 +5,11 @@ export interface EditTeamPayload {
     updatedData: EditTeamData;
 }
 
+export interface UpdateUserDataPayload {
+    userData: FormData;
+    userId: string;
+}
+
 export type CreateTeamData = {
     name: string;
     sport: string;

@@ -31,7 +31,6 @@ const managerSlice = createSlice({
                 state.error = null;
             })
             .addCase(getAllTeams.fulfilled, (state, action) => {
-                console.log(action.payload)
                 state.teams = action.payload;
                 state.loading = false;
                 state.fetched = true;

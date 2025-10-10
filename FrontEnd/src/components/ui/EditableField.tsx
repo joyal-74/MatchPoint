@@ -73,7 +73,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
                     {value && value.trim() !== '' ? value
                         : (
                             <span style={{ fontStyle: 'italic', opacity: 0.7 }}
-                            className="text-var(--color-text-secondary)"
+                                className="text-var(--color-text-secondary)"
                             >
                                 {`${label} not updated yet`}
                             </span>

@@ -2,6 +2,7 @@ import { PLAYER_ROUTES } from "../../constants/playerRoutes";
 import axiosClient from "../http/axiosClient";
 import type { Filters, Team } from "../../components/player/Teams/Types";
 import type { User } from "../../types/User";
+import type { UpdateUserDataPayload } from "../../features/manager/managerTypes";
 
 export const playerEndpoints = {
 
@@ -10,8 +11,10 @@ export const playerEndpoints = {
         return data.data;
     },
 
-    updatePlayerData: async (userData: User): Promise<User> => {
-        const { data } = await axiosClient.put(PLAYER_ROUTES.EDIT_DETAILS(userData._id));
+    updatePlayerData: async ({ userData, userId }: UpdateUserDataPayload): Promise<User> => {
+        const { data } = await axiosClient.put(PLAYER_ROUTES.EDIT_DETAILS(userId),
+            userData, { headers: { "Content-Type": "multipart/form-data" }, }
+        );
         return data.data;
     },
 

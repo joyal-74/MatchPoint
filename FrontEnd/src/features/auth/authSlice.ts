@@ -57,7 +57,10 @@ const authSlice = createSlice({
         },
         clearResetEmail(state) {
             state.resetEmail = undefined;
-        }
+        },
+        setUser: (state, action) => {
+            state.user = action.payload;
+        },
     },
     extraReducers: (builder) => {
         // Login (Admin)
@@ -234,5 +237,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { logout, clearError, resetPasswordFlow, resetSignupState, clearResetEmail } = authSlice.actions;
+export const { logout, clearError, resetPasswordFlow, resetSignupState, clearResetEmail, setUser } = authSlice.actions;
 export default authSlice.reducer;

@@ -32,28 +32,21 @@ const TeamFinderPage = () => {
         maxPlayers: undefined
     });
     const [searchQuery, setSearchQuery] = useState('');
-    const [sortBy, setSortBy] = useState('mostActive');
-    const [showFilters, setShowFilters] = useState(false);
 
     useEffect(() => {
         const params = {
             ...filters,
             search: searchQuery,
-            sort: sortBy,
             page: currentPage,
             limit: itemsPerPage
         };
         dispatch(fetchTeams(params));
-    }, [filters, searchQuery, sortBy, currentPage, dispatch, itemsPerPage]);
+    }, [filters, searchQuery, currentPage, dispatch, itemsPerPage]);
 
     useEffect(() => {
         setFilteredTeams(allTeams);
     }, [allTeams]);
 
-    const handleFilterChange = (filterName: keyof Filters, value: string | number) => {
-        setFilters(prev => ({ ...prev, [filterName]: value }));
-        setCurrentPage(1);
-    };
 
     const clearFilters = () => {
         setFilters({ sport: '', state: '', city: '', phase: undefined, maxPlayers: undefined });
@@ -79,7 +72,7 @@ const TeamFinderPage = () => {
 
     const handleJoinTeam = async () => {
         if (!selectedTeam?._id || !user?._id) return;
-        const result = await dispatch(joinTeam({ playerId: selectedTeam?._id, teamId: user?._id }));
+        const result = await dispatch(joinTeam({ playerId: user?._id, teamId: selectedTeam?._id }));
         if (joinTeam.fulfilled.match(result)) {
             toast.success("Team join request submitted");
             closeModal();
@@ -116,19 +109,6 @@ const TeamFinderPage = () => {
                                 Connect with cricket teams actively seeking talented players.
                                 <span className="hidden sm:inline"> Use advanced filters to discover your perfect match.</span>
                             </p>
-
-                            {/* Stats Pills */}
-                            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 pt-2 px-4">
-                                <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm rounded-full border border-emerald-200 dark:border-emerald-800 shadow-sm">
-                                    <span className="text-xs sm:text-sm font-semibold text-emerald-600 dark:text-emerald-400">{filteredTeams.length}+ Teams</span>
-                                </div>
-                                <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm rounded-full border border-blue-200 dark:border-blue-800 shadow-sm">
-                                    <span className="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400">Active Recruitment</span>
-                                </div>
-                                <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm rounded-full border border-purple-200 dark:border-purple-800 shadow-sm">
-                                    <span className="text-xs sm:text-sm font-semibold text-purple-600 dark:text-purple-400">All Skill Levels</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -147,7 +127,7 @@ const TeamFinderPage = () => {
                             <span className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 font-medium">View:</span>
                             <div className="flex space-x-1 bg-neutral-100/80 dark:bg-neutral-700/80 backdrop-blur-sm p-1 sm:p-1.5 rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-600 shadow-sm">
                                 <button
-                                    className={`p-2 sm:p-2.5 rounded-md sm:rounded-lg transition-all duration-200 ${viewMode === 'grid'
+                                    className={`p-1 sm:p-1.5 rounded-md sm:rounded-lg transition-all duration-200 ${viewMode === 'grid'
                                         ? 'bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-600 dark:to-neutral-700 shadow-md scale-105 text-emerald-600 dark:text-emerald-400'
                                         : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300'
                                         }`}
@@ -155,7 +135,7 @@ const TeamFinderPage = () => {
                                     title="Grid View"
                                 >
                                     <div className="flex space-x-0.5 sm:space-x-1">
-                                        {[1, 2, 3, 4].map(i => (
+                                        {[1, 2, 3].map(i => (
                                             <div key={i} className="w-0.5 sm:w-1 h-2 sm:h-3 bg-current rounded-sm"></div>
                                         ))}
                                     </div>
@@ -178,136 +158,10 @@ const TeamFinderPage = () => {
                         </div>
                     </div>
 
-                    {/* Mobile Filter Toggle */}
-                    <div className="lg:hidden mb-4">
-                        <button
-                            onClick={() => setShowFilters(!showFilters)}
-                            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                            </svg>
-                            <span className="font-medium">
-                                {showFilters ? 'Hide Filters' : 'Show Filters'}
-                            </span>
-                            <span className="ml-1 px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded-full">
-                                {Object.values(filters).filter(v => v).length}
-                            </span>
-                        </button>
-                    </div>
+
 
                     <div className="flex flex-col lg:flex-row gap-6">
 
-                        {/* Filters Sidebar */}
-                        <aside className={`
-                            ${showFilters ? 'block' : 'hidden'} 
-                            lg:block 
-                            w-full lg:w-50 xl:w-60 
-                            flex-shrink-0
-                        `}>
-                            <div className="sticky top-24 bg-white/60 dark:bg-neutral-800/60 backdrop-blur-xl rounded-xl border border-neutral-200/50 dark:border-neutral-700/50 p-4 sm:p-5 shadow-lg space-y-5">
-
-                                {/* Header */}
-                                <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-neutral-700">
-                                    <h3 className="font-semibold text-neutral-800 dark:text-neutral-200 text-base sm:text-lg uppercase tracking-wide">
-                                        Filters
-                                    </h3>
-                                    <button
-                                        onClick={clearFilters}
-                                        className="text-xs sm:text-sm text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium transition-colors"
-                                    >
-                                        Clear All
-                                    </button>
-                                </div>
-
-                                {/* Sport Filter */}
-                                <div>
-                                    <h4 className="font-medium text-neutral-700 dark:text-neutral-300 text-xs sm:text-sm mb-3 uppercase tracking-wide">Sport</h4>
-                                    <div className="space-y-2.5">
-                                        {['Cricket', 'Football', 'Badminton', 'Basketball'].map(sport => (
-                                            <label key={sport} className="flex items-center space-x-3 cursor-pointer group">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={filters.sport === sport}
-                                                    onChange={() => handleFilterChange('sport', filters.sport === sport ? '' : sport)}
-                                                    className="accent-emerald-600 w-4 h-4 rounded transition-transform group-hover:scale-110"
-                                                />
-                                                <span className="text-sm text-neutral-700 dark:text-neutral-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                                                    {sport}
-                                                </span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* State Filter */}
-                                <div>
-                                    <h4 className="font-medium text-neutral-700 dark:text-neutral-300 text-xs sm:text-sm mb-3 uppercase tracking-wide">State</h4>
-                                    <div className="space-y-2.5">
-                                        {['Kerala', 'Tamil Nadu', 'Karnataka', 'Maharashtra'].map(state => (
-                                            <label key={state} className="flex items-center space-x-3 cursor-pointer group">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={filters.state === state}
-                                                    onChange={() => handleFilterChange('state', filters.state === state ? '' : state)}
-                                                    className="accent-emerald-600 w-4 h-4 rounded transition-transform group-hover:scale-110"
-                                                />
-                                                <span className="text-sm text-neutral-700 dark:text-neutral-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                                                    {state}
-                                                </span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* City Filter */}
-                                <div>
-                                    <h4 className="font-medium text-neutral-700 dark:text-neutral-300 text-xs sm:text-sm mb-3 uppercase tracking-wide">City</h4>
-                                    <div className="space-y-2.5">
-                                        {['Kochi', 'Chennai', 'Bangalore', 'Mumbai'].map(city => (
-                                            <label key={city} className="flex items-center space-x-3 cursor-pointer group">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={filters.city === city}
-                                                    onChange={() => handleFilterChange('city', filters.city === city ? '' : city)}
-                                                    className="accent-emerald-600 w-4 h-4 rounded transition-transform group-hover:scale-110"
-                                                />
-                                                <span className="text-sm text-neutral-700 dark:text-neutral-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                                                    {city}
-                                                </span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Sort Filter */}
-                                <div>
-                                    <h4 className="font-medium text-neutral-700 dark:text-neutral-300 text-xs sm:text-sm mb-3 uppercase tracking-wide">Sort By</h4>
-                                    <div className="space-y-2.5">
-                                        {[
-                                            { label: 'Most Active', value: 'mostActive' },
-                                            { label: 'Newest First', value: 'newest' },
-                                            { label: 'Oldest First', value: 'oldest' },
-                                        ].map(option => (
-                                            <label key={option.value} className="flex items-center space-x-3 cursor-pointer group">
-                                                <input
-                                                    type="radio"
-                                                    name="sort"
-                                                    value={option.value}
-                                                    checked={sortBy === option.value}
-                                                    onChange={() => setSortBy(option.value)}
-                                                    className="accent-emerald-600 w-4 h-4 transition-transform group-hover:scale-110"
-                                                />
-                                                <span className="text-sm text-neutral-700 dark:text-neutral-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                                                    {option.label}
-                                                </span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-
-                            </div>
-                        </aside>
 
                         {/* Main Content Area */}
                         <main className="flex-1 min-w-0">
@@ -318,7 +172,7 @@ const TeamFinderPage = () => {
                                     <h2 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-neutral-800 to-neutral-600 dark:from-neutral-200 dark:to-neutral-400 bg-clip-text text-transparent">
                                         Available Teams
                                     </h2>
-                                    
+
                                 </div>
                             </div>
 

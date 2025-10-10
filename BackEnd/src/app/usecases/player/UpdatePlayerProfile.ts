@@ -1,3 +1,4 @@
+import { playerMapper } from "app/mappers/PlayerMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { PlayerResponseDTO, PlayerUpdateDTO } from "domain/dtos/Player.dto";
@@ -11,7 +12,7 @@ export class UpdatePlayerProfile {
         private fileStorage: IFileStorage
     ) { }
 
-    async execute(update: PlayerUpdateDTO, file?: File): Promise<{ user: PlayerResponseDTO }> {
+    async execute(update: PlayerUpdateDTO, file?: File): Promise<PlayerResponseDTO> {
         const validData = validateManagerUpdate(update, file);
 
         if (file) {
@@ -24,20 +25,7 @@ export class UpdatePlayerProfile {
         }
 
         const player = await this.userRepo.update(validData._id, validData);
-        const playerDTO: PlayerResponseDTO = {
-            _id: player._id,
-            userId: player.userId,
-            email: player.email,
-            first_name: player.first_name,
-            last_name: player.last_name,
-            username: player.username,
-            sport: player.sport as string,
-            role: player.role,
-            gender: player.gender,
-            phone: player.phone,
-            wallet: player.wallet,
-            logo: player.logo ? this.fileStorage.getUrl(player.logo) : null
-        };
-        return { user: playerDTO };
+        
+        return playerMapper.toProfileResponseDTO(player)
     }
 }

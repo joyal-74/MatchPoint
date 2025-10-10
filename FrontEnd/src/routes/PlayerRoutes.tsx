@@ -3,7 +3,7 @@ import ViewTeam from "../pages/player/TeamDetailsPage";
 import TeamsListPage from "../pages/player/TeamsListPage";
 import TournamentsPage from "../pages/player/Tournaments";
 import ProtectedRoute from "./ProtectedRoute";
-import PlayerProfilePage from "../components/player/profile/ProfileSection";
+import PlayerProfilePage from "../pages/player/ProfilePage";
 import TeamFinderPage from "../pages/player/TeamsPage";
 
 export const playerRoutes = [

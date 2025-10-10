@@ -33,7 +33,7 @@ export class TeamsController implements IPlayerTeamController {
 
         this._logger.info(`[TeamController] Join to team Id → playerId=${playerId}`);
 
-        const result = await this._joinTeamsUsecase.execute(teamId, playerId);
+        const result = await this._joinTeamsUsecase.execute(playerId, teamId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Joined to team successfully", result));
     };

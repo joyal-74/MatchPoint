@@ -1,27 +1,33 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createApiThunk } from "../../utils/createApiThunk";
 import { playerEndpoints } from "../../api/endpoints/playerEndpoints";
+import { setUser } from "../auth";
+import type { UpdateUserDataPayload } from "../manager/managerTypes";
 
 // Fetch all teams
 export const getMyTeams = createAsyncThunk(
-    "manager/getMyTeams",
+    "player/getMyTeams",
     createApiThunk(playerEndpoints.getMyTeams)
 );
 
 
 export const getMyTeamDetails = createAsyncThunk(
-    "manager/getMyTeamDetails",
+    "player/getMyTeamDetails",
     createApiThunk(playerEndpoints.getMyTeamDetails)
 );
 
 
 export const fetchPlayerData = createAsyncThunk(
-    "manager/fetchPlayerData",
+    "player/fetchPlayerData",
     createApiThunk(playerEndpoints.fetchPlayerData)
 );
 
 
 export const updatePlayerData = createAsyncThunk(
-    "manager/getMyTeamDetails",
-    createApiThunk(playerEndpoints.updatePlayerData)
+    "player/updatePlayerData",
+    createApiThunk(async (data: UpdateUserDataPayload, dispatch) => {
+        const response = await playerEndpoints.updatePlayerData(data);
+        dispatch(setUser(response));
+        return response;
+    })
 );
