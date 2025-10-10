@@ -1,12 +1,13 @@
 import { playerMapper } from "app/mappers/PlayerMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
+import { IUpdatePlayerProfile } from "app/repositories/interfaces/IUserProfileRepository";
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { PlayerResponseDTO, PlayerUpdateDTO } from "domain/dtos/Player.dto";
 import { File } from "domain/entities/File";
 import { NotFoundError } from "domain/errors";
 import { validateManagerUpdate } from "domain/validators/ManagerUpdateValidator";
 
-export class UpdatePlayerProfile {
+export class UpdatePlayerProfile implements IUpdatePlayerProfile {
     constructor(
         private userRepo: IUserRepository,
         private fileStorage: IFileStorage

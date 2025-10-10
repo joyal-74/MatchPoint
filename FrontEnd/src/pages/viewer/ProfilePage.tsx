@@ -1,11 +1,11 @@
-import ProfileHeader from "../../shared/ProfileHeader";
-import ProfileForm from "../../shared/ProfileForm";
-import ProfileActions from "../../shared/ProfileActions";
-import PremiumCard from "../../shared/PremiumCard";
-import LoadingOverlay from "../../shared/LoadingOverlay";
-import ProfileError from "./ProfileError";
-import { useProfile } from "../../../hooks/manager/useProfile";
-import ViewerProfileLayout from "../../../pages/layout/ViewerProfileLayout";
+import ProfileHeader from "../../components/shared/ProfileHeader";
+import ProfileForm from "../../components/shared/ProfileForm";
+import ProfileActions from "../../components/shared/ProfileActions";
+import PremiumCard from "../../components/shared/PremiumCard";
+import LoadingOverlay from "../../components/shared/LoadingOverlay";
+import ProfileError from "../../components/viewer/profile/ProfileError";
+import ViewerProfileLayout from "../layout/ViewerProfileLayout";
+import { useProfile } from "../../hooks/viewer/useProfile";
 
 const ProfilePage: React.FC = () => {
     const {

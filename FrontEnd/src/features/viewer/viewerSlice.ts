@@ -2,20 +2,20 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { User } from "../../types/User";
 import { fetchViewerData, updateViewerData } from "./viewerThunks";
 
-interface playerState {
+interface viewerState {
     viewer : User | null;
     loading: boolean;
     error: string | null;
 }
 
-const initialState: playerState = {
+const initialState: viewerState = {
     viewer: null,
     loading: false,
     error: null,
 };
 
-const playerSlice = createSlice({
-    name: "player",
+const viewerSlice = createSlice({
+    name: "viewer",
     initialState,
     reducers: {},
     extraReducers: (builder) => {
@@ -54,4 +54,4 @@ const playerSlice = createSlice({
 
 
 
-export default playerSlice.reducer;
+export default viewerSlice.reducer;

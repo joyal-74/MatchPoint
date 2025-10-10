@@ -1,6 +1,6 @@
 import { ManagerMapper } from "app/mappers/ManagerMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
-import { IUpdateManagerProfile } from "app/repositories/interfaces/IManagerProfileRepository";
+import { IUpdateManagerProfile } from "app/repositories/interfaces/IUserProfileRepository";
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { ManagerResponseDTO, ManagerUpdateDTO } from "domain/dtos/Manager.dto";
 import { File } from "domain/entities/File";

@@ -11,5 +11,6 @@ const updatePlayerProfileUC = new UpdatePlayerProfile(userRepository, imageKitfi
 // Controller
 export const playerProfileController = new PlayerProfileController(
     getPlayerProfileUC,
-    updatePlayerProfileUC
+    updatePlayerProfileUC,
+    logger
 );

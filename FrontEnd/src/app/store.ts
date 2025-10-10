@@ -3,6 +3,7 @@ import authReducer from "../features/auth/authSlice";
 import usersReducer from "../features/admin/users/userSlice";
 import managerReducer from '../features/manager/managerSlice';
 import playerReducer from '../features/player/playerSlice';
+import viewerReducer from '../features/viewer/viewerSlice';
 import managerTournamentReducer from '../features/manager/Tournaments/tournamentSlice'
 import playerTeamsReducer from '../features/player/Teams/TeamSlice'
 
@@ -12,6 +13,7 @@ export const store = configureStore({
         users: usersReducer,
         manager: managerReducer,
         player: playerReducer,
+        viewer: viewerReducer,
         managerTournaments: managerTournamentReducer,
         playerTeams: playerTeamsReducer,
     },

@@ -1,5 +1,5 @@
 import { ManagerMapper } from "app/mappers/ManagerMapper";
-import { IGetManagerProfile } from "app/repositories/interfaces/IManagerProfileRepository";
+import { IGetManagerProfile } from "app/repositories/interfaces/IUserProfileRepository";
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { ManagerResponseDTO } from "domain/dtos/Manager.dto";
 import { NotFoundError } from "domain/errors";

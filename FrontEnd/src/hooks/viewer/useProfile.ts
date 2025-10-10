@@ -3,32 +3,32 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import type { RootState } from "../../app/store";
 import type { UserProfile } from "../../types/Profile";
 import { toast } from "react-toastify";
-import { fetchPlayerData, updatePlayerData } from "../../features/player/playerThunks";
+import { fetchViewerData, updateViewerData } from "../../features/viewer/viewerThunks";
 
 export const useProfile = () => {
     const dispatch = useAppDispatch();
-    const { player, loading, error } = useAppSelector((state: RootState) => state.player);
-    const playerId = useAppSelector((state: RootState) => state.auth.user?._id);
+    const { viewer, loading, error } = useAppSelector((state: RootState) => state.viewer);
+    const viewerId = useAppSelector((state: RootState) => state.auth.user?._id);
 
     const [isEditing, setIsEditing] = useState(false);
     const [profileImage, setProfileImage] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [formData, setFormData] = useState<UserProfile | null>(null);
 
-    // Fetch player data
+    // Fetch viewer data
     useEffect(() => {
-        if (playerId) {
-            dispatch(fetchPlayerData(playerId));
+        if (viewerId) {
+            dispatch(fetchViewerData(viewerId));
         }
-    }, [dispatch, playerId]);
+    }, [dispatch, viewerId]);
 
 
     useEffect(() => {
-        if (player) {
-            setFormData(player);
-            setProfileImage(player.profileImage || null);
+        if (viewer) {
+            setFormData(viewer);
+            setProfileImage(viewer.profileImage || null);
         }
-    }, [player]);
+    }, [viewer]);
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]; if (!file) return;
@@ -47,7 +47,7 @@ export const useProfile = () => {
     };
 
     const handleSave = async () => {
-        if (!formData || !playerId) return;
+        if (!formData || !viewerId) return;
         const data = new FormData();
 
         for (const [key, value] of Object.entries(formData)) {
@@ -59,7 +59,7 @@ export const useProfile = () => {
         }
 
         try {
-            await dispatch(updatePlayerData({ userData: data, userId: playerId })).unwrap();
+            await dispatch(updateViewerData({ userData: data, userId: viewerId })).unwrap();
             toast.success("Profile updated successfully!");
             setIsEditing(false);
             setSelectedFile(null);
@@ -70,16 +70,16 @@ export const useProfile = () => {
     };
 
     const handleCancel = () => {
-        if (player) {
-            setFormData(player);
-            setProfileImage(player.profileImage || null);
+        if (viewer) {
+            setFormData(viewer);
+            setProfileImage(viewer.profileImage || null);
             setSelectedFile(null);
         }
         setIsEditing(false);
     };
 
     const handleRetry = () => {
-        if (playerId) dispatch(fetchPlayerData(playerId));
+        if (viewerId) dispatch(fetchViewerData(viewerId));
     };
 
     return {

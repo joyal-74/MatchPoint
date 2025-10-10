@@ -1,4 +1,4 @@
-import ProfilePage from "../components/viewer/profile/ProfileSection";
+import ProfilePage from "../pages/viewer/ProfilePage";
 import ProtectedRoute from "./ProtectedRoute";
 
 export const viewerRoutes = [
