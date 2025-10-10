@@ -1,4 +1,4 @@
-import type { playerStatus } from "../manager/managerTypes";
+import type { playerStatus } from "../../components/manager/teams/Types";
 
 type profileType =  {
     position : string
@@ -47,3 +47,5 @@ export interface Filters {
     phase?: "recruiting" | "active" | "completed";
     maxPlayers?: number;
 }
+
+export type playerJoinStatus = 'pending' | 'approved';

@@ -42,3 +42,19 @@ export const updateManagerData = createAsyncThunk(
         return response;
     })
 );
+
+
+export const getMyTeamDetails = createAsyncThunk(
+    "manager/getMyTeamDetails",
+    createApiThunk(managerEndpoints.getMyTeamDetails)
+);
+
+export const approvePlayerRequest = createAsyncThunk(
+    "manager/approvePlayerRequest",
+    createApiThunk(managerEndpoints.approvePlayerRequest)
+);
+
+export const rejectPlayerRequest = createAsyncThunk(
+    "manager/approvePlayerRequest",
+    createApiThunk(managerEndpoints.rejectPlayerRequest)
+);

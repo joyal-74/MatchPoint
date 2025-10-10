@@ -1,9 +1,11 @@
 import {
     IAddTeamUseCase,
+    IApprovePlayerUseCase,
     IChangePlayerStatusUseCase,
     IChangeTeamStatusUseCase,
     IEditTeamUseCase,
-    IGetAllTeamsUseCase
+    IGetAllTeamsUseCase,
+    IRejectPlayerUseCase
 } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -13,6 +15,7 @@ import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 import { ITeamController } from "presentation/http/interfaces/ITeamController";
 import { ILogger } from "app/providers/ILogger";
 import { BadRequestError } from "domain/errors";
+import { IGetMyTeamDetailsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 
 export class TeamController implements ITeamController {
     constructor(
@@ -20,7 +23,10 @@ export class TeamController implements ITeamController {
         private _editTeamUsecase: IEditTeamUseCase,
         private _deleteTeamUsecase: IChangeTeamStatusUseCase,
         private _getTeamsUsecase: IGetAllTeamsUseCase,
+        private _getmyTeamsDetailsUsecase: IGetMyTeamDetailsUseCase,
         private _changeStatusUsecase: IChangePlayerStatusUseCase,
+        private _approvetoTeamUsecase: IApprovePlayerUseCase,
+        private _rejectfromTeamUsecase: IRejectPlayerUseCase,
         private _logger: ILogger,
     ) { }
 
@@ -99,6 +105,22 @@ export class TeamController implements ITeamController {
     }
 
     /**
+     * @description Retrieve team details for the a specific team.
+     * @param {IHttpRequest} httpRequest - The request containing teamId in params.
+     * @returns {Promise<IHttpResponse>} - Returns team details.
+     */
+
+    getTeamDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { teamId } = httpRequest.params;
+
+        this._logger.info(`[TeamController] Join to team Id → teamId=${teamId}`);
+
+        const result = await this._getmyTeamsDetailsUsecase.execute(teamId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team detailed fetched successfully", result));
+    }
+
+    /**
      * @description Change the active/blocked status of a specific player within a team.
      * @param {IHttpRequest} httpRequest - The request containing `teamId` and `playerId` in body.
      * @returns {Promise<IHttpResponse>} - Returns updated list of players for that team.
@@ -113,5 +135,27 @@ export class TeamController implements ITeamController {
         this._logger.info(`[Controller] Player status changed successfully → teamId=${teamId} playerId=${playerId}`);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Player status changed successfully", players));
+    }
+
+
+    approvePlayertoTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { teamId, playerId } = httpRequest.body;
+
+        this._logger.info(`[TeamController] accept player to team Id → teamId=${teamId}`);
+
+        const result = await this._approvetoTeamUsecase.execute(teamId, playerId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "player approved successfully", result));
+
+    }
+
+    rejectPlayerfromTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { teamId, playerId } = httpRequest.body;
+
+        this._logger.info(`[TeamController] reject player from team Id → teamId=${teamId}`);
+
+        const result = await this._rejectfromTeamUsecase.execute(teamId, playerId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Player rejected successfully", result));
     }
 }

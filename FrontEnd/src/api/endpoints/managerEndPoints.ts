@@ -17,8 +17,8 @@ export const managerEndpoints = {
     updateManagerData: async ({ userData, userId }: { userData: FormData; userId: string }): Promise<User> => {
         const { data } = await axiosClient.put(MANAGER_ROUTES.EDIT_DETAILS(userId),
             userData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            }
+            headers: { "Content-Type": "multipart/form-data" },
+        }
         );
 
         return data.data;
@@ -26,6 +26,11 @@ export const managerEndpoints = {
 
     getAllTeams: async (managerId: string): Promise<Team[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_TEAMS(managerId));
+        return data.data;
+    },
+
+    getMyTeamDetails: async (teamId: string): Promise<Team> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.GET_TEAM(teamId));
         return data.data;
     },
 
@@ -94,6 +99,16 @@ export const managerEndpoints = {
 
     getRegisteredTeams: async (tournamentId: string): Promise<RegisteredTeam[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.REGISTERED_TEAMS(tournamentId));
+        return data.data;
+    },
+
+    rejectPlayerRequest: async ({ teamId, playerId }: { teamId: string; playerId: string }): Promise<RegisteredTeam[]> => {
+        const { data } = await axiosClient.post(MANAGER_ROUTES.REJECT_PLAYER(playerId), { teamId, playerId });
+        return data.data;
+    },
+
+    approvePlayerRequest: async ({ teamId, playerId }: { teamId: string; playerId: string }): Promise<RegisteredTeam[]> => {
+        const { data } = await axiosClient.post(MANAGER_ROUTES.APPROVE_PLAYER(playerId), { teamId, playerId });
         return data.data;
     }
 }

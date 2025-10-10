@@ -4,13 +4,14 @@ import type { AppDispatch, RootState } from "../../app/store";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getMyTeams } from "../../features/player/playerThunks";
+import type { playerJoinStatus } from "../../features/player/playerTypes";
 
-export const usePlayerTeams = () => {
+export const usePlayerTeams = (status : playerJoinStatus) => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
     const { teams, loading, error } = useSelector((state: RootState) => state.player);
-    
+
     const { user, isInitialized } = useSelector((state: RootState) => state.auth);
     const playerId = user?._id;
 
@@ -22,8 +23,8 @@ export const usePlayerTeams = () => {
             navigate("/");
             return;
         }
-        dispatch(getMyTeams(playerId));
-    }, [dispatch, playerId, isInitialized, navigate]);
+        dispatch(getMyTeams({ playerId, status }));
+    }, [dispatch, playerId, isInitialized, navigate, status]);
 
     useEffect(() => {
         if (error) toast.error(error);

@@ -20,9 +20,6 @@ const ViewTeam = () => {
 
     }, [teamId, team, dispatch]);
 
-    console.log(team);
-
-    
     if (loading) {
         return (
             <PlayerLayout>
@@ -149,59 +146,34 @@ const ViewTeam = () => {
                                 {/* Members Grid - 2 columns */}
                                 <div className="p-3">
                                     <div className="grid grid-cols-3 gap-2">
-                                        {team.members.map((player) => (
-                                            <div
-                                                key={player.playerId}
-                                                className="flex items-center space-x-3 p-3 bg-neutral-50 dark:bg-neutral-700/50 rounded-lg border border-neutral-200 dark:border-neutral-600 hover:bg-white dark:hover:bg-neutral-600/50 transition-colors duration-200 cursor-pointer"
-                                            >
-                                                <div className="relative">
-                                                    <img
-                                                        src={player.profileImage}
-                                                        alt={player.firstName}
-                                                        className="w-12 h-12 rounded-full object-cover border border-neutral-300 dark:border-neutral-500"
-                                                    />
-                                                    {player.isCaptain && (
-                                                        <div className="absolute -top-1 -right-1 bg-amber-500 rounded-full p-1">
-                                                            <Star className="w-2 h-2 text-white fill-current" />
+                                        {team.members
+                                            .filter((player) => player.approvalStatus === "approved").
+                                            map((player) => (
+                                                <div
+                                                    key={player.playerId}
+                                                    className="flex items-center space-x-3 p-3 bg-neutral-50 dark:bg-neutral-700/50 rounded-lg border border-neutral-200 dark:border-neutral-600 hover:bg-white dark:hover:bg-neutral-600/50 transition-colors duration-200 cursor-pointer"
+                                                >
+                                                    <div className="relative">
+                                                        <img
+                                                            src={player.profileImage}
+                                                            alt={player.firstName}
+                                                            className="w-12 h-12 rounded-full object-cover border border-neutral-300 dark:border-neutral-500"
+                                                        />
+                                                    </div>
+
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="flex items-center space-x-2">
+                                                            <h3 className="font-medium text-neutral-800 dark:text-white truncate text-sm">
+                                                                {player.firstName + " " + player.lastName}
+                                                            </h3>
+                                                           
                                                         </div>
-                                                    )}
-                                                </div>
-
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center space-x-2">
-                                                        <h3 className="font-medium text-neutral-800 dark:text-white truncate text-sm">
-                                                            {player.firstName + " " +player.lastName }
-                                                        </h3>
-                                                        {player.isCaptain && (
-                                                            <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-1.5 py-0.5 rounded text-xs font-medium">
-                                                                C
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <p className="text-xs text-neutral-600 dark:text-neutral-400 truncate">
-                                                        {player.profile.position}
-                                                    </p>
-
-                                                    {/* Always visible contact actions under position */}
-                                                    <div className="flex space-x-1 mt-1">
-                                                        <button
-                                                            className="p-1.5 text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors duration-200"
-                                                            title="Send email"
-                                                        >
-                                                            <Mail className="w-3.5 h-3.5" />
-                                                        </button>
-                                                        {player.phone && (
-                                                            <button
-                                                                className="p-1.5 text-neutral-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded transition-colors duration-200"
-                                                                title="Call"
-                                                            >
-                                                                <Phone className="w-3.5 h-3.5" />
-                                                            </button>
-                                                        )}
+                                                        <p className="text-xs text-neutral-600 dark:text-neutral-400 truncate">
+                                                            {player.profile.position || 'na'}
+                                                        </p>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            ))}
                                     </div>
                                 </div>
                             </div>

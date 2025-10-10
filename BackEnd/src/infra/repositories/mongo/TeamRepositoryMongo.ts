@@ -1,5 +1,5 @@
 import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
-import { Filters, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "domain/dtos/Team.dto";
+import { Filters, PlayerApprovalStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "domain/dtos/Team.dto";
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { TeamModel } from "infra/databases/mongo/models/TeamModel";
 import { TeamMongoMapper, TeamPopulatedDocument } from "infra/utils/mappers/TeamMongoMapper";
@@ -32,21 +32,30 @@ export class TeamRepositoryMongo implements ITeamRepository {
 
     async findAllWithFilters(filters: Filters): Promise<{ teams: TeamDataSummary[], totalTeams: number }> {
         const result = await TeamModel.find(filters);
+        console.log(result)
         const totalTeams = await TeamModel.countDocuments(filters);
         const teams = TeamMongoMapper.toDomainSummaryArray(result);
         return { teams, totalTeams }
     }
 
-    async findAllWithUserId(userId: string): Promise<{ teams: TeamDataSummary[]; totalTeams: number }> {
+    async findAllWithUserId(userId: string, status: string): Promise<{ teams: TeamDataSummary[]; totalTeams: number }> {
         const objectId = new mongoose.Types.ObjectId(userId);
-        const result = await TeamModel.find({ "members.userId": objectId });
 
-        const totalTeams = await TeamModel.countDocuments({ "members.userId": objectId });
+        const filter = {
+            members: {
+                $elemMatch: {
+                    userId: objectId,
+                    approvalStatus: status,
+                },
+            },
+        };
+
+        const result = await TeamModel.find(filter);
+        const totalTeams = await TeamModel.countDocuments(filter);
 
         const teams = TeamMongoMapper.toDomainSummaryArray(result);
         return { teams, totalTeams };
     }
-
 
     async findById(id: string): Promise<TeamDataFull | null> {
         const team = await TeamModel.findById(id)
@@ -58,7 +67,6 @@ export class TeamRepositoryMongo implements ITeamRepository {
         return TeamMongoMapper.toDomainFull(team as unknown as TeamPopulatedDocument);
     }
 
-
     async findByName(name: string): Promise<TeamData | null> {
         const team = await TeamModel.findOne({ name, status: true }).populate('members.playerId')
             .populate('members.userId');
@@ -66,8 +74,9 @@ export class TeamRepositoryMongo implements ITeamRepository {
 
         return TeamMongoMapper.toDomainFull(team as unknown as TeamPopulatedDocument);
     }
+    
 
-    async togglePlayerStatus(teamId: string, playerId: string): Promise<TeamData | null> {
+    async togglePlayerStatus(teamId: string, playerId: string): Promise<TeamDataFull | null> {
         const team = await TeamModel.findById(teamId);
         if (!team) return null;
 
@@ -79,6 +88,21 @@ export class TeamRepositoryMongo implements ITeamRepository {
         await team.save();
         return TeamMongoMapper.toDomainFull(team as unknown as TeamPopulatedDocument);
     }
+
+
+    async playerTeamStatus(teamId: string, playerId: string, status: PlayerApprovalStatus): Promise<TeamDataFull | null> {
+        const team = await TeamModel.findById(teamId);
+        if (!team) return null;
+
+        const member = team.members.find(m => m.playerId.toString() === playerId);
+        if (!member) return null;
+
+        member.approvalStatus = status;
+
+        await team.save();
+        return TeamMongoMapper.toDomainFull(team as unknown as TeamPopulatedDocument);
+    }
+
 
     async update(teamId: string, updates: Partial<TeamRegister>): Promise<TeamData> {
         const updated = await TeamModel.findByIdAndUpdate(

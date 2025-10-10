@@ -11,6 +11,6 @@ export const playerRoutes = [
     { path: "/player/profile", element: <ProtectedRoute allowedRoles={['player']}><PlayerProfilePage /></ProtectedRoute> },
     { path: "/player/tournaments", element: <ProtectedRoute allowedRoles={['player']}><TournamentsPage /></ProtectedRoute> },
     { path: "/player/teams", element: <ProtectedRoute allowedRoles={['player']}><TeamFinderPage /></ProtectedRoute> },
-    { path: "/player/myteams", element: <ProtectedRoute allowedRoles={['player']}><TeamsListPage /></ProtectedRoute> },
-    { path: "/player/myteams/:teamId", element: <ProtectedRoute allowedRoles={['player']}><ViewTeam /></ProtectedRoute> },
+    { path: `/player/myteams/:status`, element: <ProtectedRoute allowedRoles={['player']}><TeamsListPage /></ProtectedRoute> },
+    { path: "/player/myteam/:teamId", element: <ProtectedRoute allowedRoles={['player']}><ViewTeam /></ProtectedRoute> },
 ];

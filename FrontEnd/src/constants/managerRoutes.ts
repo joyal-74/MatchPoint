@@ -2,6 +2,7 @@ export const MANAGER_ROUTES = {
     GET_DETAILS: (managerId: string) => `/manager/${managerId}`,
     EDIT_DETAILS: (managerId: string) => `/manager/${managerId}`,
     GET_TEAMS: (managerId: string) => `/manager/teams/${managerId}`,
+    GET_TEAM: (teamId: string) => `/manager/team/${teamId}/details`,
     CREATE_TEAM: '/manager/team',
     DELETE_TEAM: (teamId: string) => `/manager/team/${teamId}`,
     EDIT_TEAM: (teamId: string) => `/manager/team/${teamId}`,
@@ -14,4 +15,6 @@ export const MANAGER_ROUTES = {
     TOUTNAMENT_PAYMENT: (tournamentId: string) => `/manager/tournament/${tournamentId}/payment`,
     PAYMENT_STATUS: (registrationId: string) => `/manager/registration/${registrationId}/status`,
     REGISTERED_TEAMS: (tournamentId: string) => `/manager/tournament/${tournamentId}/teams`,
+    REJECT_PLAYER: (playerId: string) => `/manager/team/${playerId}/reject`,
+    APPROVE_PLAYER: (playerId: string) => `/manager/team/${playerId}/approve`,
 } as const;

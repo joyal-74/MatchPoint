@@ -1,4 +1,5 @@
-import type { EditTeamPayload, TeamStatus } from "../../../../features/manager/managerTypes";
+import { useNavigate } from "react-router-dom";
+import type { EditTeamPayload } from "../../../../features/manager/managerTypes";
 import SecondaryButton from "../../../ui/SecondaryButton";
 import TeamDetailItem from "./TeamDetailItem";
 import TeamInfo from "./TeamInfo";
@@ -6,6 +7,7 @@ import TeamLogo from "./TeamLogo";
 import type { MenuAction } from "./TeamMenu";
 import TeamMenu from "./TeamMenu";
 import { getColorScheme } from "./teamColors"; 
+import type { TeamStatus } from "../Types";
 
 export interface TeamCardProps {
     _id: string;
@@ -59,6 +61,7 @@ export default function TeamCard({
 
     // Get color scheme based on index
     const colorScheme = getColorScheme(index);
+    const navigate = useNavigate();
 
     return (
         <div className={`relative group ${className}`}>
@@ -123,13 +126,12 @@ export default function TeamCard({
 
                             <SecondaryButton 
                                 className={`
-                                    py-1.5 px-4 text-[13px] ${colorScheme.text} ${colorScheme.hoverText} 
-                                    rounded-lg font-medium text-sm transition-all duration-300 
-                                    border ${colorScheme.buttonBorder} ${colorScheme.buttonHoverBorder} 
-                                    ${colorScheme.buttonBg} ${colorScheme.buttonHoverBg} 
+                                    py-1.5 px-4 text-[13px] ${colorScheme.text} ${colorScheme.hoverText} rounded-lg font-medium text-sm transition-all duration-300 
+                                    border ${colorScheme.buttonBorder} ${colorScheme.buttonHoverBorder} ${colorScheme.buttonBg} ${colorScheme.buttonHoverBg} 
                                     disabled:opacity-50
                                 `} 
                                 type="button"
+                                onClick={()=> navigate(`/manager/team/${_id}`)}
                             >
                                 View
                             </SecondaryButton>

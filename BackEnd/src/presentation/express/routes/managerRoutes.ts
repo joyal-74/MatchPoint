@@ -13,6 +13,9 @@ router.get('/:managerId', expressAdapter(managerProfileController.getProfile));
 
 router.post('/teams/change', expressAdapter(teamManagementController.changePlayerStatus));
 router.get('/teams/:managerId', expressAdapter(teamManagementController.getAllTeams));
+router.get('/team/:teamId/details', expressAdapter(teamManagementController.getTeamDetails));
+router.post('/team/:playerId/approve', expressAdapter(teamManagementController.approvePlayertoTeam));
+router.post('/team/:playerId/reject', expressAdapter(teamManagementController.rejectPlayerfromTeam));
 router.patch('/team/:teamId', expressAdapter(teamManagementController.deleteTeam));
 router.post("/team", upload.single("logo"), expressFileUpdateHandler(teamManagementController.addNewTeam));
 router.put("/team/:teamId", upload.single("logo"), expressFileUpdateHandler(teamManagementController.editTeam));

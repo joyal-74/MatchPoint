@@ -5,7 +5,7 @@ export interface IGetAllTeamsUseCase {
 }
 
 export interface IGetMyTeamsUseCase {
-    execute(playerId: string): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
+    execute(playerId: string, status: string): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
 }
 
 export interface IGetMyTeamDetailsUseCase {

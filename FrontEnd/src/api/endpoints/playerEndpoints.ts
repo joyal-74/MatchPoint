@@ -30,13 +30,14 @@ export const playerEndpoints = {
         return data.data;
     },
 
-    getMyTeams: async (playerId: string): Promise<{ teams: Team[], totalTeams: number }> => {
-        const { data } = await axiosClient.get(PLAYER_ROUTES.GET_MY_TEAMS(playerId))
+    getMyTeams: async ({ playerId, status }: { playerId: string, status: string }): Promise<{ teams: Team[], totalTeams: number }> => {
+        const { data } = await axiosClient.get(PLAYER_ROUTES.GET_MY_TEAMS(playerId, status))
         return data.data;
     },
 
     getMyTeamDetails: async (teamId: string): Promise<Team> => {
         const { data } = await axiosClient.get(PLAYER_ROUTES.GET_MY_TEAM(teamId))
+        console.log(data.data)
         return data.data;
     }
 };

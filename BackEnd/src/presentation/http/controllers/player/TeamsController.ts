@@ -19,6 +19,8 @@ export class TeamsController implements IPlayerTeamController {
     getAllTeams = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { filters } = httpRequest.params;
 
+        console.log(filters)
+
         this._logger.info(`[TeamController] getAllTeamswith filters → managerId=${filters}`);
 
         const result = await this._getAllTeamsUsecase.execute(filters);
@@ -39,11 +41,11 @@ export class TeamsController implements IPlayerTeamController {
     };
 
     getMyTeams = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { playerId } = httpRequest.params;
+        const { playerId, status } = httpRequest.params;
 
-        this._logger.info(`[TeamController] Join to team Id → managerId=${playerId}`);
+        this._logger.info(`[TeamController] Join to team Id → playerId=${playerId}`);
 
-        const result = await this._getmyTeamsUsecase.execute(playerId);
+        const result = await this._getmyTeamsUsecase.execute(playerId, status);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team fetched successfully", result));
     }

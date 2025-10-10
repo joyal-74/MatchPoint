@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
                 handleLogout();
                 break;
             case "teams":
-                navigate("/player/myteams");
+                navigate("/player/myteams/approved");
                 break;
             case "profile":
                 navigate("/player/profile");

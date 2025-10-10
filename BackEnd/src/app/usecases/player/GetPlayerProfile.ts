@@ -1,9 +1,9 @@
 import { playerMapper } from "app/mappers/PlayerMapper";
-import { IGetPlayerProfile } from "app/repositories/interfaces/IPlayerProfileRepository";
 import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { PlayerResponseDTO } from "domain/dtos/Player.dto";
 import { NotFoundError } from "domain/errors";
 import { ILogger } from "app/providers/ILogger";
+import { IGetPlayerProfile } from "app/repositories/interfaces/IUserProfileRepository";
 
 export class GetPlayerProfile implements IGetPlayerProfile {
     constructor(

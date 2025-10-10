@@ -8,15 +8,15 @@ import { playerProfileController, playerTeamController } from "presentation/comp
 const router = Router();
 const upload = multer();
 
-router.put("/:playerId", upload.single("file"), expressFileUpdateHandler(playerProfileController.updateProfile));
+router.put("/:playerId/profile", upload.single("file"), expressFileUpdateHandler(playerProfileController.updateProfile));
 
-router.get('/:playerId', expressAdapter(playerProfileController.getProfile));
+router.get('/:playerId/profile', expressAdapter(playerProfileController.getProfile));
 
 router.get('/teams', expressAdapter(playerTeamController.getAllTeams))
 
-router.get('/teams/:playerId', expressAdapter(playerTeamController.getMyTeams))
+router.get('/teams/:playerId/:status', expressAdapter(playerTeamController.getMyTeams))
 
-router.get('/teams/:teamId/details', expressAdapter(playerTeamController.getTeamDetails))
+router.get('/team/:teamId/details', expressAdapter(playerTeamController.getTeamDetails))
 
 router.post('/:teamId/join', expressAdapter(playerTeamController.joinTeams))
 

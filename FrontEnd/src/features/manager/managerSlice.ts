@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllTeams, createTeam, deleteTeam, editTeam, fetchManagerData, updateManagerData } from "./managerThunks";
+import { getAllTeams, createTeam, deleteTeam, editTeam, fetchManagerData, updateManagerData, getMyTeamDetails } from "./managerThunks";
 import type { Team } from "../../components/manager/teams/Types";
 import type { User } from "../../types/User";
 
 interface ManagerState {
     teams: Team[];
-    manager : User | null;
+    selectedTeam: Team | null;
+    manager: User | null;
     loading: boolean;
     fetched: boolean,
     error: string | null;
@@ -13,7 +14,8 @@ interface ManagerState {
 
 const initialState: ManagerState = {
     teams: [],
-    manager : null,
+    selectedTeam: null,
+    manager: null,
     loading: false,
     fetched: false,
     error: null,
@@ -116,6 +118,21 @@ const managerSlice = createSlice({
                 state.error = null;
             })
             .addCase(updateManagerData.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? "Edit failed";
+            });
+
+        builder
+            .addCase(getMyTeamDetails.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getMyTeamDetails.fulfilled, (state, action) => {
+                state.selectedTeam = action.payload;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(getMyTeamDetails.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? "Edit failed";
             });

@@ -18,5 +18,13 @@ export interface IChangeTeamStatusUseCase {
 }
 
 export interface IChangePlayerStatusUseCase {
-    execute(teamId: string, playerId: string): Promise<TeamData>;
+    execute(teamId: string, playerId: string): Promise<TeamDataFull>;
+}
+
+export interface IApprovePlayerUseCase {
+    execute(teamId: string, playerId: string): Promise<TeamDataFull>;
+}
+
+export interface IRejectPlayerUseCase {
+    execute(teamId: string, playerId: string): Promise<TeamDataFull>;
 }

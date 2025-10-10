@@ -26,7 +26,7 @@ export interface EditTeamModalProps {
     };
 }
 
-export default function EditTeamModal({ isOpen, onClose, onEditTeam, teamData, }: EditTeamModalProps) {
+export default function EditTeamModal({ isOpen, onClose, onEditTeam, teamData, }: EditTeamModalProps) { 
     const [name, setName] = useState("");
     const [sport, setSport] = useState("Cricket");
     const [description, setDescription] = useState("");

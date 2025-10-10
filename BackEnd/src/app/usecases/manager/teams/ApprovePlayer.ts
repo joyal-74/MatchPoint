@@ -1,10 +1,10 @@
 import { TeamMapper } from "app/mappers/TeamMappers";
 import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
-import { IChangePlayerStatusUseCase } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
+import { IApprovePlayerUseCase } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
 import { TeamDataFull } from "domain/dtos/Team.dto";
 import { BadRequestError, NotFoundError } from "domain/errors";
 
-export class ChangePlayerStatusUseCase implements IChangePlayerStatusUseCase {
+export class ApprovePlayerUseCase implements IApprovePlayerUseCase {
     constructor(
         private _teamRepo: ITeamRepository
     ) { }
@@ -17,7 +17,7 @@ export class ChangePlayerStatusUseCase implements IChangePlayerStatusUseCase {
             throw new BadRequestError("playerId and teamId are required");
         }
 
-        const updatedTeam = await this._teamRepo.togglePlayerStatus(teamId, playerId);
+        const updatedTeam = await this._teamRepo.playerTeamStatus(teamId, playerId, 'approved');
 
         if (!updatedTeam) {
             throw new NotFoundError("Team or player not found");

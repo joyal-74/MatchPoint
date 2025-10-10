@@ -38,7 +38,8 @@ export default function TeamCard({
     const navigate = useNavigate();
 
     const handleView = () => {
-        navigate(`/player/myteams/${_id}`);
+        console.log("clicked")
+        navigate(`/player/myteam/${_id}`);
     }
 
     return (

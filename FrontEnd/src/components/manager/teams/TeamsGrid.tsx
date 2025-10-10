@@ -1,6 +1,7 @@
 import React from "react";
 import TeamCard from "./TeamCard/TeamCard";
-import type { Team, EditTeamPayload } from "../../../features/manager/managerTypes";
+import type { EditTeamPayload } from "../../../features/manager/managerTypes";
+import type { Team } from "./Types";
 
 interface TeamsGridProps {
     teams: Team[];

@@ -1,3 +1,5 @@
+import type { playerJoinStatus } from "../../../features/player/playerTypes";
+
 export type playerStatus = "playing" | "sub";
 
 export interface Team {
@@ -30,6 +32,7 @@ export interface Members {
     lastName : string;
     profileImage : string;
     status: playerStatus;
+    approvalStatus : playerJoinStatus
 }
 
 export interface Filters {
