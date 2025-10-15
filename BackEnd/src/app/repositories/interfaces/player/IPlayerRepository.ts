@@ -1,7 +1,8 @@
+import { PlayerProfileResponse } from "domain/dtos/Player.dto";
 import { Player, PlayerRegister, PlayerResponse } from "domain/entities/Player";
 
 export interface IPlayerRepository {
-    findById(_id: string): Promise<PlayerResponse | null>;
+    findById(userId: string): Promise<PlayerProfileResponse | null>;
 
     findByUserId(userId: string): Promise<PlayerResponse | null>;
 
@@ -9,7 +10,7 @@ export interface IPlayerRepository {
 
     create(player: PlayerRegister): Promise<PlayerResponse>;
 
-    update(_id: string, data: Partial<Player>): Promise<PlayerResponse>;
+    update(userId: string, data: Partial<Player>): Promise<PlayerProfileResponse>;
 
     deleteByUserId(userId: string): Promise<void>;
 }

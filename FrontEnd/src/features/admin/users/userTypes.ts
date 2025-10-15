@@ -1,16 +1,10 @@
-export interface User {
-    _id: string;
-    userId: string;
-    first_name: string;
-    last_name: string;
-    role: string;
-    email: string;
-    createdAt: string;
-    isActive : boolean;
-}
+import type { PlayerProfileField } from "../../../types/Player";
+import type { User } from "../../../types/User";
+
 
 export interface Player extends User {
     sport : string;
+    profile: PlayerProfileField[];
 }
 
 

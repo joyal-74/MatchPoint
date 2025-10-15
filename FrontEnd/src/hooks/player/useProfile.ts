@@ -1,32 +1,42 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import type { RootState } from "../../app/store";
 import type { UserProfile } from "../../types/Profile";
 import { toast } from "react-toastify";
-import { fetchPlayerData, updatePlayerData } from "../../features/player/playerThunks";
+import { fetchPlayerData, updatePlayerData, updatePlayerProfileData } from "../../features/player/playerThunks";
 
 export const useProfile = () => {
     const dispatch = useAppDispatch();
     const { player, loading, error } = useAppSelector((state: RootState) => state.player);
-    const playerId = useAppSelector((state: RootState) => state.auth.user?._id);
+    const userId = useAppSelector((state: RootState) => state.auth.user?._id);
 
     const [isEditing, setIsEditing] = useState(false);
     const [profileImage, setProfileImage] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [formData, setFormData] = useState<UserProfile | null>(null);
+    const [playerProfile, setPlayerProfile] = useState({
+        sport: "",
+        profile: {},
+    });
 
     // Fetch player data
     useEffect(() => {
-        if (playerId) {
-            dispatch(fetchPlayerData(playerId));
+        if (userId) {
+            dispatch(fetchPlayerData(userId));
         }
-    }, [dispatch, playerId]);
-
+    }, [dispatch, userId]);
 
     useEffect(() => {
         if (player) {
-            setFormData(player);
-            setProfileImage(player.profileImage || null);
+            const { firstName, lastName, email, username, phone, gender, bio, profileImage, sport } = player;
+
+            setFormData({ firstName, lastName, email, username, phone, gender, bio, profileImage, sport });
+            setPlayerProfile({
+                sport: sport || "",
+                profile: player.profile || {},
+            });
+
+            setProfileImage(profileImage || null);
         }
     }, [player]);
 
@@ -42,25 +52,48 @@ export const useProfile = () => {
         reader.readAsDataURL(file);
     };
 
-    const handleInputChange = (field: keyof UserProfile, value: string) => {
+    const handleInputChange = useCallback((field: keyof UserProfile, value: string) => {
         setFormData((prev) => (prev ? { ...prev, [field]: value } : prev));
+    }, []);
+
+
+    const handlePlayerProfileChange = (field: string, value: string) => {
+        setPlayerProfile((prev) => ({
+            ...prev,
+            profile: {
+                ...prev.profile,
+                [field]: value,
+            },
+        }));
     };
 
-    const handleSave = async () => {
-        if (!formData || !playerId) return;
-        const data = new FormData();
 
-        for (const [key, value] of Object.entries(formData)) {
-            data.append(key, value ?? "");
-        }
+    const appendFormEntries = (data: Record<string, any>) => {
+        const form = new FormData();
+        Object.entries(data).forEach(([k, v]) => form.append(k, v ?? ""));
+        return form;
+    };
 
-        if (selectedFile) {
-            data.append("file", selectedFile);
-        }
+    const handleSave = async (activeTab: "user" | "sport") => {
+        if (!userId) return;
 
         try {
-            await dispatch(updatePlayerData({ userData: data, userId: playerId })).unwrap();
-            toast.success("Profile updated successfully!");
+            if (activeTab === "user" && formData) {
+                const userData = appendFormEntries(formData);
+                if (selectedFile) userData.append("file", selectedFile);
+                await dispatch(updatePlayerData({ userData, userId })).unwrap();
+                toast.success("User info updated successfully!");
+            }
+
+            if (activeTab === "sport" && playerProfile) {
+                const profileData = {
+                    sport: playerProfile.sport,
+                    ...playerProfile.profile
+                };
+                await dispatch(updatePlayerProfileData({ userData: profileData, userId })).unwrap();
+                toast.success("Sport info updated successfully!");
+            }
+
             setIsEditing(false);
             setSelectedFile(null);
         } catch (err) {
@@ -69,9 +102,14 @@ export const useProfile = () => {
         }
     };
 
+
     const handleCancel = () => {
         if (player) {
             setFormData(player);
+            setPlayerProfile({
+                sport: player.sport,
+                profile: player.profile
+            });
             setProfileImage(player.profileImage || null);
             setSelectedFile(null);
         }
@@ -79,18 +117,21 @@ export const useProfile = () => {
     };
 
     const handleRetry = () => {
-        if (playerId) dispatch(fetchPlayerData(playerId));
+        if (userId) dispatch(fetchPlayerData(userId));
     };
+
 
     return {
         isEditing,
         setIsEditing,
         profileImage,
         formData,
+        playerProfile,
         loading,
         error,
         handleImageUpload,
         handleInputChange,
+        handlePlayerProfileChange,
         handleSave,
         handleCancel,
         handleRetry,

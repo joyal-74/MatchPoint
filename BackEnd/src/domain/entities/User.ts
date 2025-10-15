@@ -49,6 +49,7 @@ export interface UserRegister {
 export interface UserResponse extends User {
     _id: string;
     sport?: string;
+    profile?: Record<string, string | number | boolean | null>;
 }
 
 

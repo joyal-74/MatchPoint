@@ -1,8 +1,8 @@
-import { PlayerResponseDTO } from "domain/dtos/Player.dto";
+import { PlayerProfileResponse } from "domain/dtos/Player.dto";
 import { UserLoginResponseDTO } from "domain/dtos/User.dto";
 
 
-export class playerMapper {
+export class PlayerMapper {
     static toLoginResponseDTO(player: UserLoginResponseDTO): UserLoginResponseDTO {
         return {
             _id: player._id,
@@ -15,7 +15,7 @@ export class playerMapper {
         };
     }
 
-    static toProfileResponseDTO(player: PlayerResponseDTO): PlayerResponseDTO {
+    static toProfileResponseDTO(player: PlayerProfileResponse): PlayerProfileResponse {
         return {
             _id: player._id,
             userId: player.userId,
@@ -25,11 +25,12 @@ export class playerMapper {
             username: player.username,
             role: player.role,
             gender: player.gender,
-            phone: player.phone || null,
+            phone: player.phone,
             wallet: player.wallet,
             bio: player.bio,
             profileImage: player.profileImage,
-            sport : player.sport
+            sport: player.sport,
+            profile: player.profile
         };
     }
 }

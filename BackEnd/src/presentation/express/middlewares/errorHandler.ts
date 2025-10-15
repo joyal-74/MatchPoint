@@ -6,17 +6,9 @@ import { logger } from "presentation/composition/shared/providers";
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
-    logger.error(err.message, {
-        stack: err.stack,
-        path: req.originalUrl,
-        method: req.method,
-        body: req.body,
-        params: req.params,
-        query: req.query,
-    });
+    logger.error(`${err.message}${err.stack ? `\nStack: ${err.stack}` : ""}`);
 
     if (err instanceof AppError) {
-
         return res.status(err.statusCode).json(buildResponse(false, err.message, err.details));
     }
 

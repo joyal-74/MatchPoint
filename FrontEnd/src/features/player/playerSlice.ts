@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchPlayerData, getMyTeams } from "./playerThunks";
+import { fetchPlayerData, getMyTeams, updatePlayerData, updatePlayerProfileData } from "./playerThunks";
 import type { Team } from "../../components/player/Teams/Types";
-import type { User } from "../../types/User";
+import type { Player } from "../../types/Player";
 
 
 interface playerState {
     teams: Team[];
-    player : User | null;
+    player : Player | null;
     totalTeams: number;
     loading: boolean;
     error: string | null;
@@ -53,6 +53,36 @@ const playerSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchPlayerData.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? "Team get failed";
+            });
+
+        builder
+            .addCase(updatePlayerData.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updatePlayerData.fulfilled, (state, action) => {
+                state.player = action.payload;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(updatePlayerData.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? "Team get failed";
+            });
+
+        builder
+            .addCase(updatePlayerProfileData.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updatePlayerProfileData.fulfilled, (state, action) => {
+                state.player = action.payload;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(updatePlayerProfileData.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? "Team get failed";
             });

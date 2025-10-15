@@ -1,6 +1,6 @@
 interface EditableFieldProps {
     label: string;
-    value: string;
+    value: string | number;
     type?: string;
     placeholder: string;
     options?: string[];
@@ -70,7 +70,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
                 )
             ) : (
                 <div className="px-4 py-3 rounded-lg" style={inputStyle}>
-                    {value && value.trim() !== '' ? value
+                    {value && typeof value === "string" && value.trim() !== '' ? value
                         : (
                             <span style={{ fontStyle: 'italic', opacity: 0.7 }}
                                 className="text-var(--color-text-secondary)"

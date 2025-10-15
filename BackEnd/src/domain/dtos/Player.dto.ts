@@ -19,8 +19,8 @@ export interface PlayersResponseDTO {
     email: string;
     role: RoleType;
     sport: string;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     gender: GenderType;
     phone: string | null;
     wallet: number;
@@ -38,4 +38,29 @@ export interface PlayerUpdateDTO {
     lastName: string;
     username: string;
     gender: GenderType;
+}
+
+export interface PlayerProfileFieldDTO {
+    _id: string;
+    userId : string;
+    sport?: string;
+    profile: Record<string, string | number | boolean | null>;
+}
+
+
+export interface PlayerProfileResponse {
+    _id: string;
+    userId: string;
+    email: string;
+    phone: string;
+    bio: string;
+    wallet: number;
+    profileImage: string;
+    role: RoleType;
+    firstName: string;
+    lastName: string;
+    username: string;
+    gender: GenderType;
+    sport: string;
+    profile: Record<string, string | number | boolean | null>;
 }

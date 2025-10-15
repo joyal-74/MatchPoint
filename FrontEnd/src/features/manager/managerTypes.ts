@@ -10,6 +10,14 @@ export interface UpdateUserDataPayload {
     userId: string;
 }
 
+export interface UpdatePlayerProfilePayload {
+    userData: {
+        sport: string;
+        [key: string]: string;
+    };
+    userId: string;
+}
+
 export type CreateTeamData = {
     name: string;
     sport: string;

@@ -2,6 +2,7 @@ import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
 import { GetAllUsersParams } from "app/usecases/admin/GetAllViewers";
 import { UserResponseDTO } from "domain/dtos/User.dto";
 import { User, UserRegister, UserResponse } from "domain/entities/User";
+import { NotFoundError } from "domain/errors";
 import { UserModel } from "infra/databases/mongo/models/UserModel";
 
 
@@ -147,7 +148,7 @@ export class UserRepositoryMongo implements IUserRepository {
     // Update user by MongoDB _id
     async update(_id: string, data: Partial<User>): Promise<UserResponse> {
         const updated = await UserModel.findByIdAndUpdate(_id, data, { new: true }).lean<UserResponse>().exec();
-        if (!updated) throw new Error("User not found");
+        if (!updated) throw new NotFoundError("User not found");
         return updated;
     }
 

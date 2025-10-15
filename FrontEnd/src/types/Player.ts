@@ -1,3 +1,4 @@
+import type { UserProfile } from "./Profile";
 import type { User } from "./User";
 
 export interface PlayerProfileField {
@@ -20,13 +21,22 @@ export interface PlayerTournament {
 }
 
 export interface Player extends User {
-    id:string
+    id: string
     sport: string;
-    profile: PlayerProfileField[];
+    profile: Record<string, string>;
     career_stats: PlayerStatsField[];
     tournaments: PlayerTournament[];
 }
 
+export interface PlayerProfile extends UserProfile {
+    sport: string;
+    profile: Record<string, string>;
+}
+
+export interface playerProfileData {
+    sport: string;
+    profile: Record<string, string | number>;
+}
 
 export interface PlayerCardProps {
     player: Player;

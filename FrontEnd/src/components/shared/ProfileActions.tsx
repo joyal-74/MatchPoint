@@ -4,10 +4,10 @@ interface ProfileActionsProps {
 }
 
 const ProfileActions: React.FC<ProfileActionsProps> = ({ onSave, onCancel }) => (
-    <div className="flex gap-2 items-end justify-center">
+    <div className="flex gap-2 items-end justify-start pl-8 mt-5">
         <button
             onClick={onSave}
-            className="px-3 py-2 text-sm bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors"
+            className="px-3 py-2 text-sm  bg-gradient-to-br from-purple-950 to-purple-900 text-white rounded-lg font-medium transition-colors"
         >
             Save Changes
         </button>

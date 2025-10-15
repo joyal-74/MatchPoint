@@ -1,32 +1,41 @@
-import { playerMapper } from "app/mappers/PlayerMapper";
+import { PlayerMapper } from "app/mappers/PlayerMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
+import { ILogger } from "app/providers/ILogger";
+import { IPlayerService } from "app/providers/IPlayerService";
 import { IUpdatePlayerProfile } from "app/repositories/interfaces/IUserProfileRepository";
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
-import { PlayerResponseDTO, PlayerUpdateDTO } from "domain/dtos/Player.dto";
+import { PlayerProfileResponse, PlayerUpdateDTO } from "domain/dtos/Player.dto";
 import { File } from "domain/entities/File";
 import { NotFoundError } from "domain/errors";
 import { validateManagerUpdate } from "domain/validators/ManagerUpdateValidator";
 
 export class UpdatePlayerProfile implements IUpdatePlayerProfile {
     constructor(
-        private userRepo: IUserRepository,
-        private fileStorage: IFileStorage
+        private _playerService : IPlayerService,
+        private _fileStorage: IFileStorage,
+        private _logger: ILogger,
     ) { }
 
-    async execute(update: PlayerUpdateDTO, file?: File): Promise<PlayerResponseDTO> {
-        const validData = validateManagerUpdate(update, file);
+    async execute(updateData: PlayerUpdateDTO, file?: File): Promise<PlayerProfileResponse> {
 
-        if (file) {
-            const fileKey = await this.fileStorage.upload(file);
-            validData.logo = fileKey;
-        }
+        const validData = validateManagerUpdate(updateData, file);
 
-        if (!validData._id) {
+        if (!validData.userId) {
+            this._logger.warn("[UpdatePlayerProfile] Missing user ID in update data");
             throw new NotFoundError("UserId not found");
         }
 
-        const player = await this.userRepo.update(validData._id, validData);
-        
-        return playerMapper.toProfileResponseDTO(player)
+        this._logger.info("[UpdatePlayerProfile] Valid data passed validation");
+
+        if (file) {
+            const fileKey = await this._fileStorage.upload(file);
+            validData.logo = fileKey;
+        }
+
+        const player = await this._playerService.updateUserProfile(validData.userId, validData);
+        if(!player) throw new NotFoundError('Player not found')
+
+        this._logger.info("Player profile successfully updated")
+
+        return PlayerMapper.toProfileResponseDTO(player)
     }
 }

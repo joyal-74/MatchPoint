@@ -10,6 +10,8 @@ const upload = multer();
 
 router.put("/:playerId/profile", upload.single("file"), expressFileUpdateHandler(playerProfileController.updateProfile));
 
+router.put('/:playerId/profile/sports', expressAdapter(playerProfileController.updatePlayerSportsFields));
+
 router.get('/:playerId/profile', expressAdapter(playerProfileController.getProfile));
 
 router.get('/teams', expressAdapter(playerTeamController.getAllTeams))

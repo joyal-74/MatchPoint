@@ -1,4 +1,4 @@
-import { IGetPlayerProfile, IUpdatePlayerProfile } from "app/repositories/interfaces/IUserProfileRepository";
+import { IGetPlayerProfile, IUpdatePlayerFields, IUpdatePlayerProfile } from "app/repositories/interfaces/IUserProfileRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -11,8 +11,9 @@ export class PlayerProfileController implements IProfileController {
     constructor(
         private _getPlayerProfileUsecase: IGetPlayerProfile,
         private _profileUpdateUsecase: IUpdatePlayerProfile,
+        private _sportsProfileUpdateUsecase: IUpdatePlayerFields,
         private _logger: ILogger
-    ) {}
+    ) { }
 
     getProfile = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const playerId = httpRequest.params.playerId;
@@ -31,12 +32,28 @@ export class PlayerProfileController implements IProfileController {
         const playerId = httpRequest.params.playerId;
         const file = httpRequest.file;
 
+        console.log(userData)
+        console.log(playerId)
+
         this._logger.info(`Updating profile for player ID: ${playerId}`, { body: userData, file });
 
-        const player = await this._profileUpdateUsecase.execute({ ...userData, playerId }, file);
+        const player = await this._profileUpdateUsecase.execute({ ...userData, userId :playerId }, file);
 
         this._logger.info(`Profile updated successfully for player ID: ${playerId}`);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Player profile updated', player));
+    }
+
+    updatePlayerSportsFields = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const userData = httpRequest.body;
+        const playerId = httpRequest.params.playerId;
+
+        this._logger.info(`Updating sports fields for player ID: ${playerId}`, { body: userData });
+
+        const profile = await this._sportsProfileUpdateUsecase.execute({ ...userData, userId : playerId });
+
+        this._logger.info(`Profile updated successfully for player ID: ${playerId}`);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Player profile updated', profile));
     }
 };

@@ -6,12 +6,13 @@ export interface UserProfile {
     phone?: string;
     gender?: string;
     bio: string;
-    profileImage : string
+    profileImage: string;
+    sport?: string;
 }
 
 export type profileData = {
-    firstName: string; 
-    lastName: string; 
-    username: string; 
+    firstName: string;
+    lastName: string;
+    username: string;
     profileImage?: string;
 };

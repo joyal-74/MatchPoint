@@ -1,5 +1,5 @@
 import { ManagerResponseDTO, ManagerUpdateDTO } from "domain/dtos/Manager.dto";
-import { PlayerResponseDTO, PlayerUpdateDTO } from "domain/dtos/Player.dto";
+import { PlayerProfileFieldDTO, PlayerProfileResponse, PlayerUpdateDTO } from "domain/dtos/Player.dto";
 import { UserResponseDTO, UserUpdateDTO } from "domain/dtos/User.dto";
 import { File } from "domain/entities/File";
 
@@ -13,11 +13,15 @@ export interface IUpdateManagerProfile {
 }
 
 export interface IGetPlayerProfile {
-    execute(managerId: string): Promise<PlayerResponseDTO>;
+    execute(managerId: string): Promise<PlayerProfileResponse>;
 }
 
 export interface IUpdatePlayerProfile {
-    execute(updateData: PlayerUpdateDTO, file?: File): Promise<PlayerResponseDTO>;
+    execute(updateData: PlayerUpdateDTO, file?: File): Promise<PlayerProfileResponse>;
+}
+
+export interface IUpdatePlayerFields {
+    execute(updateData: PlayerProfileFieldDTO): Promise<PlayerProfileResponse>;
 }
 
 export interface IGetViewerProfile {
