@@ -4,7 +4,6 @@ import SecondaryButton from "../../../ui/SecondaryButton";
 import TeamDetailItem from "./TeamDetailItem";
 import TeamInfo from "./TeamInfo";
 import TeamLogo from "./TeamLogo";
-import type { MenuAction } from "./TeamMenu";
 import TeamMenu from "./TeamMenu";
 import { getColorScheme } from "./teamColors"; 
 import type { TeamStatus } from "../Types";
@@ -14,7 +13,7 @@ export interface TeamCardProps {
     name: string;
     sport: string;
     membersCount: number;
-    created: string;
+    createdAt: string;
     maxPlayers: string;
     managerId: string;
     status: TeamStatus;
@@ -24,7 +23,6 @@ export interface TeamCardProps {
     index: number;
     onEdit: (id: EditTeamPayload) => void;
     onDelete: (id: string) => void;
-    onManageMembers: (id: string) => void;
     className?: string;
 }
 
@@ -33,7 +31,7 @@ export default function TeamCard({
     name, 
     sport, 
     membersCount, 
-    created, 
+    createdAt, 
     status, 
     state,
     city,
@@ -43,21 +41,8 @@ export default function TeamCard({
     index,
     onEdit, 
     onDelete, 
-    onManageMembers, 
     className = "" 
 }: TeamCardProps) {
-    const handleMenuAction = (action: MenuAction): void => {
-        switch (action) {
-            case 'manage':
-                onManageMembers(_id);
-                break;
-            case 'delete':
-                onDelete(_id);
-                break;
-            default:
-                break;
-        }
-    };
 
     // Get color scheme based on index
     const colorScheme = getColorScheme(index);
@@ -83,7 +68,6 @@ export default function TeamCard({
                                 <TeamInfo name={name} sport={sport} colorScheme={colorScheme} />
 
                                 <TeamMenu
-                                    onAction={handleMenuAction}
                                     membersCount={membersCount}
                                     teamId={_id}
                                     onEdit={onEdit}
@@ -121,7 +105,7 @@ export default function TeamCard({
                                     </svg>
                                 }
                             >
-                                Created: {created}
+                                Created: {new Date(createdAt).toLocaleDateString()}
                             </TeamDetailItem>
 
                             <SecondaryButton 

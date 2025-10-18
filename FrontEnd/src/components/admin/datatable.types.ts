@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { Player } from "../../types/Player";
 
 interface Column<T> {
     id: string;
@@ -6,6 +7,7 @@ interface Column<T> {
     accessor?: keyof T;
     render?: (row: T) => ReactNode;
     className?: string;
+    player?: Player;
 }
 
 export interface DataTableProps<T> {

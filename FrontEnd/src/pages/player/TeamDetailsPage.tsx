@@ -1,24 +1,32 @@
-import { MapPin, Users, Trophy, Calendar, ArrowLeft, Mail, Phone, Star } from 'lucide-react';
+import { MapPin, Users, Trophy, Calendar, ArrowLeft } from 'lucide-react';
 import PlayerLayout from '../layout/PlayerLayout';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { useEffect } from 'react';
 import { getMyTeamDetails } from '../../features/player/playerThunks';
 import LoadingOverlay from '../../components/shared/LoadingOverlay';
+import { clearSelectedTeam, setSelectedTeam } from '../../features/player/Teams/TeamSlice';
+
 
 const ViewTeam = () => {
     const { teamId } = useParams();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const team = useAppSelector(state => state.playerTeams.selectedTeam);
-    const loading = useAppSelector(state => state.player.loading);
+    const allTeams = useAppSelector((state) => state.playerTeams.allTeams);
+    const team = useAppSelector((state) => state.playerTeams.selectedTeam);
+    const found = allTeams.find((t) => t._id === teamId);
+    const loading = useAppSelector((state) => state.player.loading);
 
     useEffect(() => {
-        if (teamId && !team) {
-            dispatch(getMyTeamDetails(teamId));
+        if (teamId) {
+            if (!found) {
+                dispatch(getMyTeamDetails(teamId));
+            } else {
+                dispatch(setSelectedTeam(found));
+            }
         }
+    }, [teamId, found, dispatch]);
 
-    }, [teamId, team, dispatch]);
 
     if (loading) {
         return (
@@ -50,9 +58,11 @@ const ViewTeam = () => {
                 <LoadingOverlay show={loading} />
                 <div className="mt-6 w-full pr-12">
                     <div className="">
-                        {/* Back Button */}
                         <button
-                            onClick={() => navigate(-1)}
+                            onClick={() => {
+                                dispatch(clearSelectedTeam());
+                                navigate(-1);
+                            }}
                             className="flex items-center space-x-2 text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 mb-3 transition-colors duration-200 text-sm"
                         >
                             <ArrowLeft className="w-5 h-5" />
@@ -60,9 +70,7 @@ const ViewTeam = () => {
                         </button>
 
                         <div className="flex gap-3">
-                            {/* Team Details - 1/3 width on LEFT */}
                             <div className="w-2/7 bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden">
-                                {/* Header with Team Info */}
                                 <div className="p-6 border-b border-neutral-200 dark:border-neutral-700">
                                     <div className="flex items-center space-x-4">
                                         <img
@@ -166,7 +174,7 @@ const ViewTeam = () => {
                                                             <h3 className="font-medium text-neutral-800 dark:text-white truncate text-sm">
                                                                 {player.firstName + " " + player.lastName}
                                                             </h3>
-                                                           
+
                                                         </div>
                                                         <p className="text-xs text-neutral-600 dark:text-neutral-400 truncate">
                                                             {player.profile.position || 'na'}

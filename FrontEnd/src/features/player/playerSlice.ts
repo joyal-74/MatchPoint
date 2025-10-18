@@ -1,21 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchPlayerData, getMyTeams, updatePlayerData, updatePlayerProfileData } from "./playerThunks";
+import { fetchPlayerData, getMyAllTeams, updatePlayerData, updatePlayerProfileData } from "./playerThunks";
 import type { Team } from "../../components/player/Teams/Types";
 import type { Player } from "../../types/Player";
 
 
 interface playerState {
-    teams: Team[];
-    player : Player | null;
-    totalTeams: number;
+    approvedTeams: Team[];
+    pendingTeams: Team[];
+    totalApprovedTeams: number;
+    totalPendingTeams: number;
+    totalTeams: number; // derived total
+    player: Player | null;
     loading: boolean;
     error: string | null;
 }
 
 const initialState: playerState = {
-    teams: [],
-    player : null,
-    totalTeams : 0,
+    approvedTeams: [],
+    pendingTeams: [],
+    totalApprovedTeams: 0,
+    totalPendingTeams: 0,
+    totalTeams: 0,
+    player: null,
     loading: false,
     error: null,
 };
@@ -25,23 +31,25 @@ const playerSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        // getMyTeams
+        // getAllMyTeams
         builder
-            .addCase(getMyTeams.pending, (state) => {
+            .addCase(getMyAllTeams.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(getMyTeams.fulfilled, (state, action) => {
-                state.teams = action.payload.teams;
-                state.totalTeams = action.payload.totalTeams;
+            .addCase(getMyAllTeams.fulfilled, (state, action) => {
+                state.approvedTeams = action.payload.approvedTeams;
+                state.pendingTeams = action.payload.pendingTeams;
+                state.totalApprovedTeams = action.payload.totalApprovedTeams;
+                state.totalPendingTeams = action.payload.totalPendingTeams
                 state.loading = false;
                 state.error = null;
             })
-            .addCase(getMyTeams.rejected, (state, action) => {
+            .addCase(getMyAllTeams.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? "Team get failed";
             });
-
+            
         builder
             .addCase(fetchPlayerData.pending, (state) => {
                 state.loading = true;

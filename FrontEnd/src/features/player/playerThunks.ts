@@ -5,9 +5,15 @@ import { setUser } from "../auth";
 import type { UpdatePlayerProfilePayload, UpdateUserDataPayload } from "../manager/managerTypes";
 
 // Fetch all teams
-export const getMyTeams = createAsyncThunk(
-    "player/getMyTeams",
-    createApiThunk(playerEndpoints.getMyTeams)
+// export const getMyTeams = createAsyncThunk(
+//     "player/getMyTeams",
+//     createApiThunk(playerEndpoints.getMyTeams)
+// );
+
+
+export const getMyAllTeams = createAsyncThunk(
+    "player/getMyAllTeams",
+    createApiThunk(playerEndpoints.getMyAllTeams)
 );
 
 
@@ -37,7 +43,6 @@ export const updatePlayerProfileData = createAsyncThunk(
     "player/updatePlayerProfileData",
     createApiThunk(async (data : UpdatePlayerProfilePayload, dispatch) => {
         const response = await playerEndpoints.updatePlayerProfileData(data);
-        console.log(response, ":::::::")
         dispatch(setUser(response));
         return response;
     })

@@ -1,5 +1,5 @@
 export type TeamStatus = 'active' | 'blocked' | 'deleted'
-export type playerStatus = "playing" | "sub";
+export type playerStatus = "playing" | "substitute";
 
 
 export interface Team {
@@ -12,7 +12,7 @@ export interface Team {
     membersCount: number;
     state: string;
     city: string;
-    created: string;
+    createdAt: string;
     status: TeamStatus;
     logo: string;
     description?: string;
@@ -24,5 +24,7 @@ export interface Members {
     userId: string;
     firstName : string;
     lastName : string;
+    profile : Record <string, string | number>
     status: playerStatus;
+    profileImage : string;
 }

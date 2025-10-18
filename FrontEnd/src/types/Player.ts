@@ -1,3 +1,4 @@
+import type { playerStatus } from "../components/manager/teams/Types";
 import type { UserProfile } from "./Profile";
 import type { User } from "./User";
 
@@ -44,4 +45,13 @@ export interface PlayerCardProps {
     isSelected: boolean;
     swapMode: boolean;
     compact?: boolean;
+}
+
+export type TeamPlayer = {
+    id: string;
+    name: string;
+    position: string;
+    jerseyNumber: number;
+    status: playerStatus;
+    profileImage: string;
 }

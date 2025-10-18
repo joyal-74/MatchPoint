@@ -32,7 +32,8 @@ export interface Members {
     lastName : string;
     profileImage : string;
     status: playerStatus;
-    approvalStatus : playerJoinStatus
+    approvalStatus : playerJoinStatus;
+    profile : Record<string, string | number | boolean | null>;
 }
 
 export interface Filters {
@@ -41,4 +42,11 @@ export interface Filters {
     city?: string;
     phase?: "recruiting" | "active" | "completed";
     maxPlayers?: number;
+}
+
+export type totalTeamResponse = {
+    pendingTeams : Team[];
+    approvedTeams : Team[];
+    totalApprovedTeams : number;
+    totalPendingTeams : number;
 }

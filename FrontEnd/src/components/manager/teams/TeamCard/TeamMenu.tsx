@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from "react";
-import type { EditTeamPayload, TeamStatus } from "../../../../features/manager/managerTypes";
+import type { EditTeamPayload } from "../../../../features/manager/managerTypes";
 import { menuItems } from "./TeamMenuItems";
 import type { ColorScheme } from "./teamColors";
+import type { TeamStatus } from "../Types";
+import { useNavigate } from "react-router-dom";
 
 export type MenuAction = 'manage' | 'edit' | 'delete';
 
 export interface TeamMenuProps {
-    onAction: (action: MenuAction) => void;
     teamId: string;
     onEdit: (payload: EditTeamPayload) => void;
     onDelete: (teamId: string) => void;
@@ -23,7 +24,6 @@ export interface TeamMenuProps {
 }
 
 export default function TeamMenu({
-    onAction,
     teamId,
     onEdit,
     onDelete,
@@ -40,6 +40,11 @@ export default function TeamMenu({
 }: TeamMenuProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
+
+    const handleManageMember = () => {
+        navigate(`/manager/team/${teamId}/manage`)
+    }
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -64,8 +69,10 @@ export default function TeamMenu({
             case 'delete':
                 onDelete(teamId);
                 break;
+            case 'manage':
+                handleManageMember();
+                break;
             default:
-                onAction(action);
                 break;
         }
     };

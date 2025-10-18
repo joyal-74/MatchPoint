@@ -2,13 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AdminLayout from "../layout/AdminLayout";
 import DataTable from "../../components/admin/DataTable";
-import type { User } from "../../features/admin/users/userTypes";
 import { fetchManagers, userStatusChange } from "../../features/admin/users/userThunks";
 import type { RootState, AppDispatch } from "../../app/store";
 import { useDebounce } from "../../hooks/useDebounce";
 import { managerColumns } from "../../utils/adminColumns";
 import type { SignupRole } from "../../types/UserRoles";
 import type { GetAllUsersParams } from "../../types/api/Params";
+import type { User } from "../../types/User";
 
 const ManagersManagement = () => {
     const dispatch = useDispatch<AppDispatch>();

@@ -10,6 +10,7 @@ import TeamsTab from "./TeamsTab";
 export type TabType = "info" | "teams" | "fixtures" | "matches" | "results" | "groups" | "leaderboard";
 
 export interface RegisteredTeam {
+    _id : string;
     name: string;
     captain: string;
     registeredOn: string;

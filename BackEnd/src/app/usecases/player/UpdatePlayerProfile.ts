@@ -31,7 +31,9 @@ export class UpdatePlayerProfile implements IUpdatePlayerProfile {
             validData.logo = fileKey;
         }
 
-        const player = await this._playerService.updateUserProfile(validData.userId, validData);
+        const {userId, ...data} = validData
+
+        const player = await this._playerService.updateUserProfile(userId, data);
         if(!player) throw new NotFoundError('Player not found')
 
         this._logger.info("Player profile successfully updated")

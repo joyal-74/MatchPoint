@@ -34,7 +34,11 @@ const teamsSlice = createSlice({
 
         setSelectedTeam: (state, action: PayloadAction<Team>) => {
             state.selectedTeam = action.payload;
-        }
+        },
+
+        clearSelectedTeam: (state) => {
+            state.selectedTeam = null;
+        },
     },
     extraReducers: builder => {
         builder
@@ -84,5 +88,5 @@ const teamsSlice = createSlice({
     },
 });
 
-export const { setPage, setSelectedTeam } = teamsSlice.actions;
+export const { setPage, setSelectedTeam, clearSelectedTeam } = teamsSlice.actions;
 export default teamsSlice.reducer;

@@ -30,6 +30,7 @@ const DataTable = <T extends { _id: string; status?: string }>({
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4 sm:gap-0">
                 <div className="w-full sm:w-auto">
                     <SearchBar
+                        placeholder={"Search for players"}
                         value={localSearchTerm}
                         onChange={handleSearch}
                     />
@@ -39,11 +40,10 @@ const DataTable = <T extends { _id: string; status?: string }>({
                         <button
                             key={f}
                             onClick={() => onFilterChange(f)}
-                            className={`px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm transition-colors flex-shrink-0 ${
-                                currentFilter === f
+                            className={`px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm transition-colors flex-shrink-0 ${currentFilter === f
                                     ? "bg-[var(--color-primary)] text-white"
                                     : "bg-[var(--color-background-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-primary-light)] hover:text-white"
-                            }`}
+                                }`}
                         >
                             {f}
                         </button>
@@ -103,10 +103,10 @@ const DataTable = <T extends { _id: string; status?: string }>({
                                         : col.accessor
                                             ? (row[col.accessor] as React.ReactNode)
                                             : null;
-                                    
+
                                     // Skip empty values to save space
                                     if (!value && value !== 0) return null;
-                                    
+
                                     return (
                                         <div key={col.id} className="flex flex-col space-y-1">
                                             <span className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wide">

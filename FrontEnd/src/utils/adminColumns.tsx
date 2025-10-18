@@ -1,9 +1,8 @@
 import StatusBadge from "../components/ui/StatusBadge";
 import ViewButton from "../components/ui/ViewButton";
 import StatusButton from "../components/ui/StatusButton";
-import type { User } from "../features/admin/users/userTypes";
 import type { SignupRole } from "../types/UserRoles";
-import type { Player } from "../types/Player";
+import type { User } from "../types/User";
 
 export const viewerColumns = (handleStatusChange: (role: SignupRole, id: string, newStatus: boolean) => void) => [
     {
@@ -14,7 +13,7 @@ export const viewerColumns = (handleStatusChange: (role: SignupRole, id: string,
     {
         id: "customer",
         label: "Customer",
-        render: (row: User) => `${row.first_name} ${row.last_name}`
+        render: (row: User) => `${row.firstName} ${row.lastName}`
     },
     {
         id: "email",
@@ -58,7 +57,7 @@ export const managerColumns = (handleStatusChange: (role: SignupRole, id: string
     {
         id: "customer",
         label: "Customer",
-        render: (row: User) => `${row.first_name} ${row.last_name}`
+        render: (row: User) => `${row.firstName} ${row.lastName}`
     },
     {
         id: "email",
@@ -94,10 +93,10 @@ export const managerColumns = (handleStatusChange: (role: SignupRole, id: string
 
 
 export const playerColumns = (handleStatusChange: (role: SignupRole, id: string, newStatus: boolean) => void) => [
-    { id: "id", label: "ID", accessor: "userId" },
-    { id: "name", label: "Player", render: (row: User) => `${row.first_name} ${row.last_name}` },
-    { id: "email", label: "Email", accessor: "email" },
-    { id: "sport", label: "Sport", render: (row: Player) => `${row.sport}` },
+    { id: "id", label: "ID", accessor: "userId" as keyof User },
+    { id: "name", label: "Player", render: (row: User) => `${row.firstName} ${row.lastName}` as keyof User },
+    { id: "email", label: "Email", accessor: "email" as keyof User },
+    { id: "sport", label: "Sport", render: (row: User) => `${row.sport}` },
     {
         id: "memberSince", label: "Member Since", render: (row: User) => new Date(row.createdAt).toLocaleDateString()
     },

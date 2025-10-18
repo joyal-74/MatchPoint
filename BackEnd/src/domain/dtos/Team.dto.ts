@@ -98,3 +98,10 @@ export interface Filters {
     phase?: "recruiting" | "active" | "completed";
     maxPlayers?: number;
 }
+
+export interface PlayerTeamResponseDTO {
+    approvedTeams : TeamDataSummary[];
+    pendingTeams : TeamDataSummary[];
+    totalApprovedTeams : number;
+    totalPendingTeams : number;
+}

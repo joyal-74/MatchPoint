@@ -1,11 +1,12 @@
-import type { Player } from "../../../pages/manager/ManageMembers";
+import type { TeamPlayer } from "../../../types/Player";
 import { PlayerAvatar } from "../../ui/PlayerAvatar";
 import { PlayerMenu } from "../../ui/player/PlayerMenu";
 import { PlayerStatusBadge } from "../../ui/player/PlayerStatusBadge";
 
+
 export interface PlayerCardProps {
-    player: Player;
-    onAction: (action: "swap" | "makeSubstitute" | "makeActive" | "view", player: Player) => void;
+    player: TeamPlayer;
+    onAction: (action: "swap" | "makeSubstitute" | "makeActive" | "view", player: TeamPlayer) => void;
     isSelected: boolean;
     swapMode: boolean;
     compact?: boolean;
@@ -30,7 +31,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, onAction, isSelected, s
             <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center space-x-4">
                     <PlayerAvatar
-                        jerseyNumber={player.jerseyNumber}
+                        profileImage={player.profileImage}
                         status={player.status}
                     />
                     <div>
@@ -41,16 +42,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, onAction, isSelected, s
                 {!swapMode && <PlayerMenu player={player} onAction={onAction} />}
             </div>
 
-            <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="flex items-center">
-                    Performance: {player.performance}%
-                </div>
-                <div className="flex items-center">
-                    Joined: {new Date(player.joinDate).toLocaleDateString()}
-                </div>
-            </div>
-
-            <div className="mt-2 flex justify-between items-center">
+            <div className="mt-2 flex justify-end items-center">
                 <PlayerStatusBadge status={player.status} />
             </div>
         </div>

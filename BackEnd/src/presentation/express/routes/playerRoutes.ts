@@ -18,6 +18,8 @@ router.get('/teams', expressAdapter(playerTeamController.getAllTeams))
 
 router.get('/teams/:playerId/:status', expressAdapter(playerTeamController.getMyTeams))
 
+router.get('/teams/:playerId', expressAdapter(playerTeamController.getAllMyTeams))
+
 router.get('/team/:teamId/details', expressAdapter(playerTeamController.getTeamDetails))
 
 router.post('/:teamId/join', expressAdapter(playerTeamController.joinTeams))

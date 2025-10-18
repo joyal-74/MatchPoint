@@ -8,7 +8,6 @@ interface TeamsGridProps {
     handlers: {
         edit: (teamId: string, updatedData: EditTeamPayload) => void;
         delete: (teamId: string) => void;
-        manage: (teamId: string) => void;
     };
 }
 
@@ -21,7 +20,6 @@ export const TeamsGrid: React.FC<TeamsGridProps> = ({ teams, handlers }) => (
                 {...team}
                 onEdit={(updatedData) => handlers.edit(team._id, updatedData)}
                 onDelete={() => handlers.delete(team._id)}
-                onManageMembers={() => handlers.manage(team._id)}
             />
         ))}
     </div>

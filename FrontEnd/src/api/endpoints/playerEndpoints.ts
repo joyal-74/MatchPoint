@@ -1,6 +1,6 @@
 import { PLAYER_ROUTES } from "../../constants/playerRoutes";
 import axiosClient from "../http/axiosClient";
-import type { Filters, Team } from "../../components/player/Teams/Types";
+import type { Filters, Team, totalTeamResponse } from "../../components/player/Teams/Types";
 import type { UpdatePlayerProfilePayload, UpdateUserDataPayload } from "../../features/manager/managerTypes";
 import type { Player } from "../../types/Player";
 
@@ -37,6 +37,12 @@ export const playerEndpoints = {
 
     getMyTeams: async ({ playerId, status }: { playerId: string, status: string }): Promise<{ teams: Team[], totalTeams: number }> => {
         const { data } = await axiosClient.get(PLAYER_ROUTES.GET_MY_TEAMS(playerId, status))
+        return data.data;
+    },
+
+    getMyAllTeams: async (playerId: string): Promise<totalTeamResponse> => {
+        const { data } = await axiosClient.get(PLAYER_ROUTES.GET_MY_All_TEAMS(playerId))
+        console.log(data.data)
         return data.data;
     },
 

@@ -36,9 +36,7 @@ export default function TeamCard({
 
     const colorScheme = getColorScheme(index);
     const navigate = useNavigate();
-
     const handleView = () => {
-        console.log("clicked")
         navigate(`/player/myteam/${_id}`);
     }
 

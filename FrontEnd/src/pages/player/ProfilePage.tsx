@@ -60,7 +60,7 @@ const PlayerProfilePage: React.FC = () => {
 
     return (
         <PlayerLayout>
-            <div className="min-h-40 bg-[var(--color-background)] min-w-5xl rounded-xl">
+            <div className="min-h-40 bg-[var(--color-background)] max-w-6xl rounded-xl">
                 <ProfileHeader
                     profileData={formData}
                     profileImage={profileImage || formData.profileImage}
@@ -72,7 +72,6 @@ const PlayerProfilePage: React.FC = () => {
                 <div className="py-6">
                     {loading ? <LoadingOverlay show={loading} /> : (
                         <>
-
                             <div className="flex gap-4 items-center justify-end pr-8">
                                 <button
                                     className={activeTab === "user" ? "font-bold text-purple-700" : ""}

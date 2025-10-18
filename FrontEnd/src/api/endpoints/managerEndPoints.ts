@@ -17,8 +17,7 @@ export const managerEndpoints = {
     updateManagerData: async ({ userData, userId }: { userData: FormData; userId: string }): Promise<User> => {
         const { data } = await axiosClient.put(MANAGER_ROUTES.EDIT_DETAILS(userId),
             userData, {
-            headers: { "Content-Type": "multipart/form-data" },
-        }
+            headers: { "Content-Type": "multipart/form-data" },}
         );
 
         return data.data;
@@ -26,6 +25,7 @@ export const managerEndpoints = {
 
     getAllTeams: async (managerId: string): Promise<Team[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_TEAMS(managerId));
+        console.log(data.data)
         return data.data;
     },
 

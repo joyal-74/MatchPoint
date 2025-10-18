@@ -25,21 +25,21 @@ const Sidebar: React.FC = () => {
     ];
 
     return (
-        <aside className="fixed top-15 left-0 h-full w-65 bg-[var(--color-background-secondary)] text-[var(--color-text-primary)] shadow-lg flex flex-col">
+        <aside className="fixed top-15 left-0 h-full w-15 lg:w-65 bg-[var(--color-background-secondary)] text-[var(--color-text-primary)] shadow-lg flex flex-col">
             <nav className="flex-1 mt-4">
                 {menuItems.map((item) => (
                     <NavLink
                         key={item.name}
                         to={item.path}
                         className={({ isActive }) =>
-                            `w-full flex items-center gap-3 pl-20 py-4 text-sm font-medium transition-colors ${isActive
+                            `w-full flex items-center gap-3 pl-5 lg:pl-20 py-4 text-sm font-medium transition-colors ${isActive
                                 ? "text-[var(--color-link-hover)] font-semibold"
                                 : "text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]"
                             }`
                         }
                     >
                         {item.icon}
-                        {item.name}
+                        <span className="hidden lg:inline">{item.name}</span>
                     </NavLink>
                 ))}
             </nav>

@@ -88,7 +88,7 @@ const Navbar: React.FC = () => {
 
                     <div ref={profileRef}>
                         <img
-                            src="https://i.pravatar.cc/40"
+                            src={user?.profileImage || "https://i.pravatar.cc/40"}
                             alt="Profile"
                             className="w-8 h-8 rounded-full border-2 border-[var(--color-border)] hover:border-[var(--color-primary)] transition-colors duration-200 cursor-pointer"
                             onClick={() => setShowProfileCard((prev) => !prev)}
@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
 
                         {showProfileCard && (
                             <div className="absolute right-0 mt-2">
-                                <ProfileCard onAction={handleProfileAction} />
+                                <ProfileCard role={user?.role || 'guest'} onAction={handleProfileAction} />
                             </div>
                         )}
                     </div>

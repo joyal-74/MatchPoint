@@ -1,5 +1,5 @@
 import { ILogger } from "app/providers/ILogger";
-import { IGetAllTeamsUseCase, IGetMyTeamDetailsUseCase, IGetMyTeamsUseCase, IJoinTeamUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
+import { IGetAllMyTeamsUseCase, IGetAllTeamsUseCase, IGetMyTeamDetailsUseCase, IGetMyTeamsUseCase, IJoinTeamUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -12,6 +12,7 @@ export class TeamsController implements IPlayerTeamController {
         private _getAllTeamsUsecase: IGetAllTeamsUseCase,
         private _joinTeamsUsecase: IJoinTeamUseCase,
         private _getmyTeamsUsecase: IGetMyTeamsUseCase,
+        private _getAllMyTeamsUsecase: IGetAllMyTeamsUseCase,
         private _getmyTeamsDetailsUsecase: IGetMyTeamDetailsUseCase,
         private _logger: ILogger
     ) { }
@@ -31,8 +32,6 @@ export class TeamsController implements IPlayerTeamController {
     joinTeams = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { teamId, playerId } = httpRequest.body;
 
-        console.log(httpRequest.body, "-----")
-
         this._logger.info(`[TeamController] Join to team Id → playerId=${playerId}`);
 
         const result = await this._joinTeamsUsecase.execute(playerId, teamId);
@@ -46,6 +45,18 @@ export class TeamsController implements IPlayerTeamController {
         this._logger.info(`[TeamController] Join to team Id → playerId=${playerId}`);
 
         const result = await this._getmyTeamsUsecase.execute(playerId, status);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team fetched successfully", result));
+    }
+
+    getAllMyTeams = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { playerId } = httpRequest.params;
+
+        this._logger.info(`[TeamController] Join to team Id → playerId=${playerId}`);
+
+        const result = await this._getAllMyTeamsUsecase.execute(playerId);
+
+        console.log(result, "=====")
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team fetched successfully", result));
     }

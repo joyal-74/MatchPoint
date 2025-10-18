@@ -1,11 +1,11 @@
-import ProfileHeader from "../../shared/ProfileHeader";
-import ProfileForm from "../../shared/ProfileForm";
-import ProfileActions from "../../shared/ProfileActions";
-import PremiumCard from "../../shared/PremiumCard";
-import ManagerLayout from "../../../pages/layout/ManagerLayout";
-import LoadingOverlay from "../../shared/LoadingOverlay";
-import ProfileError from "./ProfileError";
-import { useProfile } from "../../../hooks/manager/useProfile";
+import ProfileHeader from "../../components/shared/ProfileHeader";
+import ProfileForm from "../../components/shared/ProfileForm";
+import ProfileActions from "../../components/shared/ProfileActions";
+import PremiumCard from "../../components/shared/PremiumCard";
+import ManagerLayout from "../layout/ManagerLayout";
+import LoadingOverlay from "../../components/shared/LoadingOverlay";
+import ProfileError from "../../components/manager/profile/ProfileError";
+import { useProfile } from "../../hooks/manager/useProfile";
 
 const ProfilePage: React.FC = () => {
     const {
@@ -39,7 +39,7 @@ const ProfilePage: React.FC = () => {
 
     return (
         <ManagerLayout>
-            <div className="min-h-40 bg-[var(--color-background)] w-6xl rounded-xl">
+            <div className="min-h-40 bg-[var(--color-background)] max-w-6xl rounded-xl">
                 <ProfileHeader
                     profileData={formData}
                     profileImage={profileImage || formData.profileImage}
@@ -69,7 +69,7 @@ const ProfilePage: React.FC = () => {
                             )}
 
                             {!isEditing && (
-                                <div className="mt-8 max-w-5xl mx-auto">
+                                <div className="mt-8 mx-8">
                                     <PremiumCard />
                                 </div>
                             )}

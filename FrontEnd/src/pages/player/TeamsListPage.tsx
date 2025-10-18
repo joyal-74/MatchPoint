@@ -10,7 +10,9 @@ import type { playerJoinStatus } from "../../features/player/playerTypes";
 const TeamsListPage: React.FC = () => {
     const { status } = useParams<{ status: playerJoinStatus }>();
     const [currentStatus, setCurrentStatus] = useState<playerJoinStatus>(status || "approved");
-    const { teams, loading } = usePlayerTeams(currentStatus);
+    const { approvedTeams, pendingTeams, loading } = usePlayerTeams(currentStatus);
+
+    const teams = currentStatus === "approved" ? approvedTeams : pendingTeams;
 
     const navigate = useNavigate();
 
@@ -28,7 +30,7 @@ const TeamsListPage: React.FC = () => {
                     <div className="flex justify-between items-center mb-6">
                         <div>
                             <h2 className="text-xl font-semibold mb-2">My Teams</h2>
-                            <p className="text-neutral-400">{teams.length} {status === "approved" ? "approved" : "pending"} teams </p>
+                            <p className="text-neutral-400">{teams?.length || 0} {status === "approved" ? "approved" : "pending"} teams </p>
                         </div>
                         <div className="flex gap-2">
                             <button
@@ -52,10 +54,10 @@ const TeamsListPage: React.FC = () => {
                         </div>
                     </div>
 
-                    {teams.length === 0 && !loading ? (
+                    {(teams?.length === 0 || 0) && !loading ? (
                         <EmptyTeams onExplore={() => navigate('/player/teams')} />
                     ) : (
-                        <TeamsGrid teams={Array.isArray(teams) ? teams : []} onLeft={() => console.log('left')} />
+                        <TeamsGrid teams={teams || []} onLeft={() => console.log('left')} />
                     )}
                 </section>
             </div>

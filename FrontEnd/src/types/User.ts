@@ -34,9 +34,9 @@ export interface User {
     role: UserRole;
     wallet: number;
     settings: UserSettings;
-    isActive?: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 

@@ -1,5 +1,6 @@
 import { X, MapPin, Users, Trophy, Calendar, Target } from 'lucide-react';
 import type { Team } from './Types';
+import { useAppSelector } from '../../../hooks/hooks';
 
 interface TeamModalProps {
     team: Team;
@@ -9,6 +10,13 @@ interface TeamModalProps {
 }
 
 const TeamModal: React.FC<TeamModalProps> = ({ team, isOpen, onClose, onSubmit }) => {
+    const { approvedTeams, pendingTeams } = useAppSelector(state => state.player);
+
+    let status: 'joined' | 'pending' | 'none' = 'none';
+    if (approvedTeams.some(t => t._id === team._id)) status = 'joined';
+    else if (pendingTeams.some(t => t._id === team._id)) status = 'pending';
+
+
     if (!isOpen) return null;
 
     return (
@@ -139,12 +147,26 @@ const TeamModal: React.FC<TeamModalProps> = ({ team, isOpen, onClose, onSubmit }
 
                     {/* Actions */}
                     <div className="flex">
-                        <button className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-medium transition-colors duration-200 shadow-lg hover:shadow-emerald-500/25"
+                        <button
                             onClick={onSubmit}
+                            disabled={status !== 'none'}
+                            className={`flex-1 py-3 rounded-xl font-medium transition-colors duration-200 shadow-lg
+                                 ${status === 'joined'
+                                    ? "bg-gray-400 cursor-not-allowed shadow-none"
+                                    : status === 'pending'
+                                        ? "bg-amber-500/90 text-white cursor-not-allowed shadow-none"
+                                        : "bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg hover:shadow-emerald-500/25"
+                                }`}
                         >
-                            Join Team
+                            {status === 'joined'
+                                ? 'Already Joined'
+                                : status === 'pending'
+                                    ? 'Request Pending'
+                                    : 'Join Team'}
                         </button>
+
                     </div>
+
                 </div>
             </div>
         </div>
