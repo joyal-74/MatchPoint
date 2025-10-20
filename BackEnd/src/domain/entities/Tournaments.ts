@@ -10,11 +10,14 @@ export type Contact = {
 
 export interface TournamentTeam {
     teamId: string;
+    teamName: string;
+    logo: string;
     captainId: string;
     managerId: string;
     paymentStatus: paymentStatus;
     paymentId?: string | null;
 }
+
 
 export interface Tournament {
     _id: string;

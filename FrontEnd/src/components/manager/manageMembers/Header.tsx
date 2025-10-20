@@ -1,38 +1,23 @@
-import type { Player, Team } from "../../../pages/manager/ManageMembers";
+import type { Team } from "../teams/Types";
 
 interface HeaderProps {
     team: Team;
     playersCount: number;
-    swapMode: boolean;
-    selectedPlayer: Player | null;
-    cancelSwap: () => void;
 }
 
-export function Header({
-    team,
-    playersCount,
-    swapMode,
-    selectedPlayer,
-    cancelSwap,
-}: HeaderProps) {
+export function Header({ team, playersCount }: HeaderProps) {
     return (
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-8">
             <div>
-                <h1 className="text-2xl font-semibold">Manage Team Members</h1>
-                <p className="text-neutral-400">
-                    {team.name} • {playersCount}/{team.maxPlayers} Players
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-neutral-300 bg-clip-text text-transparent">
+                    Manage Your Team
+                </h1>
+                <p className="text-neutral-400 mt-2">
+                    {team?.name} • {playersCount}/{team?.maxPlayers || 0} Players
                 </p>
             </div>
-            <div className="flex gap-3">
-                {swapMode && selectedPlayer && (
-                    <button
-                        onClick={cancelSwap}
-                        className="text-red-500 hover:underline text-sm font-medium transition-colors"
-                    >
-                        Cancel Swap
-                    </button>
-                )}
-                <button className="bg-emerald-600 py-2 px-4 rounded-xl text-white hover:underline text-sm font-medium transition-colors">
+            <div className="flex gap-3 items-center">
+                <button className="bg-gradient-to-r from-emerald-500 to-green-600 py-2 px-3 rounded-xl text-white text-sm font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all">
                     Add Player +
                 </button>
             </div>

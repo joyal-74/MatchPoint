@@ -6,11 +6,14 @@ interface PlayerAvatarProps {
     size?: "sm" | "md";
 }
 
-const statusColorMap = {
-    active: "bg-green-500",
-    sub: "bg-yellow-500",
-    bench: "bg-red-500",
+const statusColorMap: Record<string, string> = {
+    active: "text-green-500",
+    sub: "text-yellow-400",
+    bench: "text-gray-400",
+    playing: "text-green-400",
+    substitute: "text-yellow-400",
 };
+
 
 export function PlayerAvatar({ profileImage, status, size = "md" }: PlayerAvatarProps) {
     const dimension = size === "sm" ? "w-10 h-10" : "w-14 h-14";

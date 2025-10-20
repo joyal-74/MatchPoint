@@ -10,9 +10,6 @@ export class ApprovePlayerUseCase implements IApprovePlayerUseCase {
     ) { }
 
     async execute(teamId: string, playerId: string): Promise<TeamDataFull> {
-
-        console.log(teamId, playerId);
-
         if (!playerId || !teamId) {
             throw new BadRequestError("playerId and teamId are required");
         }

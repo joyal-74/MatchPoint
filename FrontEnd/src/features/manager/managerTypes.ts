@@ -58,9 +58,9 @@ export interface TournamentCard {
     title: string;
     description: string;
     sport: string;
-    startDate: Date;
-    endDate: Date;
-    regDeadline: Date;
+    startDate: string;
+    endDate: string;
+    regDeadline: string;
     location: string;
     maxTeams: number;
     minTeams: number;
@@ -86,9 +86,9 @@ export type TournamentRegister = {
     title: string;
     sport: string;
     description: string;
-    startDate: Date;
-    endDate: Date;
-    regDeadline: Date;
+    startDate: string;
+    endDate: string;
+    regDeadline: string;
     location: string;
     maxTeams: number;
     minTeams: number;
@@ -104,4 +104,32 @@ export type TournamentUpdate = TournamentRegister & { _id: string }
 export interface PaymentUrls {
     success: string;
     cancel: string;
+}
+
+
+export type FixtureFormat = 'knockout' | 'league' | 'friendly';
+export type MatchStatus = 'ongoing' | 'completed' | 'upcoming' | "bye";
+
+export interface Match {
+    matchNumber: number;
+    teamA: string;
+    teamB: string | null;
+    round?: number;
+    date?: Date;
+    status: MatchStatus;
+    result?: {
+        teamAScore: number;
+        teamBScore: number;
+    };
+    winner: string;
+}
+
+
+
+export interface Fixture {
+    _id?: string;
+    tournamentId: string;
+    format: FixtureFormat;
+    matches: Match[];
+    createdAt?: Date;
 }

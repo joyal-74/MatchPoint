@@ -1,4 +1,4 @@
-import { Filters, PlayerApprovalStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "domain/dtos/Team.dto";
+import { Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "domain/dtos/Team.dto";
 
 export interface ITeamRepository {
     findByName(name: string): Promise<TeamData | null>;
@@ -8,6 +8,7 @@ export interface ITeamRepository {
     findAll(managerId: string): Promise<TeamDataFull[]>;
     togglePlayerStatus(teamId: string, playerId: string): Promise<TeamDataFull | null>;
     playerTeamStatus(teamId: string, playerId: string, status : PlayerApprovalStatus): Promise<TeamDataFull | null>;
+    playerPlayingStatus(teamId: string, playerId: string, status : playerStatus): Promise<TeamDataFull | null>;
     create(teamData: TeamRegister): Promise<TeamData>;
     addMember(teamId: string, userId: string, playerId: string): Promise<TeamData>;
     update(teamId: string, updates: Partial<TeamRegister>): Promise<TeamData>;

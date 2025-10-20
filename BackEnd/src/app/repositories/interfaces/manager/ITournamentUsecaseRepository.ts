@@ -1,4 +1,6 @@
-import { Tournament, TournamentTeam } from "domain/entities/Tournaments";
+import { TournamentTeamData } from "domain/dtos/Tournament";
+import { Fixture } from "domain/entities/Fixture";
+import { Tournament } from "domain/entities/Tournaments";
 
 export interface IGetMyTournaments {
     execute(managerId: string): Promise<Tournament[]>;
@@ -42,5 +44,18 @@ export interface IUpdateTournamentTeam {
 }
 
 export interface IGetRegisteredTeams {
-    execute(tournamentId: string): Promise<TournamentTeam[]>;
+    execute(tournamentId: string): Promise<TournamentTeamData[]>;
+}
+
+
+export interface IGetTournamentFixtures {
+    execute(tournamentId: string): Promise<Fixture>;
+}
+
+export interface ICreateTournamentFixtures {
+    execute(tournamentId: string, data: Fixture): Promise<Fixture>;
+}
+
+export interface ITournamentRegistrationValidator {
+    execute(tournamentId: string, teamId: string): Promise<void>;
 }

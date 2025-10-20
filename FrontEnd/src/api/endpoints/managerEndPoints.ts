@@ -3,7 +3,7 @@ import type { RegisteredTeam } from "../../components/manager/tournaments/Tourna
 import type { TournamentFormData, updateTournamentFormData } from "../../components/manager/tournaments/TournamentModal/types";
 import type { PaymentInitiateResponse } from "../../components/manager/tournaments/Types";
 import { MANAGER_ROUTES } from "../../constants/managerRoutes";
-import type { Tournament, TournamentRegister, TournamentUpdate } from "../../features/manager/managerTypes";
+import type { Fixture, Tournament, TournamentRegister, TournamentUpdate } from "../../features/manager/managerTypes";
 import type { User } from "../../types/User";
 import axiosClient from "../http/axiosClient";
 import { TournamentMapper } from "../mappers/TournamentMapper";
@@ -16,9 +16,7 @@ export const managerEndpoints = {
 
     updateManagerData: async ({ userData, userId }: { userData: FormData; userId: string }): Promise<User> => {
         const { data } = await axiosClient.put(MANAGER_ROUTES.EDIT_DETAILS(userId),
-            userData, {
-            headers: { "Content-Type": "multipart/form-data" },}
-        );
+            userData, { headers: { "Content-Type": "multipart/form-data" } });
 
         return data.data;
     },
@@ -99,6 +97,7 @@ export const managerEndpoints = {
 
     getRegisteredTeams: async (tournamentId: string): Promise<RegisteredTeam[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.REGISTERED_TEAMS(tournamentId));
+        console.log(data.data)
         return data.data;
     },
 
@@ -110,5 +109,20 @@ export const managerEndpoints = {
     approvePlayerRequest: async ({ teamId, playerId }: { teamId: string; playerId: string }): Promise<RegisteredTeam[]> => {
         const { data } = await axiosClient.post(MANAGER_ROUTES.APPROVE_PLAYER(playerId), { teamId, playerId });
         return data.data;
-    }
+    },
+
+    updatePlayerStatus: async ({ teamId, playerId, status }: { teamId: string; playerId: string, status: string }): Promise<void> => {
+        const { data } = await axiosClient.patch(MANAGER_ROUTES.UPDATE_PLAYER(playerId), { teamId, playerId, status });
+        return data.data;
+    },
+
+    createTournamentFixtures: async ({ tournamentId, fixturesData }: { tournamentId: string, fixturesData: Fixture }): Promise<Fixture[]> => {
+        const { data } = await axiosClient.post(MANAGER_ROUTES.CREATE_FIXTURE(tournamentId), { fixturesData });
+        return data.data
+    },
+
+    getTournamentFixtures: async (tournamentId: string): Promise<Fixture[]> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.GET_FIXTURES(tournamentId));
+        return data.data
+    },
 }

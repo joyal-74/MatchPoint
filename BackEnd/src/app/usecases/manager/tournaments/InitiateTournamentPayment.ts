@@ -2,7 +2,7 @@ import { ILogger } from "app/providers/ILogger";
 import { IPaymentProvider } from "app/providers/IPaymentProvider";
 import { ITournamentRepository } from "app/repositories/interfaces/ITournamentRepository";
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
-import { IInitiateTournamentPayment } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { IInitiateTournamentPayment, ITournamentRegistrationValidator } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
 import { BadRequestError, NotFoundError } from "domain/errors";
 
 
@@ -14,7 +14,8 @@ export class InitiateTournamentPayment implements IInitiateTournamentPayment {
         private _registrationRepo: IRegistrationRepository,
         private _logger: ILogger,
         private _razorpayProvider: IPaymentProvider,
-        private _walletProvider: IPaymentProvider
+        private _walletProvider: IPaymentProvider,
+        private _validator: ITournamentRegistrationValidator
     ) {
         this.providers = {
             razorpay: _razorpayProvider,
@@ -26,13 +27,13 @@ export class InitiateTournamentPayment implements IInitiateTournamentPayment {
         const tournament = await this._tournamentRepo.findById(tournamentId);
         if (!tournament) throw new NotFoundError('Tournament not found');
 
-
         const existingRegistration = await this._registrationRepo.findByTournamentAndTeam(tournamentId, teamId);
         if (existingRegistration) throw new BadRequestError('Team already registered');
 
+        await this._validator.execute(tournamentId, teamId);
+
         const entryFee = parseFloat(tournament.entryFee);
         if (isNaN(entryFee) || entryFee <= 0) throw new BadRequestError('Invalid entry fee');
-
 
         const registration = await this._registrationRepo.create({
             tournamentId,

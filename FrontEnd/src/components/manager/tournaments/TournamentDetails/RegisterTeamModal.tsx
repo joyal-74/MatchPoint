@@ -40,6 +40,7 @@ export default function RegisterTeamModal({ show, onClose, entryFee, tournament,
 
     const selectedTeamData = teams.find(team => team._id === selectedTeam);
     const availablePlayers = selectedTeamData?.members || [];
+    console.log(availablePlayers, "_------____")
 
     async function loadRazorpayScript(): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -178,7 +179,7 @@ export default function RegisterTeamModal({ show, onClose, entryFee, tournament,
                             >
                                 <option value="">Choose a player as Captain</option>
                                 {availablePlayers.map((player) => (
-                                    <option key={player.playerId} value={player.playerId}>
+                                    <option key={player.userId} value={player.userId}>
                                         {`${player.firstName} ${player.lastName}`}
                                     </option>
                                 ))}
@@ -186,7 +187,7 @@ export default function RegisterTeamModal({ show, onClose, entryFee, tournament,
                         </div>
                     )}
 
-                    {/* Payment Method */}
+
                     <div>
                         <label className="block text-sm font-medium text-neutral-300 mb-3">
                             Payment Method

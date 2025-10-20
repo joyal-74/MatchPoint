@@ -6,15 +6,15 @@ export interface IGetAllTeamsUseCase {
 }
 
 export interface IAddTeamUseCase {
-    execute(teamData: TeamRegister, file : File): Promise<TeamData>;
+    execute(teamData: TeamRegister, file: File): Promise<TeamData>;
 }
 
 export interface IEditTeamUseCase {
-    execute(teamData: TeamRegister, teamId : string, file : File): Promise<TeamData>;
+    execute(teamData: TeamRegister, teamId: string, file: File): Promise<TeamData>;
 }
 
 export interface IChangeTeamStatusUseCase {
-    execute(teamId : string): Promise<string>;
+    execute(teamId: string): Promise<string>;
 }
 
 export interface IChangePlayerStatusUseCase {
@@ -23,6 +23,10 @@ export interface IChangePlayerStatusUseCase {
 
 export interface IApprovePlayerUseCase {
     execute(teamId: string, playerId: string): Promise<TeamDataFull>;
+}
+
+export interface ISwapPlayers {
+    execute(teamId: string, playerId: string, status: string): Promise<void>;
 }
 
 export interface IRejectPlayerUseCase {

@@ -13,7 +13,10 @@ import { WalletProvider } from "infra/providers/WalletProvider";
 import { WinstonLogger } from "infra/providers/WinstonLogger";
 import { TournamentIdGenerator } from "infra/providers/IdGenerator";
 import { walletRepository } from "presentation/composition/shared/providers";
-import { registrationRepository, tournamentRepository } from "presentation/composition/shared/repositories";
+import { fixturesRepository, registrationRepository, tournamentRepository } from "presentation/composition/shared/repositories";
+import { tournamentRegistrationServices } from "../shared/services";
+import { GetTournamentFixtures } from "app/usecases/manager/tournaments/fixtures/GetTournamentFixtures";
+import { CreateTournamentFixtures } from "app/usecases/manager/tournaments/fixtures/CreateTournamentFixtures";
 
 
 const logger = new WinstonLogger();
@@ -38,9 +41,12 @@ const initiatePayment = new InitiateTournamentPayment(
     registrationRepository,
     logger,
     razorpayProvider,
-    walletProvider
+    walletProvider,
+    tournamentRegistrationServices
 );
 const updateTournamentTeam = new UpdateTournamentTeam(tournamentRepository, registrationRepository, logger);
+const getFixtures = new GetTournamentFixtures(fixturesRepository, logger)
+const createFixtures = new CreateTournamentFixtures(tournamentRepository, fixturesRepository, logger)
 
 export const tournamentManagementController = new TournamentController(
     getMyTournaments,
@@ -52,5 +58,7 @@ export const tournamentManagementController = new TournamentController(
     initiatePayment,
     updateTournamentTeam,
     getRegisteredTeams,
+    getFixtures,
+    createFixtures,
     logger
 );

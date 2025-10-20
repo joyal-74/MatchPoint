@@ -1,7 +1,7 @@
 import { PlayerProfileType } from "./Sports.dto";
 
 export type TeamStatus = 'active' | 'blocked' | 'deleted'
-export type playerStatus = "playing" | "sub";
+export type playerStatus = "playing" | "substitute";
 export type PlayerApprovalStatus = "pending" | "approved" | "rejected";
 export type TeamPhase = "recruiting" | "active" | "competing" | "completed" | "inactive";
 export type statsType = {

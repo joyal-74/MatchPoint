@@ -1,8 +1,5 @@
-import {
-    Info, UserCog, CalendarDays, Swords, Trophy as TrophyIcon,
-    UsersRound, BarChart3
-} from "lucide-react";
-import type { TabType } from "./TournamentDetails";
+import { Info, UserCog, CalendarDays, Swords, Trophy as TrophyIcon, UsersRound, BarChart3 } from "lucide-react";
+import type { TabType } from "./tabs/TabContent";
 
 
 interface TournamentTabsProps {
@@ -32,8 +29,8 @@ export default function TournamentTabs({ activeTab, onTabChange }: TournamentTab
                                 key={tab.id}
                                 onClick={() => onTabChange(tab.id)}
                                 className={`flex items-center gap-2 px-4 py-3 rounded-xl transition-all duration-200 whitespace-nowrap ${activeTab === tab.id
-                                        ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg"
-                                        : "text-neutral-400 hover:text-white hover:bg-neutral-700/50"
+                                    ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg"
+                                    : "text-neutral-400 hover:text-white hover:bg-neutral-700/50"
                                     }`}
                             >
                                 <IconComponent size={18} />

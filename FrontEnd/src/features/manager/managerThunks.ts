@@ -58,3 +58,8 @@ export const rejectPlayerRequest = createAsyncThunk(
     "manager/approvePlayerRequest",
     createApiThunk(managerEndpoints.rejectPlayerRequest)
 );
+
+export const updatePlayerStatus  = createAsyncThunk(
+    "manager/updatePlayerStatus",
+    createApiThunk(managerEndpoints.updatePlayerStatus)
+);

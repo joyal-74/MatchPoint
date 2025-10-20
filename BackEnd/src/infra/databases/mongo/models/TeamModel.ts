@@ -38,7 +38,7 @@ const TeamSchema = new Schema<TeamDocument>({
         type: [{
             playerId: { type: Schema.Types.ObjectId, ref: "Player" },
             userId: { type: Schema.Types.ObjectId, ref: "User" },
-            status: { type: String, enum: ["playing", "sub"], default: "sub" },
+            status: { type: String, enum: ["playing", "substitute"], default: "substitute" },
             approvalStatus: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" }
         }],
         default: []

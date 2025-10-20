@@ -5,7 +5,8 @@ import {
     IChangeTeamStatusUseCase,
     IEditTeamUseCase,
     IGetAllTeamsUseCase,
-    IRejectPlayerUseCase
+    IRejectPlayerUseCase,
+    ISwapPlayers
 } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -27,6 +28,7 @@ export class TeamController implements ITeamController {
         private _changeStatusUsecase: IChangePlayerStatusUseCase,
         private _approvetoTeamUsecase: IApprovePlayerUseCase,
         private _rejectfromTeamUsecase: IRejectPlayerUseCase,
+        private _swapPlayersUsecase: ISwapPlayers,
         private _logger: ILogger,
     ) { }
 
@@ -157,5 +159,16 @@ export class TeamController implements ITeamController {
         const result = await this._rejectfromTeamUsecase.execute(teamId, playerId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Player rejected successfully", result));
+    }
+
+
+    swapPlayers = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { teamId, playerId, status } = httpRequest.body;
+
+        this._logger.info(`[TeamController] reject player from team Id → teamId=${teamId}`);
+
+        await this._swapPlayersUsecase.execute(teamId, playerId, status);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Player swapped successfully"));
     }
 }

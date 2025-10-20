@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Navbar from "../../Navbar";
-import TournamentHeader from "./TournamentHeader";
-import TournamentTabs from "./TournamentTabs";
+import Navbar from "../../components/manager/Navbar";
+import TournamentHeader from "../../components/manager/tournaments/TournamentDetails/TournamentHeader";
+import TournamentTabs from "../../components/manager/tournaments/TournamentDetails/TournamentTabs";
 import { ArrowLeft } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "../../../../hooks/hooks";
-import type { RootState } from "../../../../app/store";
-import { fetchTournament, getRegisteredTeams } from "../../../../features/manager/Tournaments/tournamentThunks";
-import LoadingOverlay from "../../../shared/LoadingOverlay";
-import { renderTabContent, type TabType } from "./tabs/TabContent";
-import RegisterTeamModal from "./RegisterTeamModal";
-import { getAllTeams } from "../../../../features/manager";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import type { RootState } from "../../app/store";
+import { fetchTournament, getRegisteredTeams } from "../../features/manager/Tournaments/tournamentThunks";
+import LoadingOverlay from "../../components/shared/LoadingOverlay";
+import { renderTabContent, type TabType } from "../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
+import RegisterTeamModal from "../../components/manager/tournaments/TournamentDetails/RegisterTeamModal";
+import { getAllTeams } from "../../features/manager";
 
 export default function TournamentDetailsPage() {
     const navigate = useNavigate();
@@ -23,6 +23,10 @@ export default function TournamentDetailsPage() {
 
     const { teams, fetched, loading: teamsLoading } = useAppSelector(state => state.manager);
     const { user } = useAppSelector(state => state.auth);
+
+    const isAlreadyRegistered = registeredTeams.some(reg =>
+        teams.some(team => reg.teamId === team._id)
+    );
 
     if (!user) throw new Error('User not found')
 
@@ -65,10 +69,11 @@ export default function TournamentDetailsPage() {
                 <TournamentHeader
                     tournamentData={selectedTournament}
                     type={type!}
+                    isRegistered={isAlreadyRegistered}
                     onClick={() => setShowModal(true)}
                 />
                 <TournamentTabs activeTab={activeTab} onTabChange={setActiveTab} />
-                <div className="animate-fade-in">{renderTabContent(selectedTournament, registeredTeams, activeTab)}</div>
+                <div className="animate-fade-in">{renderTabContent(selectedTournament, registeredTeams, activeTab, type!)}</div>
             </div>
 
             <RegisterTeamModal

@@ -11,6 +11,7 @@ import { teamRepository } from "presentation/composition/shared/repositories";
 import { GetMyTeamDetails } from "app/usecases/manager/GetMyTeamDetails";
 import { ApprovePlayerUseCase } from "app/usecases/manager/teams/ApprovePlayer";
 import { RejectPlayerUseCase } from "app/usecases/manager/teams/RejectPlayer";
+import { SwapPlayers } from "app/usecases/manager/teams/SwapPlayers";
 
 
 const logger = new WinstonLogger();
@@ -25,6 +26,7 @@ const getTeamDetails = new GetMyTeamDetails(teamRepository, logger);
 const changeTeamStatus = new ChangePlayerStatusUseCase(teamRepository);
 const approveToTeam = new ApprovePlayerUseCase(teamRepository);
 const rejectFromTeam = new RejectPlayerUseCase(teamRepository);
+const swapPlayersUC = new SwapPlayers(teamRepository,logger);
 
 export const teamManagementController = new TeamController(
     addNewTeam,
@@ -35,5 +37,6 @@ export const teamManagementController = new TeamController(
     changeTeamStatus,
     approveToTeam,
     rejectFromTeam,
+    swapPlayersUC,
     logger
 );

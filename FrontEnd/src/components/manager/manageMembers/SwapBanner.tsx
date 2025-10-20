@@ -1,7 +1,7 @@
-import type { Player } from "../../../pages/manager/ManageMembers";
+import type { TeamPlayer } from "../../../types/Player";
 
 interface SwapBannerProps {
-    player: Player;
+    player: TeamPlayer;
     cancelSwap: () => void;
 }
 

@@ -4,17 +4,20 @@ import { TournamentDocument } from "infra/databases/mongo/models/TournamentModel
 export class TournamentMongoMapper {
     static toDomain(t: TournamentDocument): Tournament {
         const obj = t.toObject();
-        
-        const managerId = obj.managerId._id.toString();
-        const organizer = `${obj.managerId.first_name} ${obj.managerId.last_name}`;
+
+        const manager = obj.managerId || {};
+        const managerId = manager._id ? manager._id.toString() : null;
+        const organizer = manager.firstName && manager.lastName
+            ? `${manager.firstName} ${manager.lastName}`
+            : 'Unknown Organizer';
         const contact = {
-            email: obj.managerId.email,
-            phone: obj.managerId.phone,
+            email: manager.email || '',
+            phone: manager.phone || '',
         };
 
         return {
             ...obj,
-             _id: obj._id.toString(),
+            _id: obj._id.toString(),
             managerId,
             organizer,
             contact,

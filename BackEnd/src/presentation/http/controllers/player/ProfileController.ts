@@ -33,9 +33,9 @@ export class PlayerProfileController implements IProfileController {
         const file = httpRequest.file;
 
         console.log(userData)
-        console.log(playerId)
+        console.log(file)
 
-        this._logger.info(`Updating profile for player ID: ${playerId}`, { body: userData, file });
+        this._logger.info(`Updating profile for player ID: ${playerId}`);
 
         const player = await this._profileUpdateUsecase.execute({ ...userData, userId :playerId }, file);
 

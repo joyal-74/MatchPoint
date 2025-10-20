@@ -10,20 +10,21 @@ import TeamsTab from "./TeamsTab";
 export type TabType = "info" | "teams" | "fixtures" | "matches" | "results" | "groups" | "leaderboard";
 
 export interface RegisteredTeam {
-    _id : string;
+    _id: string;
+    teamId: string;
     name: string;
     captain: string;
-    registeredOn: string;
+    createdAt: string;
 }
 
-export const renderTabContent = (selectedTournament: Tournament, registeredTeams: RegisteredTeam[], activeTab: TabType) => {
+export const renderTabContent = (selectedTournament: Tournament, registeredTeams: RegisteredTeam[], activeTab: TabType, type: "manage" | "explore") => {
     switch (activeTab) {
         case "info":
             return <InfoTab tournamentData={selectedTournament} registeredTeams={registeredTeams} />;
         case "teams":
             return <TeamsTab registeredTeams={registeredTeams} />;
         case "fixtures":
-            return <FixturesTab />;
+            return <FixturesTab type={type} />;
         case "matches":
             return <MatchesTab />;
         case "results":

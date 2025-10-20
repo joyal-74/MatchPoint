@@ -1,13 +1,14 @@
-import type { Player } from "../../../pages/manager/ManageMembers";
+import type { TeamPlayer } from "../../../types/Player";
 import PlayerCard from "./PlayerCard";
 
 interface SubProps {
-    substitutePlayers: Player[];
-    selectedPlayer: Player | null;
+    substitutePlayers: TeamPlayer[];
+    selectedPlayer: TeamPlayer | null;
     swapMode: boolean;
+    cancelSwap: () => void;
     handlePlayerAction: (
         action: "swap" | "makeSubstitute" | "makeActive" | "view",
-        player: Player
+        player: TeamPlayer
     ) => void;
 }
 
@@ -15,6 +16,7 @@ export function SubstitutePlayersSection({
     substitutePlayers,
     selectedPlayer,
     swapMode,
+    cancelSwap,
     handlePlayerAction,
 }: SubProps) {
     return (
@@ -31,7 +33,7 @@ export function SubstitutePlayersSection({
                     <p className="text-neutral-500 text-sm">No substitute players</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {substitutePlayers.map((player) => (
                         <PlayerCard
                             key={player.id}
@@ -39,7 +41,8 @@ export function SubstitutePlayersSection({
                             onAction={handlePlayerAction}
                             isSelected={selectedPlayer?.id === player.id}
                             swapMode={swapMode}
-                            compact
+                            cardStyle={'substitution'}
+                            cancelSwap={cancelSwap}
                         />
                     ))}
                 </div>

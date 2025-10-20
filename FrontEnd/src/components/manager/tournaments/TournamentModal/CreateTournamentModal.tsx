@@ -27,7 +27,7 @@ export default function CreateTournamentModal({ isOpen, onClose, managerId, onSh
         const { name, value } = e.target;
 
         if (name === "rules") {
-            setRulesText(value); // ✅ keep rules as string
+            setRulesText(value);
             return;
         }
 
@@ -41,7 +41,7 @@ export default function CreateTournamentModal({ isOpen, onClose, managerId, onSh
 
     const handleClose = () => {
         setFormData(initialFormData(managerId));
-        setRulesText(""); // ✅ reset rules text
+        setRulesText("");
         onClose();
     };
 

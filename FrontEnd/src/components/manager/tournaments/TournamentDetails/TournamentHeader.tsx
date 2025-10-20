@@ -5,9 +5,10 @@ interface TournamentHeaderProps {
     tournamentData: Tournament,
     type: "manage" | "explore";
     onClick?: () => void;
+    isRegistered? : boolean;
 }
 
-export default function TournamentHeader({ tournamentData, type, onClick }: TournamentHeaderProps) {
+export default function TournamentHeader({ tournamentData, type, onClick, isRegistered }: TournamentHeaderProps) {
     return (
         <div className="bg-gradient-to-br from-green-900/20 to-emerald-800/10 backdrop-blur-sm rounded-2xl border border-green-700/30 p-6 mb-6">
             <div className="flex justify-between items-start">
@@ -43,11 +44,21 @@ export default function TournamentHeader({ tournamentData, type, onClick }: Tour
                             </button>
                         </>
                     ) : (
-                        <button
-                            className="px-5 py-2.5 text-sm font-medium rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
-                            onClick={onClick}>
-                            Register
-                        </button>
+                        isRegistered ? (
+                            <button
+                                disabled
+                                className="px-5 py-2.5 text-sm font-medium rounded-lg bg-green-600/30 text-green-300 border border-green-500/30 cursor-not-allowed"
+                            >
+                                Registered
+                            </button>
+                        ) : (
+                            <button
+                                className="px-5 py-2.5 text-sm font-medium rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
+                                onClick={onClick}
+                            >
+                                Register
+                            </button>
+                        )
                     )}
                 </div>
             </div>

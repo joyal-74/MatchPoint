@@ -1,7 +1,7 @@
 import { ILogger } from "app/providers/ILogger";
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
 import { IGetRegisteredTeams } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
-import { TournamentTeam } from "domain/entities/Tournaments";
+import { TournamentTeamData } from "domain/dtos/Tournament";
 import { BadRequestError } from "domain/errors";
 
 export class GetRegisteredTeams implements IGetRegisteredTeams {
@@ -10,7 +10,7 @@ export class GetRegisteredTeams implements IGetRegisteredTeams {
         private _logger: ILogger,
     ) { }
 
-    async execute(tournamentId: string): Promise<TournamentTeam[]> {
+    async execute(tournamentId: string): Promise<TournamentTeamData[]> {
         if (!tournamentId) {
             throw new BadRequestError("Tournament ID is required");
         }

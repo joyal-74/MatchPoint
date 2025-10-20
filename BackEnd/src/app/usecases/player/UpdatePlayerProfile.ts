@@ -28,7 +28,8 @@ export class UpdatePlayerProfile implements IUpdatePlayerProfile {
 
         if (file) {
             const fileKey = await this._fileStorage.upload(file);
-            validData.logo = fileKey;
+            console.log(fileKey)
+            validData.profileImage = fileKey;
         }
 
         const {userId, ...data} = validData

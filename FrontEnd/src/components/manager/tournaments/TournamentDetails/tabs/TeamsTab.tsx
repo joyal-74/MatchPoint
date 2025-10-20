@@ -32,7 +32,7 @@ export default function TeamsTab({ registeredTeams }: TeamsTabProps) {
                         </div>
                         <div className="text-sm text-neutral-400">
                             <div>Captain: {team.captain}</div>
-                            <div>Registered: {team.registeredOn}</div>
+                            <div>Registered: {new Date(team.createdAt).toLocaleDateString()}</div>
                         </div>
                     </div>
                 ))}

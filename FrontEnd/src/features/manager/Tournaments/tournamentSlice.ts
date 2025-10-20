@@ -10,15 +10,17 @@ import {
     verifyTournamentPayment,
     getRegisteredTeams,
 } from "./tournamentThunks";
-import type { Tournament } from "../managerTypes";
+import type { Fixture, Tournament } from "../managerTypes";
 import type { RegisteredTeam } from "../../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
 
 interface ManagerTournamentState {
     myTournaments: Tournament[];
     exploreTournaments: Tournament[];
     selectedTournament: Tournament | null;
-    registeredTeams : RegisteredTeam[],
-    paymentStatus : boolean;
+    registeredTeams: RegisteredTeam[],
+    fixtures : Fixture | null,
+    fixturesLoading : boolean,
+    paymentStatus: boolean;
     loading: boolean;
     error: string | null;
 }
@@ -27,8 +29,10 @@ const initialState: ManagerTournamentState = {
     myTournaments: [],
     exploreTournaments: [],
     selectedTournament: null,
-    registeredTeams :[],
-    paymentStatus : false,
+    fixtures: null,
+    fixturesLoading: false,
+    registeredTeams: [],
+    paymentStatus: false,
     loading: false,
     error: null,
 };

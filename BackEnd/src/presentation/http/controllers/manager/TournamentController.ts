@@ -8,7 +8,9 @@ import {
     IGetMyTournaments,
     IGetTournamentDetails,
     IUpdateTournamentTeam,
-    IGetRegisteredTeams
+    IGetRegisteredTeams,
+    IGetTournamentFixtures,
+    ICreateTournamentFixtures
 } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -27,7 +29,9 @@ export class TournamentController implements ITournamentController {
         private _tournamentsDetailsUsecase: IGetTournamentDetails,
         private _entryFeePaymentUsecase: IInitiateTournamentPayment,
         private _updateTournamenTeamUsecase: IUpdateTournamentTeam,
-        private _tournamenTeamsUsecase: IGetRegisteredTeams,
+        private _tournamentTeamsUsecase: IGetRegisteredTeams,
+        private _getFixturesUsecase: IGetTournamentFixtures,
+        private _createFixturesUsecase: ICreateTournamentFixtures,
         private _logger: ILogger
     ) { }
 
@@ -70,7 +74,7 @@ export class TournamentController implements ITournamentController {
         this._logger.info(`[TournamentController] addNewTournament → managerId=${tournamentData.managerId}`);
         const result = await this._addTournamentsUsecase.execute(tournamentData);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournament added successfully", result));
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Tournament added successfully", result));
     };
 
     /**
@@ -153,8 +157,25 @@ export class TournamentController implements ITournamentController {
     getTournamentTeams = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentId = httpRequest.params.tournamentId;
 
-        const result = await this._tournamenTeamsUsecase.execute(tournamentId);
+        const result = await this._tournamentTeamsUsecase.execute(tournamentId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Registered teams fetched successfully", result));
     };
+
+    getTournamentFixtures = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const tournamentId = httpRequest.params.tournamentId;
+
+        const result = await this._getFixturesUsecase.execute(tournamentId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Fixtures fetched successfully", result));
+    }
+
+    createTournamentFixtures = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const tournamentId = httpRequest.params.tournamentId;
+        const tournamentData = httpRequest.body.data
+
+        const result = await this._createFixturesUsecase.execute(tournamentId, tournamentData);
+
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Fixtures fetched successfully", result));
+    }
 }
