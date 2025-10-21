@@ -29,6 +29,7 @@ export class CreateTournamentFixtures implements ICreateTournamentFixtures {
         }
 
         const existingFixtures = await this._fixturesRepo.findByTournamentId(tournamentId);
+        console.log("-----", existingFixtures)
         if (existingFixtures) {
             this._logger.warn(`Fixtures already exist for tournament ${tournamentId}`);
             throw new BadRequestError("Fixtures already created for this tournament");

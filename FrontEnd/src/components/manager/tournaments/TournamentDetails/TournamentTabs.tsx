@@ -19,9 +19,9 @@ const tabs = [
 
 export default function TournamentTabs({ activeTab, onTabChange }: TournamentTabsProps) {
     return (
-        <div className="mb-8">
+        <div className="mb-3">
             <div className="flex">
-                <div className="flex justify-between w-full bg-neutral-800/30 backdrop-blur-sm rounded-2xl border border-neutral-700/50 p-2">
+                <div className="flex justify-between w-full bg-neutral-800/30 backdrop-blur-sm rounded-2xl border border-neutral-700/50 p-1">
                     {tabs.map((tab) => {
                         const IconComponent = tab.icon;
                         return (

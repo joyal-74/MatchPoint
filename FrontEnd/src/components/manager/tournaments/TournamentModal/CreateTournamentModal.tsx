@@ -6,24 +6,40 @@ import { formats, initialFormData, sports } from "./constants";
 import FormInput from "./FormInput";
 import ModalHeader from "../../../shared/modal/ModalHeader";
 import FormActions from "../../../shared/modal/FormActions";
+import MapPicker from "../../../shared/MapPicker";
+import { validateTournamentForm } from "../../../../validators/validateTournamentForm";
 
-export default function CreateTournamentModal({ isOpen, onClose, managerId, onShowPrizeInfo }: CreateTournamentModalProps) {
+
+export default function CreateTournamentModal({
+    isOpen,
+    onClose,
+    managerId,
+    onShowPrizeInfo,
+}: CreateTournamentModalProps) {
     const dispatch = useAppDispatch();
     const [formData, setFormData] = useState<TournamentFormData>(initialFormData(managerId));
     const [rulesText, setRulesText] = useState("");
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const formattedData = {
             ...formData,
-            rules: rulesText.split("\n").map(r => r.trim()).filter(r => r),
+            rules: rulesText.split("\n").map((r) => r.trim()).filter((r) => r),
         };
+
+        const { isValid, errors: validationErrors } = validateTournamentForm(formattedData);
+        setErrors(validationErrors);
+
+        if (!isValid) return;
 
         dispatch(createTournament({ formData: formattedData, managerId }));
         handleClose();
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    ) => {
         const { name, value } = e.target;
 
         if (name === "rules") {
@@ -31,17 +47,19 @@ export default function CreateTournamentModal({ isOpen, onClose, managerId, onSh
             return;
         }
 
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: name.includes("Teams") || name === "prizePool"
-                ? Number(value)
-                : value
+            [name]:
+                name.includes("Teams") || name === "prizePool"
+                    ? Number(value)
+                    : value,
         }));
     };
 
     const handleClose = () => {
         setFormData(initialFormData(managerId));
         setRulesText("");
+        setErrors({});
         onClose();
     };
 
@@ -53,11 +71,11 @@ export default function CreateTournamentModal({ isOpen, onClose, managerId, onSh
         { label: "Tournament Start Date", type: "date", name: "startDate" },
         { label: "Tournament End Date", type: "date", name: "endDate" },
         { label: "Registration Deadline", type: "date", name: "regDeadline" },
-        { label: "Location", type: "text", name: "location", placeholder: "Enter tournament location" },
         { label: "Max Participants", type: "number", name: "maxTeams", placeholder: "Maximum number of teams", min: "2" },
         { label: "Min Participants", type: "number", name: "minTeams", placeholder: "Minimum number of teams", min: "2" },
-        { label: "Entry Fee", type: "number", name: "entryFee", placeholder: "Enter minimum entry fee", min: "0" },
         { label: "Tournament Format", type: "select", name: "format", options: formats },
+        { label: "Entry Fee", type: "number", name: "entryFee", placeholder: "Enter minimum entry fee", min: "0" },
+        { label: "Players per Team", type: "number", name: "playersPerTeam", placeholder: "Enter number of players per team", min: "2" }
     ];
 
     return (
@@ -74,13 +92,16 @@ export default function CreateTournamentModal({ isOpen, onClose, managerId, onSh
                     <form onSubmit={handleSubmit} className="p-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             {fields.map((field) => (
-                                <FormInput
-                                    key={field.name}
-                                    {...field}
-                                    value={formData[field.name as keyof TournamentFormData]}
-                                    onChange={handleChange}
-                                    required
-                                />
+                                <div key={field.name}>
+                                    <FormInput
+                                        {...field}
+                                        value={formData[field.name as keyof TournamentFormData]}
+                                        onChange={handleChange}
+                                    />
+                                    {errors[field.name] && (
+                                        <p className="text-xs text-red-500 mt-1">{errors[field.name]}</p>
+                                    )}
+                                </div>
                             ))}
                         </div>
 
@@ -95,16 +116,39 @@ export default function CreateTournamentModal({ isOpen, onClose, managerId, onSh
                         </div>
 
                         <div className="mt-6">
+                            <label className="block text-sm font-medium text-gray-300 mb-1">
+                                Tournament Location
+                            </label>
+                            <MapPicker
+                                onSelectLocation={(data) => {
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        location: data.address,
+                                        latitude: data.lat,
+                                        longitude: data.lng,
+                                    }));
+                                }}
+                            />
+                            {formData.location && (
+                                <p className="text-sm text-yellow-400 mt-1">
+                                    {formData.location}
+                                </p>
+                            )}
+                        </div>
+
+
+                        <div className="mt-6">
                             <FormInput
                                 label="Rules"
                                 type="textarea"
                                 name="rules"
-                                value={rulesText} // ✅ controlled by separate state
+                                value={rulesText}
                                 onChange={handleChange}
                                 placeholder="Rules about the tournament"
                                 rows={3}
                             />
                         </div>
+
                         <p className="text-xs text-green-400 mt-1">
                             Enter each rule on a separate line. Each line will become an individual rule.
                         </p>
@@ -118,7 +162,6 @@ export default function CreateTournamentModal({ isOpen, onClose, managerId, onSh
                                 onChange={handleChange}
                                 placeholder="Description about the tournament"
                                 rows={3}
-                                required
                             />
                         </div>
 

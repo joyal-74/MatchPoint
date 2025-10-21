@@ -24,9 +24,9 @@ export function validateManagerUpdate(data, file?: File) {
 
     // File validation
     if (file) {
-        const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+        const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
         if (!allowedTypes.includes(file.type)) {
-            errors.file = "Invalid file type. Only PNG/JPG allowed";
+            errors.file = "Invalid file type. Only PNG/JPG/webp allowed";
         }
     }
 

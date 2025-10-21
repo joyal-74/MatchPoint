@@ -1,15 +1,16 @@
 import { Schema, model } from 'mongoose';
 
 const matchSchema = new Schema({
-    homeTeam: { type: Schema.Types.ObjectId, ref: "Team", required: true },
-    awayTeam: { type: Schema.Types.ObjectId, ref: "Team" },
+    teamA: { type: Schema.Types.ObjectId, ref: "Team", required: true },
+    teamB: { type: Schema.Types.ObjectId, ref: "Team" },
     round: Number,
     date: Date,
     status: { type: String, enum: ["upcoming", "completed", "bye"], default: "upcoming" },
     result: {
-        homeScore: Number,
-        awayScore: Number,
+        teamAScore: Number,
+        teamBScore: Number,
     },
+    winner : {type : String, default : ''}
 });
 
 const fixtureSchema = new Schema({

@@ -54,7 +54,7 @@ export default function TournamentDetailsPage() {
     return (
         <>
             <Navbar />
-            <div className="min-h-screen bg-neutral-900 text-white p-8 mt-10 mx-12">
+            <div className="min-h-screen bg-neutral-900 text-white p-8 mt-12 mx-12">
                 <div className="flex items-center gap-4 mb-6">
                     <button
                         onClick={() => navigate(-1)}

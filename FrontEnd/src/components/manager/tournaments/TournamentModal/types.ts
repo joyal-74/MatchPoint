@@ -5,18 +5,22 @@ export interface TournamentFormData {
     managerId: string;
     description: string;
     sport: string;
-    startDate: Date;
-    endDate: Date;
-    regDeadline: Date;
+    startDate: string;
+    endDate: string;
+    regDeadline: string;
     location: string;
+    latitude?: number;
+    longitude?: number;
     maxTeams: number;
     minTeams: number;
     currTeams: number;
     entryFee: string;
     format: Formats;
     prizePool: number;
-    rules : string[];
+    playersPerTeam: number;
+    rules: string[];
 }
+
 
 export interface CreateTournamentModalProps {
     isOpen: boolean;

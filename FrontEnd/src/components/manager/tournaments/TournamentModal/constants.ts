@@ -9,17 +9,20 @@ export const initialFormData = (managerId: string): TournamentFormData => ({
     managerId,
     description: "",
     sport: "",
-    startDate: new Date(),
-    endDate: new Date(),
-    regDeadline : new Date(),
+    startDate: '',
+    endDate: '',
+    regDeadline: '',
     location: "",
+    latitude: undefined,
+    longitude: undefined,
     maxTeams: 0,
     minTeams: 0,
     currTeams: 0,
     entryFee: "",
     format: 'knockout',
     prizePool: 0,
-    rules : []
+    playersPerTeam: 0,
+    rules: []
 });
 
 export const initialEditFormData = (managerId: string, id: string): updateTournamentFormData => ({
@@ -29,18 +32,21 @@ export const initialEditFormData = (managerId: string, id: string): updateTourna
     managerId,
     description: "",
     sport: "",
-    startDate: new Date(),
-    regDeadline: new Date(),
-    endDate: new Date(),
+    startDate: "",
+    regDeadline: "",
+    endDate: "",
     location: "",
+    latitude: undefined,
+    longitude: undefined,
     maxTeams: 0,
     minTeams: 0,
     currTeams: 0,
     entryFee: "",
     format: 'knockout',
     prizePool: 0,
+    playersPerTeam: 0,
     status: 'ongoing',
-    rules : []
+    rules: []
 });
 
 
@@ -55,12 +61,15 @@ export const mapTournamentToFormData = (tournament: Tournament): updateTournamen
     endDate: tournament.endDate,
     regDeadline: tournament.regDeadline,
     location: tournament.location,
+    latitude: tournament.latitude,
+    longitude: tournament.longitude,
     maxTeams: tournament.maxTeams,
     minTeams: tournament.minTeams,
     currTeams: tournament.minTeams,
     entryFee: tournament.entryFee,
     format: tournament.format,
     prizePool: tournament.prizePool,
+    playersPerTeam: tournament.playersPerTeam,
     status: tournament.status,
-    rules : tournament.rules
+    rules: tournament.rules
 });

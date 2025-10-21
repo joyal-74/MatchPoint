@@ -9,6 +9,8 @@ import {
     paymentInitiate,
     verifyTournamentPayment,
     getRegisteredTeams,
+    getTournamentFixtures,
+    createTournamentFixtures,
 } from "./tournamentThunks";
 import type { Fixture, Tournament } from "../managerTypes";
 import type { RegisteredTeam } from "../../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
@@ -18,8 +20,8 @@ interface ManagerTournamentState {
     exploreTournaments: Tournament[];
     selectedTournament: Tournament | null;
     registeredTeams: RegisteredTeam[],
-    fixtures : Fixture | null,
-    fixturesLoading : boolean,
+    fixtures: Fixture | null,
+    fixturesLoading: boolean,
     paymentStatus: boolean;
     loading: boolean;
     error: string | null;
@@ -50,7 +52,7 @@ const managerTournamentSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        // ---------------- My Tournaments ----------------
+        // My Tournaments
         builder
             .addCase(getMyTournaments.pending, (state) => {
                 state.loading = true;
@@ -65,7 +67,7 @@ const managerTournamentSlice = createSlice({
                 state.error = action.payload as string;
             });
 
-        // ---------------- Explore Tournaments ----------------
+        // Explore Tournaments
         builder
             .addCase(getExploreTournaments.pending, (state) => {
                 state.loading = true;
@@ -113,7 +115,7 @@ const managerTournamentSlice = createSlice({
                 state.error = action.payload as string;
             });
 
-        // ---------------- Edit Tournament ----------------
+        // Edit Tournament
         builder
             .addCase(editTournament.pending, (state) => {
                 state.loading = true;
@@ -146,6 +148,7 @@ const managerTournamentSlice = createSlice({
                 state.error = action.payload as string;
             });
 
+        // payment start
         builder
             .addCase(paymentInitiate.pending, (state) => {
                 state.loading = true;
@@ -163,6 +166,7 @@ const managerTournamentSlice = createSlice({
                 state.error = action.payload as string;
             });
 
+        // Payment verification
         builder
             .addCase(verifyTournamentPayment.pending, (state) => {
                 state.loading = true;
@@ -177,6 +181,7 @@ const managerTournamentSlice = createSlice({
                 state.error = action.payload as string;
             });
 
+        // Get registered teams
         builder
             .addCase(getRegisteredTeams.pending, (state) => {
                 state.loading = true;
@@ -188,6 +193,37 @@ const managerTournamentSlice = createSlice({
             })
             .addCase(getRegisteredTeams.rejected, (state, action) => {
                 state.loading = false;
+                state.error = action.payload as string;
+            });
+        
+        // get tournament fixtures
+        builder
+            .addCase(getTournamentFixtures.pending, (state) => {
+                state.fixturesLoading = true;
+                state.error = null;
+            })
+            .addCase(getTournamentFixtures.fulfilled, (state, action) => {
+                state.fixtures = action.payload;
+                state.fixturesLoading = false;
+            })
+            .addCase(getTournamentFixtures.rejected, (state, action) => {
+                state.fixturesLoading = false;
+                state.error = action.payload as string;
+            });
+
+        // create tournment fixtures
+        builder
+            .addCase(createTournamentFixtures.pending, (state) => {
+                state.fixturesLoading = true;
+                state.error = null;
+            })
+            .addCase(createTournamentFixtures.fulfilled, (state) => {
+                state.fixturesLoading = false;
+                state.error = null;
+
+            })
+            .addCase(createTournamentFixtures.rejected, (state, action) => {
+                state.fixturesLoading = false;
                 state.error = action.payload as string;
             });
     },

@@ -37,6 +37,7 @@ export interface UserRegister {
     firstName: string;
     lastName: string;
     username: string;
+    phone: string;
     gender: GenderType;
     password: string;
     settings: UserSettings;

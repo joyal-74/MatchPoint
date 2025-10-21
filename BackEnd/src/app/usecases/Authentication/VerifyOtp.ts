@@ -6,12 +6,12 @@ import { IVerifyOtpUseCase } from "app/repositories/interfaces/IAuthenticationUs
 
 export class VerifyOtp implements IVerifyOtpUseCase {
     constructor(
-        private userRepository: IUserRepository,
-        private otpRepository: IOtpRepository
+        private _userRepository: IUserRepository,
+        private _otpRepository: IOtpRepository
     ) { }
 
     async execute(email: string, otp: string, context: OtpContext) {
-        const otpRecord = await this.otpRepository.findOtpByEmail(email);
+        const otpRecord = await this._otpRepository.findOtpByEmail(email);
         if (!otpRecord) {
             throw new NotFoundError("OTP not found or expired");
         }
@@ -21,10 +21,10 @@ export class VerifyOtp implements IVerifyOtpUseCase {
         }
 
         if (context === OtpContext.VerifyEmail) {
-            await this.userRepository.update(otpRecord.userId, { isVerified: true });
+            await this._userRepository.update(otpRecord.userId, { isVerified: true });
         }
 
-        await this.otpRepository.deleteOtp(otpRecord.userId, context);
+        await this._otpRepository.deleteOtp(otpRecord.userId, context);
 
         return {
             success: true,

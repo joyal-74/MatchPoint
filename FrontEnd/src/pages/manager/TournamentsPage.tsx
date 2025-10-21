@@ -87,7 +87,6 @@ export default function TournamentsPage() {
                     onLearnMore={() => setIsInfoModalOpen(true)}
                 />
 
-                {/* Modals */}
                 <CreateTournamentModal
                     isOpen={isCreateModalOpen}
                     managerId={managerId!}

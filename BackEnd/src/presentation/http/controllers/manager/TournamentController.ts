@@ -172,7 +172,9 @@ export class TournamentController implements ITournamentController {
 
     createTournamentFixtures = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentId = httpRequest.params.tournamentId;
-        const tournamentData = httpRequest.body.data
+        const tournamentData = httpRequest.body.fixturesData;
+
+        console.log(httpRequest.body, " body")
 
         const result = await this._createFixturesUsecase.execute(tournamentId, tournamentData);
 

@@ -3,6 +3,9 @@
 @import "tailwindcss";
 @import "./themes.css";
 
+@import "leaflet/dist/leaflet.css";
+
+
 .font-rowdies {
     font-family: 'rowdies';
 }

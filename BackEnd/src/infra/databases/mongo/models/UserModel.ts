@@ -18,7 +18,7 @@ const UserSchema = new Schema<UserDocument>({
     username: { type: String, unique: true, sparse: true, trim: true, },
     password: { type: String },
     bio: { type: String },
-    phone: { type: String },
+    phone: { type: String, required : true },
     gender: { type: String, enum: GenderValues },
     role: { type: String, enum: RoleValues, required: true },
     refreshToken: { type: String, default: null },

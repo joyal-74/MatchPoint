@@ -45,6 +45,7 @@ export class SignupManager implements IManagerSignupUseCase {
             password: hashedPassword,
             username: `user-${Date.now()}`,
             wallet: 0,
+            phone : validData.phone,
             isActive: true,
             isVerified: false,
             settings: {

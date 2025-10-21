@@ -30,11 +30,14 @@ export interface Tournament {
     endDate: Date;
     regDeadline: Date;
     location: string;
+    latitude?: number;
+    longitude?: number;
     maxTeams: number;
     minTeams: number;
     currTeams: number;
     entryFee: string;
     prizePool: number;
+    playersPerTeam: number;
     status: Status;
     format: Format;
     organizer: string;
@@ -55,6 +58,7 @@ export interface TournamentRegister {
     maxTeams: number;
     minTeams: number;
     prizePool: number;
+    playersPerTeam: number;
     entryFee: string;
     format: Format;
 }

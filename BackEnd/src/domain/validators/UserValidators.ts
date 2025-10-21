@@ -1,7 +1,7 @@
 import { BadRequestError } from "domain/errors";
 import { Validators } from "./common";
 
-export function validateUserInput(data: any) {
+export function validateUserInput(data) {
     const errors: Record<string, string> = {};
 
     const email = data.email?.trim();

@@ -11,7 +11,7 @@ export default function PaymentFailedPage() {
 
     useEffect(() => {
         if (tournamentId && teamId) {
-            dispatch(verifyTournamentPayment({ tournamentId, teamId, paymentStatus: "failed" }));
+            dispatch(verifyTournamentPayment({ registrationId :tournamentId, teamId, paymentStatus: "failed" }));
         }
     }, [dispatch, tournamentId, teamId]);
 

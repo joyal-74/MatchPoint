@@ -12,8 +12,8 @@ export class FixturesRepositoryMongo implements IFixturesRepository {
         return created;
     }
 
-    async findByTournamentId(tournamentId: string): Promise<Fixture> {
-        const fixtures = await FixtureModel.find({ tournamentId }).lean();
+    async findByTournamentId(tournamentId: string): Promise<Fixture | null> {
+        const fixtures = await FixtureModel.findOne({ tournamentId }).lean();
         return fixtures;
     }
 }

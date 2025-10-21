@@ -1,6 +1,9 @@
+type FormInputType = 'text' | 'number' | 'email' | 'password' | 'tel' | 'url';
+
+
 interface FormInputProps {
     label: string;
-    type?: 'text' | 'number' | 'email' | 'password';
+    type?: FormInputType;
     value: string | number;
     onChange: (value: string) => void;
     placeholder?: string;

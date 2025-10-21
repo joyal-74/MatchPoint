@@ -57,14 +57,14 @@ const BracketMatch = ({
     return (
         <div className="match-wrapper relative">
             <div className={`match-card bg-neutral-800 border rounded-lg p-4 min-w-60 ${match.status === 'completed' ? 'border-green-500/50' :
-                    match.status === 'ongoing' ? 'border-yellow-500/50' :
-                        'border-neutral-600'
+                match.status === 'ongoing' ? 'border-yellow-500/50' :
+                    'border-neutral-600'
                 }`}>
                 <div className="match-header flex justify-between items-center mb-3">
                     <span className="text-sm text-neutral-400">Match {match.matchNumber}</span>
                     <span className={`text-xs px-2 py-1 rounded-full ${match.status === 'completed' ? 'bg-green-500/20 text-green-300' :
-                            match.status === 'ongoing' ? 'bg-yellow-500/20 text-yellow-300' :
-                                'bg-blue-500/20 text-blue-300'
+                        match.status === 'ongoing' ? 'bg-yellow-500/20 text-yellow-300' :
+                            'bg-blue-500/20 text-blue-300'
                         }`}>
                         {match.status}
                     </span>
@@ -122,8 +122,8 @@ const TeamSlot = ({
 
     return (
         <div className={`team-slot flex justify-between items-center px-3 py-2 rounded text-sm transition-all ${isWinner
-                ? 'bg-green-500/20 border border-green-500/30 text-green-300'
-                : 'bg-neutral-700/50 text-white'
+            ? 'bg-green-500/20 border border-green-500/30 text-green-300'
+            : 'bg-neutral-700/50 text-white'
             }`}>
             <span className="team-name font-medium">{getTeamName(team)}</span>
             {score !== undefined && (
@@ -143,8 +143,8 @@ const LeagueFixtures = ({ matches, getTeamName }: { matches: Match[], getTeamNam
                 <div
                     key={index}
                     className={`league-match bg-neutral-800 border rounded-lg p-4 hover:bg-neutral-700/50 transition-colors ${match.status === 'completed' ? 'border-green-500/30' :
-                            match.status === 'ongoing' ? 'border-yellow-500/30' :
-                                'border-neutral-600'
+                        match.status === 'ongoing' ? 'border-yellow-500/30' :
+                            'border-neutral-600'
                         }`}
                 >
                     <div className="flex justify-between items-center">
@@ -171,8 +171,8 @@ const LeagueFixtures = ({ matches, getTeamName }: { matches: Match[], getTeamNam
 
                         <div className="flex flex-col items-end gap-2 ml-4">
                             <span className={`text-xs px-2 py-1 rounded-full ${match.status === 'completed' ? 'bg-green-500/20 text-green-300' :
-                                    match.status === 'ongoing' ? 'bg-yellow-500/20 text-yellow-300' :
-                                        'bg-blue-500/20 text-blue-300'
+                                match.status === 'ongoing' ? 'bg-yellow-500/20 text-yellow-300' :
+                                    'bg-blue-500/20 text-blue-300'
                                 }`}>
                                 {match.status}
                             </span>
@@ -213,27 +213,34 @@ export default function FixturesTab({ type }: FixturesTabProps) {
         if (!selectedTournament) return;
         const format = selectedTournament.format;
         const teams = registeredTeams;
-        let fixturesData: Match[] = [];
+        let matchesData: Match[] = [];
 
         switch (format) {
             case "knockout":
-                fixturesData = generateKnockoutFixtures(teams);
+                matchesData = generateKnockoutFixtures(teams);
                 break;
             case "league":
-                fixturesData = generateLeagueFixtures(teams);
+                matchesData = generateLeagueFixtures(teams);
                 break;
             case "friendly":
-                fixturesData = generateFriendlyFixture(teams);
+                matchesData = generateFriendlyFixture(teams);
                 break;
             default:
                 return toast.error("Unknown tournament format");
         }
 
-        if (fixturesData.length === 0) {
+        if (matchesData.length === 0) {
             return toast.warn("Not enough teams to create fixtures");
         }
 
-        dispatch(createTournamentFixtures({ tournamentId: selectedTournament._id, matches: fixturesData }))
+        const fixturesData = {
+            tournamentId: selectedTournament._id,
+            format: selectedTournament.format,
+            matches: matchesData
+        };
+
+
+        dispatch(createTournamentFixtures({ tournamentId: selectedTournament._id, fixturesData }))
             .unwrap()
             .then(() => toast.success("Fixtures created successfully!"))
             .catch(() => toast.error("Failed to create fixtures"));
@@ -251,7 +258,7 @@ export default function FixturesTab({ type }: FixturesTabProps) {
                     teamB: shuffled[i + 1]._id,
                     round: 1,
                     status: "upcoming",
-                    winner : ''
+                    winner: ''
                 });
             } else {
                 matches.push({
@@ -260,7 +267,7 @@ export default function FixturesTab({ type }: FixturesTabProps) {
                     teamB: null,
                     round: 1,
                     status: "bye",
-                    winner : ''
+                    winner: ''
                 });
             }
         }
@@ -277,7 +284,7 @@ export default function FixturesTab({ type }: FixturesTabProps) {
                     teamA: teams[i]._id,
                     teamB: teams[j]._id,
                     status: "upcoming",
-                    winner : ''
+                    winner: ''
                 });
             }
         }

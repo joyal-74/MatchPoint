@@ -58,7 +58,6 @@ export default function FormInput({
                     required={required}
                     min={min}
                 />
-
             )}
         </div>
     );

@@ -5,10 +5,9 @@ interface EmptyStateProps {
     subtitle: string;
     buttonText?: string;
     onAction?: () => void;
-    // Optional text size classes
-    titleSize?: string;    // e.g., "text-xl", "text-2xl"
-    messageSize?: string;  // e.g., "text-base", "text-lg"
-    subtitleSize?: string; // e.g., "text-sm", "text-xs"
+    titleSize?: string;
+    messageSize?: string;
+    subtitleSize?: string;
 }
 
 export default function EmptyState({
@@ -18,8 +17,8 @@ export default function EmptyState({
     subtitle,
     buttonText,
     onAction,
-    titleSize = "text-2xl",
-    messageSize = "text-lg",
+    titleSize = "text-xl",
+    messageSize = "text-md",
     subtitleSize = "text-sm text-neutral-400"
 }: EmptyStateProps) {
     return (

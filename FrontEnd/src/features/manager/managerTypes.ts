@@ -62,11 +62,14 @@ export interface TournamentCard {
     endDate: string;
     regDeadline: string;
     location: string;
+    latitude: number;
+    longitude: number;
     maxTeams: number;
     minTeams: number;
     currTeams: number;
     entryFee: string;
     prizePool: number;
+    playersPerTeam: number;
     status: Status;
     format: Formats;
     createdAt: Date,
@@ -123,7 +126,6 @@ export interface Match {
     };
     winner: string;
 }
-
 
 
 export interface Fixture {

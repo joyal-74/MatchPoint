@@ -10,7 +10,7 @@ interface TournamentHeaderProps {
 
 export default function TournamentHeader({ tournamentData, type, onClick, isRegistered }: TournamentHeaderProps) {
     return (
-        <div className="bg-gradient-to-br from-green-900/20 to-emerald-800/10 backdrop-blur-sm rounded-2xl border border-green-700/30 p-6 mb-6">
+        <div className="bg-gradient-to-br from-green-900/20 to-emerald-800/10 backdrop-blur-sm rounded-2xl border border-green-700/30 p-6 mb-3">
             <div className="flex justify-between items-start">
                 <div>
                     <h1 className="text-3xl font-bold mb-2">{tournamentData.title}</h1>
