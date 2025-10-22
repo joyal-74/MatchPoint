@@ -15,12 +15,12 @@ export class UpdateTournamentTeam implements IUpdateTournamentTeam {
 
     async execute(registrationId: string, paymentStatus: 'completed' | 'failed', paymentId: string): Promise<Tournament> {
         const registration = await this._registrationRepo.updatePaymentStatus(registrationId, paymentStatus, paymentId);
-        const increment = await this._tournamentRepo.incrementCurrTeams(registration.tournamentId);
+        const increment = await this._tournamentRepo.incrementCurrTeams(registration._id);
         if (increment) {
-            this._logger.info(`Tournament ${registration.tournamentId} currTeams incremented`);
+            this._logger.info(`Tournament ${registration._id} currTeams incremented`);
         }
 
-        const tournament = await this._tournamentRepo.findById(registration.tournamentId);
+        const tournament = await this._tournamentRepo.findById(registration._id);
         if (!tournament) throw new NotFoundError('Tournament not found');
 
         this._logger.info(`Registration ${registrationId} payment updated with status ${paymentStatus}`);

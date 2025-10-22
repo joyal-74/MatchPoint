@@ -7,12 +7,12 @@ import { TournamentTeamMongoMapper } from "infra/utils/mappers/TournamentTeamMon
 
 export class RegistrationRepository implements IRegistrationRepository {
     async create(registration: Omit<Registration, '_id' | 'createdAt' | 'updatedAt'>): Promise<TournamentTeamData> {
-        const team = RegistrationModel.create(registration);
+        const team = await RegistrationModel.create(registration);
         return TournamentTeamMongoMapper.toDomain(team);
     }
 
     async findByTournamentAndTeam(tournamentId: string, teamId: string): Promise<Registration | null> {
-        return RegistrationModel.findOne({ tournamentId, teamId });
+        return await RegistrationModel.findOne({ tournamentId, teamId });
     }
 
     async getTeamsByTournament(tournamentId: string): Promise<TournamentTeamData[]> {
@@ -35,6 +35,6 @@ export class RegistrationRepository implements IRegistrationRepository {
     }
 
     async findByPaymentId(paymentId: string): Promise<Registration | null> {
-        return RegistrationModel.findOne({ paymentId });
+        return await RegistrationModel.findOne({ paymentId });
     }
 }

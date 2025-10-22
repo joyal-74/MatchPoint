@@ -53,7 +53,17 @@ export const createTournamentFixtures  = createAsyncThunk(
     createApiThunk(managerEndpoints.createTournamentFixtures )
 )
 
+export const createTournamentMatches  = createAsyncThunk(
+    "manager/createTournamentMatches ",
+    createApiThunk(managerEndpoints.createTournamentMatches )
+)
+
 export const getTournamentFixtures  = createAsyncThunk(
     "manager/getTournamentFixtures ",
     createApiThunk(managerEndpoints.getTournamentFixtures )
+)
+
+export const getTournamentMatches  = createAsyncThunk(
+    "manager/getTournamentMatches ",
+    createApiThunk(managerEndpoints.getTournamentMatches )
 )

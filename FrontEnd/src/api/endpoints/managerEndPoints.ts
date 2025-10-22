@@ -3,7 +3,7 @@ import type { RegisteredTeam } from "../../components/manager/tournaments/Tourna
 import type { TournamentFormData, updateTournamentFormData } from "../../components/manager/tournaments/TournamentModal/types";
 import type { PaymentInitiateResponse } from "../../components/manager/tournaments/Types";
 import { MANAGER_ROUTES } from "../../constants/managerRoutes";
-import type { Fixture, Tournament, TournamentRegister, TournamentUpdate } from "../../features/manager/managerTypes";
+import type { Fixture, Match, Tournament, TournamentRegister, TournamentUpdate } from "../../features/manager/managerTypes";
 import type { User } from "../../types/User";
 import axiosClient from "../http/axiosClient";
 import { TournamentMapper } from "../mappers/TournamentMapper";
@@ -92,6 +92,7 @@ export const managerEndpoints = {
 
     verifyTournamentPayment: async ({ registrationId, paymentId, paymentStatus }: { registrationId: string, paymentId: string, paymentStatus: string }): Promise<boolean> => {
         const { data } = await axiosClient.post(MANAGER_ROUTES.PAYMENT_STATUS(registrationId), { paymentId, paymentStatus });
+        console.log(data.data, '-----')
         return data.data;
     },
 
@@ -116,13 +117,23 @@ export const managerEndpoints = {
         return data.data;
     },
 
-    createTournamentFixtures: async ({ tournamentId, fixturesData }: { tournamentId: string, fixturesData: Fixture }): Promise<Fixture[]> => {
-        const { data } = await axiosClient.post(MANAGER_ROUTES.CREATE_FIXTURE(tournamentId), { fixturesData });
+    createTournamentMatches: async ({ tournamentId, matchesData }: { tournamentId: string, matchesData: Match[] }): Promise<Match[]> => {
+        const { data } = await axiosClient.post(MANAGER_ROUTES.CREATE_MATCHES(tournamentId), { matchesData });
+        return data.data
+    },
+
+    createTournamentFixtures: async ({ tournamentId, matchIds, format }: { tournamentId: string, matchIds: { matchId: string; round: number }[], format: string }): Promise<Fixture[]> => {
+        const { data } = await axiosClient.post(MANAGER_ROUTES.CREATE_FIXTURE(tournamentId), { matchIds, format });
         return data.data
     },
 
     getTournamentFixtures: async (tournamentId: string): Promise<Fixture> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_FIXTURES(tournamentId));
+        return data.data
+    },
+
+    getTournamentMatches: async (tournamentId: string): Promise<Match[]> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.GET_MATCHES(tournamentId));
         return data.data
     },
 }

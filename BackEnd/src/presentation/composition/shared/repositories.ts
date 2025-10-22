@@ -7,6 +7,7 @@ import { TeamRepositoryMongo } from 'infra/repositories/mongo/TeamRepositoryMong
 import { TournamentRepositoryMongo } from 'infra/repositories/mongo/TournamentRepoMongo';
 import { RegistrationRepository } from 'infra/repositories/mongo/RegistrationRepository';
 import { FixturesRepositoryMongo } from 'infra/repositories/mongo/FixturesRepositoryMongo';
+import { MatchesRepositoryMongo } from 'infra/repositories/mongo/MatchesRepositoryMongo';
 
 export const userRepository = new UserRepositoryMongo();
 export const adminRepository = new AdminRepositoryMongo();
@@ -17,3 +18,4 @@ export const teamRepository = new TeamRepositoryMongo();
 export const tournamentRepository = new TournamentRepositoryMongo();
 export const registrationRepository = new RegistrationRepository();
 export const fixturesRepository = new FixturesRepositoryMongo();
+export const matchRepository = new MatchesRepositoryMongo();

@@ -1,9 +1,15 @@
+import { MatchStatus } from "./Fixture";
+
 export interface Match {
-    id: string;
-    homeTeamId: string;
-    awayTeamId: string;
+    _id: string;
     tournamentId: string;
-    date: Date;
-    venueId?: string;
+    teamA: string;
+    teamB: string;
     round: number;
+    matchNumber: number;
+    status: MatchStatus;
+    venue?: string;
+    date?: Date;
+    winner: string;
+    stats: Record<string, string>
 }

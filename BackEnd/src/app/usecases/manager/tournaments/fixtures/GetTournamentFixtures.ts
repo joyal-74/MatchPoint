@@ -16,7 +16,7 @@ export class GetTournamentFixtures implements IGetTournamentFixtures {
             throw new BadRequestError("Tournament ID is required");
         }
 
-        const fixtures = await this._fixturesRepo.findByTournamentId(tournamentId);
+        const fixtures = await this._fixturesRepo.getFixtureByTournament(tournamentId);
 
         if (!fixtures) {
             this._logger.info(`No fixtures found for tournament ${tournamentId}`);

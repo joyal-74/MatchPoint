@@ -10,7 +10,9 @@ import {
     IUpdateTournamentTeam,
     IGetRegisteredTeams,
     IGetTournamentFixtures,
-    ICreateTournamentFixtures
+    ICreateTournamentFixtures,
+    ICreateMatchesUseCase,
+    IGetTournamentMatches
 } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -32,6 +34,8 @@ export class TournamentController implements ITournamentController {
         private _tournamentTeamsUsecase: IGetRegisteredTeams,
         private _getFixturesUsecase: IGetTournamentFixtures,
         private _createFixturesUsecase: ICreateTournamentFixtures,
+        private _createMatchesUsecase: ICreateMatchesUseCase,
+        private _getMatchesUsecase: IGetTournamentMatches,
         private _logger: ILogger
     ) { }
 
@@ -170,13 +174,30 @@ export class TournamentController implements ITournamentController {
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Fixtures fetched successfully", result));
     }
 
+    getTournamentMatches = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const tournamentId = httpRequest.params.tournamentId;
+
+        const result = await this._getMatchesUsecase.execute(tournamentId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Matches fetched successfully", result));
+    }
+
+    createTournamentMatches = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const tournamentId = httpRequest.params.tournamentId;
+        const matchesData = httpRequest.body.matchesData;
+
+        console.log(httpRequest.body, 'body')
+
+        const result = await this._createMatchesUsecase.execute(tournamentId, matchesData);
+
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Fixtures fetched successfully", result));
+    }
+
     createTournamentFixtures = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentId = httpRequest.params.tournamentId;
-        const tournamentData = httpRequest.body.fixturesData;
+        const { matchIds, format } = httpRequest.body;
 
-        console.log(httpRequest.body, " body")
-
-        const result = await this._createFixturesUsecase.execute(tournamentId, tournamentData);
+        const result = await this._createFixturesUsecase.execute(tournamentId, matchIds, format);
 
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Fixtures fetched successfully", result));
     }

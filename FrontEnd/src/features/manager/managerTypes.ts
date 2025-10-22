@@ -109,29 +109,33 @@ export interface PaymentUrls {
     cancel: string;
 }
 
-
-export type FixtureFormat = 'knockout' | 'league' | 'friendly';
-export type MatchStatus = 'ongoing' | 'completed' | 'upcoming' | "bye";
+export type MatchStatus = "ongoing" | "completed" | "upcoming" | "bye";
 
 export interface Match {
-    matchNumber: number;
+    _id?: string;
+    tournamentId?: string;
     teamA: string;
     teamB: string | null;
-    round?: number;
-    date?: Date;
+    round: number;
+    matchNumber: number;
     status: MatchStatus;
-    result?: {
-        teamAScore: number;
-        teamBScore: number;
-    };
+    venue?: string;
+    date?: Date;
     winner: string;
+    stats: Record<string, any>;
 }
 
+export type FixtureFormat = "knockout" | "league" | "friendly";
+
+export interface FixtureMatch {
+    matchId: string;
+    round: number;
+}
 
 export interface Fixture {
     _id?: string;
     tournamentId: string;
     format: FixtureFormat;
-    matches: Match[];
+    matches: FixtureMatch[];
     createdAt?: Date;
 }

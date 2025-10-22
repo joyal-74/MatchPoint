@@ -1,5 +1,6 @@
 import { TournamentTeamData } from "domain/dtos/Tournament";
 import { Fixture } from "domain/entities/Fixture";
+import { Match } from "domain/entities/Match";
 import { Tournament } from "domain/entities/Tournaments";
 
 export interface IGetMyTournaments {
@@ -52,8 +53,17 @@ export interface IGetTournamentFixtures {
     execute(tournamentId: string): Promise<Fixture>;
 }
 
+export interface IGetTournamentMatches {
+    execute(tournamentId: string): Promise<Match[]>;
+}
+
 export interface ICreateTournamentFixtures {
-    execute(tournamentId: string, data: Fixture): Promise<Fixture>;
+    execute(tournamentId: string, matchIds: { matchId: string; round: number }[], format: string): Promise<Fixture>;
+}
+
+
+export interface ICreateMatchesUseCase {
+    execute(tournamentId: string, matchesData: Match[]): Promise<Match[]>;
 }
 
 export interface ITournamentRegistrationValidator {

@@ -13,10 +13,12 @@ import { WalletProvider } from "infra/providers/WalletProvider";
 import { WinstonLogger } from "infra/providers/WinstonLogger";
 import { TournamentIdGenerator } from "infra/providers/IdGenerator";
 import { walletRepository } from "presentation/composition/shared/providers";
-import { fixturesRepository, registrationRepository, tournamentRepository } from "presentation/composition/shared/repositories";
+import { fixturesRepository, matchRepository, registrationRepository, tournamentRepository } from "presentation/composition/shared/repositories";
 import { tournamentRegistrationServices } from "../shared/services";
 import { GetTournamentFixtures } from "app/usecases/manager/tournaments/fixtures/GetTournamentFixtures";
-import { CreateTournamentFixtures } from "app/usecases/manager/tournaments/fixtures/CreateTournamentFixtures";
+import { CreateMatchesUseCase } from "app/usecases/manager/tournaments/matches/CreateMatchesUseCase";
+import { CreateFixtureUseCase } from "app/usecases/manager/tournaments/fixtures/CreateTournamentFixtures";
+import { GetTournamentMatches } from "app/usecases/manager/tournaments/matches/GetMatchesUseCase";
 
 
 const logger = new WinstonLogger();
@@ -46,7 +48,9 @@ const initiatePayment = new InitiateTournamentPayment(
 );
 const updateTournamentTeam = new UpdateTournamentTeam(tournamentRepository, registrationRepository, logger);
 const getFixtures = new GetTournamentFixtures(fixturesRepository, logger)
-const createFixtures = new CreateTournamentFixtures(tournamentRepository, fixturesRepository, logger)
+const createFixtures = new CreateFixtureUseCase(fixturesRepository, logger)
+const createMatchesUC = new CreateMatchesUseCase(matchRepository, logger)
+const getMatchesUC = new GetTournamentMatches(matchRepository, logger)
 
 export const tournamentManagementController = new TournamentController(
     getMyTournaments,
@@ -60,5 +64,7 @@ export const tournamentManagementController = new TournamentController(
     getRegisteredTeams,
     getFixtures,
     createFixtures,
+    createMatchesUC,
+    getMatchesUC,
     logger
 );

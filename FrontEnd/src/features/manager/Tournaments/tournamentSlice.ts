@@ -11,8 +11,10 @@ import {
     getRegisteredTeams,
     getTournamentFixtures,
     createTournamentFixtures,
+    createTournamentMatches,
+    getTournamentMatches,
 } from "./tournamentThunks";
-import type { Fixture, Tournament } from "../managerTypes";
+import type { Fixture, Match, Tournament } from "../managerTypes";
 import type { RegisteredTeam } from "../../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
 
 interface ManagerTournamentState {
@@ -21,6 +23,7 @@ interface ManagerTournamentState {
     selectedTournament: Tournament | null;
     registeredTeams: RegisteredTeam[],
     fixtures: Fixture | null,
+    matches : Match[] | null,
     fixturesLoading: boolean,
     paymentStatus: boolean;
     loading: boolean;
@@ -32,6 +35,7 @@ const initialState: ManagerTournamentState = {
     exploreTournaments: [],
     selectedTournament: null,
     fixtures: null,
+    matches: null,
     fixturesLoading: false,
     registeredTeams: [],
     paymentStatus: false,
@@ -206,9 +210,22 @@ const managerTournamentSlice = createSlice({
                 state.fixtures = action.payload;
                 state.fixturesLoading = false;
             })
-            .addCase(getTournamentFixtures.rejected, (state, action) => {
+            .addCase(getTournamentFixtures.rejected, (state) => {
                 state.fixturesLoading = false;
-                state.error = action.payload as string;
+            });
+
+        // get tournament matches
+        builder
+            .addCase(getTournamentMatches.pending, (state) => {
+                state.fixturesLoading = true;
+                state.error = null;
+            })
+            .addCase(getTournamentMatches.fulfilled, (state, action) => {
+                state.matches = action.payload;
+                state.fixturesLoading = false;
+            })
+            .addCase(getTournamentMatches.rejected, (state) => {
+                state.fixturesLoading = false;
             });
 
         // create tournment fixtures
@@ -223,6 +240,22 @@ const managerTournamentSlice = createSlice({
 
             })
             .addCase(createTournamentFixtures.rejected, (state, action) => {
+                state.fixturesLoading = false;
+                state.error = action.payload as string;
+            });
+
+        // create tournment matches
+        builder
+            .addCase(createTournamentMatches.pending, (state) => {
+                state.fixturesLoading = true;
+                state.error = null;
+            })
+            .addCase(createTournamentMatches.fulfilled, (state) => {
+                state.fixturesLoading = false;
+                state.error = null;
+
+            })
+            .addCase(createTournamentMatches.rejected, (state, action) => {
                 state.fixturesLoading = false;
                 state.error = action.payload as string;
             });

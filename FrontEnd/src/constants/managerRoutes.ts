@@ -18,6 +18,8 @@ export const MANAGER_ROUTES = {
     REJECT_PLAYER: (playerId: string) => `/manager/team/${playerId}/reject`,
     APPROVE_PLAYER: (playerId: string) => `/manager/team/${playerId}/approve`,
     UPDATE_PLAYER: (playerId: string) => `/manager/team/${playerId}/swap`,
+    CREATE_MATCHES: (tournamentId: string) => `/manager/tournament/${tournamentId}/matches`,
+    GET_MATCHES: (tournamentId: string) => `/manager/tournament/${tournamentId}/matches`,
     CREATE_FIXTURE: (tournamentId: string) => `/manager/tournament/${tournamentId}/fixture`,
     GET_FIXTURES: (tournamentId: string) => `/manager/tournament/${tournamentId}/fixture`,
 } as const;

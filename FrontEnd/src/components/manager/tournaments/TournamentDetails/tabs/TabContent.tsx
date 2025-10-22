@@ -1,5 +1,5 @@
 import type { Tournament } from "../../../../../features/manager/managerTypes";
-import FixturesTab from "./FixturesTab";
+import FixturesTab from "./Fixtures/FixturesTab";
 import GroupsTab from "./GroupsTab";
 import InfoTab from "./InfoTab";
 import LeaderboardTab from "./LeaderboardTab";

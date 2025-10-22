@@ -1,6 +1,6 @@
 import { Fixture } from "domain/entities/Fixture";
 
 export interface IFixturesRepository {
-    findByTournamentId(tournamentId: string): Promise<Fixture | null>;
-    createFixture(tournamentId: string, data: Fixture): Promise<Fixture>;
+    createFixture(tournamentId: string, matchIds: { matchId: string; round: number }[], format: string): Promise<Fixture>;
+    getFixtureByTournament(tournamentId: string): Promise<Fixture | null>;
 }
