@@ -41,8 +41,8 @@ const DataTable = <T extends { _id: string; status?: string }>({
                             key={f}
                             onClick={() => onFilterChange(f)}
                             className={`px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm transition-colors flex-shrink-0 ${currentFilter === f
-                                    ? "bg-[var(--color-primary)] text-white"
-                                    : "bg-[var(--color-background-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-primary-light)] hover:text-white"
+                                ? "bg-[var(--color-primary)] text-white"
+                                : "bg-[var(--color-background-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-primary-light)] hover:text-white"
                                 }`}
                         >
                             {f}
@@ -123,7 +123,6 @@ const DataTable = <T extends { _id: string; status?: string }>({
                     ))}
                 </div>
 
-                {/* Empty state for card view */}
                 {data.length === 0 && (
                     <div className="text-center py-8 text-[var(--color-text-secondary)]">
                         <p>No data available</p>
@@ -131,7 +130,6 @@ const DataTable = <T extends { _id: string; status?: string }>({
                 )}
             </div>
 
-            {/* Empty state for desktop table */}
             {data.length === 0 && (
                 <div className="hidden xl:block text-center py-8 text-[var(--color-text-secondary)] border border-[var(--color-border)] rounded-b-lg">
                     <p>No data available</p>

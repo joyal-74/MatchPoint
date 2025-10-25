@@ -1,11 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import AuthForm from "./AuthForm";
+import AuthForm from "../../components/shared/AuthForm";
 import FormField from "../../components/shared/FormField";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
-import { toast, ToastContainer } from "react-toastify";
 import { useLoginAdmin } from "../../hooks/useLoginAdmin";
-import FormFooter from "../../components/shared/FormFooter";
+import toast from "react-hot-toast";
 
 const AdminLoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -24,12 +23,19 @@ const AdminLoginPage: React.FC = () => {
 
     return (
         <>
-            <ToastContainer position="top-right" autoClose={3000} />
             <LoadingOverlay show={loading} />
+
             <AuthForm
-                title="Login to your Admin Account" buttonText="Login" onSubmit={onSubmit}
-                footer={<FormFooter text="Not an admin?" linkText="Sign Up" linkTo="/signup" />}
+                mainHeading={<h1>Welcome Back</h1>}
+                subHeading="Manage, monitor, and control"
+                subtitle="Sign in to access your admin dashboard"
+                buttonText="Login"
+                onSubmit={onSubmit}
+                footer={<p>Not an Admin?</p>}
+                showSocialButtons={false}
+                subfooter={<span className="text-primary cursor-pointer hover:underline" onClick={() => navigate('/login')}>Login as User</span>}
             >
+
                 <FormField
                     id="email" label="Email" type="email" value={formData.email} placeholder="Enter your email"
                     onChange={(e) => handleFieldChange("email", e.target.value)} className="w-full" error={errors.email}
@@ -39,7 +45,7 @@ const AdminLoginPage: React.FC = () => {
                     id="password" label="Password" type="password" value={formData.password} placeholder="Enter your password"
                     onChange={(e) => handleFieldChange('password', e.target.value)} className="w-full" error={errors.password}
                 />
-            </AuthForm>
+            </AuthForm >
         </>
     );
 };

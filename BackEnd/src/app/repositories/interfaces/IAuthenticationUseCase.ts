@@ -1,5 +1,5 @@
 import { AdminToResponseDTO } from "domain/dtos/Admin.dto";
-import { UserLoginResponseDTO } from "domain/dtos/User.dto";
+import { ILoginGoogleUserResponse, UserLoginResponseDTO } from "domain/dtos/User.dto";
 import { ManagerRegister } from "domain/entities/Manager";
 import { PlayerRegister } from "domain/entities/Player";
 import { UserRegister } from "domain/entities/User";
@@ -9,6 +9,14 @@ import { OtpContext } from "domain/enums/OtpContext";
 export interface IAuthUseCase<TAccount> {
     execute(email: string, password: string): Promise<{
         account: TAccount;
+        accessToken: string;
+        refreshToken: string;
+    }>;
+}
+
+export interface ICompleteGoogleSignup<TAccount> {
+    execute(tempToken: string, role: string, gender: string, sport: string, phone: string, username: string): Promise<{
+        user: TAccount;
         accessToken: string;
         refreshToken: string;
     }>;
@@ -29,6 +37,10 @@ export interface ILogoutUseCase {
         message: string;
         clearCookies: boolean;
     }>;
+}
+
+export interface ILoginGoogleUser {
+    execute(tokenId: string): Promise<ILoginGoogleUserResponse>;
 }
 
 export type TokenUserResponse = UserLoginResponseDTO | AdminToResponseDTO;
@@ -69,6 +81,7 @@ export interface IResetPasswordUseCase {
 // Auth (login) aliases
 export type IAdminAuthUseCase = IAuthUseCase<AdminToResponseDTO>;
 export type IUserAuthUseCase = IAuthUseCase<UserLoginResponseDTO>;
+export type IGoogleUserAuthUseCase = ICompleteGoogleSignup<UserLoginResponseDTO>;
 
 
 // Signup aliases

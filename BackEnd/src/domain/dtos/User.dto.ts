@@ -17,6 +17,15 @@ export interface UserLoginResponseDTO {
     wallet: number;
     role: RoleType;
     profileImage?: string;
+    isActive : boolean;
+}
+
+export interface ILoginGoogleUserResponse {
+    isNewUser: boolean;
+    tempToken?: string;
+    accessToken?: string;
+    refreshToken?: string;
+    user?: any;
 }
 
 export interface UserResponseDTO {
@@ -32,6 +41,7 @@ export interface UserResponseDTO {
     gender: GenderType;
     phone: string | null;
     wallet: number;
+    isActive : boolean
 }
 
 export interface UserUpdateDTO {

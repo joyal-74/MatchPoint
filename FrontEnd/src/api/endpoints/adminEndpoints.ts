@@ -11,7 +11,7 @@ export const adminEndpoints = {
         return response.data.data;
     },
 
-    fetchPlayers: async (page = 1, limit = 10, filter?: string, search?: string) => {
+    fetchPlayers: async (page = 1, limit = 5, filter?: string, search?: string) => {
         const response = await axiosClient.get(ADMIN_ROUTES.PLAYERS, {
             params: { page, limit, filter, search },
         });

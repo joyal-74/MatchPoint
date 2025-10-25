@@ -52,7 +52,7 @@ export class UsersManagementController implements IUsersManagementController {
      * @returns IHttpResponse containing the list of players
      */
     getAllPlayers = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { page = 1, limit = 10, filter, search } = httpRequest.query;
+        const { page = 1, limit = 5, filter, search } = httpRequest.query;
 
         const players = await this._getAllPlayersUseCase.execute({
             page: Number(page),

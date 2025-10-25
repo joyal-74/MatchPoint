@@ -10,10 +10,9 @@ import cookie from 'cookie';
 import {
     IUserAuthUseCase, IAdminAuthUseCase, ILogoutUseCase, IRefreshTokenUseCase,
     IViewerSignupUseCase, IPlayerSignupUseCase, IManagerSignupUseCase,
-    IForgotPasswordUseCase,
-    IVerifyOtpUseCase,
-    IResendOtpUseCase,
-    IResetPasswordUseCase
+    IForgotPasswordUseCase, IVerifyOtpUseCase,
+    IResendOtpUseCase, IResetPasswordUseCase,
+    ILoginGoogleUser, IGoogleUserAuthUseCase
 } from 'app/repositories/interfaces/IAuthenticationUseCase';
 
 /**
@@ -24,6 +23,8 @@ import {
 export class AuthController implements IAuthController {
     constructor(
         private _userAuthUseCase: IUserAuthUseCase,
+        private _userGoogleAuthUseCase: ILoginGoogleUser,
+        private _completeGoogleProfileUC: IGoogleUserAuthUseCase,
         private _adminAuthUseCase: IAdminAuthUseCase,
         private _logoutUserUseCase: ILogoutUseCase,
         private _signupViewerUseCase: IViewerSignupUseCase,
@@ -57,6 +58,31 @@ export class AuthController implements IAuthController {
             refreshToken: result.refreshToken,
         });
     }
+
+    loginGoogleUser = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { code } = httpRequest.body;
+        
+        const result = await this._userGoogleAuthUseCase.execute(code);
+
+        console.log(result, "result")
+
+        if (result.isNewUser) {
+            return new HttpResponse(HttpStatusCode.OK, {
+                ...buildResponse(true, "New Google user — proceed to complete signup", {
+                    tempToken: result.tempToken,
+                }),
+            });
+        }
+
+        return new HttpResponse(HttpStatusCode.OK, {
+            ...buildResponse(true, "Google login successful", {
+                user: result.user,
+                accessToken: result.accessToken,
+                refreshToken: result.refreshToken,
+            }),
+        });
+    };
+
 
     /**
      * Authenticate an admin with email and password.
@@ -109,6 +135,16 @@ export class AuthController implements IAuthController {
             user: result.user,
             expiresAt: result.expiresAt,
         }));
+    }
+
+
+    signupGoogleAccount = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+
+        const { tempToken, role, gender, sport, phone, username } = httpRequest.body;
+        console.log(httpRequest.body)
+
+        const result = await this._completeGoogleProfileUC.execute(tempToken, role, gender, sport, phone, username);
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, 'User account created', { user: result.user, }));
     }
 
     /**

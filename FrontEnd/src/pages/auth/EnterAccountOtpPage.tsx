@@ -1,5 +1,5 @@
 import React from "react";
-import AuthForm from "./AuthForm";
+import AuthForm from "../../components/shared/AuthForm";
 import OtpVerify from "../../components/shared/OtpVerify";
 import { useOtpVerify } from "../../hooks/useOtpVerify";
 import { useLocation, useNavigate } from "react-router-dom";

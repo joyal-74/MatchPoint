@@ -11,6 +11,7 @@ export class UserMapper {
             role: user.role,
             wallet: user.wallet,
             profileImage: user.profileImage,
+            isActive : user.isActive
         };
     }
 
@@ -27,7 +28,8 @@ export class UserMapper {
             phone: user.phone || null,
             wallet: user.wallet,
             bio: user.bio,
-            profileImage: user.profileImage
+            profileImage: user.profileImage,
+            isActive : user.isActive
         };
     }
 }

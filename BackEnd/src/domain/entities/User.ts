@@ -20,6 +20,7 @@ export interface User {
     gender: GenderType;
     phone: string;
     password: string;
+    authProvider?: string;
     bio: string;
     settings: UserSettings;
     wallet: number;
@@ -37,9 +38,11 @@ export interface UserRegister {
     firstName: string;
     lastName: string;
     username: string;
+    profileImage?: string;
+    authProvider?: string;
     phone: string;
     gender: GenderType;
-    password: string;
+    password?: string;
     settings: UserSettings;
     wallet: number;
     isActive: boolean;

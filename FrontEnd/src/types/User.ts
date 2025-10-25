@@ -17,6 +17,7 @@ export interface LoginUser {
     profileImage: string
     role: UserRole;
     wallet: number;
+    isActive : boolean;
 }
 
 export interface User {
@@ -54,4 +55,14 @@ export interface RegisterUser {
 }
 
 
-export type AuthUser = Pick<User, "_id" | "firstName" | "lastName" | "email" | "role" | "phone" | "gender" | "profileImage">;
+export interface LoginGoogleResult {
+    success: boolean;
+    message?: string;
+    errors?: { global?: string };
+    tempToken?: string;
+    user?: LoginUser;
+    accessToken?: string;
+    refreshToken?: string;
+}
+
+export type AuthUser = Pick<User, "_id" | "firstName" | "lastName" | "email" | "role" | "phone" | "gender" | "profileImage" | "isActive">;

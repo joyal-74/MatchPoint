@@ -29,10 +29,12 @@ export interface UserRegister {
     lastName: string;
     email: string;
     password: string;
+    phone: string;
     role: SignupRole;
     gender: Gender;
-    phone: string;
     sport?: string;
+    username?: string;
+    tempToken?: string;
 }
 
 export type SignupResponse = {
@@ -43,4 +45,14 @@ export type SignupResponse = {
 export type LoginRequest = {
     email: string;
     password: string;
+}
+
+
+export interface CompleteUserData {
+    tempToken: string;
+    role: SignupRole;
+    gender: Gender;
+    sport?: string;
+    username: string;
+    phone: string;
 }

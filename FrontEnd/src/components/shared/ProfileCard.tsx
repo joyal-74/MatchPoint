@@ -3,11 +3,10 @@ import { FiGlobe, FiLogOut, FiUser, FiUsers } from 'react-icons/fi';
 
 interface ProfileCardProps {
     onAction: (action: "logout" | "teams" | "profile") => void;
-    role : string;
+    role: string;
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ onAction, role }) => {
-
     return (
         <div className="w-40 bg-[var(--color-background)] text-white text-sm flex flex-col gap-1 rounded-md shadow-lg">
             <button onClick={() => onAction("profile")} className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--color-background-secondary)] w-full text-left">
@@ -15,7 +14,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ onAction, role }) => {
                 <span>Profile</span>
             </button>
 
-            {role !== 'viewer' ? (
+            {role !== 'viewer' && role !== 'admin' && (
                 <button
                     onClick={() => onAction("teams")}
                     className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--color-background-secondary)] w-full text-left"
@@ -23,7 +22,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ onAction, role }) => {
                     <FiUsers className="text-[var(--color-primary)] text-lg" />
                     <span>My Teams</span>
                 </button>
-            ) : null}
+            )}
+
 
             <button className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--color-background-secondary)]  w-full text-left">
                 <FiGlobe className="text-[var(--color-primary)] text-lg" />

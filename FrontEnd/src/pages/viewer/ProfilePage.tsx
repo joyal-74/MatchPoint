@@ -69,7 +69,7 @@ const ProfilePage: React.FC = () => {
                             )}
 
                             {!isEditing && (
-                                <div className="mt-8 max-w-5xl mx-auto">
+                                <div className="mt-8 mx-8">
                                     <PremiumCard />
                                 </div>
                             )}

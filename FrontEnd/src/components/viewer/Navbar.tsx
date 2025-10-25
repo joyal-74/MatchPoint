@@ -31,15 +31,8 @@ const Navbar: React.FC = () => {
     }, [showProfileCard]);
 
     const handleLogout = async () => {
-        try {
-            await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
-            if (user?.role === 'admin') {
-                navigate("/admin/login");
-            }
-            navigate("/login");
-        } catch (error) {
-            console.error("Logout failed:", error);
-        }
+        await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
+        navigate("/login");
     };
 
     const handleProfileAction = (action: "logout" | "teams" | "profile") => {
@@ -90,7 +83,7 @@ const Navbar: React.FC = () => {
 
                     <div ref={profileRef}>
                         <img
-                            src={user?.profileImage}
+                            src={user?.profileImage || 'placeholder.png'}
                             alt="Profile"
                             className="w-8 h-8 rounded-full border-2 border-[var(--color-border)] hover:border-[var(--color-primary)] transition-colors duration-200 cursor-pointer"
                             onClick={() => setShowProfileCard((prev) => !prev)}

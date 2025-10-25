@@ -1,22 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "../features/auth/authSlice";
-import usersReducer from "../features/admin/users/userSlice";
-import managerReducer from '../features/manager/managerSlice';
-import playerReducer from '../features/player/playerSlice';
-import viewerReducer from '../features/viewer/viewerSlice';
-import managerTournamentReducer from '../features/manager/Tournaments/tournamentSlice'
-import playerTeamsReducer from '../features/player/Teams/TeamSlice'
+import rootReducer from "./rootReducer";
 
 export const store = configureStore({
-    reducer: {
-        auth: authReducer,
-        users: usersReducer,
-        manager: managerReducer,
-        player: playerReducer,
-        viewer: viewerReducer,
-        managerTournaments: managerTournamentReducer,
-        playerTeams: playerTeamsReducer,
-    },
+    reducer: rootReducer,
 });
 
 export type RootState = ReturnType<typeof store.getState>;

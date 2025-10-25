@@ -22,7 +22,7 @@ const PlayersManagement = () => {
 
     const params: GetAllUsersParams = useMemo(() => ({
         page: currentPage,
-        limit: 10,
+        limit : 10,
         filter: currentFilter === "All" ? undefined : currentFilter,
         search: debouncedSearch || undefined
     }), [currentPage, currentFilter, debouncedSearch]);

@@ -1,6 +1,6 @@
 import Sidebar from "../../components/admin/Sidebar";
 import type { ReactNode } from "react";
-import Navbar from "../../components/shared/Navbar";
+import Navbar from "../../components/admin/Navbar";
 
 interface AdminLayoutProps {
     children: ReactNode;
@@ -16,7 +16,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     <Navbar />
                 </div>
 
-                <main className="flex-1 px-6 ml-10 lg:ml-70 mt-14">{children}</main>
+                <main className="flex-1 px-6 ml-10 lg:ml-70 mt-13 mr-8">{children}</main>
             </div>
         </div>
     );

@@ -14,6 +14,7 @@ export interface LoginAdmin {
     profileImage: string
     role: UserRole;
     wallet: number;
+    isActive : boolean;
 }
 
 export interface Admin {

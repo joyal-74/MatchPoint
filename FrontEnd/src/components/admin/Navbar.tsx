@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Bell } from "lucide-react";
-import ProfileCard from "./ProfileCard";
+import ProfileCard from "../shared/ProfileCard";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { logoutUser } from "../../features/auth";
 import { useNavigate } from "react-router-dom";
@@ -29,14 +29,15 @@ const Navbar: React.FC = () => {
     }, [showProfileCard]);
 
     const handleLogout = async () => {
-        try {
-            await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
-            if (user?.role === 'admin') {
-                navigate("/admin/login");
-            }
-            navigate("/login");
-        } catch (error) {
-            console.error("Logout failed:", error);
+        await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
+        navigate("/admin/login");
+    };
+
+    const handleProfileAction = (action: "logout" | "teams" | "profile") => {
+        switch (action) {
+            case "logout":
+                handleLogout();
+                break;
         }
     };
 
@@ -57,7 +58,7 @@ const Navbar: React.FC = () => {
 
                     <div ref={profileRef}>
                         <img
-                            src="https://i.pravatar.cc/40"
+                            src="/placeholder.png"
                             alt="Profile"
                             className="w-8 h-8 rounded-full border-2 border-[var(--color-border)] hover:border-[var(--color-primary)] transition-colors duration-200 cursor-pointer"
                             onClick={() => setShowProfileCard((prev) => !prev)}
@@ -65,7 +66,7 @@ const Navbar: React.FC = () => {
 
                         {showProfileCard && (
                             <div className="absolute right-0 mt-2">
-                                <ProfileCard onAction={handleLogout} />
+                                <ProfileCard role={'admin'} onAction={handleProfileAction} />
                             </div>
                         )}
                     </div>

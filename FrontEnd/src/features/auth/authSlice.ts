@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
     loginUser, loginAdmin, resendOtp, signupUser, verifyOtp, logoutUser, requestResetOtp,
-    verifyResetOtp, resetPassword, refreshToken
+    verifyResetOtp, resetPassword, refreshToken,
+    loginUserGoogleComplete,
+    loginUserGoogle
 } from "./authThunks";
 import type { AuthUser } from "../../types/User";
 
@@ -10,6 +12,7 @@ interface AuthState {
     loading: boolean;
     error: string | null;
     signupSuccess: boolean;
+    expiresAt: string | null;
     otpVerified: boolean;
     resetOtpSent: boolean;
     resetOtpVerified: boolean;
@@ -23,6 +26,7 @@ const initialState: AuthState = {
     loading: false,
     error: null,
     signupSuccess: false,
+    expiresAt : null,
     otpVerified: false,
     resetOtpSent: false,
     resetOtpVerified: false,
@@ -61,6 +65,10 @@ const authSlice = createSlice({
         setUser: (state, action) => {
             state.user = action.payload;
         },
+        setResetData (state, action) {
+            state.resetEmail = action.payload.email;
+            state.expiresAt = action.payload.expiresAt;
+        }
     },
     extraReducers: (builder) => {
         // Login (Admin)
@@ -86,11 +94,44 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(loginUser.fulfilled, (state, action) => {
+                console.log(action.payload)
                 state.user = action.payload;
                 state.loading = false;
                 state.error = null;
             })
             .addCase(loginUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? action.error.message ?? "Login failed";
+            });
+
+        builder
+            .addCase(loginUserGoogle.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(loginUserGoogle.fulfilled, (state, action) => {
+                console.log(action.payload)
+                state.user = action.payload?.user || null;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(loginUserGoogle.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? action.error.message ?? "Login failed";
+            });
+
+        builder
+            .addCase(loginUserGoogleComplete.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(loginUserGoogleComplete.fulfilled, (state, action) => {
+                console.log(action.payload)
+                state.user = action.payload;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(loginUserGoogleComplete.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? action.error.message ?? "Login failed";
             });
@@ -113,7 +154,6 @@ const authSlice = createSlice({
                 state.error = action.payload as string;
                 state.isInitialized = true;
             });
-
 
         // Signup
         builder
@@ -154,7 +194,8 @@ const authSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(resendOtp.fulfilled, (state) => {
+            .addCase(resendOtp.fulfilled, (state, action) => {
+                state.expiresAt = action.payload.expiresAt;
                 state.loading = false;
                 state.error = null;
             })
@@ -170,9 +211,9 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(requestResetOtp.fulfilled, (state, action) => {
-
                 state.loading = false;
                 state.resetOtpSent = true;
+                state.expiresAt = action.payload.expiresAt
                 state.resetEmail = action.meta.arg;
                 state.error = null;
             })
@@ -237,5 +278,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { logout, clearError, resetPasswordFlow, resetSignupState, clearResetEmail, setUser } = authSlice.actions;
+export const { logout, clearError, resetPasswordFlow, resetSignupState, clearResetEmail, setUser, setResetData } = authSlice.actions;
 export default authSlice.reducer;

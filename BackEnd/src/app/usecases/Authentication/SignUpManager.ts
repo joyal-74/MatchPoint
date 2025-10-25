@@ -27,7 +27,6 @@ export class SignupManager implements IManagerSignupUseCase {
 
     async execute(userData: ManagerRegister) {
         const validData = validateUserInput(userData);
-        console.log("====", userData)
 
         const existingUser = await this._userRepository.findByEmail(validData.email);
         if (existingUser) throw new BadRequestError("User with this email already exists");

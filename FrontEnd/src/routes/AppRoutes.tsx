@@ -4,9 +4,7 @@ import { publicRoutes } from "./publicRoutes";
 import { playerRoutes } from "./PlayerRoutes";
 import { managerRoutes } from "./ManagerRoutes";
 import NotFoundPage from "../pages/shared/PageNotFound";
-import Unauthorized from "../pages/shared/Unauthorized";
 import { viewerRoutes } from "./ViewerRoutes";
-
 
 const AppRoutes = () => {
     return (
@@ -33,7 +31,6 @@ const AppRoutes = () => {
                 ))}
 
                 <Route path="*" element={<NotFoundPage />} />
-                <Route path="/unauthorized" element={<Unauthorized />} />
             </Routes>
         </BrowserRouter>
     );

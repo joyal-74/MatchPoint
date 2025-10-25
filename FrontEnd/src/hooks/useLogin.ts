@@ -1,9 +1,12 @@
 import { useAppDispatch } from "../hooks/hooks";
-import { loginUser } from "../features/auth/authThunks";
-import type { LoginRequest } from "../types/api/UserApi";
+import { loginUser, loginUserGoogle, loginUserGoogleComplete } from "../features/auth/authThunks";
+import type { CompleteUserData, LoginRequest } from "../types/api/UserApi";
 import { UserRole } from "../types/UserRoles";
 import { useState } from "react";
 import { validateLogin } from "../validators/LoginValidators";
+import type { LoginGoogleResult } from "../types/User";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 type ValidationErrors = Partial<Record<keyof LoginRequest | "global", string>>;
 type LoginSuccess = { success: true; message: string; role: UserRole };
@@ -12,6 +15,16 @@ type LoginResult = LoginSuccess | LoginFailure;
 
 export const useLogin = () => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const [formData, setFormData] = useState<LoginRequest>({ email: "", password: "" });
+    const [errors, setErrors] = useState<ValidationErrors>({});
+    const [loading, setLoading] = useState(false);
+
+    // Modal state
+    const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+    const [tempToken, setTempToken] = useState<string>('');
+    const [registrationLoading, setRegistrationLoading] = useState(false);
 
     const validateForm = (payload: LoginRequest): ValidationErrors => {
         return validateLogin(payload);
@@ -23,7 +36,6 @@ export const useLogin = () => {
 
         try {
             const resultAction = await dispatch(loginUser(payload));
-            console.log(resultAction)
 
             if (loginUser.fulfilled.match(resultAction)) {
                 const role: UserRole = resultAction.payload.role;
@@ -37,10 +49,6 @@ export const useLogin = () => {
             return { success: false, errors: { global: "Something went wrong" } };
         }
     };
-
-    const [formData, setFormData] = useState<LoginRequest>({ email: "", password: "" });
-    const [errors, setErrors] = useState<ValidationErrors>({});
-    const [loading, setLoading] = useState(false);
 
     const handleFieldChange = (field: keyof LoginRequest, value: string) => {
         setFormData({ ...formData, [field]: value });
@@ -73,5 +81,82 @@ export const useLogin = () => {
         return result;
     };
 
-    return { handleSubmit, handleFieldChange, errors, loading, formData };
+    const handleGoogleLogin = async (code: string): Promise<LoginGoogleResult> => {
+        setLoading(true);
+        try {
+            const resultAction = await dispatch(loginUserGoogle(code));
+
+            if (loginUserGoogle.fulfilled.match(resultAction)) {
+                const payload = resultAction.payload;
+
+                if (payload.tempToken) {
+                    setTempToken(payload.tempToken);
+                    setShowRegistrationModal(true);
+                    setLoading(false);
+                    return {
+                        success: true,
+                        message: "Please complete your registration",
+                        tempToken: payload.tempToken
+                    };
+                }
+
+                if (payload.user && payload.accessToken) {
+                    setLoading(false);
+                    return {
+                        success: true,
+                        message: "Google login successful!",
+                        user: payload.user,
+                    };
+                }
+
+                setLoading(false);
+                return {
+                    success: false,
+                    errors: { global: "Unexpected response from server" }
+                };
+            } else {
+                const backendError = resultAction.payload || "Google login failed";
+                setLoading(false);
+                return { success: false, errors: { global: backendError } };
+            }
+        } catch (err) {
+            console.error(err);
+            setLoading(false);
+            return { success: false, errors: { global: "Something went wrong" } };
+        }
+    };
+
+    const handleRegistrationSubmit = async (userData : CompleteUserData) => {
+        setRegistrationLoading(true);
+
+        const response = await dispatch(loginUserGoogleComplete(userData));
+
+        if (response) {
+            setShowRegistrationModal(false);
+            setTempToken('');
+
+            toast.success("Registration completed successfully!");
+            navigate('/dashboard');
+        }
+        setRegistrationLoading(false);
+    };
+
+    const closeRegistrationModal = () => {
+        setShowRegistrationModal(false);
+        setTempToken('');
+    };
+
+    return {
+        handleSubmit,
+        handleGoogleLogin,
+        handleFieldChange,
+        errors,
+        loading,
+        formData,
+        showRegistrationModal,
+        tempToken,
+        handleRegistrationSubmit,
+        registrationLoading,
+        closeRegistrationModal,
+    };
 };

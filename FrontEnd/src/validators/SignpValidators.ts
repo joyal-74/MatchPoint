@@ -5,18 +5,13 @@ export type ValidationErrors = Partial<Record<string, string>>;
 
 
 export const validateSignup = (payload: SignUpForm): ValidationErrors => {
-    console.log(payload)
     const errors: ValidationErrors = {};
 
-    if (!payload.firstName) errors.first_name = AuthMessages.FIRST_NAME_REQUIRED;
-    if (!payload.lastName) errors.last_name = AuthMessages.LAST_NAME_REQUIRED;
+    if (!payload.firstName.trim()) errors.firstName = AuthMessages.FIRST_NAME_REQUIRED;
+    if (!payload.lastName.trim()) errors.lastName = AuthMessages.LAST_NAME_REQUIRED;
 
     if (!payload.email || !payload.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
         errors.email = AuthMessages.INVALID_EMAIL;
-    }
-
-    if (!payload.phone || !/^\d{10}$/.test(payload.phone)) {
-        errors.phone = AuthMessages.INVALID_PHONE;
     }
 
     if (!payload.gender) {
