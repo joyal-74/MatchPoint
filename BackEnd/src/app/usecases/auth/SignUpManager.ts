@@ -1,39 +1,37 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
-import { IOtpRepository } from "app/repositories/interfaces/IOtpRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
+import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
 import { BadRequestError } from "domain/errors";
 import { UserRoles } from "domain/enums";
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
-import { PlayerRegister } from "domain/entities/Player";
-import { validatePlayerInput } from "domain/validators/PlayerValidators";
-import { getDefaultCareerStats, getDefaultProfile } from "infra/utils/playerDefaults";
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { IOtpGenerator } from "app/providers/IOtpGenerator";
+import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
+import { ManagerRegister } from "domain/entities/Manager";
+import { validateUserInput } from "domain/validators/UserValidators";
 import { OtpContext } from "domain/enums/OtpContext";
-import { IPlayerSignupUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
-import { IPlayerIdGenerator } from "app/providers/IIdGenerator";
+import { IManagerSignupUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
+import { IManagerIdGenerator } from "app/providers/IIdGenerator";
 import { UserMapper } from "app/mappers/UserMapper";
 
 
-export class SignupPlayer implements IPlayerSignupUseCase {
+export class SignupManager implements IManagerSignupUseCase {
     constructor(
         private _userRepository: IUserRepository,
-        private _playerRepository: IPlayerRepository,
+        private _managerRepository: IManagerRepository,
         private _otpRepository: IOtpRepository,
         private _mailRepository: IMailRepository,
         private _passwordHasher: IPasswordHasher,
         private _otpGenerator: IOtpGenerator,
-        private _idGenerator: IPlayerIdGenerator,
+        private _idGenerator: IManagerIdGenerator,
     ) { }
 
-    async execute(userData: PlayerRegister) {
-        const validData = validatePlayerInput(userData);
+    async execute(userData: ManagerRegister) {
+        const validData = validateUserInput(userData);
 
         const existingUser = await this._userRepository.findByEmail(validData.email);
         if (existingUser) throw new BadRequestError("User with this email already exists");
 
         const hashedPassword = await this._passwordHasher.hashPassword(validData.password);
-
         const userId = this._idGenerator.generate();
 
         const newUser = await this._userRepository.create({
@@ -42,12 +40,11 @@ export class SignupPlayer implements IPlayerSignupUseCase {
             firstName: validData.firstName,
             lastName: validData.lastName,
             gender: validData.gender,
-            role: UserRoles.Player,
+            role: UserRoles.Manager,
             password: hashedPassword,
             username: `user-${Date.now()}`,
-            phone : validData.phone,
             wallet: 0,
-            sport: validData.sport,
+            phone : validData.phone,
             isActive: true,
             isVerified: false,
             settings: {
@@ -59,11 +56,10 @@ export class SignupPlayer implements IPlayerSignupUseCase {
             }
         });
 
-        await this._playerRepository.create({
+        await this._managerRepository.create({
             userId: newUser._id,
-            sport: userData.sport,
-            profile: getDefaultProfile(userData.sport),
-            stats: getDefaultCareerStats(userData.sport),
+            tournaments: [],
+            teams: [],
         });
 
         const otp = this._otpGenerator.generateOtp();
@@ -72,8 +68,8 @@ export class SignupPlayer implements IPlayerSignupUseCase {
 
         await this._mailRepository.sendVerificationEmail(newUser.email, otp);
 
-        const userDTO = UserMapper.toUserLoginResponseDTO(newUser)
+        const managerDTO  = UserMapper.toUserLoginResponseDTO(newUser)
 
-        return { success : true, message : "Player registered successfully", user: userDTO, expiresAt };
+        return { success: true, message: "Manager Registered successfully", user: managerDTO, expiresAt };
     }
 }

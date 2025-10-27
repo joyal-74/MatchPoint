@@ -8,6 +8,9 @@ import { WalletProvider } from 'infra/providers/WalletProvider';
 import { RazorpayProvider } from 'infra/providers/RazorpayProvider';
 import { WalletRepository } from 'infra/services/WalletRepository';
 import { registrationRepository } from './repositories';
+import { ManagerIdGenerator, PlayerIdGenerator, UserIdGenerator } from 'infra/providers/IdGenerator';
+import { RoleIdGenerator } from 'infra/providers/RoleIdGenerator';
+import { EnvConfigProvider } from 'infra/providers/EnvConfigProvider';
 
 export const jwtService = new JWTService();
 export const mailService = new NodeMailerService();
@@ -15,6 +18,11 @@ export const otpGenerator = new NodeOtpGenerator();
 export const passwordHasher = new BcryptPasswordHasher();
 export const logger = new WinstonLogger();
 export const imageKitfileProvider = new ImageKitFileStorage();
+export const playerIdGenerator = new PlayerIdGenerator();
+export const managerIdGenerator = new ManagerIdGenerator();
+export const userIdGenerator = new UserIdGenerator();
+export const roleIdGenerator = new RoleIdGenerator(playerIdGenerator, userIdGenerator, managerIdGenerator);
+export const configProvider = new EnvConfigProvider();
 
 export const walletRepository = new WalletRepository();
 export const walletProvider = new WalletProvider(walletRepository, registrationRepository);

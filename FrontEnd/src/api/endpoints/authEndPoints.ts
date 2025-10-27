@@ -1,4 +1,4 @@
-import type { LoginGoogleResult, LoginUser, User } from '../../types/User';
+import type { LoginSocialResult, LoginUser, User } from '../../types/User';
 import type { CompleteUserData, UserRegister } from '../../types/api/UserApi';
 import type { ChangePasswordPayload, LoginPayload, OtpPayload, ResetPasswordPayload } from '../../types/api/authPayloads';
 import { axiosClient } from '../http/axiosClient';
@@ -12,13 +12,19 @@ export const authEndpoints = {
         return data.data.user;
     },
 
-    loginGoogle: async (code: string): Promise<LoginGoogleResult> => {
+    loginGoogle: async (code: string): Promise<LoginSocialResult> => {
         const { data } = await axiosClient.post(AUTH_ROUTES.LOGIN_GOOGLE, { code: code });
         return data.data;
     },
 
-    loginUserGoogleComplete: async (userdata : CompleteUserData): Promise<User> => {
-        const { data } = await axiosClient.post(AUTH_ROUTES.GOOGLE_COMPLETE, userdata);
+    loginFacebook: async (code: string): Promise<LoginSocialResult> => {
+        const { data } = await axiosClient.post(AUTH_ROUTES.LOGIN_FACEBOOK, { code: code });
+        console.log('facebook', data.data)
+        return data.data;
+    },
+
+    loginSocialComplete: async (userdata : CompleteUserData): Promise<User> => {
+        const { data } = await axiosClient.post(AUTH_ROUTES.SOCIAL_COMPLETE, userdata);
         return data.data;
     },
 

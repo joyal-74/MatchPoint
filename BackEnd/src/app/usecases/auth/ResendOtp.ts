@@ -1,10 +1,10 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
-import { IOtpRepository } from "app/repositories/interfaces/IOtpRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
+import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
 import { BadRequestError } from "domain/errors";
 import { IOtpGenerator } from "app/providers/IOtpGenerator";
 import { OtpContext } from "domain/enums/OtpContext";
-import { IResendOtpUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
+import { IResendOtpUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 
 export class ResendOtp implements IResendOtpUseCase {
     constructor(

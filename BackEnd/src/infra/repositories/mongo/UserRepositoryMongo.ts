@@ -1,4 +1,4 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { GetAllUsersParams } from "app/usecases/admin/GetAllViewers";
 import { UserResponseDTO } from "domain/dtos/User.dto";
 import { User, UserRegister, UserResponse } from "domain/entities/User";

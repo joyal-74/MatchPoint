@@ -1,5 +1,5 @@
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
-import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
+import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { BadRequestError } from "domain/errors";
 
 export class TournamentRegistrationValidator {

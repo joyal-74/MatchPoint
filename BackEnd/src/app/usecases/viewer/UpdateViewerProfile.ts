@@ -1,7 +1,7 @@
 import { UserMapper } from "app/mappers/UserMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
-import { IUpdateViewerProfile } from "app/repositories/interfaces/IUserProfileRepository";
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
+import { IUpdateViewerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { UserResponseDTO, UserUpdateDTO } from "domain/dtos/User.dto";
 import { File } from "domain/entities/File";
 import { NotFoundError } from "domain/errors";
@@ -18,8 +18,7 @@ export class UpdateViewerProfile implements IUpdateViewerProfile {
 
         if (file) {
             const fileKey = await this.fileStorage.upload(file);
-            console.log(fileKey)
-            validData.logo = fileKey;
+            validData.profileImage = fileKey;
         }
 
         if (!validData._id) {

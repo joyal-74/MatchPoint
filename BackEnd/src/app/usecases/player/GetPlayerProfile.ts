@@ -2,7 +2,7 @@ import { PlayerMapper } from "app/mappers/PlayerMapper";
 import { PlayerProfileResponse } from "domain/dtos/Player.dto";
 import { NotFoundError } from "domain/errors";
 import { ILogger } from "app/providers/ILogger";
-import { IGetPlayerProfile } from "app/repositories/interfaces/IUserProfileRepository";
+import { IGetPlayerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
 import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 
 export class GetPlayerProfile implements IGetPlayerProfile {

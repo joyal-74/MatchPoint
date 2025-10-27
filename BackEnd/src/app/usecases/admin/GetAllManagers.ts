@@ -1,4 +1,4 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { ILogger } from "app/providers/ILogger";
 import { GetAllUsersParams } from "./GetAllViewers";
 import { IGetManagersUsecase } from "app/repositories/interfaces/admin/IAdminUsecases";

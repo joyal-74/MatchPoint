@@ -1,4 +1,4 @@
-import { IWalletRepository } from "app/repositories/interfaces/IWalletRepository";
+import { IWalletRepository } from "app/repositories/interfaces/shared/IWalletRepository";
 import { UserModel } from "infra/databases/mongo/models/UserModel";
 
 export class WalletRepository implements IWalletRepository {

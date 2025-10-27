@@ -1,5 +1,5 @@
-import { IPlayerTeamServices } from "app/providers/IPlayerTeamServices";
-import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
+import { IPlayerTeamServices } from "app/services/player/IPlayerTeamServices";
+import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { PlayerTeamResponseDTO } from "domain/dtos/Team.dto";
 
 export class PlayerTeamServices implements IPlayerTeamServices {

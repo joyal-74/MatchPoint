@@ -1,4 +1,4 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { UsersResponseDTO } from "domain/dtos/User.dto";
 import { ILogger } from "app/providers/ILogger";
 

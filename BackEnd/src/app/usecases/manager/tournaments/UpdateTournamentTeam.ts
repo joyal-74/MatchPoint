@@ -1,5 +1,5 @@
 import { ILogger } from "app/providers/ILogger";
-import { ITournamentRepository } from "app/repositories/interfaces/ITournamentRepository";
+import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
 import { IUpdateTournamentTeam } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
 import { Tournament } from "domain/entities/Tournaments";

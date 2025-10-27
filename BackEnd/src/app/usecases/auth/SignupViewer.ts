@@ -1,5 +1,5 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
-import { IOtpRepository } from "app/repositories/interfaces/IOtpRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
+import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
 import { BadRequestError } from "domain/errors";
 import { UserRegister } from "domain/entities/User";
@@ -8,7 +8,7 @@ import { validateUserInput } from "domain/validators/UserValidators";
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { IOtpGenerator } from "app/providers/IOtpGenerator";
 import { OtpContext } from "domain/enums/OtpContext";
-import { IViewerSignupUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
+import { IViewerSignupUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 import { UserMapper } from "app/mappers/UserMapper";
 import { IUserIdGenerator } from "app/providers/IIdGenerator";
 

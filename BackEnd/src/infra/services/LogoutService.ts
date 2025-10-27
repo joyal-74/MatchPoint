@@ -1,5 +1,5 @@
-import { ILogoutService } from "app/providers/ILogoutService";
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
+import { ILogoutService } from "app/services/user/ILogoutService";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { IAdminRepository } from "app/repositories/interfaces/admin/IAdminRepository";
 import { Admin } from "domain/entities/Admin";
 import { User } from "domain/entities/User";

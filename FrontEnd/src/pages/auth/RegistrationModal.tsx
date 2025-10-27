@@ -17,27 +17,30 @@ interface RegistrationModalProps {
     onClose: () => void;
     onSubmit: (userData: CompleteUserData) => void;
     loading?: boolean;
+    authProvider: string;
 }
 
-
-
 const inputClasses = `
-    w-full p-3 rounded-lg border transition-all duration-200
-    bg-[var(--color-surface)] text-[var(--color-text-primary)]
-    border-[var(--color-border)] placeholder-[var(--color-text-tertiary)]
-    focus:outline-none focus:ring-2 focus:ring-[var(--color-focus)] focus:border-[var(--color-focus)]
-    disabled:opacity-50 disabled:cursor-not-allowed
-    backdrop-blur-sm
+  w-full p-3 rounded-lg border transition-all duration-200
+  bg-neutral-900/60 text-neutral-100 border-neutral-700 placeholder-neutral-400
+  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+  disabled:opacity-50 disabled:cursor-not-allowed
 `;
 
-const selectClasses = `${inputClasses} appearance-none bg-no-repeat bg-right pr-10 bg-[url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")] bg-[length:1.5rem_1.5rem] bg-[center_right_0.75rem]`;
+const selectClasses = `${inputClasses} appearance-none bg-no-repeat bg-right pr-10 
+  bg-[url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' 
+  fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a1a1aa' 
+  stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' 
+  d='m6 8 4 4 4-4'/%3e%3c/svg%3e")] bg-[length:1.5rem_1.5rem] 
+  bg-[center_right_0.75rem]`;
 
 const RegistrationModal: React.FC<RegistrationModalProps> = ({
     tempToken,
     isOpen,
     onClose,
     onSubmit,
-    loading = false
+    loading = false,
+    authProvider
 }) => {
     const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
     const [formData, setFormData] = useState<CompleteUserData>({
@@ -46,11 +49,20 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
         gender: 'male' as Gender,
         sport: '',
         username: '',
-        phone: ''
+        phone: '',
+        authProvider: authProvider
     });
 
     useEffect(() => {
-        if (tempToken && isOpen) {
+        setFormData(prev => ({
+            ...prev,
+            authProvider: authProvider
+        }));
+    }, [authProvider]);
+
+
+    useEffect(() => {
+        if (tempToken) {
             const decoded = decodeJWT<UserDetails>(tempToken);
             if (decoded) {
                 setUserDetails(decoded);
@@ -58,11 +70,11 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                 setFormData(prev => ({
                     ...prev,
                     tempToken,
-                    username: defaultUsername
+                    username: defaultUsername,
                 }));
             }
         }
-    }, [tempToken, isOpen]);
+    }, [tempToken]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -71,45 +83,43 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-
-        const roleValue = value as SignupRole;
-        if (roleValue !== 'player') {
+        if (name === 'role') {
+            const roleValue = value as SignupRole;
             setFormData(prev => ({
                 ...prev,
                 role: roleValue,
-                sport: ''
+                sport: roleValue === 'player' ? prev.sport : '',
             }));
         } else {
-            setFormData(prev => ({
-                ...prev,
-                [name]: value
-            }));
+            setFormData(prev => ({ ...prev, [name]: value }));
         }
     };
 
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 backdrop-blur-sm bg-[var(--color-background-overlay)] flex items-center justify-center z-50 p-4">
-            <div className="bg-[var(--color-surface)] backdrop-blur-md rounded-2xl p-6 w-full max-w-md border border-[var(--color-border)] shadow-[var(--shadow-lg)]">
+        <div className="fixed inset-0 backdrop-blur-sm bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-neutral-900 text-neutral-100 rounded-2xl p-6 w-full max-w-md border border-neutral-700 shadow-2xl">
                 <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold text-[var(--color-text-primary)] mb-2">Complete Registration</h2>
-                    <p className="text-[var(--color-text-secondary)] text-sm">Please provide additional information to continue</p>
+                    <h2 className="text-2xl font-bold mb-1">Complete Registration</h2>
+                    <p className="text-neutral-400 text-sm">
+                        Please provide additional information to continue
+                    </p>
                 </div>
 
                 {userDetails && (
-                    <div className="mb-6 p-4 bg-[var(--color-surface-secondary)] rounded-xl border border-[var(--color-border-secondary)]">
+                    <div className="mb-6 p-4 bg-neutral-800/70 rounded-xl border border-neutral-700">
                         <div className="flex items-center space-x-3">
                             {userDetails.picture && (
                                 <img
                                     src={userDetails.picture}
                                     alt={userDetails.name}
-                                    className="w-10 h-10 rounded-full border border-[var(--color-border)]"
+                                    className="w-10 h-10 rounded-full border border-neutral-700"
                                 />
                             )}
                             <div className="min-w-0 flex-1">
-                                <p className="font-semibold text-[var(--color-text-primary)] text-sm truncate">{userDetails.name}</p>
-                                <p className="text-[var(--color-text-tertiary)] text-xs truncate">{userDetails.email}</p>
+                                <p className="font-semibold text-sm truncate">{userDetails.name}</p>
+                                <p className="text-neutral-400 text-xs truncate">{userDetails.email}</p>
                             </div>
                         </div>
                     </div>
@@ -118,10 +128,16 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                 <form onSubmit={handleSubmit} className="space-y-5">
                     {/* Role */}
                     <div>
-                        <label className="block text-sm font-semibold text-[var(--color-text-primary)] mb-2">
-                            I am a <span className="text-[var(--color-error)]">*</span>
+                        <label className="block text-sm font-semibold mb-2">
+                            I am a <span className="text-red-500">*</span>
                         </label>
-                        <select name="role" value={formData.role} onChange={handleChange} required className={selectClasses}>
+                        <select
+                            name="role"
+                            value={formData.role}
+                            onChange={handleChange}
+                            required
+                            className={selectClasses}
+                        >
                             <option value="player">Player</option>
                             <option value="viewer">Viewer</option>
                             <option value="manager">Manager</option>
@@ -131,8 +147,8 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                     {/* Username & Gender */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-semibold text-[var(--color-text-primary)] mb-2">
-                                Username <span className="text-[var(--color-error)]">*</span>
+                            <label className="block text-sm font-semibold mb-2">
+                                Username <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"
@@ -145,49 +161,60 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-[var(--color-text-primary)] mb-2">
-                                Gender <span className="text-[var(--color-error)]">*</span>
+                            <label className="block text-sm font-semibold mb-2">
+                                Gender <span className="text-red-500">*</span>
                             </label>
-                            <select name="gender" value={formData.gender} onChange={handleChange} required className={selectClasses}>
+                            <select
+                                name="gender"
+                                value={formData.gender}
+                                onChange={handleChange}
+                                required
+                                className={selectClasses}
+                            >
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                             </select>
                         </div>
                     </div>
 
-                    {/* Phone & Conditional Sport */}
+                    {/* Phone & Sport */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-semibold text-[var(--color-text-primary)] mb-2">Phone Number</label>
+                            <label className="block text-sm font-semibold mb-2">Phone Number</label>
                             <input
                                 type="tel"
                                 name="phone"
                                 value={formData.phone}
                                 onChange={handleChange}
+                                pattern="[0-9]{10}"
+                                maxLength={10}
                                 className={inputClasses}
-                                placeholder="+1 234 567 890"
+                                placeholder="9876543210"
                             />
                         </div>
+
                         {formData.role === 'player' && (
                             <div>
-                                <label className="block text-sm font-semibold text-[var(--color-text-primary)] mb-2">
-                                    Sport <span className="text-[var(--color-error)]">*</span>
+                                <label className="block text-sm font-semibold mb-2">
+                                    Sport <span className="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="text"
+                                <select
                                     name="sport"
                                     value={formData.sport}
                                     onChange={handleChange}
-                                    className={inputClasses}
-                                    placeholder="e.g., Football"
                                     required
-                                />
+                                    className={selectClasses}
+                                >
+                                    <option value="" disabled>Select Sport</option>
+                                    <option value="Cricket">Cricket</option>
+
+                                </select>
                             </div>
                         )}
                     </div>
 
-                    <div className="text-xs text-[var(--color-text-tertiary)]">
-                        <span className="text-[var(--color-error)]">*</span> Required fields
+                    <div className="text-xs text-neutral-400">
+                        <span className="text-red-500">*</span> Required fields
                     </div>
 
                     {/* Buttons */}
@@ -196,14 +223,14 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                             type="button"
                             onClick={onClose}
                             disabled={loading}
-                            className="px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200 border border-[var(--color-border)] text-[var(--color-text-secondary)] bg-[var(--color-surface)] hover:bg-[var(--color-hover)] hover:text-[var(--color-text-primary)] disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-6 py-3 text-sm font-medium rounded-lg border border-neutral-700 bg-neutral-800 hover:bg-neutral-700 transition-all disabled:opacity-50"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-6 py-3 text-sm font-medium text-white rounded-lg transition-all duration-200 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--color-focus)] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)]"
+                            className="px-6 py-3 text-sm font-medium text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-neutral-900 disabled:opacity-50"
                         >
                             {loading ? (
                                 <span className="flex items-center space-x-2">

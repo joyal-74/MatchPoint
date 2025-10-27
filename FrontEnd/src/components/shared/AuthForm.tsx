@@ -1,6 +1,7 @@
 import React from "react";
 import { FaFacebookF, FaGoogle, FaUser } from "react-icons/fa";
 import { useGoogleLogin } from "@react-oauth/google";
+import FacebookLogin from "@greatsumini/react-facebook-login";
 
 
 interface AuthFormProps {
@@ -17,6 +18,7 @@ interface AuthFormProps {
     agreementText?: string;
     width?: string;
     onGoogleSuccess?: (token: string) => void;
+    onFacebookSuccess?: (token: string) => void;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({
@@ -32,11 +34,14 @@ const AuthForm: React.FC<AuthFormProps> = ({
     agreementText,
     width = "w-1/2",
     onGoogleSuccess,
+    onFacebookSuccess,
 }) => {
 
     const googleLogin = useGoogleLogin({
         onSuccess: (tokenResponse) => {
-            onGoogleSuccess(tokenResponse.code)
+            if (onGoogleSuccess) {
+                onGoogleSuccess(tokenResponse.code)
+            }
         },
         onError: (error) => {
             console.error('Google OAuth error:', error);
@@ -44,7 +49,6 @@ const AuthForm: React.FC<AuthFormProps> = ({
         flow: 'auth-code',
         scope: 'openid email profile',
     });
-
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-900 via-neutral-950 to-black text-white relative overflow-hidden">
@@ -88,16 +92,33 @@ const AuthForm: React.FC<AuthFormProps> = ({
                                     {onGoogleSuccess && (
                                         <button
                                             onClick={() => googleLogin()}
-                                            className="p-2 rounded-full bg-white/10 hover:bg-green-500/10 transition flex items-center justify-center cursor-pointer"
+                                            className="p-2 rounded-full bg-green-500/10 hover:bg-green-500/30 transition flex items-center justify-center cursor-pointer"
                                         >
                                             <FaGoogle className="text-white" />
                                         </button>
                                     )}
 
+                                    <FacebookLogin
+                                        appId={import.meta.env.VITE_FACEBOOK_APP_ID}
+                                        onSuccess={(response) => {
+                                            const accessToken = response?.accessToken;
 
-                                    <button className="p-2 rounded-full bg-white/10 hover:bg-blue-600/10 transition flex items-center justify-center cursor-pointer">
-                                        <FaFacebookF className="text-white" />
-                                    </button>
+                                            if (onFacebookSuccess && accessToken) {
+                                                onFacebookSuccess(accessToken);
+                                            } else {
+                                                console.error("Facebook login failed or no access token found");
+                                            }
+                                        }}
+                                        onFail={(error) => console.error("Facebook login error:", error)}
+                                        render={({ onClick }) => (
+                                            <button
+                                                onClick={onClick}
+                                                className="p-2 rounded-full bg-blue-600/10 hover:bg-blue-600/30 transition flex items-center justify-center cursor-pointer"
+                                            >
+                                                <FaFacebookF className="text-white text-lg" />
+                                            </button>
+                                        )}
+                                    />
 
 
                                     <button className="p-2 rounded-full bg-white/10 hover:bg-gray-500/10 transition flex items-center justify-center cursor-pointer">

@@ -71,3 +71,14 @@ export interface UserEntity {
     profileImage?: string;
     sport?: string;
 }
+
+
+export interface SocialUserRegisterData {
+    tempToken: string,
+    role: UserRole,
+    gender: GenderType,
+    authProvider: string,
+    sport: string,
+    phone: string,
+    username: string
+}

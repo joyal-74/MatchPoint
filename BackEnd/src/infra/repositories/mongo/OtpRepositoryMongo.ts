@@ -1,4 +1,4 @@
-import { IOtpRepository } from "app/repositories/interfaces/IOtpRepository";
+import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
 import { OtpResponse } from "domain/entities/Otp";
 import OTPModel from "infra/databases/mongo/models/OtpModel";
 

@@ -1,5 +1,5 @@
 import { ILogger } from "app/providers/ILogger";
-import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
+import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { IGetAllTeamsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 import { Filters, TeamDataSummary } from "domain/dtos/Team.dto";
 

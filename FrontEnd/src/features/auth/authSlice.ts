@@ -2,8 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
     loginUser, loginAdmin, resendOtp, signupUser, verifyOtp, logoutUser, requestResetOtp,
     verifyResetOtp, resetPassword, refreshToken,
-    loginUserGoogleComplete,
-    loginUserGoogle
+    loginUserSocialComplete,
+    loginUserGoogle,
+    loginUserFacebook
 } from "./authThunks";
 import type { AuthUser } from "../../types/User";
 
@@ -12,6 +13,8 @@ interface AuthState {
     loading: boolean;
     error: string | null;
     signupSuccess: boolean;
+    tempToken: string | null;
+    authProvider: 'google' | 'facebook' | null;
     expiresAt: string | null;
     otpVerified: boolean;
     resetOtpSent: boolean;
@@ -26,7 +29,9 @@ const initialState: AuthState = {
     loading: false,
     error: null,
     signupSuccess: false,
-    expiresAt : null,
+    tempToken: null,
+    authProvider: null,
+    expiresAt: null,
     otpVerified: false,
     resetOtpSent: false,
     resetOtpVerified: false,
@@ -42,6 +47,7 @@ const authSlice = createSlice({
             state.user = null;
             state.error = null;
             state.signupSuccess = false;
+            state.tempToken = null;
             state.otpVerified = false;
             state.resetOtpSent = false;
             state.resetOtpVerified = false;
@@ -65,10 +71,16 @@ const authSlice = createSlice({
         setUser: (state, action) => {
             state.user = action.payload;
         },
-        setResetData (state, action) {
+        setResetData(state, action) {
             state.resetEmail = action.payload.email;
             state.expiresAt = action.payload.expiresAt;
-        }
+        },
+        clearTempToken: (state) => {
+            state.tempToken = null;
+        },
+        clearAuthProvider: (state) => {
+            state.authProvider = null;
+        },
     },
     extraReducers: (builder) => {
         // Login (Admin)
@@ -112,6 +124,8 @@ const authSlice = createSlice({
             .addCase(loginUserGoogle.fulfilled, (state, action) => {
                 console.log(action.payload)
                 state.user = action.payload?.user || null;
+                state.tempToken = action.payload?.tempToken || null;
+                state.authProvider = action.payload?.authProvider || null;
                 state.loading = false;
                 state.error = null;
             })
@@ -121,17 +135,35 @@ const authSlice = createSlice({
             });
 
         builder
-            .addCase(loginUserGoogleComplete.pending, (state) => {
+            .addCase(loginUserFacebook.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(loginUserGoogleComplete.fulfilled, (state, action) => {
+            .addCase(loginUserFacebook.fulfilled, (state, action) => {
+                console.log(action.payload)
+                state.user = action.payload?.user || null;
+                state.tempToken = action.payload?.tempToken || null;
+                state.authProvider = action.payload?.authProvider || null;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(loginUserFacebook.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? action.error.message ?? "Login failed";
+            });
+
+        builder
+            .addCase(loginUserSocialComplete.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(loginUserSocialComplete.fulfilled, (state, action) => {
                 console.log(action.payload)
                 state.user = action.payload;
                 state.loading = false;
                 state.error = null;
             })
-            .addCase(loginUserGoogleComplete.rejected, (state, action) => {
+            .addCase(loginUserSocialComplete.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? action.error.message ?? "Login failed";
             });
@@ -278,5 +310,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { logout, clearError, resetPasswordFlow, resetSignupState, clearResetEmail, setUser, setResetData } = authSlice.actions;
+export const { logout, clearError, resetPasswordFlow, resetSignupState, clearResetEmail, setUser, setResetData, clearTempToken, clearAuthProvider } = authSlice.actions;
 export default authSlice.reducer;

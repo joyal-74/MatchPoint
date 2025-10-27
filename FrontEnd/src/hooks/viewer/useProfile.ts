@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import type { RootState } from "../../app/store";
 import type { UserProfile } from "../../types/Profile";
-import { toast } from "react-toastify";
 import { fetchViewerData, updateViewerData } from "../../features/viewer/viewerThunks";
+import toast from "react-hot-toast";
 
 export const useProfile = () => {
     const dispatch = useAppDispatch();
     const { viewer, loading, error } = useAppSelector((state: RootState) => state.viewer);
     const viewerId = useAppSelector((state: RootState) => state.auth.user?._id);
+
+    console.log('vieer', viewer)
 
     const [isEditing, setIsEditing] = useState(false);
     const [profileImage, setProfileImage] = useState<string | null>(null);

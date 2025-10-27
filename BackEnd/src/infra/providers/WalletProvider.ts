@@ -1,5 +1,5 @@
 import { IPaymentProvider, PaymentMetadata, PaymentSession } from "app/providers/IPaymentProvider";
-import { IWalletRepository } from "app/repositories/interfaces/IWalletRepository";
+import { IWalletRepository } from "app/repositories/interfaces/shared/IWalletRepository";
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
 import { BadRequestError, NotFoundError } from "domain/errors";
 

@@ -12,8 +12,10 @@ import {
     IViewerSignupUseCase, IPlayerSignupUseCase, IManagerSignupUseCase,
     IForgotPasswordUseCase, IVerifyOtpUseCase,
     IResendOtpUseCase, IResetPasswordUseCase,
-    ILoginGoogleUser, IGoogleUserAuthUseCase
-} from 'app/repositories/interfaces/IAuthenticationUseCase';
+    ILoginGoogleUser,
+    ILoginFacebookUser,
+    ISocialUserAuthUseCase
+} from 'app/repositories/interfaces/auth/IAuthenticationUseCase';
 
 /**
  * Controller responsible for authentication and authorization operations.
@@ -24,7 +26,8 @@ export class AuthController implements IAuthController {
     constructor(
         private _userAuthUseCase: IUserAuthUseCase,
         private _userGoogleAuthUseCase: ILoginGoogleUser,
-        private _completeGoogleProfileUC: IGoogleUserAuthUseCase,
+        private _userFacebookAuthUseCase: ILoginFacebookUser,
+        private _completeSocialProfileUC: ISocialUserAuthUseCase,
         private _adminAuthUseCase: IAdminAuthUseCase,
         private _logoutUserUseCase: ILogoutUseCase,
         private _signupViewerUseCase: IViewerSignupUseCase,
@@ -61,7 +64,7 @@ export class AuthController implements IAuthController {
 
     loginGoogleUser = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { code } = httpRequest.body;
-        
+
         const result = await this._userGoogleAuthUseCase.execute(code);
 
         console.log(result, "result")
@@ -70,16 +73,38 @@ export class AuthController implements IAuthController {
             return new HttpResponse(HttpStatusCode.OK, {
                 ...buildResponse(true, "New Google user — proceed to complete signup", {
                     tempToken: result.tempToken,
+                    authProvider: result.authProvider,
                 }),
             });
         }
 
         return new HttpResponse(HttpStatusCode.OK, {
-            ...buildResponse(true, "Google login successful", {
-                user: result.user,
-                accessToken: result.accessToken,
-                refreshToken: result.refreshToken,
-            }),
+            ...buildResponse(true, 'Google User login successful', { user: result.user }),
+            accessToken: result.accessToken,
+            refreshToken: result.refreshToken,
+        });
+    };
+
+    loginFacebookUser = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { code } = httpRequest.body;
+
+        const result = await this._userFacebookAuthUseCase.execute(code);
+
+        console.log(result, "result")
+
+        if (result.isNewUser) {
+            return new HttpResponse(HttpStatusCode.OK, {
+                ...buildResponse(true, "New Facebook user — proceed to complete signup", {
+                    tempToken: result.tempToken,
+                    authProvider: result.authProvider,
+                }),
+            });
+        }
+
+        return new HttpResponse(HttpStatusCode.OK, {
+            ...buildResponse(true, 'Facebook User login successful', { user: result.user }),
+            accessToken: result.accessToken,
+            refreshToken: result.refreshToken,
         });
     };
 
@@ -138,12 +163,9 @@ export class AuthController implements IAuthController {
     }
 
 
-    signupGoogleAccount = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+    completeSocialAccount = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
 
-        const { tempToken, role, gender, sport, phone, username } = httpRequest.body;
-        console.log(httpRequest.body)
-
-        const result = await this._completeGoogleProfileUC.execute(tempToken, role, gender, sport, phone, username);
+        const result = await this._completeSocialProfileUC.execute(httpRequest.body);
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, 'User account created', { user: result.user, }));
     }
 

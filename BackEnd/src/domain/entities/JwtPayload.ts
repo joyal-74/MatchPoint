@@ -1,3 +1,4 @@
+import { FacebookPictureData } from "app/services/auth/IFacebookServices";
 import { AllRole } from "domain/enums/Roles";
 
 export interface JwtPayload {
@@ -8,5 +9,5 @@ export interface JwtPayload {
 export interface JwtTempPayload {
     email: string;
     name: string;
-    picture?: string;
+    picture?: FacebookPictureData | string;
 }

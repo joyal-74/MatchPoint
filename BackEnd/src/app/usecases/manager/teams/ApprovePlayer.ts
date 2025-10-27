@@ -1,5 +1,5 @@
 import { TeamMapper } from "app/mappers/TeamMappers";
-import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
+import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { IApprovePlayerUseCase } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
 import { TeamDataFull } from "domain/dtos/Team.dto";
 import { BadRequestError, NotFoundError } from "domain/errors";

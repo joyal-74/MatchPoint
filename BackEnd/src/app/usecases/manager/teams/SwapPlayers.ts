@@ -1,5 +1,5 @@
 import { ILogger } from "app/providers/ILogger";
-import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
+import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { ISwapPlayers } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
 import { playerStatus } from "domain/dtos/Team.dto";
 import { BadRequestError, NotFoundError } from "domain/errors";

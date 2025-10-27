@@ -1,7 +1,7 @@
 import { ManagerMapper } from "app/mappers/ManagerMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
-import { IUpdateManagerProfile } from "app/repositories/interfaces/IUserProfileRepository";
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
+import { IUpdateManagerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { ManagerResponseDTO, ManagerUpdateDTO } from "domain/dtos/Manager.dto";
 import { File } from "domain/entities/File";
 import { NotFoundError } from "domain/errors";

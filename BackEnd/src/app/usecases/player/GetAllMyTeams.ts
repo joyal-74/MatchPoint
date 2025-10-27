@@ -1,5 +1,5 @@
 import { ILogger } from "app/providers/ILogger";
-import { IPlayerTeamServices } from "app/providers/IPlayerTeamServices";
+import { IPlayerTeamServices } from "app/services/player/IPlayerTeamServices";
 import { IGetAllMyTeamsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 import { PlayerTeamResponseDTO } from "domain/dtos/Team.dto";
 

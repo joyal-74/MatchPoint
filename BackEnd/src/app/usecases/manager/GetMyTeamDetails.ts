@@ -1,6 +1,6 @@
 import { TeamMapper } from "app/mappers/TeamMappers";
 import { ILogger } from "app/providers/ILogger";
-import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
+import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { IGetMyTeamDetailsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 import { TeamDataFull } from "domain/dtos/Team.dto";
 import { NotFoundError } from "domain/errors";

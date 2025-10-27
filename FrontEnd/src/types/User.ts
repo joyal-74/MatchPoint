@@ -55,11 +55,12 @@ export interface RegisterUser {
 }
 
 
-export interface LoginGoogleResult {
+export interface LoginSocialResult {
     success: boolean;
     message?: string;
     errors?: { global?: string };
     tempToken?: string;
+    authProvider?: 'google' | 'facebook' | null;
     user?: LoginUser;
     accessToken?: string;
     refreshToken?: string;

@@ -8,7 +8,8 @@ const router = Router();
 router.post('/admin/login', expressAdapter(authControllers.loginAdmin));
 router.post('/login', expressAdapter(authControllers.loginUser));
 router.post('/google-login', expressAdapter(authControllers.loginGoogleUser));
-router.post('/google-complete', expressAdapter(authControllers.signupGoogleAccount));
+router.post('/facebook-login', expressAdapter(authControllers.loginFacebookUser));
+router.post('/social-complete', expressAdapter(authControllers.completeSocialAccount));
 router.get('/refresh', expressAdapter(authControllers.refreshToken));
 
 router.post('/signup/viewer', expressAdapter(authControllers.signupViewer));

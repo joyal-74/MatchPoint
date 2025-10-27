@@ -1,8 +1,8 @@
 import { PlayerMapper } from "app/mappers/PlayerMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
 import { ILogger } from "app/providers/ILogger";
-import { IPlayerService } from "app/providers/IPlayerService";
-import { IUpdatePlayerProfile } from "app/repositories/interfaces/IUserProfileRepository";
+import { IPlayerService } from "app/services/player/IPlayerService";
+import { IUpdatePlayerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
 import { PlayerProfileResponse, PlayerUpdateDTO } from "domain/dtos/Player.dto";
 import { File } from "domain/entities/File";
 import { NotFoundError } from "domain/errors";

@@ -1,4 +1,4 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
 import { ILogger } from "app/providers/ILogger";

@@ -1,8 +1,8 @@
 import { AdminToResponseDTO } from "domain/dtos/Admin.dto";
-import { ILoginGoogleUserResponse, UserLoginResponseDTO } from "domain/dtos/User.dto";
+import { ILoginSocialUserResponse, UserLoginResponseDTO } from "domain/dtos/User.dto";
 import { ManagerRegister } from "domain/entities/Manager";
 import { PlayerRegister } from "domain/entities/Player";
-import { UserRegister } from "domain/entities/User";
+import { socialRserRegisterData, UserRegister } from "domain/entities/User";
 import { OtpContext } from "domain/enums/OtpContext";
 
 
@@ -14,8 +14,8 @@ export interface IAuthUseCase<TAccount> {
     }>;
 }
 
-export interface ICompleteGoogleSignup<TAccount> {
-    execute(tempToken: string, role: string, gender: string, sport: string, phone: string, username: string): Promise<{
+export interface ICompleteSocialSignup<TAccount> {
+    execute(useData : socialRserRegisterData): Promise<{
         user: TAccount;
         accessToken: string;
         refreshToken: string;
@@ -40,7 +40,11 @@ export interface ILogoutUseCase {
 }
 
 export interface ILoginGoogleUser {
-    execute(tokenId: string): Promise<ILoginGoogleUserResponse>;
+    execute(authcode: string): Promise<ILoginSocialUserResponse>;
+}
+
+export interface ILoginFacebookUser {
+    execute(tokenId: string): Promise<ILoginSocialUserResponse>;
 }
 
 export type TokenUserResponse = UserLoginResponseDTO | AdminToResponseDTO;
@@ -81,7 +85,7 @@ export interface IResetPasswordUseCase {
 // Auth (login) aliases
 export type IAdminAuthUseCase = IAuthUseCase<AdminToResponseDTO>;
 export type IUserAuthUseCase = IAuthUseCase<UserLoginResponseDTO>;
-export type IGoogleUserAuthUseCase = ICompleteGoogleSignup<UserLoginResponseDTO>;
+export type ISocialUserAuthUseCase = ICompleteSocialSignup<UserLoginResponseDTO>;
 
 
 // Signup aliases

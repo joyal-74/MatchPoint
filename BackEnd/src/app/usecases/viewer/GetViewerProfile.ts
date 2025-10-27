@@ -1,9 +1,9 @@
 import { UserMapper } from "app/mappers/UserMapper";
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { NotFoundError } from "domain/errors";
 import { ILogger } from "app/providers/ILogger";
 import { UserResponseDTO } from "domain/dtos/User.dto";
-import { IGetViewerProfile } from "app/repositories/interfaces/IUserProfileRepository";
+import { IGetViewerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
 
 export class GetViewerProfile implements IGetViewerProfile {
     constructor(

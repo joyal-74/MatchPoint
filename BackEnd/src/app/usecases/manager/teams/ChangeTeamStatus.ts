@@ -1,5 +1,5 @@
 import { ILogger } from "app/providers/ILogger";
-import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
+import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { IChangeTeamStatusUseCase, } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
 import { BadRequestError } from "domain/errors";
 

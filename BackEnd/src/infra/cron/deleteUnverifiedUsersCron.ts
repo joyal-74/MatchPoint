@@ -1,6 +1,6 @@
-import { IScheduler } from "app/repositories/interfaces/IScheduler";
-import { DeleteUnverifiedUsers } from "app/usecases/authentication/DeleteUnverifiedUsers.ts";
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
+import { IScheduler } from "app/repositories/interfaces/providers/IScheduler";
+import { DeleteUnverifiedUsers } from "app/usecases/auth/DeleteUnverifiedUsers.ts";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
 import { ILogger } from "app/providers/ILogger";

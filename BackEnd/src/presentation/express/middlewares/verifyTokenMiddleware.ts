@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IJWTRepository } from "app/repositories/interfaces/IjwtRepository";
+import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 

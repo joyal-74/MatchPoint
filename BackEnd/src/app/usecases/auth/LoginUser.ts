@@ -1,10 +1,10 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
-import { IJWTRepository } from "app/repositories/interfaces/IjwtRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
+import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
 import { JwtPayload } from "domain/entities/JwtPayload";
 import { NotFoundError, UnauthorizedError } from "domain/errors";
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { ILogger } from "app/providers/ILogger";
-import { IUserAuthUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
+import { IUserAuthUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 import { UserMapper } from "app/mappers/UserMapper";
 
 export class LoginUser implements IUserAuthUseCase {

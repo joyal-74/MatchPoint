@@ -20,9 +20,10 @@ export interface UserLoginResponseDTO {
     isActive : boolean;
 }
 
-export interface ILoginGoogleUserResponse {
+export interface ILoginSocialUserResponse {
     isNewUser: boolean;
     tempToken?: string;
+    authProvider?: string;
     accessToken?: string;
     refreshToken?: string;
     user?: any;

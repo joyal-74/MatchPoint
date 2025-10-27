@@ -1,4 +1,4 @@
-import { ITeamRepository } from "app/repositories/interfaces/ITeamRepository";
+import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "domain/dtos/Team.dto";
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { TeamModel } from "infra/databases/mongo/models/TeamModel";

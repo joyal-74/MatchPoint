@@ -22,7 +22,7 @@ const Navbar: React.FC = () => {
 
     const handleLogout = async () => {
         await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
-        navigate("/logout");
+        navigate("/login");
     };
 
     const handleProfileAction = (action: "logout" | "teams" | "profile") => {

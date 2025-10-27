@@ -1,6 +1,6 @@
 import { ILogger } from "app/providers/ILogger";
-import { ILogoutUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
-import { ILogoutService } from "app/providers/ILogoutService";
+import { ILogoutUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
+import { ILogoutService } from "app/services/user/ILogoutService";
 
 export class LogoutUser implements ILogoutUseCase {
     constructor(

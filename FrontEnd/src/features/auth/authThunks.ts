@@ -15,9 +15,14 @@ export const loginUserGoogle = createAsyncThunk(
     createApiThunk(authEndpoints.loginGoogle)
 );
 
-export const loginUserGoogleComplete = createAsyncThunk(
-    "auth/googleComplete",
-    createApiThunk(authEndpoints.loginUserGoogleComplete)
+export const loginUserFacebook = createAsyncThunk(
+    "auth/loginFacebook",
+    createApiThunk(authEndpoints.loginFacebook)
+);
+
+export const loginUserSocialComplete = createAsyncThunk(
+    "auth/socialComplete",
+    createApiThunk(authEndpoints.loginSocialComplete)
 );
 
 // Admin login

@@ -1,4 +1,4 @@
-import { ITournamentRepository } from "app/repositories/interfaces/ITournamentRepository";
+import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
 import { TournamentRegister, Tournament, TournamentTeam } from "domain/entities/Tournaments";
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { TournamentModel } from "infra/databases/mongo/models/TournamentModel";

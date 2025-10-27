@@ -55,4 +55,5 @@ export interface CompleteUserData {
     sport?: string;
     username: string;
     phone: string;
+    authProvider: string;
 }

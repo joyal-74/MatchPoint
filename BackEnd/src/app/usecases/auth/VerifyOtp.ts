@@ -1,8 +1,8 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
-import { IOtpRepository } from "app/repositories/interfaces/IOtpRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
+import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { OtpContext } from "domain/enums/OtpContext";
-import { IVerifyOtpUseCase } from "app/repositories/interfaces/IAuthenticationUseCase";
+import { IVerifyOtpUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 
 export class VerifyOtp implements IVerifyOtpUseCase {
     constructor(
