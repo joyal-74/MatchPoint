@@ -4,7 +4,6 @@ import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
 import { expressFileUpdateHandler } from "presentation/adaptors/ExpressFileAdaptor";
 import { managerProfileController, teamManagementController, tournamentManagementController } from "presentation/composition";
 
-
 const router = Router();
 const upload = multer();
 
@@ -21,8 +20,8 @@ router.patch('/team/:teamId', expressAdapter(teamManagementController.deleteTeam
 router.post("/team", upload.single("logo"), expressFileUpdateHandler(teamManagementController.addNewTeam));
 router.put("/team/:teamId", upload.single("logo"), expressFileUpdateHandler(teamManagementController.editTeam));
 
-router.post("/tournament", expressAdapter(tournamentManagementController.addNewTournament));
-router.put("/tournament/:managerId", expressAdapter(tournamentManagementController.editTournament));
+router.post("/tournament", upload.single("banner"), expressFileUpdateHandler(tournamentManagementController.addNewTournament));
+router.put("/tournament/:managerId", upload.single("banner"), expressFileUpdateHandler(tournamentManagementController.editTournament));
 router.get("/tournament/:managerId", expressAdapter(tournamentManagementController.getMyTournaments));
 router.patch("/tournament/:tournamentId", expressAdapter(tournamentManagementController.cancelTournament));
 router.get("/tournament/:tournamentId/details", expressAdapter(tournamentManagementController.tournamentDetails));

@@ -3,6 +3,7 @@ import { Trophy, Calendar, MapPin } from "lucide-react";
 import DetailRow from "../shared/DetailRow";
 import TournamentStats from "../shared/TournamentStats";
 import type { Tournament } from "../../../../../features/manager/managerTypes";
+import MapDetails from "../shared/MapDetails";
 
 interface InfoTabProps {
     tournamentData: Tournament;
@@ -40,6 +41,10 @@ export default function InfoTab({ tournamentData }: InfoTabProps) {
                                 value={tournamentData.prizePool}
                                 highlight="text-amber-400"
                             />
+                            <DetailRow
+                                label="Registration Deadline"
+                                value={new Date(tournamentData.endDate).toLocaleDateString()}
+                            />
                         </div>
                     </div>
 
@@ -49,13 +54,12 @@ export default function InfoTab({ tournamentData }: InfoTabProps) {
                             Schedule & Venue
                         </h2>
                         <div className="space-y-4">
-                            <DetailRow
-                                label="Registration Deadline"
-                                value={new Date(tournamentData.endDate).toLocaleDateString()}
-                            />
-                            <DetailRow
+
+                            <MapDetails
                                 label="Location"
-                                value={tournamentData.location}
+                                location={tournamentData.location}
+                                longitude={tournamentData.longitude}
+                                latitude={tournamentData.latitude}
                                 icon={<MapPin size={18} className="text-purple-400" />}
                             />
                         </div>

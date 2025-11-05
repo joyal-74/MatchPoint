@@ -74,9 +74,10 @@ export class TournamentController implements ITournamentController {
      */
     addNewTournament = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentData = httpRequest.body;
+        const file = httpRequest.file;
 
         this._logger.info(`[TournamentController] addNewTournament → managerId=${tournamentData.managerId}`);
-        const result = await this._addTournamentsUsecase.execute(tournamentData);
+        const result = await this._addTournamentsUsecase.execute(tournamentData, file);
 
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Tournament added successfully", result));
     };
@@ -88,9 +89,11 @@ export class TournamentController implements ITournamentController {
      */
     editTournament = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentData = httpRequest.body;
+        const file = httpRequest.file;
+
 
         this._logger.info(`[TournamentController] editTournament → managerId=${tournamentData.managerId}`);
-        const result = await this._editTournamentsUsecase.execute(tournamentData);
+        const result = await this._editTournamentsUsecase.execute(tournamentData, file);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournament updated successfully", result));
     };

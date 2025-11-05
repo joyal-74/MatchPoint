@@ -22,7 +22,8 @@ export const initialFormData = (managerId: string): TournamentFormData => ({
     format: 'knockout',
     prizePool: 0,
     playersPerTeam: 0,
-    rules: []
+    rules: [],
+    banner: undefined
 });
 
 export const initialEditFormData = (managerId: string, id: string): updateTournamentFormData => ({
@@ -46,7 +47,8 @@ export const initialEditFormData = (managerId: string, id: string): updateTourna
     prizePool: 0,
     playersPerTeam: 0,
     status: 'ongoing',
-    rules: []
+    rules: [],
+    banner: undefined,
 });
 
 
@@ -71,5 +73,6 @@ export const mapTournamentToFormData = (tournament: Tournament): updateTournamen
     prizePool: tournament.prizePool,
     playersPerTeam: tournament.playersPerTeam,
     status: tournament.status,
-    rules: tournament.rules
+    rules: tournament.rules,
+    banner: tournament.banner,
 });

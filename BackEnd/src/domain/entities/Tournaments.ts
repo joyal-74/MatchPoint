@@ -44,6 +44,7 @@ export interface Tournament {
     contact: Contact;
     rules: string[];
     isDeleted : boolean;
+    banner : string;
 }
 
 export interface TournamentRegister {

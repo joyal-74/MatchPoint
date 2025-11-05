@@ -15,7 +15,7 @@ export const validateTournamentForm = (data: TournamentFormData): ValidationResu
     if (!data.regDeadline) errors.regDeadline = "Registration deadline is required.";
     if (!data.format) errors.format = "Please select a tournament format.";
     if (!data.description.trim()) errors.description = "Description is required.";
-    if (!data.entryFee.trim()) errors.entryFee = "Entry Fee is required.";
+    if (!data.entryFee) errors.entryFee = "Entry Fee is required.";
 
     if (data.minTeams < 2) errors.minTeams = "Minimum teams must be at least 2.";
     if (data.maxTeams < data.minTeams) errors.maxTeams = "Max teams must be greater than or equal to min teams.";

@@ -19,6 +19,7 @@ export interface TournamentFormData {
     prizePool: number;
     playersPerTeam: number;
     rules: string[];
+    banner: File | string | undefined;
 }
 
 

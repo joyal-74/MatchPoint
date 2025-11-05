@@ -24,6 +24,7 @@ const TournamentSchema = new Schema<TournamentDocument>(
         endDate: { type: Date, required: true },
         regDeadline: { type: Date, required: true },
         location: { type: String },
+        banner: { type: String },
         latitude: { type: Number },
         longitude: { type: Number },
         maxTeams: { type: Number, required: true },

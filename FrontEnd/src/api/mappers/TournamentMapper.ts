@@ -36,25 +36,27 @@ export class TournamentMapper {
             managerId: tournament.managerId,
             description: tournament.description,
             sport: tournament.sport,
-            startDate: new Date(tournament.startDate),
-            endDate: new Date(tournament.endDate),
-            regDeadline: new Date(tournament.regDeadline),
+            startDate: tournament.startDate,
+            endDate: tournament.endDate,
+            regDeadline: tournament.regDeadline,
             location: tournament.location,
             maxTeams: tournament.maxTeams,
             minTeams: tournament.minTeams,
             entryFee: String(tournament.entryFee),
+            playersPerTeam : tournament.playersPerTeam,
             format: tournament.format,
             prizePool: tournament.prizePool,
-            rules: tournament.rules
+            rules: tournament.rules,
+            banner : tournament.banner
         };
     }
 
     static toTournamentResponse(data: Tournament): Tournament {
         return {
             ...data,
-            startDate: new Date(data.startDate),
-            endDate: new Date(data.endDate),
-            regDeadline: new Date(data.regDeadline),
+            startDate: data.startDate,
+            endDate: data.endDate,
+            regDeadline: data.regDeadline,
             rules: data.rules || [],
         };
     }

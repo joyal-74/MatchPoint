@@ -74,6 +74,7 @@ export interface TournamentCard {
     format: Formats;
     createdAt: Date,
     updatedAt: Date,
+    banner: File | string | undefined;
 }
 
 export interface Tournament extends TournamentCard {

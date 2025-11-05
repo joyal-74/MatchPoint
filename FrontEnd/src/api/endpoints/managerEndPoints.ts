@@ -1,9 +1,8 @@
 import type { Team } from "../../components/manager/teams/Types";
 import type { RegisteredTeam } from "../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
-import type { TournamentFormData, updateTournamentFormData } from "../../components/manager/tournaments/TournamentModal/types";
 import type { PaymentInitiateResponse } from "../../components/manager/tournaments/Types";
 import { MANAGER_ROUTES } from "../../constants/managerRoutes";
-import type { Fixture, Match, Tournament, TournamentRegister, TournamentUpdate } from "../../features/manager/managerTypes";
+import type { Fixture, Match, Tournament } from "../../features/manager/managerTypes";
 import type { User } from "../../types/User";
 import axiosClient from "../http/axiosClient";
 import { TournamentMapper } from "../mappers/TournamentMapper";
@@ -47,9 +46,11 @@ export const managerEndpoints = {
         return data.data;
     },
 
-    createTournament: async ({ formData, managerId }: { formData: TournamentFormData, managerId: string }): Promise<Tournament> => {
-        const tournamentPayload: TournamentRegister = TournamentMapper.fromFormData(formData, managerId);
-        const { data } = await axiosClient.post(MANAGER_ROUTES.CREATE_TOURNAMENT, tournamentPayload);
+    createTournament: async (formData: FormData): Promise<Tournament> => {
+        console.log(formData, 'ffmdta')
+        const { data } = await axiosClient.post(MANAGER_ROUTES.CREATE_TOURNAMENT, formData,
+            { headers: { "Content-Type": "multipart/form-data" } }
+        );
         return TournamentMapper.toTournamentResponse(data.data);
     },
 
@@ -58,10 +59,10 @@ export const managerEndpoints = {
         return data.data;
     },
 
-    editTournament: async ({ formData, managerId }: { formData: updateTournamentFormData; managerId: string }): Promise<Tournament> => {
-        const tournamentPayload: TournamentUpdate = TournamentMapper.fromEditingData(formData, managerId);
-
-        const { data } = await axiosClient.put(MANAGER_ROUTES.EDIT_TOURNAMENT(formData._id!), tournamentPayload);
+    editTournament: async ({ formData, tourId }: { formData: FormData, tourId: string }): Promise<Tournament> => {
+        const { data } = await axiosClient.put(MANAGER_ROUTES.EDIT_TOURNAMENT(tourId), formData,
+            { headers: { "Content-Type": "multipart/form-data" } }
+        );
         return TournamentMapper.toTournamentResponse(data.data);
     },
 

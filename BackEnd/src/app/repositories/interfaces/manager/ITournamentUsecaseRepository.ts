@@ -2,6 +2,8 @@ import { TournamentTeamData } from "domain/dtos/Tournament";
 import { Fixture } from "domain/entities/Fixture";
 import { Match } from "domain/entities/Match";
 import { Tournament } from "domain/entities/Tournaments";
+import type { File } from "domain/entities/File";
+
 
 export interface IGetMyTournaments {
     execute(managerId: string): Promise<Tournament[]>;
@@ -12,11 +14,11 @@ export interface IGetExploreTournaments {
 }
 
 export interface IAddTournament {
-    execute(data: Tournament): Promise<Tournament>;
+    execute(data: Tournament, file? : File): Promise<Tournament>;
 }
 
 export interface IEditTournament {
-    execute(data: Partial<Tournament>): Promise<Tournament>;
+    execute(data: Partial<Tournament>, file?: File): Promise<Tournament>;
 }
 
 export interface ICancelTournament {

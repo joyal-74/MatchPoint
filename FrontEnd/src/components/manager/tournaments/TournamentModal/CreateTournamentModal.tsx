@@ -7,8 +7,7 @@ import FormInput from "./FormInput";
 import ModalHeader from "../../../shared/modal/ModalHeader";
 import FormActions from "../../../shared/modal/FormActions";
 import MapPicker from "../../../shared/MapPicker";
-import { validateTournamentForm } from "../../../../validators/validateTournamentForm";
-
+import { validateTournamentForm } from "../../../../validators/ValidateTournamentForm";
 
 export default function CreateTournamentModal({
     isOpen,
@@ -23,6 +22,7 @@ export default function CreateTournamentModal({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
         const formattedData = {
             ...formData,
             rules: rulesText.split("\n").map((r) => r.trim()).filter((r) => r),
@@ -30,12 +30,40 @@ export default function CreateTournamentModal({
 
         const { isValid, errors: validationErrors } = validateTournamentForm(formattedData);
         setErrors(validationErrors);
-
         if (!isValid) return;
 
-        dispatch(createTournament({ formData: formattedData, managerId }));
-        handleClose();
+        const fd = new FormData();
+        fd.append("managerId", managerId);
+        fd.append("title", formattedData.title);
+        fd.append("sport", formattedData.sport);
+        fd.append("description", formattedData.description);
+        fd.append("startDate", new Date(formattedData.startDate).toISOString());
+        fd.append("endDate", new Date(formattedData.endDate).toISOString());
+        fd.append("regDeadline", new Date(formattedData.regDeadline).toISOString());
+        fd.append("location", formattedData.location);
+        fd.append("latitude", String(formattedData.latitude ?? ""));
+        fd.append("longitude", String(formattedData.longitude ?? ""));
+        fd.append("maxTeams", String(formattedData.maxTeams));
+        fd.append("minTeams", String(formattedData.minTeams));
+        fd.append("entryFee", String(formattedData.entryFee));
+        fd.append("format", formattedData.format);
+        fd.append("prizePool", String(formattedData.prizePool));
+        fd.append("playersPerTeam", String(formattedData.playersPerTeam));
+
+        formattedData.rules.forEach((rule, i) => {
+            fd.append(`rules[${i}]`, rule);
+        });
+
+        if (formattedData.banner instanceof File) {
+            fd.append("banner", formattedData.banner);
+        }
+
+        dispatch(createTournament(fd))
+            .unwrap()
+            .then(() => handleClose())
+            .catch((err) => console.log("Error in tournament creation", err));
     };
+
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -50,7 +78,7 @@ export default function CreateTournamentModal({
         setFormData((prev) => ({
             ...prev,
             [name]:
-                name.includes("Teams") || name === "prizePool"
+                (name.includes("Teams") || name === "prizePool" || name === "entryFee" || name === "playersPerTeam")
                     ? Number(value)
                     : value,
         }));
@@ -76,7 +104,7 @@ export default function CreateTournamentModal({
         { label: "Tournament Format", type: "select", name: "format", options: formats },
         { label: "Entry Fee", type: "number", name: "entryFee", placeholder: "Enter minimum entry fee", min: "0" },
         { label: "Players per Team", type: "number", name: "playersPerTeam", placeholder: "Enter number of players per team", min: "2" }
-    ];
+    ] as const;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -95,7 +123,7 @@ export default function CreateTournamentModal({
                                 <div key={field.name}>
                                     <FormInput
                                         {...field}
-                                        value={formData[field.name as keyof TournamentFormData]}
+                                        value={formData[field.name as keyof TournamentFormData] as string | number}
                                         onChange={handleChange}
                                     />
                                     {errors[field.name] && (
@@ -113,6 +141,67 @@ export default function CreateTournamentModal({
                             >
                                 💡 How prize pool is calculated?
                             </button>
+                        </div>
+
+                        <div className="mt-6">
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                                Tournament Banner
+                            </label>
+
+                            <div className="flex flex-col items-center gap-3 border border-neutral-600 rounded-xl p-4 bg-neutral-800/60">
+
+                                {/* Preview or Upload Box */}
+                                {!formData.banner ? (
+                                    <label className="w-full cursor-pointer">
+                                        <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-neutral-500 rounded-xl hover:border-neutral-300 transition">
+                                            <span className="text-gray-300 text-sm mb-2">Click to upload banner</span>
+                                            <span className="text-neutral-400 text-xs">Supported formats: JPG, PNG, WEBP</span>
+                                        </div>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0] || undefined;
+                                                setFormData((prev) => ({ ...prev, banner: file }));
+                                            }}
+                                        />
+                                    </label>
+                                ) : (
+                                    <div className="relative w-full">
+                                        <img
+                                            src={URL.createObjectURL(formData.banner as Blob)}
+                                            alt="Preview"
+                                            className="w-full h-48 object-cover rounded-lg border border-neutral-600"
+                                        />
+
+                                        {/* Remove Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => setFormData(prev => ({ ...prev, banner: undefined }))}
+                                            className="absolute top-2 right-2 bg-red-500/80 hover:bg-red-600 text-white text-xs px-2 py-1 rounded"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* Change Image Button */}
+                                {formData.banner && (
+                                    <label className="text-blue-400 text-sm cursor-pointer hover:underline">
+                                        Change Image
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0] || undefined;
+                                                setFormData(prev => ({ ...prev, banner: file }));
+                                            }}
+                                        />
+                                    </label>
+                                )}
+                            </div>
                         </div>
 
                         <div className="mt-6">
@@ -135,7 +224,6 @@ export default function CreateTournamentModal({
                                 </p>
                             )}
                         </div>
-
 
                         <div className="mt-6">
                             <FormInput

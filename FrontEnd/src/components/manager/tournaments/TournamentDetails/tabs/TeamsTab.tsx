@@ -13,10 +13,10 @@ export default function TeamsTab({ registeredTeams }: TeamsTabProps) {
                     <Users className="text-green-400" size={20} />
                     Registered Teams ({registeredTeams.length})
                 </h2>
-                <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-500/20 text-green-300 border border-green-500/30 hover:bg-green-500/30 transition-colors">
+                {/* <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-500/20 text-green-300 border border-green-500/30 hover:bg-green-500/30 transition-colors">
                     <Download size={16} />
                     Export List
-                </button>
+                </button> */}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {registeredTeams.map((team, i) => (
