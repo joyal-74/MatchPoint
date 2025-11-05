@@ -58,9 +58,9 @@ export interface TournamentCard {
     title: string;
     description: string;
     sport: string;
-    startDate: string;
-    endDate: string;
-    regDeadline: string;
+    startDate: string | Date;
+    endDate: string | Date;
+    regDeadline: string | Date;
     location: string;
     latitude: number;
     longitude: number;
@@ -90,9 +90,9 @@ export type TournamentRegister = {
     title: string;
     sport: string;
     description: string;
-    startDate: string;
-    endDate: string;
-    regDeadline: string;
+    startDate: string | Date;
+    endDate: string | Date;
+    regDeadline: string | Date;
     location: string;
     maxTeams: number;
     minTeams: number;

@@ -7,4 +7,5 @@ export interface IRegistrationRepository {
     findByTournamentAndTeam(tournamentId: string, teamId: string): Promise<Registration | null>;
     updatePaymentStatus(registrationId: string, paymentStatus: 'completed' | 'failed', paymentId: string): Promise<TournamentTeamData>;
     findByPaymentId(paymentId: string): Promise<Registration | null>;
+    findByTeamIds(teamIds: string[]): Promise<Registration[] | null>;
 }

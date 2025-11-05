@@ -37,4 +37,27 @@ export class RegistrationRepository implements IRegistrationRepository {
     async findByPaymentId(paymentId: string): Promise<Registration | null> {
         return await RegistrationModel.findOne({ paymentId });
     }
+
+    async findManyByIds(ids: string[], page: number, limit: number): Promise<{ tournaments: TournamentTeamData[]; total: number; }> {
+        const skip = (page - 1) * limit;
+
+        const [tournaments, total] = await Promise.all([RegistrationModel.find({ _id: { $in: ids } })
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 }),
+        RegistrationModel.countDocuments({ _id: { $in: ids } })
+        ]);
+
+        const data = TournamentTeamMongoMapper.toDomainArray(tournaments);
+
+
+        return { tournaments: data, total };
+    }
+
+    async findByTeamIds(teamIds: string[]): Promise<Registration[] | null> {
+        const registrations = await RegistrationModel.find({ teamId: { $in: teamIds } })
+            .lean();
+
+        return registrations.length ? registrations : null;
+    }
 }

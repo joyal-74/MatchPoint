@@ -3,6 +3,7 @@ import multer from "multer";
 import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
 import { expressFileUpdateHandler } from "presentation/adaptors/ExpressFileAdaptor";
 import { playerProfileController, playerTeamController } from "presentation/composition";
+import { playerTournamentController } from "presentation/composition/player/tournaments";
 
 
 const router = Router();
@@ -23,5 +24,7 @@ router.get('/teams/:playerId', expressAdapter(playerTeamController.getAllMyTeams
 router.get('/team/:teamId/details', expressAdapter(playerTeamController.getTeamDetails))
 
 router.post('/:teamId/join', expressAdapter(playerTeamController.joinTeams))
+
+router.get('/tournaments', expressAdapter(playerTournamentController.getplayerTournaments))
 
 export default router;

@@ -50,5 +50,14 @@ export const playerEndpoints = {
         const { data } = await axiosClient.get(PLAYER_ROUTES.GET_MY_TEAM(teamId))
         console.log(data.data)
         return data.data;
-    }
+    },
+
+    fetchTournaments: async (filters?: { status?: string; page?: number; limit?: number; playerId?: string }) => {
+        const { status, page = 1, limit = 10, playerId } = filters || {};
+        const { data } = await axiosClient.get(PLAYER_ROUTES.GET_TOURNAMENTS, {
+            params: { status, page, limit, playerId }
+        });
+
+        return data.data;
+    },
 };

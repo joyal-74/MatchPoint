@@ -7,4 +7,6 @@ export const PLAYER_ROUTES = {
     GET_MY_All_TEAMS: (playerId: string) => `/player/teams/${playerId}`,
     GET_MY_TEAM: (teamId: string) => `/player/team/${teamId}/details`,
     JOIN_TEAM: (teamId: string) => `/player/${teamId}/join`,
+    GET_TOURNAMENTS: `/player/tournaments`,
+    GET_MY_TOURNAMENTS: (playerId: string) => `/player/tournaments/${playerId}`,
 } as const;

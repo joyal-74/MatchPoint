@@ -109,4 +109,40 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
 
         return true
     }
+
+    async findByFilters({ status, page, limit }: { status?: string; page: number; limit: number; }): Promise<{ tournaments: Tournament[]; total: number }> {
+
+        const query = { status: 'ongoing' };
+        if (status) query.status = status;
+
+        const tournaments = await TournamentModel.find(query)
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .sort({ createdAt: -1 });
+
+        const total = await TournamentModel.countDocuments(query);
+
+        const tournamentData = TournamentMongoMapper.toDomainArray(tournaments);
+
+        console.log(tournamentData, 'tournamentData')
+
+        return { tournaments: tournamentData, total };
+    }
+    
+    async findManyByIds(ids: string[], page: number, limit: number): Promise<{ tournaments: Tournament[]; total: number }> {
+
+        const skip = (page - 1) * limit;
+
+        const total = await TournamentModel.countDocuments({ _id: { $in: ids } });
+
+        const tournaments = await TournamentModel.find({ _id: { $in: ids } })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .lean();
+
+        const tournamentData = TournamentMongoMapper.toDomainArray(tournaments);
+
+        return { tournaments : tournamentData, total };
+    }
 }

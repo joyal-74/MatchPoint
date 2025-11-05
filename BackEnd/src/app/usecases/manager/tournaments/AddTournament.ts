@@ -27,7 +27,6 @@ export class AddTournamentUseCase implements IAddTournament {
             bannerUrl = await this._fileStorage.upload(file);
         }
 
-
         const newData = {
             ...data,
             tourId,

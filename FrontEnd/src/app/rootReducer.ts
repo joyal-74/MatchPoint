@@ -6,6 +6,7 @@ import playerReducer from "../features/player/playerSlice";
 import viewerReducer from "../features/viewer/viewerSlice";
 import managerTournamentReducer from "../features/manager/Tournaments/tournamentSlice";
 import playerTeamsReducer from "../features/player/Teams/TeamSlice";
+import playerTournamentReducer from "../features/player/Tournnaments/tournamnetSlice";
 
 const appReducer = combineReducers({
     auth: authReducer,
@@ -15,6 +16,7 @@ const appReducer = combineReducers({
     viewer: viewerReducer,
     managerTournaments: managerTournamentReducer,
     playerTeams: playerTeamsReducer,
+    playerTournaments: playerTournamentReducer,
 });
 
 export type RootState = ReturnType<typeof appReducer>;

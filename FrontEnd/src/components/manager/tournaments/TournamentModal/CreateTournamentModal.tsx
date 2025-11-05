@@ -47,7 +47,7 @@ export default function CreateTournamentModal({
         fd.append("minTeams", String(formattedData.minTeams));
         fd.append("entryFee", String(formattedData.entryFee));
         fd.append("format", formattedData.format);
-        fd.append("prizePool", String(formattedData.prizePool));
+        fd.append("prizePool", String(Number(formattedData.entryFee) * formattedData.minTeams));
         fd.append("playersPerTeam", String(formattedData.playersPerTeam));
 
         formattedData.rules.forEach((rule, i) => {

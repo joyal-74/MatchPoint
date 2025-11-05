@@ -7,8 +7,8 @@ export interface ITeamRepository {
     findAllWithUserId(userId: string, status: string): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
     findAll(managerId: string): Promise<TeamDataFull[]>;
     togglePlayerStatus(teamId: string, playerId: string): Promise<TeamDataFull | null>;
-    playerTeamStatus(teamId: string, playerId: string, status : PlayerApprovalStatus): Promise<TeamDataFull | null>;
-    playerPlayingStatus(teamId: string, playerId: string, status : playerStatus): Promise<TeamDataFull | null>;
+    playerTeamStatus(teamId: string, playerId: string, status: PlayerApprovalStatus): Promise<TeamDataFull | null>;
+    playerPlayingStatus(teamId: string, playerId: string, status: playerStatus): Promise<TeamDataFull | null>;
     create(teamData: TeamRegister): Promise<TeamData>;
     addMember(teamId: string, userId: string, playerId: string): Promise<TeamData>;
     update(teamId: string, updates: Partial<TeamRegister>): Promise<TeamData>;
