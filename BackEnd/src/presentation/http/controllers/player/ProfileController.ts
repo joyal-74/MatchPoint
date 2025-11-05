@@ -15,6 +15,11 @@ export class PlayerProfileController implements IProfileController {
         private _logger: ILogger
     ) { }
 
+    /**
+     * @description Get detailed profile information of a player.
+     * @param {IHttpRequest} httpRequest - The request object containing playerId in params.
+     * @returns {Promise<IHttpResponse>} - Returns the player profile data.
+     */
     getProfile = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const playerId = httpRequest.params.playerId;
 
@@ -27,30 +32,37 @@ export class PlayerProfileController implements IProfileController {
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Player profile fetched', player));
     }
 
+    /**
+     * @description Update basic profile details of a player such as name, email, image, etc.
+     * @param {IHttpRequest} httpRequest - The request object containing playerId in params and updated data in body. Accepts profile image in file.
+     * @returns {Promise<IHttpResponse>} - Returns the updated player profile.
+     */
     updateProfile = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const userData = httpRequest.body;
         const playerId = httpRequest.params.playerId;
         const file = httpRequest.file;
 
-        console.log(userData)
-        console.log(file)
-
         this._logger.info(`Updating profile for player ID: ${playerId}`);
 
-        const player = await this._profileUpdateUsecase.execute({ ...userData, userId :playerId }, file);
+        const player = await this._profileUpdateUsecase.execute({ ...userData, userId: playerId }, file);
 
         this._logger.info(`Profile updated successfully for player ID: ${playerId}`);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Player profile updated', player));
     }
 
+    /**
+     * @description Update player sports-related fields like role, position, skill info, etc.
+     * @param {IHttpRequest} httpRequest - The request object containing playerId in params and sports-related fields in body.
+     * @returns {Promise<IHttpResponse>} - Returns updated sports profile details of the player.
+     */
     updatePlayerSportsFields = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const userData = httpRequest.body;
         const playerId = httpRequest.params.playerId;
 
         this._logger.info(`Updating sports fields for player ID: ${playerId}`, { body: userData });
 
-        const profile = await this._sportsProfileUpdateUsecase.execute({ ...userData, userId : playerId });
+        const profile = await this._sportsProfileUpdateUsecase.execute({ ...userData, userId: playerId });
 
         this._logger.info(`Profile updated successfully for player ID: ${playerId}`);
 

@@ -140,6 +140,11 @@ export class TeamController implements ITeamController {
     }
 
 
+        /**
+     * @description Approve a player request and add them to the team.
+     * @param {IHttpRequest} httpRequest - The request containing `teamId` and `playerId` in the body.
+     * @returns {Promise<IHttpResponse>} - Returns success response with updated team details.
+     */
     approvePlayertoTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { teamId, playerId } = httpRequest.body;
 
@@ -148,9 +153,13 @@ export class TeamController implements ITeamController {
         const result = await this._approvetoTeamUsecase.execute(teamId, playerId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "player approved successfully", result));
-
     }
 
+    /**
+     * @description Reject a player's request to join the team.
+     * @param {IHttpRequest} httpRequest - The request containing `teamId` and `playerId` in the body.
+     * @returns {Promise<IHttpResponse>} - Returns success response confirming rejection.
+     */
     rejectPlayerfromTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { teamId, playerId } = httpRequest.body;
 
@@ -161,11 +170,15 @@ export class TeamController implements ITeamController {
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Player rejected successfully", result));
     }
 
-
+    /**
+     * @description Swap players inside a team (e.g., replace or rotate players).
+     * @param {IHttpRequest} httpRequest - The request containing `teamId`, `playerId`, and new `status` in the body.
+     * @returns {Promise<IHttpResponse>} - Returns success response after swapping players.
+     */
     swapPlayers = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { teamId, playerId, status } = httpRequest.body;
 
-        this._logger.info(`[TeamController] reject player from team Id → teamId=${teamId}`);
+        this._logger.info(`[TeamController] swap player in team → teamId=${teamId}`);
 
         await this._swapPlayersUsecase.execute(teamId, playerId, status);
 

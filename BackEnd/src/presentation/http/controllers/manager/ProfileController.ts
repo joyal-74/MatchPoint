@@ -12,6 +12,12 @@ export class ProfileController implements IProfileController {
         private _profileUpdateUsecase: IUpdateManagerProfile,
     ) { }
 
+    /**
+     * 
+     * @param httpRequest managerId in request
+     * @returns return full profile of manager
+     */
+
     getProfile = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const managerId = httpRequest.params.managerId;
 
@@ -20,14 +26,16 @@ export class ProfileController implements IProfileController {
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Manager profile updated', manager));
     }
 
+    /**
+     * 
+     * @param httpRequest partial data of user, which field he is updating data
+     * @returns returns updated data of profile
+     */
+
     updateProfile = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const userData = httpRequest.body;
         const managerId = httpRequest.params.managerId;
         const file = httpRequest.file;
-
-        console.log("ManagerId:", managerId);
-        console.log("File:", file);
-        console.log("FormData fields:", userData);
 
         const manager = await this._profileUpdateUsecase.execute({ ...userData, managerId }, file);
 

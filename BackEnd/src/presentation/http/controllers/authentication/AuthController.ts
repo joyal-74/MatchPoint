@@ -17,10 +17,6 @@ import {
     ISocialUserAuthUseCase
 } from 'app/repositories/interfaces/auth/IAuthenticationUseCase';
 
-/**
- * Controller responsible for authentication and authorization operations.
- * Handles login, signup, logout, password reset, OTP verification, and token management.
- */
 
 export class AuthController implements IAuthController {
     constructor(
@@ -62,12 +58,18 @@ export class AuthController implements IAuthController {
         });
     }
 
+    /**
+     * - Authenticate user using google signup
+     * 
+     * @param httpRequest request containing auth code
+     * @returns IHttpResponse with temp token if not signed up else user details
+     */
+
     loginGoogleUser = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { code } = httpRequest.body;
 
         const result = await this._userGoogleAuthUseCase.execute(code);
 
-        console.log(result, "result")
 
         if (result.isNewUser) {
             return new HttpResponse(HttpStatusCode.OK, {
@@ -85,12 +87,18 @@ export class AuthController implements IAuthController {
         });
     };
 
+    /**
+     * - Authenticate user using facebook signup
+     * 
+     * @param httpRequest request containing auth code of facebook
+     * @returns with temp token if not signed up else user details
+     */
+
     loginFacebookUser = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { code } = httpRequest.body;
 
         const result = await this._userFacebookAuthUseCase.execute(code);
 
-        console.log(result, "result")
 
         if (result.isNewUser) {
             return new HttpResponse(HttpStatusCode.OK, {

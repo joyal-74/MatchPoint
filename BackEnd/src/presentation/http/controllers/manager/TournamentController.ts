@@ -169,39 +169,57 @@ export class TournamentController implements ITournamentController {
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Registered teams fetched successfully", result));
     };
 
+    /**
+     * @description Get the fixtures (schedule) of a specific tournament.
+     * @param {IHttpRequest} httpRequest - The request containing `tournamentId` in params.
+     * @returns {Promise<IHttpResponse>} - Returns the fixture details of the tournament.
+     */
     getTournamentFixtures = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentId = httpRequest.params.tournamentId;
 
         const result = await this._getFixturesUsecase.execute(tournamentId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Fixtures fetched successfully", result));
-    }
+    };
 
+    /**
+     * @description Get all matches for a specific tournament.
+     * @param {IHttpRequest} httpRequest - The request containing `tournamentId` in params.
+     * @returns {Promise<IHttpResponse>} - Returns the list of tournament matches.
+     */
     getTournamentMatches = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentId = httpRequest.params.tournamentId;
 
         const result = await this._getMatchesUsecase.execute(tournamentId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Matches fetched successfully", result));
-    }
+    };
 
+    /**
+     * @description Create matches for a tournament before fixture generation.
+     * @param {IHttpRequest} httpRequest - The request containing `tournamentId` in params and `matchesData` in body.
+     * @returns {Promise<IHttpResponse>} - Returns created match records for the tournament.
+     */
     createTournamentMatches = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentId = httpRequest.params.tournamentId;
         const matchesData = httpRequest.body.matchesData;
 
-        console.log(httpRequest.body, 'body')
-
         const result = await this._createMatchesUsecase.execute(tournamentId, matchesData);
 
-        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Fixtures fetched successfully", result));
-    }
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Matches created successfully", result));
+    };
 
+    /**
+     * @description Generate fixtures for a tournament based on match IDs and tournament format.
+     * @param {IHttpRequest} httpRequest - The request containing `tournamentId` in params and `{ matchIds, format }` in body.
+     * @returns {Promise<IHttpResponse>} - Returns generated fixture schedule for the tournament.
+     */
     createTournamentFixtures = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentId = httpRequest.params.tournamentId;
         const { matchIds, format } = httpRequest.body;
 
         const result = await this._createFixturesUsecase.execute(tournamentId, matchIds, format);
 
-        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Fixtures fetched successfully", result));
-    }
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Fixtures created successfully", result));
+    };
 }

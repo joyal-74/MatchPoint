@@ -14,6 +14,11 @@ export class ProfileController implements IProfileController {
         private _logger: ILogger
     ) { }
 
+    /**
+     * @description Fetch viewer profile details by viewerId.
+     * @param {IHttpRequest} httpRequest - The HTTP request object containing viewerId in params.
+     * @returns {Promise<IHttpResponse>} - Returns the viewer profile details.
+     */
     getProfile = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const viewerId = httpRequest.params.viewerId;
 
@@ -23,9 +28,17 @@ export class ProfileController implements IProfileController {
 
         this._logger.info(`Profile fetched successfully for viewer ID: ${viewerId}`);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Viewer profile fetched', viewer));
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, "Viewer profile fetched", viewer)
+        );
     }
 
+    /**
+     * @description Update viewer profile details including optional profile image.
+     * @param {IHttpRequest} httpRequest - The request body contains profile data, file contains profile picture, viewerId in params.
+     * @returns {Promise<IHttpResponse>} - Returns updated viewer profile.
+     */
     updateProfile = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const userData = httpRequest.body;
         const viewerId = httpRequest.params.viewerId;
@@ -37,6 +50,9 @@ export class ProfileController implements IProfileController {
 
         this._logger.info(`Profile updated successfully for viewer ID: ${viewerId}`);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Viewer profile updated', viewer));
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, "Viewer profile updated", viewer)
+        );
     }
 }

@@ -12,15 +12,20 @@ export class TournamentsController {
         private _logger: ILogger
     ) { }
 
+    /**
+     * @description Get all tournaments for a player with optional filters like status and pagination.
+     * @param {IHttpRequest} httpRequest - The request object containing query params (status, page, limit, playerId).
+     * @returns {Promise<IHttpResponse>} - Returns a paginated & filtered list of tournaments joined by the player.
+     */
     getplayerTournaments = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { status, page = 1, limit = 10, playerId } = httpRequest.query;
-        console.log(httpRequest.query, 'query')
 
-        this._logger.info(`[TournamentsController] Fetch tournaments`);
+        this._logger.info(
+            `[TournamentsController] Fetching player tournaments → playerId=${playerId}, status=${status}, page=${page}, limit=${limit}`
+        );
 
         const result = await this._getplayerTournaments.execute(status, page, limit, playerId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournaments fetched successfully", result));
     };
-
 }

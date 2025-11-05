@@ -6,10 +6,7 @@ import { IUsersManagementController } from "presentation/http/interfaces/IUsersM
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 
-/**
- * Controller responsible for handling user management operations in the Admin module.
- * Supports fetching managers, players, viewers, and changing user status.
- */
+
 export class UsersManagementController implements IUsersManagementController {
     constructor(
         private _getAllManagersUseCase: IGetManagersUsecase,
