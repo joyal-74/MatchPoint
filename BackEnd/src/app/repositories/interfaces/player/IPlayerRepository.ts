@@ -6,6 +6,8 @@ export interface IPlayerRepository {
 
     findByUserId(userId: string): Promise<PlayerResponse | null>;
 
+    findPlayerDetails(userId: string): Promise<PlayerResponse | null>;
+
     findByEmail(email: string): Promise<PlayerResponse | null>;
 
     create(player: PlayerRegister): Promise<PlayerResponse>;

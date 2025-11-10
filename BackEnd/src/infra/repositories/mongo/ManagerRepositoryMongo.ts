@@ -18,6 +18,10 @@ export class ManagerRepositoryMongo implements IManagerRepository {
         return ManagerModel.find({ role }).lean<ManagerResponse[]>().exec();
     }
 
+    async findByIdWithUser(_id: string): Promise<ManagerResponse | null> {
+        return ManagerModel.findOne({ userId: _id }).populate('userId').lean<ManagerResponse | null>();;
+    }
+
     async create(manager: ManagerRegister): Promise<ManagerResponse> {
         const created = await ManagerModel.create({
             wallet: 0,
@@ -33,7 +37,8 @@ export class ManagerRepositoryMongo implements IManagerRepository {
             _id: created._id.toString(),
             userId: created.userId.toString(),
             wallet: obj.wallet ?? 0,
-            tournaments: obj.tournaments?.map(id => id.toString()) ?? [],
+            tournamentsCreated: obj.tournamentsCreated?.map(id => id.toString()) ?? [],
+            tournamentsParticipated: obj.tournamentsParticipated?.map(id => id.toString()) ?? [],
             teams: obj.teams?.map(id => id.toString()) ?? [],
         };
     }

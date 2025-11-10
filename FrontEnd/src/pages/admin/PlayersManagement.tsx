@@ -10,10 +10,12 @@ import { playerColumns } from "../../utils/adminColumns";
 import type { SignupRole } from "../../types/UserRoles";
 import type { GetAllUsersParams } from "../../types/api/Params";
 import type { User } from "../../types/User";
+import { useNavigate } from "react-router-dom";
 
 
 const PlayersManagement = () => {
     const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
     const { players, loading, totalCount } = useSelector((state: RootState) => state.users);
     const [currentPage, setCurrentPage] = useState(1);
     const [currentFilter, setCurrentFilter] = useState("All");
@@ -58,7 +60,7 @@ const PlayersManagement = () => {
                 currentFilter={currentFilter}
                 onFilterChange={handleFilterChange}
                 onSearch={handleSearch}
-                columns={playerColumns(handleStatusChange)}
+                columns={playerColumns(handleStatusChange, navigate)}
             />
         </AdminLayout>
     );

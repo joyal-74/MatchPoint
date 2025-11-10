@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { initialState, type Player, type User } from "./userTypes";
+import { initialState, type Player} from "./userTypes";
 import { fetchManagers, fetchPlayers, fetchViewers, userStatusChange } from "./userThunks";
+import type { User } from "../../../types/User";
 
 const userSlice = createSlice({
     name: "users",

@@ -18,6 +18,11 @@ export class PlayerRepositoryMongo implements IPlayerRepository {
         return PlayerModel.findOne({ userId }).lean<PlayerResponse>().exec();
     }
 
+    async findPlayerDetails(userId: string): Promise<PlayerResponse | null> {
+        const res = await PlayerModel.findOne({ userId }).populate('userId').lean<PlayerResponse>().exec();
+        return res;
+    }
+
     async findByEmail(email: string): Promise<PlayerResponse | null> {
         return PlayerModel.findOne({ email }).lean<PlayerResponse>().exec();
     }

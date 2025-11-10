@@ -16,7 +16,7 @@ const ViewButton: React.FC<ViewButtonProps> = ({
 }) => {
     return (
         <button
-            className={`px-3 py-1 bg-[var(--color-info)] hover:bg-[var(--info-700)] text-[var(--color-text-inverse)] rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all duration-200 hover:shadow-md ${className}`}
+            className={`px-3 py-1 bg-rose-500 text-white rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all duration-200 hover:shadow-md ${className}`}
             title={title || text}
             {...rest}
         >

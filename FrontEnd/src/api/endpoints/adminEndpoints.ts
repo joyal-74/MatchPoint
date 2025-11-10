@@ -25,6 +25,21 @@ export const adminEndpoints = {
         return response.data.data;
     },
 
+    fetchManagerDetails: async (id: string) => {
+        const response = await axiosClient.get(ADMIN_ROUTES.MANAGER_DETAILS(id));
+        return response.data.data;
+    },
+
+    fetchPlayerDetails: async (id: string) => {
+        const response = await axiosClient.get(ADMIN_ROUTES.PLAYER_DETAILS(id));
+        return response.data.data;
+    },
+
+    fetchViewerDetails: async (id: string) => {
+        const response = await axiosClient.get(ADMIN_ROUTES.VIEWER_DETAILS(id));
+        return response.data.data;
+    },
+
     userStatusChange: async (role: SignupRole, userId: string, isActive: boolean, params: GetAllUsersParams) => {
         const response = await axiosClient.patch(ADMIN_ROUTES.USER_STATUS_CHANGE(role, userId), { isActive, params });
         const users = response.data.data.users;

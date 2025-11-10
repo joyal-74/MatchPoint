@@ -3,6 +3,8 @@ import { Manager, ManagerRegister, ManagerResponse } from "domain/entities/Manag
 export interface IManagerRepository {
     findById(_id: string): Promise<ManagerResponse | null>;
 
+    findByIdWithUser(_id: string): Promise<ManagerResponse | null>;
+
     findByEmail(email: string): Promise<ManagerResponse | null>;
 
     create(manager: ManagerRegister): Promise<ManagerResponse>;

@@ -66,6 +66,7 @@ const DataTable = <T extends { _id: string; status?: string }>({
                             ))}
                         </tr>
                     </thead>
+                    
                     <tbody className="bg-[var(--color-background-secondary)] py-1">
                         {data.map((row) => (
                             <tr
@@ -88,7 +89,6 @@ const DataTable = <T extends { _id: string; status?: string }>({
                 </table>
             </div>
 
-            {/* Card Grid View (xl screens and below) */}
             <div className="xl:hidden">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {data.map((row) => (

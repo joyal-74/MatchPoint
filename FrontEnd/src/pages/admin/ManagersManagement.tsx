@@ -9,6 +9,7 @@ import { managerColumns } from "../../utils/adminColumns";
 import type { SignupRole } from "../../types/UserRoles";
 import type { GetAllUsersParams } from "../../types/api/Params";
 import type { User } from "../../types/User";
+import { useNavigate } from "react-router-dom";
 
 const ManagersManagement = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -17,6 +18,7 @@ const ManagersManagement = () => {
     const [currentFilter, setCurrentFilter] = useState("All");
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebounce(searchTerm, 1000);
+    const navigate = useNavigate();
 
     const params: GetAllUsersParams = useMemo(() => ({
         page: currentPage,
@@ -55,7 +57,7 @@ const ManagersManagement = () => {
                 currentFilter={currentFilter}
                 onFilterChange={handleFilterChange}
                 onSearch={handleSearch}
-                columns={managerColumns(handleStatusChange)}
+                columns={managerColumns(handleStatusChange, navigate)}
             />
         </AdminLayout>
     );

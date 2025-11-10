@@ -1,16 +1,27 @@
-import PlayerDashboard from "../pages/player/LandingPage";
-import ViewTeam from "../pages/player/TeamDetailsPage";
-import TeamsListPage from "../pages/player/TeamsListPage";
-import TournamentsPage from "../pages/player/Tournaments";
+import { lazy, Suspense, type JSX } from "react";
 import ProtectedRoute from "./ProtectedRoute";
-import PlayerProfilePage from "../pages/player/ProfilePage";
-import TeamFinderPage from "../pages/player/TeamsPage";
+import LoadingOverlay from "../components/shared/LoadingOverlay";
+
+const PlayerDashboard = lazy(() => import("../pages/player/LandingPage"));
+const ViewTeam = lazy(() => import("../pages/player/TeamDetailsPage"));
+const TeamsListPage = lazy(() => import("../pages/player/TeamsListPage"));
+const TournamentsPage = lazy(() => import("../pages/player/Tournaments"));
+const PlayerProfilePage = lazy(() => import("../pages/player/ProfilePage"));
+const TeamFinderPage = lazy(() => import("../pages/player/TeamsPage"));
+
+const withPlayerProtection = (component: JSX.Element) => (
+    <ProtectedRoute allowedRoles={["player"]}>
+        <Suspense fallback={<LoadingOverlay show />}>
+            {component}
+        </Suspense>
+    </ProtectedRoute>
+);
 
 export const playerRoutes = [
-    { path: "/player/dashboard", element: <ProtectedRoute allowedRoles={['player']}><PlayerDashboard /></ProtectedRoute> },
-    { path: "/player/profile", element: <ProtectedRoute allowedRoles={['player']}><PlayerProfilePage /></ProtectedRoute> },
-    { path: "/player/tournaments", element: <ProtectedRoute allowedRoles={['player']}><TournamentsPage /></ProtectedRoute> },
-    { path: "/player/teams", element: <ProtectedRoute allowedRoles={['player']}><TeamFinderPage /></ProtectedRoute> },
-    { path: `/player/myteams/:status`, element: <ProtectedRoute allowedRoles={['player']}><TeamsListPage /></ProtectedRoute> },
-    { path: "/player/myteam/:teamId", element: <ProtectedRoute allowedRoles={['player']}><ViewTeam /></ProtectedRoute> },
+    { path: "/player/dashboard", element: withPlayerProtection(<PlayerDashboard />) },
+    { path: "/player/profile", element: withPlayerProtection(<PlayerProfilePage />) },
+    { path: "/player/tournaments", element: withPlayerProtection(<TournamentsPage />) },
+    { path: "/player/teams", element: withPlayerProtection(<TeamFinderPage />) },
+    { path: "/player/myteams/:status", element: withPlayerProtection(<TeamsListPage />) },
+    { path: "/player/myteam/:teamId", element: withPlayerProtection(<ViewTeam />) },
 ];

@@ -1,5 +1,8 @@
+import { PlayerDetails } from "app/usecases/admin/GetPlayerDetails";
 import { PlayerProfileResponse } from "domain/dtos/Player.dto";
 import { UserLoginResponseDTO } from "domain/dtos/User.dto";
+import { PlayerResponse } from "domain/entities/Player";
+import { User } from "domain/entities/User";
 
 
 export class PlayerMapper {
@@ -12,6 +15,7 @@ export class PlayerMapper {
             role: player.role,
             wallet: player.wallet,
             profileImage: player.profileImage,
+            isActive : player.isActive
         };
     }
 
@@ -31,6 +35,34 @@ export class PlayerMapper {
             profileImage: player.profileImage,
             sport: player.sport,
             profile: player.profile
+        };
+    }
+
+    static toPlayerDetailsDTO(player: PlayerResponse): PlayerDetails {
+        const user = player.userId as unknown as User;
+
+        const toStringOrNull = (value: unknown): string | null => {
+            if (value === null || value === undefined) return null;
+            return typeof value === 'string' ? value : String(value);
+        };
+
+        return {
+            _id: player._id,
+            fullName: `${user.firstName} ${user.lastName}`,
+            username: user.username,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            status: user.isActive ? "Active" : "Blocked",
+            subscription: user.subscription || "Free",
+            joinedAt: user.createdAt.toLocaleDateString(),
+            profileImage: user.profileImage || "",
+            stats: {
+                battingStyle: toStringOrNull(player.profile?.battingStyle),
+                bowlingStyle: toStringOrNull(player.profile?.bowlingStyle),
+                position: toStringOrNull(player.profile?.position),
+            },
+            isBlocked: !user.isActive,
         };
     }
 }

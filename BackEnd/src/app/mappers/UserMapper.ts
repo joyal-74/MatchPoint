@@ -1,3 +1,4 @@
+import { ViewerDetails } from "app/usecases/admin/GetViewerDetails";
 import { UserLoginResponseDTO, UserResponseDTO } from "domain/dtos/User.dto";
 import { UserResponse } from "domain/entities/User";
 
@@ -11,11 +12,11 @@ export class UserMapper {
             role: user.role,
             wallet: user.wallet,
             profileImage: user.profileImage,
-            isActive : user.isActive
+            isActive: user.isActive
         };
     }
 
-    static toProfileResponseDTO(user : UserResponseDTO): UserResponseDTO {
+    static toProfileResponseDTO(user: UserResponseDTO): UserResponseDTO {
         return {
             _id: user._id,
             userId: user.userId,
@@ -29,7 +30,23 @@ export class UserMapper {
             wallet: user.wallet,
             bio: user.bio,
             profileImage: user.profileImage,
-            isActive : user.isActive
+            isActive: user.isActive
+        };
+    }
+
+    static toViewerDetailsDTO(user: UserResponse): ViewerDetails {
+        return {
+            _id: user._id,
+            fullName: `${user.firstName} ${user.lastName}`,
+            username: user.username,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            status: user.isActive ? "Active" : "Blocked",
+            subscription: user.subscription || "Free",
+            joinedAt: user.createdAt.toLocaleDateString(),
+            profileImage: user.profileImage || "",
+            isBlocked: !user.isActive,
         };
     }
 }

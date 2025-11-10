@@ -1,4 +1,7 @@
+import { ManagerDetails } from "app/usecases/admin/GetManagerDetails";
 import { ManagerLoginResponseDTO, ManagerResponseDTO } from "domain/dtos/Manager.dto";
+import { ManagerResponse } from "domain/entities/Manager";
+import { User } from "domain/entities/User";
 
 
 export class ManagerMapper {
@@ -30,4 +33,28 @@ export class ManagerMapper {
             profileImage: manager.profileImage
         };
     }
+
+    static toManagerDetailsDTO(manager: ManagerResponse): ManagerDetails {
+        const user = manager.userId as unknown as User;
+
+        return {
+            _id: manager._id,
+            fullName: `${user.firstName} ${user.lastName}`,
+            username: user.username,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            status: user.isActive ? "Active" : "Blocked",
+            subscription: user.subscription || "Free",
+            joinedAt: user.createdAt.toLocaleDateString(),
+            profileImage: user.profileImage || "",
+            stats: {
+                tournamentsCreated: manager.tournamentsCreated?.length || 0,
+                tournamentsParticipated: manager.tournamentsParticipated?.length || 0,
+                totalTeams: manager.teams?.length || 0,
+            },
+            isBlocked: !user.isActive,
+        };
+    }
+
 }

@@ -1,23 +1,34 @@
-import PaymentFailedPage from "../components/manager/tournaments/TournamentDetails/paymentFailedPage";
-import PaymentSuccessPage from "../components/manager/tournaments/TournamentDetails/PaymentSuccessPage";
-import TournamentDetailsPage from "../pages/manager/TournamentDetails";
-import Dashboard from "../pages/manager/Dashboard";
-import TeamsListPage from "../pages/manager/TeamsListPage";
-import TournamentsPage from "../pages/manager/TournamentsPage";
+import { lazy, Suspense, type JSX } from "react";
 import ProtectedRoute from "./ProtectedRoute";
-import UserProfile from "../pages/manager/ProfilePage";
-import ViewTeamManager from "../pages/manager/ViewTeamManager";
-import ManageMembersPage from "../pages/manager/ManageMembers";
+import LoadingOverlay from "../components/shared/LoadingOverlay";
 
+// Lazy load manager pages
+const Dashboard = lazy(() => import("../pages/manager/Dashboard"));
+const UserProfile = lazy(() => import("../pages/manager/ProfilePage"));
+const TeamsListPage = lazy(() => import("../pages/manager/TeamsListPage"));
+const ViewTeamManager = lazy(() => import("../pages/manager/ViewTeamManager"));
+const ManageMembersPage = lazy(() => import("../pages/manager/ManageMembers"));
+const TournamentsPage = lazy(() => import("../pages/manager/TournamentsPage"));
+const TournamentDetailsPage = lazy(() => import("../pages/manager/TournamentDetails"));
+const PaymentSuccessPage = lazy(() => import("../components/manager/tournaments/TournamentDetails/PaymentSuccessPage"));
+const PaymentFailedPage = lazy(() => import("../components/manager/tournaments/TournamentDetails/paymentFailedPage"));
+
+const withManagerProtection = (component: JSX.Element) => (
+    <ProtectedRoute allowedRoles={["manager"]}>
+        <Suspense fallback={<LoadingOverlay show />}>
+            {component}
+        </Suspense>
+    </ProtectedRoute>
+);
 
 export const managerRoutes = [
-    { path: "/manager/dashboard", element: <ProtectedRoute allowedRoles={['manager']}><Dashboard /></ProtectedRoute> },
-    { path: "/manager/profile", element: <ProtectedRoute allowedRoles={['manager']}><UserProfile /></ProtectedRoute> },
-    { path: "/manager/teams", element: <ProtectedRoute allowedRoles={['manager']}><TeamsListPage /></ProtectedRoute> },
-    { path: "/manager/team/:teamId", element: <ProtectedRoute allowedRoles={['manager']}><ViewTeamManager /></ProtectedRoute> },
-    { path: "/manager/team/:teamId/manage", element: <ProtectedRoute allowedRoles={['manager']}><ManageMembersPage /></ProtectedRoute> },
-    { path: "/manager/tournaments", element: <ProtectedRoute allowedRoles={['manager']}><TournamentsPage /></ProtectedRoute> },
-    { path: "/manager/tournaments/:id/:type", element: <ProtectedRoute allowedRoles={['manager']}><TournamentDetailsPage /></ProtectedRoute> },
-    { path: "/manager/tournaments/:tournamentId/:teamId/payment-success", element: <ProtectedRoute allowedRoles={['manager']}><PaymentSuccessPage /></ProtectedRoute> },
-    { path: "/manager/tournaments/:tournamentId/:teamId/payment-failed", element: <ProtectedRoute allowedRoles={['manager']}><PaymentFailedPage /></ProtectedRoute> },
+    { path: "/manager/dashboard", element: withManagerProtection(<Dashboard />) },
+    { path: "/manager/profile", element: withManagerProtection(<UserProfile />) },
+    { path: "/manager/teams", element: withManagerProtection(<TeamsListPage />) },
+    { path: "/manager/team/:teamId", element: withManagerProtection(<ViewTeamManager />) },
+    { path: "/manager/team/:teamId/manage", element: withManagerProtection(<ManageMembersPage />) },
+    { path: "/manager/tournaments", element: withManagerProtection(<TournamentsPage />) },
+    { path: "/manager/tournaments/:id/:type", element: withManagerProtection(<TournamentDetailsPage />) },
+    { path: "/manager/tournaments/:tournamentId/:teamId/payment-success", element: withManagerProtection(<PaymentSuccessPage />) },
+    { path: "/manager/tournaments/:tournamentId/:teamId/payment-failed", element: withManagerProtection(<PaymentFailedPage />) },
 ];

@@ -8,7 +8,7 @@ interface AdminLayoutProps {
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     return (
-        <div className="flex h-screen bg-[var(--color-background-primary)]">
+        <div className="flex min-h-screen bg-[var(--color-background-primary)] md:pr-12">
             <Sidebar />
 
             <div className="flex-1 flex flex-col">
@@ -16,7 +16,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     <Navbar />
                 </div>
 
-                <main className="flex-1 px-6 ml-10 lg:ml-70 mt-13 mr-8">{children}</main>
+                <main className="flex-1 px-6 ml-15 lg:ml-70 mt-14">{children}</main>
             </div>
         </div>
     );

@@ -29,6 +29,7 @@ export interface User {
     isVerified: boolean;
     createdAt: Date;
     updatedAt: Date;
+    subscription : string;
 }
 
 export interface UserRegister {

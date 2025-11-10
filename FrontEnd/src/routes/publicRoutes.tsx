@@ -7,7 +7,6 @@ import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 import SignupPage from '../pages/auth/SignupPage';
 import Blocked from '../pages/shared/Blocked';
 import Unauthorized from '../pages/shared/Unauthorized';
-
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
 import RoleRedirect from './RoleDirect';

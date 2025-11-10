@@ -1,4 +1,4 @@
-import { IChangeStatusUsecase, IGetManagersUsecase, IGetPlayersUsecase, IGetViewersUsecase } from "app/repositories/interfaces/admin/IAdminUsecases";
+import { IChangeStatusUsecase, IGetManagersUsecase, IGetPlayersUsecase, IGetViewersUsecase, IGetManagerDetails, IGetPlayerDetails, IGetViewerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -13,6 +13,9 @@ export class UsersManagementController implements IUsersManagementController {
         private _getAllPlayersUseCase: IGetPlayersUsecase,
         private _getAllViewersUseCase: IGetViewersUsecase,
         private _changeUserStatus: IChangeStatusUsecase,
+        private _getManagerDetails: IGetManagerDetails,
+        private _getPlayerDetails: IGetPlayerDetails,
+        private _getViewerDetails: IGetViewerDetails,
     ) { }
 
     /**
@@ -103,5 +106,30 @@ export class UsersManagementController implements IUsersManagementController {
         const result = await this._changeUserStatus.execute(role, userId, isActive, params);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Status changed successfully", result));
+    }
+
+
+    fetchManagerDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { id } = httpRequest.params;
+
+        const result = await this._getManagerDetails.execute(id);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Manager details fetched successfully", result));
+    }
+
+    fetchPlayerDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { id } = httpRequest.params;
+
+        const result = await this._getPlayerDetails.execute(id);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Player details fetched successfully", result));
+    }
+
+    fetchViewerDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { id } = httpRequest.params;
+
+        const result = await this._getViewerDetails.execute(id);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Player details fetched successfully", result));
     }
 }

@@ -35,6 +35,7 @@ const UserSchema = new Schema<UserDocument>({
     isVerified: { type: Boolean, default: false },
     profileImage: { type: String, default: null },
     authProvider: { type: String, default: null },
+    subscription: { type: String, default: 'Free' },
 }, { timestamps: true });
 
 export const UserModel = model<UserDocument>('User', UserSchema);
