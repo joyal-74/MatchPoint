@@ -1,13 +1,14 @@
 import { MapMember, TeamDataFull, TeamDataSummary, TeamMember } from "domain/dtos/Team.dto";
 import { TeamDocument } from "infra/databases/mongo/models/TeamModel";
 
-
 export type TeamPopulatedDocument = Omit<TeamDocument, "members"> & {
     members: MapMember[];
 };
 
 export class TeamMongoMapper {
     static toDomainSummary(team: TeamDocument): TeamDataSummary {
+        const approvedCount = team.members.filter((m) => m.approvalStatus === "approved").length;
+
         return {
             _id: team._id.toString(),
             managerId: team.managerId.toString(),
@@ -18,7 +19,7 @@ export class TeamMongoMapper {
             state: team.state,
             city: team.city,
             description: team.description,
-            membersCount: team.members.length,
+            membersCount: approvedCount,
             maxPlayers: team.maxPlayers,
             status: team.status,
             phase: team.phase,
@@ -42,8 +43,10 @@ export class TeamMongoMapper {
             profile: m.playerId.profile,
             stats: m.playerId.stats,
             status: m.status,
-            approvalStatus: m.approvalStatus
+            approvalStatus: m.approvalStatus,
         }));
+
+        const approvedCount = team.members.filter((m) => m.approvalStatus === "approved").length;
 
         return {
             _id: team._id.toString(),
@@ -57,7 +60,7 @@ export class TeamMongoMapper {
             description: team.description,
             maxPlayers: team.maxPlayers,
             members,
-            membersCount: team.members.length,
+            membersCount: approvedCount,
             status: team.status,
             phase: team.phase,
             stats: team.stats,
@@ -65,7 +68,7 @@ export class TeamMongoMapper {
         };
     }
 
-        static toDomainFullArray(teams: TeamPopulatedDocument[]): TeamDataFull[] {
+    static toDomainFullArray(teams: TeamPopulatedDocument[]): TeamDataFull[] {
         return teams.map(this.toDomainFull);
     }
 }

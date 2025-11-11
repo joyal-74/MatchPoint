@@ -8,7 +8,7 @@ export interface Team {
     name: string;
     sport: string;
     maxPlayers: string;
-    members: Members[];
+    members: PlayerDetails[];
     membersCount: number;
     state: string;
     city: string;
@@ -16,15 +16,47 @@ export interface Team {
     status: TeamStatus;
     logo: string;
     description?: string;
+    phase: string;
+    stats: Record<string, string | number>;
+
 }
 
 export interface Members {
-    _id : string;
+    _id: string;
     playerId: string;
     userId: string;
-    firstName : string;
-    lastName : string;
-    profile : Record <string, string | number>
+    firstName: string;
+    lastName: string;
+    profile: Record<string, string | number>
     status: playerStatus;
-    profileImage : string;
+    profileImage: string;
+    approvalStatus: 'approved' | 'pending';
+}
+
+export type PlayerDetails = CricketPlayer
+
+interface BasePlayer {
+    _id: string;
+    playerId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    profileImage: string;
+    status: playerStatus;
+    approvalStatus: 'approved' | 'pending' | 'rejected';
+}
+
+interface CricketPlayer extends BasePlayer {
+    sport: 'Cricket';
+    profile: {
+        battingStyle?: string;
+        bowlingStyle?: string;
+        position?: string;
+        jerseyNumber?: string;
+    };
+    stats?: {
+        batting?: { matches?: number; runs?: number; average?: number; strikeRate?: number };
+        bowling?: { matches?: number; wickets?: number; economy?: number; average?: number };
+    };
 }

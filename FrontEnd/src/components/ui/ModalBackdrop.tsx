@@ -1,5 +1,5 @@
 interface ModalBackdropProps {
-    onClick: () => void;
+    onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export default function ModalBackdrop({ onClick }: ModalBackdropProps) {

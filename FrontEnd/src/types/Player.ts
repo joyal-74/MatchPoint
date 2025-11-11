@@ -54,4 +54,5 @@ export type TeamPlayer = {
     jerseyNumber: number;
     status: playerStatus;
     profileImage: string;
+    approvalStatus: 'pending' | 'approved' | 'rejected';
 }

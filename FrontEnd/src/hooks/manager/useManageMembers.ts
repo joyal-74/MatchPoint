@@ -46,13 +46,14 @@ export function useManageMembers(teamId?: string) {
                 jerseyNumber: Number(m.profile?.jerseyNumber || 0),
                 status: m.status,
                 profileImage: m.profileImage,
+                approvalStatus : m.approvalStatus
             }));
             setPlayers(mapped);
         }
     }, [team]);
 
-    const activePlayers = players.filter((p) => p.status === "playing");
-    const substitutePlayers = players.filter((p) => p.status === "substitute");
+    const activePlayers = players.filter((p) => p.status === "playing" && p.approvalStatus === 'approved');
+    const substitutePlayers = players.filter((p) => p.status === "substitute" && p.approvalStatus === 'approved');
 
     // backend update helper
     const updateStatus = async (playerId: string, status: string) => {
