@@ -3,6 +3,7 @@ import FixtureModel from "infra/databases/mongo/models/FixtureModel";
 import { Fixture } from "domain/entities/Fixture";
 import { Types } from "mongoose";
 import { FixtureMongoMapper } from "infra/utils/mappers/FixtureMongoMapper";
+import { NotFoundError } from "domain/errors";
 
 export class FixturesRepositoryMongo implements IFixturesRepository {
     async createFixture(tournamentId: string, matchIds: { matchId: string; round: number }[], format: string): Promise<Fixture> {
@@ -14,7 +15,12 @@ export class FixturesRepositoryMongo implements IFixturesRepository {
             matches
         });
 
-        return FixtureMongoMapper.toFixtureResponse(created);
+        const populatedMatches = FixtureModel.populate(created, [
+            { path: "teamA", select: "name logo" },
+            { path: "teamB", select: "name logo" },
+        ]);
+
+        return FixtureMongoMapper.toFixtureResponse(populatedMatches);
     }
 
     async getFixtureByTournament(tournamentId: string): Promise<Fixture | null> {
@@ -22,10 +28,12 @@ export class FixturesRepositoryMongo implements IFixturesRepository {
             .populate({
                 path: "matches.matchId",
                 populate: [
-                    { path: "teamA", select: "name" },
-                    { path: "teamB", select: "name" }
+                    { path: "teamA", select: "name logo" },
+                    { path: "teamB", select: "name logo" }
                 ]
             });
+
+        if (!fixture) throw new NotFoundError('Fixture not found..!')
 
         return FixtureMongoMapper.toFixtureResponse(fixture);
     }

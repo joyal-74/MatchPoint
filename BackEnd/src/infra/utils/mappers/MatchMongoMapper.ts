@@ -8,6 +8,8 @@ export class MatchMongoMapper {
             tournamentId: matchDoc.tournamentId.toString(),
             teamA: matchDoc.teamA?.name.toString() || null,
             teamB: matchDoc.teamB?.name.toString() || null,
+            teamLogoA: matchDoc.teamA?.logo.toString() || null,
+            teamLogoB: matchDoc.teamB?.logo.toString() || null,
             round: matchDoc.round,
             date: matchDoc.date,
             venue: matchDoc.venue || "",

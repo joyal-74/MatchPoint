@@ -9,8 +9,8 @@ import type { RootState } from "../../app/store";
 import { fetchTournament, getRegisteredTeams } from "../../features/manager/Tournaments/tournamentThunks";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
 import { renderTabContent, type TabType } from "../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
-import RegisterTeamModal from "../../components/manager/tournaments/TournamentDetails/RegisterTeamModal";
 import { getAllTeams } from "../../features/manager";
+import RegisterTeamModal from "../../components/manager/tournaments/TournamentDetails/RegisterTeamModal/RegisterTeamModal";
 
 export default function TournamentDetailsPage() {
     const navigate = useNavigate();

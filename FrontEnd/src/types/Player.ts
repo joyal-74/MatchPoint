@@ -50,6 +50,8 @@ export interface PlayerCardProps {
 export type TeamPlayer = {
     id: string;
     name: string;
+    email: string;
+    phone: string;
     position: string;
     jerseyNumber: number;
     status: playerStatus;

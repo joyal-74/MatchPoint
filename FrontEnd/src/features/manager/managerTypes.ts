@@ -117,6 +117,8 @@ export interface Match {
     tournamentId?: string;
     teamA: string;
     teamB: string | null;
+    teamLogoA?: string;
+    teamLogoB?: string;
     round: number;
     matchNumber: number;
     status: MatchStatus;
@@ -137,6 +139,6 @@ export interface Fixture {
     _id?: string;
     tournamentId: string;
     format: FixtureFormat;
-    matches: FixtureMatch[];
+    matches: Match[];
     createdAt?: Date;
 }

@@ -93,13 +93,12 @@ export const managerEndpoints = {
 
     verifyTournamentPayment: async ({ registrationId, paymentId, paymentStatus }: { registrationId: string, paymentId: string, paymentStatus: string }): Promise<boolean> => {
         const { data } = await axiosClient.post(MANAGER_ROUTES.PAYMENT_STATUS(registrationId), { paymentId, paymentStatus });
-        console.log(data.data, '-----')
         return data.data;
     },
 
     getRegisteredTeams: async (tournamentId: string): Promise<RegisteredTeam[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.REGISTERED_TEAMS(tournamentId));
-        console.log(data.data)
+        console.log(data.data, 'teams')
         return data.data;
     },
 
@@ -123,7 +122,7 @@ export const managerEndpoints = {
         return data.data
     },
 
-    createTournamentFixtures: async ({ tournamentId, matchIds, format }: { tournamentId: string, matchIds: { matchId: string; round: number }[], format: string }): Promise<Fixture[]> => {
+    createTournamentFixtures: async ({ tournamentId, matchIds, format }: { tournamentId: string, matchIds: { matchId?: string; round: number }[], format: string }): Promise<Fixture[]> => {
         const { data } = await axiosClient.post(MANAGER_ROUTES.CREATE_FIXTURE(tournamentId), { matchIds, format });
         return data.data
     },

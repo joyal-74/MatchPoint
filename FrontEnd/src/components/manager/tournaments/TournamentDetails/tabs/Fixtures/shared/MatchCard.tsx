@@ -6,7 +6,6 @@ interface MatchCardProps {
 
 export default function MatchCard({ match }: MatchCardProps) {
 
-
     const getStatusStyle = () => {
         switch (match.status) {
             case "completed": return "bg-green-500/20 text-green-300";

@@ -4,6 +4,7 @@ import { ActivePlayersSection } from "../../components/manager/manageMembers/Act
 import { SubstitutePlayersSection } from "../../components/manager/manageMembers/SubstitutePlayersSection";
 import { useParams } from "react-router-dom";
 import { useManageMembers } from "../../hooks/manager/useManageMembers";
+import TeamPlayerModal from "../../components/manager/manageMembers/TeamPlayerModal";
 
 export default function ManageMembersPage() {
     const { teamId } = useParams<{ teamId: string }>();
@@ -11,9 +12,12 @@ export default function ManageMembersPage() {
         activePlayers,
         substitutePlayers,
         selectedPlayer,
+        viewPlayer,
         swapMode,
         cancelSwap,
         handlePlayerAction,
+        isModalOpen,
+        setIsModalOpen
     } = useManageMembers(teamId);
 
     if (loading || !team) {
@@ -46,6 +50,14 @@ export default function ManageMembersPage() {
                     handlePlayerAction={handlePlayerAction}
                 />
             </div>
+
+            {viewPlayer && (
+                <TeamPlayerModal
+                    player={viewPlayer}
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                />
+            )}
         </ManagerLayout>
     );
 }

@@ -23,11 +23,17 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
     compact = false,
     maxPlayingReached = false,
 }) => {
-    const handleCardClick = () => {
+    const handleCardClick = (e: React.MouseEvent) => {
+        const target = e.target as HTMLElement;
+
+        // if clicking on a button or inside one → do nothing
+        if (target.closest('button')) return;
+
         if (swapMode && !isSelected) {
             onAction('swap', player);
         }
     };
+
 
     const getCardStyle = () => {
         const baseClasses = 'rounded-lg border transition-all duration-300';
@@ -99,9 +105,10 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
 
     return (
         <div
-            className={`${cardClass} ${cardPadding} cursor-pointer`}
-            onClick={handleCardClick}
+            className={`${cardClass} ${cardPadding} ${swapMode ? 'cursor-pointer' : ''}`}
+            onClick={swapMode ? handleCardClick : undefined}
         >
+
             {/* Header: Player Info */}
             <div className="flex items-center justify-between gap-3 mb-3">
                 <div className="flex items-center gap-3 flex-1 min-w-0">

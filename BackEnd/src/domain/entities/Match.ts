@@ -5,6 +5,8 @@ export interface Match {
     tournamentId: string;
     teamA: string;
     teamB: string;
+    teamLogoA : string,
+    teamLogoB : string,
     round: number;
     matchNumber: number;
     status: MatchStatus;

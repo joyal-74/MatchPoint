@@ -18,6 +18,8 @@ export function useManageMembers(teamId?: string) {
     const [players, setPlayers] = useState<TeamPlayer[]>([]);
     const [selectedPlayer, setSelectedPlayer] = useState<TeamPlayer | null>(null);
     const [swapMode, setSwapMode] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [viewPlayer, setViewPlayer] = useState<TeamPlayer | null>(null);
 
     // fetch teams
     useEffect(() => {
@@ -42,11 +44,13 @@ export function useManageMembers(teamId?: string) {
             const mapped: TeamPlayer[] = team.members.map((m) => ({
                 id: m.playerId,
                 name: `${m.firstName} ${m.lastName}`,
+                email : m.email,
+                phone : m.phone,
                 position: String(m.profile.position),
                 jerseyNumber: Number(m.profile?.jerseyNumber || 0),
                 status: m.status,
                 profileImage: m.profileImage,
-                approvalStatus : m.approvalStatus
+                approvalStatus: m.approvalStatus
             }));
             setPlayers(mapped);
         }
@@ -57,7 +61,7 @@ export function useManageMembers(teamId?: string) {
 
     // backend update helper
     const updateStatus = async (playerId: string, status: string) => {
-        await dispatch(updatePlayerStatus({ teamId: teamId!, playerId, status })).unwrap(); 
+        await dispatch(updatePlayerStatus({ teamId: teamId!, playerId, status })).unwrap();
     };
 
 
@@ -111,7 +115,8 @@ export function useManageMembers(teamId?: string) {
             );
             await updateStatus(player.id, newStatus);
         } else if (action === "view") {
-            console.log("View player:", player);
+            setViewPlayer(player);
+            setIsModalOpen(true);
         }
     };
 
@@ -125,10 +130,13 @@ export function useManageMembers(teamId?: string) {
         team,
         players,
         activePlayers,
+        viewPlayer,
         substitutePlayers,
         selectedPlayer,
         swapMode,
         cancelSwap,
         handlePlayerAction,
+        isModalOpen,
+        setIsModalOpen
     };
 }

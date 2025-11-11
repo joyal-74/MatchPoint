@@ -12,12 +12,13 @@ export type TabType = "info" | "teams" | "fixtures" | "matches" | "results" | "g
 export interface RegisteredTeam {
     _id: string;
     teamId: string;
+    logo : string;
     name: string;
     captain: string;
     createdAt: string;
 }
 
-export const renderTabContent = (selectedTournament: Tournament, registeredTeams: RegisteredTeam[], activeTab: TabType, type: "manage" | "explore") => {
+export const renderTabContent = (selectedTournament: Tournament, registeredTeams: RegisteredTeam[], activeTab: TabType, type : 'manage' | 'explore') => {
     switch (activeTab) {
         case "info":
             return <InfoTab tournamentData={selectedTournament} registeredTeams={registeredTeams} />;

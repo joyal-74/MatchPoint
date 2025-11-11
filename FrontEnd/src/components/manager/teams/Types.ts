@@ -37,6 +37,7 @@ export type PlayerDetails = CricketPlayer
 
 interface BasePlayer {
     _id: string;
+    userId: string;
     playerId: string;
     firstName: string;
     lastName: string;

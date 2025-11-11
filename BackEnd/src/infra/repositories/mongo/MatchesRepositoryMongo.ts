@@ -5,7 +5,6 @@ import MatchModel from "infra/databases/mongo/models/MatchesModel";
 import { MatchMongoMapper } from "infra/utils/mappers/MatchMongoMapper";
 
 export class MatchesRepositoryMongo implements IMatchesRepository {
-
     async createMatches(tournamentId: string, matches: Match[]): Promise<Match[]> {
         const matchesWithTournament = matches.map(m => ({
             ...m,
@@ -13,13 +12,20 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
         }));
 
         const createdMatches = await MatchModel.insertMany(matchesWithTournament);
-        return MatchMongoMapper.toMatchResponseArray(createdMatches);
+
+        const populatedMatches = await MatchModel.populate(createdMatches, [
+            { path: "teamA", select: "name logo" },
+            { path: "teamB", select: "name logo" },
+        ]);
+
+        console.log(populatedMatches, 'populatedMatches')
+
+        return MatchMongoMapper.toMatchResponseArray(populatedMatches);
     }
 
 
     async updateMatchStats(matchId: string, stats: Record<string, any>): Promise<Match> {
-        const updatedMatch = await MatchModel.findByIdAndUpdate(
-            matchId,
+        const updatedMatch = await MatchModel.findByIdAndUpdate(matchId,
             { $set: { stats, ...stats } },
             { new: true }
         );
@@ -33,9 +39,11 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
 
     async getMatchesByTournament(tournamentId: string): Promise<Match[]> {
         const matches = await MatchModel.find({ tournamentId }).populate([
-            { path: "teamA", select: "name" },
-            { path: "teamB", select: "name" }
+            { path: "teamA", select: "name logo" },
+            { path: "teamB", select: "name logo" },
         ]);
+
+        console.log(matches, 'matches')
 
         return MatchMongoMapper.toMatchResponseArray(matches)
     }

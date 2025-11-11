@@ -6,14 +6,49 @@ export interface Match {
     teamA: string;
     teamB: string;
     round: number;
-    status: 'ongoing' | 'completed' | 'upcoming' | 'bye';
+    status: "ongoing" | "completed" | "upcoming" | "bye";
     winner: string;
-    stats: Record<string, any>;
+    venue?: string;
+    date?: Date;
+    stats: Record<string, unknown>;
 }
 
-export function generateKnockoutFixtures(teams: RegisteredTeam[]): Match[] {
+/**
+ * Utility function to generate date slots based on startDate and matchesPerDay.
+ */
+function assignMatchDates<T extends Match>(
+    matches: T[],
+    startDate: string | Date,
+    matchesPerDay: number
+): T[] {
+    const start = new Date(startDate);
+    let dayOffset = 0;
+    let count = 0;
+
+    return matches.map((match) => {
+        if (count >= matchesPerDay) {
+            dayOffset++;
+            count = 0;
+        }
+
+        const matchDate = new Date(start);
+        matchDate.setDate(start.getDate() + dayOffset);
+
+        count++;
+        return { ...match, date: matchDate };
+    });
+}
+
+/**
+ * Knockout fixtures with location and scheduled dates
+ */
+export function generateKnockoutFixtures(
+    teams: RegisteredTeam[],
+    location: string,
+    startDate: string | Date,
+    matchesPerDay: number
+): Match[] {
     const shuffled = shuffleTeams([...teams]);
-    console.log(shuffleTeams, " skdfhsdf")
     const matches: Match[] = [];
     let matchNumber = 1;
 
@@ -22,15 +57,15 @@ export function generateKnockoutFixtures(teams: RegisteredTeam[]): Match[] {
         const teamB = shuffled[i + 1];
 
         if (!teamB) {
-
             matches.push({
                 matchNumber: matchNumber++,
                 teamA: teamA.teamId,
-                teamB: '',
+                teamB: "",
                 round: 1,
                 status: "bye",
+                venue: location,
                 winner: teamA.teamId,
-                stats: {}
+                stats: {},
             });
         } else {
             matches.push({
@@ -38,22 +73,28 @@ export function generateKnockoutFixtures(teams: RegisteredTeam[]): Match[] {
                 teamA: teamA.teamId,
                 teamB: teamB.teamId,
                 round: 1,
+                venue: location,
                 status: "upcoming",
-                winner: '',
-                stats: {}
+                winner: "",
+                stats: {},
             });
         }
     }
 
-    return matches;
+    return assignMatchDates(matches, startDate, matchesPerDay);
 }
 
-
-
-export function generateLeagueFixtures(teams: RegisteredTeam[]): Match[] {
+/**
+ * League fixtures with automatic date assignment
+ */
+export function generateLeagueFixtures(
+    teams: RegisteredTeam[],
+    location: string,
+    startDate: string | Date,
+    matchesPerDay: number
+): Match[] {
     const matches: Match[] = [];
     let matchNumber = 1;
-    // const totalRounds = teams.length - 1;
 
     for (let i = 0; i < teams.length; i++) {
         for (let j = i + 1; j < teams.length; j++) {
@@ -62,17 +103,25 @@ export function generateLeagueFixtures(teams: RegisteredTeam[]): Match[] {
                 teamA: teams[i].teamId,
                 teamB: teams[j].teamId,
                 round: 1,
+                venue: location,
                 status: "upcoming",
-                winner: '',
-                stats: {}
+                winner: "",
+                stats: {},
             });
         }
     }
 
-    return matches;
+    return assignMatchDates(matches, startDate, matchesPerDay);
 }
 
-export function generateFriendlyFixture(teams: RegisteredTeam[]): Match[] {
+/**
+ * Friendly fixture (single match)
+ */
+export function generateFriendlyFixture(
+    teams: RegisteredTeam[],
+    location: string,
+    startDate: string | Date,
+): Match[] {
     const shuffled = shuffleTeams([...teams]);
     return [
         {
@@ -80,9 +129,11 @@ export function generateFriendlyFixture(teams: RegisteredTeam[]): Match[] {
             teamA: shuffled[0].teamId,
             teamB: shuffled[1].teamId,
             round: 1,
+            venue: location,
+            date: new Date(startDate),
             status: "upcoming",
-            winner: '',
-            stats: {}
-        }
+            winner: "",
+            stats: {},
+        },
     ];
 }

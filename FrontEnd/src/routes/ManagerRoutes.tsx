@@ -11,7 +11,7 @@ const ManageMembersPage = lazy(() => import("../pages/manager/ManageMembers"));
 const TournamentsPage = lazy(() => import("../pages/manager/TournamentsPage"));
 const TournamentDetailsPage = lazy(() => import("../pages/manager/TournamentDetails"));
 const PaymentSuccessPage = lazy(() => import("../components/manager/tournaments/TournamentDetails/PaymentSuccessPage"));
-const PaymentFailedPage = lazy(() => import("../components/manager/tournaments/TournamentDetails/paymentFailedPage"));
+const PaymentFailedPage = lazy(() => import("../components/manager/tournaments/TournamentDetails/PaymentFailedPage"));
 
 const withManagerProtection = (component: JSX.Element) => (
     <ProtectedRoute allowedRoles={["manager"]}>
