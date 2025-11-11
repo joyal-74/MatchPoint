@@ -26,8 +26,7 @@ export const initialState: UserState = {
     totalCount: 0,
 };
 
-
-export interface ManagerDetails {
+export interface UserDetailsBase {
     _id: string;
     fullName: string;
     username: string;
@@ -38,43 +37,23 @@ export interface ManagerDetails {
     subscription: string;
     joinedAt: string;
     profileImage: string;
+    isBlocked?: boolean;
+}
+
+export interface ManagerDetails extends UserDetailsBase {
     stats: {
         tournamentsCreated: number;
         tournamentsParticipated: number;
         totalTeams: number;
     };
-    isBlocked?: boolean;
 }
 
-export interface PlayerDetails {
-    _id: string;
-    fullName: string;
-    username: string;
-    email: string;
-    phone: string;
-    role: string;
-    status: string;
-    subscription: string;
-    joinedAt: string;
-    profileImage: string;
+export interface PlayerDetails extends UserDetailsBase {
     stats: {
         battingStyle: string;
         bowlingStyle: string;
         position: string;
     };
-    isBlocked?: boolean;
 }
 
-export interface viewerDetails {
-    _id: string;
-    fullName: string;
-    username: string;
-    email: string;
-    phone: string;
-    role: string;
-    status: string;
-    subscription: string;
-    joinedAt: string;
-    profileImage: string;
-    isBlocked?: boolean;
-}
+export type UserDetails = ManagerDetails | PlayerDetails | UserDetailsBase;

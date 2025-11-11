@@ -1,4 +1,4 @@
-import { GetAllUsersParams } from "app/usecases/admin/GetAllViewers"; 
+import { GetAllUsersParams } from "app/usecases/admin/GetAllViewers";
 import { ManagerDetails } from "app/usecases/admin/GetManagerDetails";
 import { PlayerDetails } from "app/usecases/admin/GetPlayerDetails";
 import { ViewerDetails } from "app/usecases/admin/GetViewerDetails";
@@ -10,10 +10,18 @@ export interface IGetUsersUsecase<TUser> {
     execute(params: GetAllUsersParams): Promise<{ users: TUser[], totalCount: number }>;
 }
 
-type RoleResponseDTO = PlayerResponseDTO | UserResponseDTO | ManagerResponseDTO;
+export type RoleResponseDTO = PlayerResponseDTO | UserResponseDTO | ManagerResponseDTO;
 
-export interface IChangeStatusUsecase {
+export interface IChangeUserStatus {
     execute(role: string, userId: string, isActive: boolean, params: GetAllUsersParams): Promise<{ users: RoleResponseDTO[], totalCount: number }>;
+}
+
+export interface IChangeUserBlockStatus {
+    execute(userId: string, isActive: boolean): Promise<RoleResponseDTO>;
+}
+
+export interface IGetUsersByRole {
+    execute(role: string, params: GetAllUsersParams): Promise<{ users: RoleResponseDTO[], totalCount: number }>
 }
 
 export type IGetViewersUsecase = IGetUsersUsecase<UserResponseDTO>;

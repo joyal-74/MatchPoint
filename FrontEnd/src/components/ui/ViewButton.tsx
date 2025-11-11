@@ -7,16 +7,11 @@ interface ViewButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     iconSize?: number;
 }
 
-const ViewButton: React.FC<ViewButtonProps> = ({
-    text = "View",
-    title,
-    iconSize = 12,
-    className = "",
-    ...rest
-}) => {
+const ViewButton: React.FC<ViewButtonProps> = ({ text = "View", title, iconSize = 12, className = "", ...rest }) => {
     return (
         <button
-            className={`px-3 py-1 bg-rose-500 text-white rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all duration-200 hover:shadow-md ${className}`}
+            className={`px-3 py-1 bg-purple-600 text-white rounded-lg text-xs font-medium flex items-center 
+                gap-1.5 transition-all duration-200 hover:shadow-md ${className} cursor-pointer`}
             title={title || text}
             {...rest}
         >

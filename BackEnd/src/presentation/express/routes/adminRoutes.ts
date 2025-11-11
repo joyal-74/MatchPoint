@@ -14,5 +14,6 @@ router.get("/players", adminOnly, expressAdapter(usersManagementController.getAl
 router.get("/players/:id", adminOnly, expressAdapter(usersManagementController.fetchPlayerDetails));
 
 router.patch( "/:role/:userId/status", adminOnly, expressAdapter(usersManagementController.changeUserStatus));
+router.patch( "/user/:userId/blockStatus", adminOnly, expressAdapter(usersManagementController.changeUserBlockStatus));
 
 export default router;

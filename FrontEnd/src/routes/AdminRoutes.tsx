@@ -5,12 +5,12 @@ import LoadingOverlay from "../components/shared/LoadingOverlay";
 
 
 const Dashboard = lazy(() => import("../pages/admin/Dashboard"));
-const ManagersManagement = lazy(() => import("../pages/admin/ManagersManagement"));
-const PlayersManagement = lazy(() => import("../pages/admin/PlayersManagement"));
-const ViewersManagement = lazy(() => import("../pages/admin/ViewersManagement"));
-const ManagerDetails = lazy(() => import("../pages/admin/ManagerDetails"));
-const PlayerDetails = lazy(() => import("../pages/admin/PlayerDetails"));
-const ViewerDetails = lazy(() => import("../pages/admin/ViewerDetails"));
+const ManagersManagement = lazy(() => import("../pages/admin/Manager/ManagersManagement"));
+const PlayersManagement = lazy(() => import("../pages/admin/Player/PlayersManagement"));
+const ViewersManagement = lazy(() => import("../pages/admin/Viewer/ViewersManagement"));
+const ManagerDetails = lazy(() => import("../pages/admin/Manager/ManagerDetails"));
+const PlayerDetails = lazy(() => import("../pages/admin/Player/PlayerDetails"));
+const ViewerDetails = lazy(() => import("../pages/admin/Viewer/ViewerDetails"));
 
 const withAdminProtection = (component: JSX.Element) => (
     <ProtectedRoute redirectTo="/admin/login" allowedRoles={["admin"]}>

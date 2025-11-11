@@ -1,27 +1,26 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AdminLayout from "../layout/AdminLayout";
-import DataTable from "../../components/admin/DataTable";
-import { fetchViewers, userStatusChange } from "../../features/admin/users/userThunks";
-import type { RootState, AppDispatch } from "../../app/store";
-import LoadingOverlay from "../../components/shared/LoadingOverlay";
-import { useDebounce } from "../../hooks/useDebounce";
-import { viewerColumns } from "../../utils/adminColumns";
-import type { SignupRole } from "../../types/UserRoles";
-import type { GetAllUsersParams } from "../../types/api/Params";
-import type { User } from "../../types/User";
+import AdminLayout from "../../layout/AdminLayout";
+import DataTable from "../../../components/admin/DataTable";
+import { fetchManagers, userStatusChange } from "../../../features/admin/users/userThunks";
+import type { RootState, AppDispatch } from "../../../app/store";
+import { useDebounce } from "../../../hooks/useDebounce";
+import { managerColumns } from "../../../utils/adminColumns";
+import type { SignupRole } from "../../../types/UserRoles";
+import type { GetAllUsersParams } from "../../../types/api/Params";
+import type { User } from "../../../types/User";
 import { useNavigate } from "react-router-dom";
 
-const ViewersManagement = () => {
+const ManagersManagement = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const navigate = useNavigate();
-    const { viewers, loading, totalCount } = useSelector((state: RootState) => state.users);
+    const { managers, totalCount } = useSelector((state: RootState) => state.users);
     const [currentPage, setCurrentPage] = useState(1);
     const [currentFilter, setCurrentFilter] = useState("All");
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebounce(searchTerm, 1000);
+    const navigate = useNavigate();
 
-    const params : GetAllUsersParams = useMemo(() => ({
+    const params: GetAllUsersParams = useMemo(() => ({
         page: currentPage,
         limit: 10,
         filter: currentFilter === "All" ? undefined : currentFilter,
@@ -29,7 +28,7 @@ const ViewersManagement = () => {
     }), [currentPage, currentFilter, debouncedSearch]);
 
     useEffect(() => {
-        dispatch(fetchViewers(params));
+        dispatch(fetchManagers(params));
     }, [dispatch, params]);
 
     const handleStatusChange = (role: SignupRole, userId: string, newStatus: boolean) => {
@@ -48,10 +47,9 @@ const ViewersManagement = () => {
 
     return (
         <AdminLayout>
-            <LoadingOverlay show={loading} />
             <DataTable<User>
-                title="Viewers Management"
-                data={viewers}
+                title="Managers Management"
+                data={managers}
                 totalCount={totalCount}
                 currentPage={currentPage}
                 onPageChange={setCurrentPage}
@@ -59,10 +57,10 @@ const ViewersManagement = () => {
                 currentFilter={currentFilter}
                 onFilterChange={handleFilterChange}
                 onSearch={handleSearch}
-                columns={viewerColumns(handleStatusChange, navigate)}
+                columns={managerColumns(handleStatusChange, navigate)}
             />
         </AdminLayout>
     );
 };
 
-export default ViewersManagement;
+export default ManagersManagement;

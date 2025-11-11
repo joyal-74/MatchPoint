@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createApiThunk } from "../../../utils/createApiThunk";
 import { adminEndpoints } from "../../../api/endpoints/adminEndpoints";
-import type { ManagerDetails, Player, PlayerDetails, viewerDetails } from "./userTypes";
+import type { ManagerDetails, Player, PlayerDetails, UserDetails } from "./userTypes";
 import type { SignupRole } from "../../../types/UserRoles";
 import type { GetAllUsersParams } from "../../../types/api/Params";
 import type { User } from "../../../types/User";
@@ -32,7 +32,7 @@ export const fetchPlayerDetails = createAsyncThunk<PlayerDetails, string>(
     createApiThunk((id: string) => adminEndpoints.fetchPlayerDetails(id))
 );
 
-export const fetchViewerDetails = createAsyncThunk<viewerDetails, string>(
+export const fetchViewerDetails = createAsyncThunk<UserDetails, string>(
     "/admin/fetchViewerDetails",
     createApiThunk((id: string) => adminEndpoints.fetchViewerDetails(id))
 );
@@ -41,5 +41,12 @@ export const userStatusChange = createAsyncThunk(
     "/admin/user/status",
     createApiThunk(({ role, userId, isActive, params }: { role: SignupRole, userId: string; isActive: boolean, params: GetAllUsersParams }) =>
         adminEndpoints.userStatusChange(role, userId, isActive, params)
+    )
+);
+
+export const userBlockStatus = createAsyncThunk(
+    "/admin/user/blockStatus",
+    createApiThunk(({ userId, isActive }: { userId: string; isActive: boolean }) =>
+        adminEndpoints.userBlockStatus(userId, isActive)
     )
 );

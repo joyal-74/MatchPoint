@@ -8,4 +8,5 @@ export const ADMIN_ROUTES = {
     PLAYER_DETAILS: (id: string) => `/admin/players/${id}`,
     VIEWER_DETAILS: (id: string) => `/admin/viewers/${id}`,
     USER_STATUS_CHANGE: (role: SignupRole, userId: string) => `/admin/${role}/${userId}/status`,
+    USER_BLOCK_STATUS: (userId: string) => `/admin/user/${userId}/blockStatus`,
 } as const;

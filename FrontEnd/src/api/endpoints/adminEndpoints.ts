@@ -46,4 +46,9 @@ export const adminEndpoints = {
         const totalCount = response.data.data.totalCount;
         return { users, role, totalCount };
     },
+
+    userBlockStatus: async (userId: string, isActive: boolean,) => {
+        const response = await axiosClient.patch(ADMIN_ROUTES.USER_BLOCK_STATUS(userId), { isActive });
+        return response.data.data;
+    },
 };

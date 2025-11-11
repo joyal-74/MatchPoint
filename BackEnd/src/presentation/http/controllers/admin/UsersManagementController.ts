@@ -1,10 +1,11 @@
-import { IChangeStatusUsecase, IGetManagersUsecase, IGetPlayersUsecase, IGetViewersUsecase, IGetManagerDetails, IGetPlayerDetails, IGetViewerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
+import { IGetManagersUsecase, IGetPlayersUsecase, IGetViewersUsecase, IGetManagerDetails, IGetPlayerDetails, IGetViewerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { IUsersManagementController } from "presentation/http/interfaces/IUsersManagementController";
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
+import { IUserManagementService } from "app/repositories/interfaces/services/AdminUserServices";
 
 
 export class UsersManagementController implements IUsersManagementController {
@@ -12,7 +13,7 @@ export class UsersManagementController implements IUsersManagementController {
         private _getAllManagersUseCase: IGetManagersUsecase,
         private _getAllPlayersUseCase: IGetPlayersUsecase,
         private _getAllViewersUseCase: IGetViewersUsecase,
-        private _changeUserStatus: IChangeStatusUsecase,
+        private _changeUserStatus: IUserManagementService,
         private _getManagerDetails: IGetManagerDetails,
         private _getPlayerDetails: IGetPlayerDetails,
         private _getViewerDetails: IGetViewerDetails,
@@ -103,7 +104,16 @@ export class UsersManagementController implements IUsersManagementController {
         const { role, userId } = httpRequest.params;
         const { isActive, params } = httpRequest.body;
 
-        const result = await this._changeUserStatus.execute(role, userId, isActive, params);
+        const result = await this._changeUserStatus.changeStatusAndFetch(role, userId, isActive, params);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Status changed successfully", result));
+    }
+
+    changeUserBlockStatus = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { userId } = httpRequest.params;
+        const { isActive } = httpRequest.body;
+
+        const result = await this._changeUserStatus.changeBlockStatus(userId, isActive);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Status changed successfully", result));
     }
