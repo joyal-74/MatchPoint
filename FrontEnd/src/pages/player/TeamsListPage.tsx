@@ -57,7 +57,7 @@ const TeamsListPage: React.FC = () => {
                     {(teams?.length === 0 || 0) && !loading ? (
                         <EmptyTeams onExplore={() => navigate('/player/teams')} />
                     ) : (
-                        <TeamsGrid teams={teams || []} onLeft={() => console.log('left')} />
+                        <TeamsGrid teams={teams || []} />
                     )}
                 </section>
             </div>

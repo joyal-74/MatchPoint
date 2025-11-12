@@ -4,8 +4,8 @@ import type { Gender, SignupRole } from "../UserRoles";
 export interface ApiUser {
     _id: string;
     email: string;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     role: string;
     wallet?: number;
     phone?: string;

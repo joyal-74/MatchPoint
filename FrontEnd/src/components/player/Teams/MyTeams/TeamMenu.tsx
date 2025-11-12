@@ -6,21 +6,20 @@ export type MenuAction = 'leave';
 
 export interface TeamMenuProps {
     teamId: string;
-    onLeft: (teamId: string) => void;
     colorScheme?: ColorScheme;
     className?: string;
+    onLeaveRequest: (teamId: string) => void;
 }
 
 export default function TeamMenu({
     teamId,
-    onLeft,
     colorScheme,
+    onLeaveRequest,
     className = ""
 }: TeamMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
-    // Close menu when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -34,7 +33,7 @@ export default function TeamMenu({
     const handleMenuAction = (action: MenuAction) => {
         setIsOpen(false);
         if (action === 'leave') {
-            onLeft(teamId);
+            onLeaveRequest(teamId)
         }
     };
 

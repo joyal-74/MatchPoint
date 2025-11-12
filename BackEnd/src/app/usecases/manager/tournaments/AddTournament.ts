@@ -5,12 +5,14 @@ import { IAddTournament } from "app/repositories/interfaces/manager/ITournamentU
 import { ITournamentIdGenerator } from "app/providers/IIdGenerator";
 import { IFileStorage } from "app/providers/IFileStorage";
 import type { File } from "domain/entities/File";
+import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
 
 
 export class AddTournamentUseCase implements IAddTournament {
     constructor(
         private _tournamentRepo: ITournamentRepository,
         private _tournamentId: ITournamentIdGenerator,
+        private _managerRepo: IManagerRepository,
         private _fileStorage: IFileStorage,
         private _logger: ILogger
     ) { }
@@ -34,6 +36,8 @@ export class AddTournamentUseCase implements IAddTournament {
         };
 
         const tournament = await this._tournamentRepo.create(newData);
+
+        await this._managerRepo.addTournamentToManager(data.managerId, tournament._id);
 
         this._logger.info(`[AddTournamentUseCase] Tournament added: ${data.title}`);
 

@@ -11,5 +11,9 @@ export interface IManagerRepository {
 
     update(_id: string, data: Partial<Manager>): Promise<ManagerResponse>;
 
+    addTournamentToManager(managerId: string, tournamentId: string): Promise<void>;
+
+    addTeamToManager(managerId: string, teamId: string): Promise<void>;
+
     deleteByUserId(userId: string): Promise<void>;
 }

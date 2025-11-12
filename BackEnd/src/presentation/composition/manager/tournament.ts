@@ -13,7 +13,7 @@ import { WalletProvider } from "infra/providers/WalletProvider";
 import { WinstonLogger } from "infra/providers/WinstonLogger";
 import { TournamentIdGenerator } from "infra/providers/IdGenerator";
 import { imageKitfileProvider, walletRepository } from "presentation/composition/shared/providers";
-import { fixturesRepository, matchRepository, registrationRepository, tournamentRepository } from "presentation/composition/shared/repositories";
+import { fixturesRepository, managerRepository, matchRepository, registrationRepository, tournamentRepository } from "presentation/composition/shared/repositories";
 import { tournamentRegistrationServices } from "../shared/services";
 import { GetTournamentFixtures } from "app/usecases/manager/tournaments/fixtures/GetTournamentFixtures";
 import { CreateMatchesUseCase } from "app/usecases/manager/tournaments/matches/CreateMatchesUseCase";
@@ -33,7 +33,7 @@ const walletProvider = new WalletProvider(walletRepository, registrationReposito
 
 const getMyTournaments = new GetMyTournamentsUseCase(tournamentRepository, logger);
 const getExploreTournaments = new ExploreTournamentsUseCase(tournamentRepository, logger);
-const addTournament = new AddTournamentUseCase(tournamentRepository, tournamentId, imageKitfileProvider, logger);
+const addTournament = new AddTournamentUseCase(tournamentRepository, tournamentId, managerRepository, imageKitfileProvider, logger);
 const editTournament = new EditTournamentUseCase(tournamentRepository, imageKitfileProvider, logger);
 const cancelTournament = new CancelTournamentUsecase(tournamentRepository, logger);
 const fetchTournamentDetails = new GetTournamentDetails(tournamentRepository, logger);

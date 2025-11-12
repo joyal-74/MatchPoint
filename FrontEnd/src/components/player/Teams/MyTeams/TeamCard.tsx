@@ -6,7 +6,6 @@ import { getColorScheme } from "../../../manager/teams/TeamCard/teamColors";
 import TeamMenu from "./TeamMenu";
 import { useNavigate } from "react-router-dom";
 
-
 export interface TeamCardProps {
     _id: string;
     name: string;
@@ -17,22 +16,11 @@ export interface TeamCardProps {
     managerId: string;
     logo?: string;
     index: number;
-    onLeft: (id: string) => void;
     className?: string;
+    onLeaveRequest : (teamId: string) => void;
 }
 
-export default function TeamCard({
-    _id,
-    name,
-    sport,
-    membersCount,
-    created,
-    logo,
-    index,
-    maxPlayers,
-    onLeft,
-    className = ""
-}: TeamCardProps) {
+export default function TeamCard({ _id, name, sport, membersCount, created, logo, index, maxPlayers, onLeaveRequest, className = "" }: TeamCardProps) {
 
     const colorScheme = getColorScheme(index);
     const navigate = useNavigate();
@@ -59,8 +47,8 @@ export default function TeamCard({
 
                                 <TeamMenu
                                     teamId={_id}
-                                    onLeft={onLeft}
                                     colorScheme={colorScheme}
+                                    onLeaveRequest={onLeaveRequest}
                                 />
                             </div>
                         </div>

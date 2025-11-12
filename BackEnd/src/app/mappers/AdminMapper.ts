@@ -6,8 +6,8 @@ export class AdminMapper {
         return {
             _id: admin._id,
             email: admin.email,
-            first_name: admin.first_name,
-            last_name: admin.last_name,
+            firstName: admin.firstName,
+            lastName: admin.lastName,
             role: "admin",
             wallet: admin.wallet,
         };

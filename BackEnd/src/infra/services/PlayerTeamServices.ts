@@ -12,10 +12,7 @@ export class PlayerTeamServices implements IPlayerTeamServices {
         const approveResult = await this._teamRepository.findAllWithUserId(playerId, "approved");
 
         const pendingResult = await this._teamRepository.findAllWithUserId(playerId, "pending");
-
-        console.log('....', approveResult)
-        console.log('//////', pendingResult)
-
+        
         return {
             approvedTeams : approveResult.teams,
             totalApprovedTeams : approveResult.totalTeams,

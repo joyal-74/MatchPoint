@@ -9,8 +9,8 @@ export interface AdminSettingsDTO {
 export interface AdminToResponseDTO {
     _id: string;
     email: string;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     role :string;
     wallet: number;
 }

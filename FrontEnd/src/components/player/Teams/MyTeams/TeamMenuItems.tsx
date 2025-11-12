@@ -2,8 +2,8 @@ import type { MenuAction } from "./TeamMenu";
 
 export const menuItems = [
     {
-        action: "leaave" as MenuAction,
-        label: "Leave Team",
+        action: "leave" as MenuAction,
+        label: "Leave",
         icon: (colorScheme?: { text: string }) => (
             <svg
                 className={`w-4 h-4 mr-3 ${colorScheme ? colorScheme.text : "text-green-400"}`}

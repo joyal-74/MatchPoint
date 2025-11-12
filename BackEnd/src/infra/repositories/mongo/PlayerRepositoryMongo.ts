@@ -46,7 +46,7 @@ export class PlayerRepositoryMongo implements IPlayerRepository {
 
     async update(id: string, data: Partial<Player>): Promise<PlayerProfileResponse> {
         const { userId, ...profileData } = data;
-        console.log(data)
+
         const updateData = { profile: profileData };
 
         const updated = await PlayerModel.findOneAndUpdate({ userId }, updateData, { new: true }).populate('userId').lean();

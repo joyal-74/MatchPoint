@@ -49,6 +49,18 @@ export class ManagerRepositoryMongo implements IManagerRepository {
         return updated;
     }
 
+    async addTournamentToManager(managerId: string, tournamentId: string): Promise<void> {
+        await ManagerModel.findByIdAndUpdate(managerId, {
+            $push: { tournamentsCreated: tournamentId },
+        });
+    }
+
+    async addTeamToManager(managerId: string, teamId: string): Promise<void> {
+        await ManagerModel.findByIdAndUpdate(managerId, {
+            $push: { teams: teamId },
+        });
+    }
+
     async deleteByUserId(userId: string): Promise<void> {
         await ManagerModel.deleteMany({ userId });
     }

@@ -124,8 +124,6 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
 
         const tournamentData = TournamentMongoMapper.toDomainArray(tournaments);
 
-        console.log(tournamentData, 'tournamentData')
-
         return { tournaments: tournamentData, total };
     }
     

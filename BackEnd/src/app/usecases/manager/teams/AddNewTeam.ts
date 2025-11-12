@@ -4,25 +4,26 @@ import { File } from "domain/entities/File";
 import { ITeamIdGenerator } from "app/providers/IIdGenerator";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { IAddTeamUseCase } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
-import { TeamData, TeamRegister } from "domain/dtos/Team.dto";
+import { TeamDataFull, TeamRegister } from "domain/dtos/Team.dto";
 import { BadRequestError } from "domain/errors";
 import { IFileStorage } from "app/providers/IFileStorage";
+import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
 
 
 export class AddNewTeamUseCase implements IAddTeamUseCase {
     constructor(
         private _teamRepo: ITeamRepository,
+        private _managerRepo: IManagerRepository,
         private _idGenerator: ITeamIdGenerator,
         private _fileStorage: IFileStorage,
         private _logger: ILogger,
     ) { }
 
-    async execute(teamData: TeamRegister, file: File): Promise<TeamData> {
+    async execute(teamData: TeamRegister, file: File): Promise<TeamDataFull> {
         this._logger.info(`Adding new team initiated.. for ${teamData.managerId}`);
 
         if (file) {
             const fileKey = await this._fileStorage.upload(file);
-            console.log(fileKey)
             teamData.logo = fileKey;
         } else if (!teamData.logo) {
             throw new BadRequestError("Logo is required");
@@ -49,6 +50,8 @@ export class AddNewTeamUseCase implements IAddTeamUseCase {
             phase : teamData.phase,
             stats : teamData.stats
         })
+
+        await this._managerRepo.addTeamToManager(teamData.managerId, newTeam._id);
 
         return TeamMapper.toTeamDTO(newTeam);
     }

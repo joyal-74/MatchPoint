@@ -5,8 +5,8 @@ import { Theme, ThemeValues } from 'domain/enums';
 interface AdminDocument extends Document<Types.ObjectId>, Omit<Admin, '_id'> { }
 
 const AdminSchema = new Schema<AdminDocument>({
-    first_name: { type: String, required: true, trim: true },
-    last_name: { type: String, required: true, trim: true },
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
     wallet: { type: Number, default: 0 },

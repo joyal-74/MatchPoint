@@ -18,7 +18,6 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
             { path: "teamB", select: "name logo" },
         ]);
 
-        console.log(populatedMatches, 'populatedMatches')
 
         return MatchMongoMapper.toMatchResponseArray(populatedMatches);
     }
@@ -42,8 +41,6 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
             { path: "teamA", select: "name logo" },
             { path: "teamB", select: "name logo" },
         ]);
-
-        console.log(matches, 'matches')
 
         return MatchMongoMapper.toMatchResponseArray(matches)
     }

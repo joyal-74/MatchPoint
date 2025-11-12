@@ -9,7 +9,7 @@ export interface ITeamRepository {
     togglePlayerStatus(teamId: string, playerId: string): Promise<TeamDataFull | null>;
     playerTeamStatus(teamId: string, playerId: string, status: PlayerApprovalStatus): Promise<TeamDataFull | null>;
     playerPlayingStatus(teamId: string, playerId: string, status: playerStatus): Promise<TeamDataFull | null>;
-    create(teamData: TeamRegister): Promise<TeamData>;
+    create(teamData: TeamRegister): Promise<TeamDataFull>;
     addMember(teamId: string, userId: string, playerId: string): Promise<TeamData>;
     update(teamId: string, updates: Partial<TeamRegister>): Promise<TeamData>;
 }

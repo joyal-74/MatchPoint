@@ -7,7 +7,7 @@ import { TeamController } from "presentation/http/controllers/manager/TeamContro
 import { ImageKitFileStorage } from "infra/providers/ImageKitFileStorage";
 import { WinstonLogger } from "infra/providers/WinstonLogger";
 import { TeamIdGenerator } from "infra/providers/IdGenerator";
-import { teamRepository } from "presentation/composition/shared/repositories";
+import { managerRepository, teamRepository } from "presentation/composition/shared/repositories";
 import { GetMyTeamDetails } from "app/usecases/manager/GetMyTeamDetails";
 import { ApprovePlayerUseCase } from "app/usecases/manager/teams/ApprovePlayer";
 import { RejectPlayerUseCase } from "app/usecases/manager/teams/RejectPlayer";
@@ -18,7 +18,7 @@ const logger = new WinstonLogger();
 const imageKitfileProvider = new ImageKitFileStorage();
 const teamId = new TeamIdGenerator();
 
-const addNewTeam = new AddNewTeamUseCase(teamRepository, teamId, imageKitfileProvider, logger);
+const addNewTeam = new AddNewTeamUseCase(teamRepository, managerRepository, teamId, imageKitfileProvider, logger);
 const editTeam = new EditTeamUseCase(teamRepository, imageKitfileProvider, logger);
 const deleteTeam = new SoftDeleteTeam(teamRepository, logger);
 const getallTeams = new GetAllTeamUseCase(teamRepository, logger);

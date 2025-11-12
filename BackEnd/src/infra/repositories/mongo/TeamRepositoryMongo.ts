@@ -6,7 +6,7 @@ import { TeamMongoMapper, TeamPopulatedDocument } from "infra/utils/mappers/Team
 import mongoose from "mongoose";
 
 export class TeamRepositoryMongo implements ITeamRepository {
-    async create(teamData: TeamRegister): Promise<TeamData> {
+    async create(teamData: TeamRegister): Promise<TeamDataFull> {
         const created = await TeamModel.create(teamData);
         return TeamMongoMapper.toDomainFull(created as unknown as TeamPopulatedDocument);
     }

@@ -15,7 +15,6 @@ export class GetPlayerProfile implements IGetPlayerProfile {
         this._logger.info(`Fetching player profile for ID: ${playerId}`);
 
         const player = await this._playerRepo.findById(playerId);
-        console.log(player)
         if (!player) {
             this._logger.error(`Player profile not found for ID: ${playerId}`);
             throw new NotFoundError("Player account not found");

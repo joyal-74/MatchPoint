@@ -15,26 +15,16 @@ const ManagerStatsSection = ({ stats }: ManagerStatsSectionProps) => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                <StatCard label="Tournaments Created" value={stats.tournamentsCreated} color="emerald" />
-                <StatCard label="Tournaments Participated" value={stats.tournamentsParticipated} color="blue" />
+                <StatCard label="Tournaments Created" value={stats.tournamentsCreated} color="emerald" subtitle="Total tournaments created" />
+                <StatCard label="Tournaments Participated" value={stats.tournamentsParticipated} color="blue" subtitle="Total tournaments participated" />
                 <StatCard label="Total Teams" value={stats.totalTeams} color="purple" subtitle="Across all tournaments" />
             </div>
         </div>
     );
 };
 
-const StatCard = ({
-    label,
-    value,
-    color,
-    subtitle,
-}: {
-    label: string;
-    value: number;
-    color: string;
-    subtitle?: string;
-}) => (
-    <div className={`bg-gradient-to-br from-${color}-500/10 to-${color}-600/5 rounded-lg p-4 border border-${color}-500/20`}>
+const StatCard = ({ label, value, color, subtitle, }: { label: string; value: number; color: string; subtitle?: string; }) => (
+    <div className={`bg-gradient-to-br from-${color}-500/10 to-${color}-600/5 rounded-lg p-4`}>
         <h3 className="text-xs uppercase text-neutral-400 font-semibold mb-1">
             {label}
         </h3>
