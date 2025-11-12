@@ -134,7 +134,7 @@ MatchPoint/
 
    # Run frontend
    cd ../frontend
-   npm start
+   npm run dev
    ```
 
 

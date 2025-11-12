@@ -163,7 +163,7 @@ const ViewTeam = () => {
                                                 >
                                                     <div className="relative">
                                                         <img
-                                                            src={player.profileImage}
+                                                            src={player.profileImage || '/cricket-player.png'}
                                                             alt={player.firstName}
                                                             className="w-12 h-12 rounded-full object-cover border border-neutral-300 dark:border-neutral-500"
                                                         />

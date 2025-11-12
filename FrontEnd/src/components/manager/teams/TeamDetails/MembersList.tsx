@@ -1,13 +1,6 @@
-import { EyeIcon } from 'lucide-react';
 import type { PlayerDetails } from '../Types';
 
-const MembersList = ({
-    players,
-    openPlayerDetails,
-}: {
-    players: PlayerDetails[];
-    openPlayerDetails: (player: PlayerDetails) => void;
-}) => {
+const MembersList = ({ players, openPlayerDetails }: { players: PlayerDetails[]; openPlayerDetails: (player: PlayerDetails) => void; }) => {
     if (players.length === 0)
         return (
             <p className="text-sm text-neutral-500 dark:text-neutral-400 text-center py-8 col-span-full">
@@ -24,7 +17,7 @@ const MembersList = ({
                     onClick={() => openPlayerDetails(player)}
                 >
                     <img
-                        src={player.profileImage || '/placeholder.png'}
+                        src={player.profileImage || '/player.png'}
                         alt={player.firstName}
                         className="w-12 h-12 rounded-full object-cover border border-neutral-300 dark:border-neutral-500 flex-shrink-0"
                     />
@@ -36,9 +29,6 @@ const MembersList = ({
                             {player.profile?.position || 'No position'}
                         </p>
                     </div>
-                    <button className="p-2 text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 ml-auto hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition">
-                        <EyeIcon className="w-4 h-4" />
-                    </button>
                 </div>
             ))}
         </div>

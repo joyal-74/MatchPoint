@@ -20,6 +20,7 @@ export class FixtureMongoMapper {
                     stats: match?.stats || {},
                     venue: match?.venue || "",
                     date: match?.date || "",
+                    matchNumber : match.matchNumber,
                 };
             }),
         };
