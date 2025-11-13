@@ -14,6 +14,7 @@ import {
     ICreateMatchesUseCase,
     IGetTournamentMatches
 } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { TournamentMessages } from "domain/constants/TournamentMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -50,7 +51,7 @@ export class TournamentController implements ITournamentController {
         this._logger.info(`[TournamentController] getAllTournament → managerId=${managerId}`);
         const result = await this._getMyTournamentsUsecase.execute(managerId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournaments fetched successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TOURNAMENTS_FETCHED, result));
     };
 
     /**
@@ -64,7 +65,7 @@ export class TournamentController implements ITournamentController {
         this._logger.info(`[TournamentController] getAllTournament → managerId=${managerId}`);
         const result = await this._getExploreTournamentsUsecase.execute(managerId, page, limit, search, filter);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournaments fetched successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true,TournamentMessages.TOURNAMENTS_FETCHED, result));
     };
 
     /**
@@ -79,7 +80,7 @@ export class TournamentController implements ITournamentController {
         this._logger.info(`[TournamentController] addNewTournament → managerId=${tournamentData.managerId}`);
         const result = await this._addTournamentsUsecase.execute(tournamentData, file);
 
-        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Tournament added successfully", result));
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, TournamentMessages.TOURNAMENT_ADDED, result));
     };
 
     /**
@@ -95,7 +96,7 @@ export class TournamentController implements ITournamentController {
         this._logger.info(`[TournamentController] editTournament → managerId=${tournamentData.managerId}`);
         const result = await this._editTournamentsUsecase.execute(tournamentData, file);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournament updated successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true,TournamentMessages.TOURNAMENT_UPDATED, result));
     };
 
     /**
@@ -110,7 +111,7 @@ export class TournamentController implements ITournamentController {
         this._logger.info(`[TournamentController] cancel → tournamentId=${tournamentId}`);
         const result = await this._cancelTournamentsUsecase.execute(tournamentId, reason);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournament cancelled successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TOURNAMENT_CANCELLED, result));
     };
 
     /**
@@ -124,7 +125,7 @@ export class TournamentController implements ITournamentController {
         this._logger.info(`[TournamentController] details → tournamentId=${tournamentId}`);
         const result = await this._tournamentsDetailsUsecase.execute(tournamentId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournament fetched successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TOURNAMENT_DETAILS_FETCHED, result));
     };
 
     /**
@@ -139,7 +140,7 @@ export class TournamentController implements ITournamentController {
         this._logger.info(`[TournamentController] entryFee → tournamentId=${tournamentId}`);
         const result = await this._entryFeePaymentUsecase.execute(tournamentId, teamId, captainId, managerId, paymentMethod);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Entry Fee Paid successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true,TournamentMessages.ENTRY_FEE_PAID, result));
     };
 
     /**
@@ -153,7 +154,7 @@ export class TournamentController implements ITournamentController {
 
         const result = await this._updateTournamenTeamUsecase.execute(registrationId, paymentStatus, paymentId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team registration updated successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TEAM_REGISTRATION_UPDATED, result));
     };
 
     /**
@@ -166,7 +167,7 @@ export class TournamentController implements ITournamentController {
 
         const result = await this._tournamentTeamsUsecase.execute(tournamentId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Registered teams fetched successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.REGISTERED_TEAMS_FETCHED, result));
     };
 
     /**
@@ -179,7 +180,7 @@ export class TournamentController implements ITournamentController {
 
         const result = await this._getFixturesUsecase.execute(tournamentId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Fixtures fetched successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.FIXTURES_FETCHED, result));
     };
 
     /**
@@ -192,7 +193,7 @@ export class TournamentController implements ITournamentController {
 
         const result = await this._getMatchesUsecase.execute(tournamentId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Matches fetched successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.MATCHES_FETCHED, result));
     };
 
     /**
@@ -206,7 +207,7 @@ export class TournamentController implements ITournamentController {
 
         const result = await this._createMatchesUsecase.execute(tournamentId, matchesData);
 
-        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Matches created successfully", result));
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, TournamentMessages.MATCHES_CREATED, result));
     };
 
     /**
@@ -220,6 +221,6 @@ export class TournamentController implements ITournamentController {
 
         const result = await this._createFixturesUsecase.execute(tournamentId, matchIds, format);
 
-        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Fixtures created successfully", result));
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, TournamentMessages.FIXTURES_CREATED, result));
     };
 }

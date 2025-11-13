@@ -1,4 +1,5 @@
 import { IGetManagerProfile, IUpdateManagerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
+import { ProfileMessages } from "domain/constants/manager/ManagerProfileMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -23,7 +24,7 @@ export class ProfileController implements IProfileController {
 
         const manager = await this._getManagerProfileUsecase.execute(managerId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Manager profile updated', manager));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, ProfileMessages.PROFILE_FETCHED, manager));
     }
 
     /**
@@ -39,6 +40,6 @@ export class ProfileController implements IProfileController {
 
         const manager = await this._profileUpdateUsecase.execute({ ...userData, managerId }, file);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Manager profile updated', manager));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, ProfileMessages.PROFILE_UPDATED, manager));
     }
 }

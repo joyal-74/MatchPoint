@@ -6,6 +6,7 @@ import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 import { IProfileController } from "presentation/http/interfaces/IManagerController";
 import { ILogger } from "app/providers/ILogger";
+import { ProfileMessages } from "domain/constants/player/PlayerProfileMessages";
 
 export class PlayerProfileController implements IProfileController {
     constructor(
@@ -29,7 +30,7 @@ export class PlayerProfileController implements IProfileController {
 
         this._logger.info(`Profile fetched successfully for player ID: ${playerId}`);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Player profile fetched', player));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, ProfileMessages.PROFILE_FETCHED, player));
     }
 
     /**
@@ -48,7 +49,7 @@ export class PlayerProfileController implements IProfileController {
 
         this._logger.info(`Profile updated successfully for player ID: ${playerId}`);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Player profile updated', player));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, ProfileMessages.PROFILE_UPDATED, player));
     }
 
     /**
@@ -66,6 +67,6 @@ export class PlayerProfileController implements IProfileController {
 
         this._logger.info(`Profile updated successfully for player ID: ${playerId}`);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Player profile updated', profile));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, ProfileMessages.SPORT_PROFILE_UPDATED, profile));
     }
 };

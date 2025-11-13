@@ -1,5 +1,6 @@
 import { ILogger } from "app/providers/ILogger";
 import { IGetPlayerTournaments } from "app/repositories/interfaces/player/ITournamentsRepoUsecaes";
+import { TournamentMessages } from "domain/constants/TournamentMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -26,6 +27,6 @@ export class TournamentsController {
 
         const result = await this._getplayerTournaments.execute(status, page, limit, playerId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Tournaments fetched successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TOURNAMENTS_FETCHED, result));
     };
 }

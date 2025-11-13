@@ -6,6 +6,7 @@ import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 import { IProfileController } from "presentation/http/interfaces/IManagerController";
 import { ILogger } from "app/providers/ILogger";
+import { ProfileMessages } from "domain/constants/viewer/ViewerProfileMessages";
 
 export class ProfileController implements IProfileController {
     constructor(
@@ -30,7 +31,7 @@ export class ProfileController implements IProfileController {
 
         return new HttpResponse(
             HttpStatusCode.OK,
-            buildResponse(true, "Viewer profile fetched", viewer)
+            buildResponse(true, ProfileMessages.PROFILE_FETCHED, viewer)
         );
     }
 
@@ -52,7 +53,7 @@ export class ProfileController implements IProfileController {
 
         return new HttpResponse(
             HttpStatusCode.OK,
-            buildResponse(true, "Viewer profile updated", viewer)
+            buildResponse(true, ProfileMessages.PROFILE_UPDATED, viewer)
         );
     }
 }

@@ -6,6 +6,7 @@ import { IUsersManagementController } from "presentation/http/interfaces/IUsersM
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 import { IUserManagementService } from "app/repositories/interfaces/services/AdminUserServices";
+import { AdminUserMessages } from "domain/constants/admin/AdminUserMessages";
 
 
 export class UsersManagementController implements IUsersManagementController {
@@ -39,7 +40,7 @@ export class UsersManagementController implements IUsersManagementController {
             search: search as string | undefined,
         });
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Managers fetched successfully", managers));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.MANAGERS_FETCHED, managers));
     }
 
     /**
@@ -62,7 +63,7 @@ export class UsersManagementController implements IUsersManagementController {
             search: search as string | undefined,
         });
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Players fetched successfully", players));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.PLAYERS_FETCHED, players));
     }
 
     /**
@@ -85,7 +86,7 @@ export class UsersManagementController implements IUsersManagementController {
             search: search as string | undefined,
         });
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Viewers fetched successfully", viewers));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.VIEWERS_FETCHED, viewers));
     }
 
     /**
@@ -106,7 +107,7 @@ export class UsersManagementController implements IUsersManagementController {
 
         const result = await this._changeUserStatus.changeStatusAndFetch(role, userId, isActive, params);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Status changed successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.STATUS_CHANGED, result));
     }
 
     changeUserBlockStatus = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
@@ -115,7 +116,7 @@ export class UsersManagementController implements IUsersManagementController {
 
         const result = await this._changeUserStatus.changeBlockStatus(userId, isActive);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Status changed successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.STATUS_CHANGED, result));
     }
 
 
@@ -124,7 +125,7 @@ export class UsersManagementController implements IUsersManagementController {
 
         const result = await this._getManagerDetails.execute(id);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Manager details fetched successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.MANAGER_DETAILS_FETCHED, result));
     }
 
     fetchPlayerDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
@@ -132,7 +133,7 @@ export class UsersManagementController implements IUsersManagementController {
 
         const result = await this._getPlayerDetails.execute(id);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Player details fetched successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.PLAYER_DETAILS_FETCHED, result));
     }
 
     fetchViewerDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
@@ -140,6 +141,6 @@ export class UsersManagementController implements IUsersManagementController {
 
         const result = await this._getViewerDetails.execute(id);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Player details fetched successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.VIEWER_DETAILS_FETCHED, result));
     }
 }

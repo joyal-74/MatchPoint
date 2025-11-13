@@ -6,6 +6,7 @@ import {
     IGetMyTeamsUseCase,
     IJoinTeamUseCase
 } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
+import { TeamMessages } from "domain/constants/TeamMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -35,7 +36,7 @@ export class TeamsController implements IPlayerTeamController {
 
         const result = await this._getAllTeamsUsecase.execute(filters);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Teams fetched successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.TEAMS_FETCHED, result));
     };
 
     /**
@@ -52,7 +53,7 @@ export class TeamsController implements IPlayerTeamController {
 
         return new HttpResponse(
             HttpStatusCode.OK,
-            buildResponse(true, "Joined team successfully", result)
+            buildResponse(true, TeamMessages.TEAM_JOINED, result)
         );
     };
 
@@ -70,7 +71,7 @@ export class TeamsController implements IPlayerTeamController {
 
         return new HttpResponse(
             HttpStatusCode.OK,
-            buildResponse(true, "Teams fetched successfully", result)
+            buildResponse(true, TeamMessages.TEAMS_FETCHED, result)
         );
     };
 
@@ -88,7 +89,7 @@ export class TeamsController implements IPlayerTeamController {
 
         return new HttpResponse(
             HttpStatusCode.OK,
-            buildResponse(true, "Teams fetched successfully", result)
+            buildResponse(true, TeamMessages.TEAMS_FETCHED, result)
         );
     };
 
@@ -106,7 +107,7 @@ export class TeamsController implements IPlayerTeamController {
 
         return new HttpResponse(
             HttpStatusCode.OK,
-            buildResponse(true, "Team details fetched successfully", result)
+            buildResponse(true, TeamMessages.TEAM_DETAILS_FETCHED, result)
         );
     };
 }

@@ -17,6 +17,7 @@ import { ITeamController } from "presentation/http/interfaces/ITeamController";
 import { ILogger } from "app/providers/ILogger";
 import { BadRequestError } from "domain/errors";
 import { IGetMyTeamDetailsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
+import { TeamMessages } from "domain/constants/TeamMessages";
 
 export class TeamController implements ITeamController {
     constructor(
@@ -50,7 +51,7 @@ export class TeamController implements ITeamController {
 
         this._logger.info(`[Controller] Team created successfully → managerId=${teamData.managerId}`);
 
-        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Team created successfully", team));
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, TeamMessages.TEAM_CREATED, team));
     }
 
     /**
@@ -69,7 +70,7 @@ export class TeamController implements ITeamController {
 
         this._logger.info(`[Controller] Team updated successfully → managerId=${teamData.managerId}`);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team edited successfully", team));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.TEAM_EDITED, team));
     }
 
     /**
@@ -86,7 +87,7 @@ export class TeamController implements ITeamController {
 
         this._logger.info(`[Controller] Team deleted successfully → TeamID=${teamId}`);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team deleted successfully", id));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.TEAM_DELETED, id));
     }
 
     /**
@@ -103,7 +104,7 @@ export class TeamController implements ITeamController {
 
         this._logger.info(`[Controller] ${teams.length} teams fetched → managerId=${managerId}`);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Teams fetched successfully", teams));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.TEAMS_FETCHED, teams));
     }
 
     /**
@@ -119,7 +120,7 @@ export class TeamController implements ITeamController {
 
         const result = await this._getmyTeamsDetailsUsecase.execute(teamId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Team detailed fetched successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.TEAM_DETAILS_FETCHED, result));
     }
 
     /**
@@ -136,7 +137,7 @@ export class TeamController implements ITeamController {
 
         this._logger.info(`[Controller] Player status changed successfully → teamId=${teamId} playerId=${playerId}`);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Player status changed successfully", players));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.PLAYER_STATUS_CHANGED, players));
     }
 
 
@@ -152,7 +153,7 @@ export class TeamController implements ITeamController {
 
         const result = await this._approvetoTeamUsecase.execute(teamId, playerId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "player approved successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.PLAYER_APPROVED, result));
     }
 
     /**
@@ -167,7 +168,7 @@ export class TeamController implements ITeamController {
 
         const result = await this._rejectfromTeamUsecase.execute(teamId, playerId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Player rejected successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.PLAYER_REJECTED, result));
     }
 
     /**
@@ -182,6 +183,6 @@ export class TeamController implements ITeamController {
 
         await this._swapPlayersUsecase.execute(teamId, playerId, status);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Player swapped successfully"));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.PLAYER_SWAPPED));
     }
 }
