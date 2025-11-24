@@ -107,6 +107,11 @@ export const managerEndpoints = {
         return data.data;
     },
 
+    removePlayerFromTeam: async ({ teamId, playerId }: { teamId: string; playerId: string }): Promise<RegisteredTeam[]> => {
+        const { data } = await axiosClient.post(MANAGER_ROUTES.REMOVE_PLAYER(playerId), { teamId, playerId });
+        return data.data;
+    },
+
     approvePlayerRequest: async ({ teamId, playerId }: { teamId: string; playerId: string }): Promise<RegisteredTeam[]> => {
         const { data } = await axiosClient.post(MANAGER_ROUTES.APPROVE_PLAYER(playerId), { teamId, playerId });
         return data.data;

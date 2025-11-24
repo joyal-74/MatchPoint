@@ -13,18 +13,18 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
     }
 
     async findAll(managerId: string): Promise<Tournament[]> {
-        const tournaments = await TournamentModel.find({ managerId, status: { $ne: 'cancelled' } }).populate("managerId", "first_name last_name email phone");
+        const tournaments = await TournamentModel.find({ managerId, status: { $ne: 'cancelled' } }).populate("managerId", "firstName lastName email phone");
         return TournamentMongoMapper.toDomainArray(tournaments);
     }
 
     async findById(id: string): Promise<Tournament | null> {
-        const tournament = await TournamentModel.findById(id).populate("managerId", "first_name last_name email phone");
+        const tournament = await TournamentModel.findById(id).populate("managerId", "firstName lastName email phone");
         if (!tournament) return null;
         return TournamentMongoMapper.toDomain(tournament);
     }
 
     async getByManager(managerId: string): Promise<Tournament[] | null> {
-        const tournaments = await TournamentModel.find({ managerId, status: { $ne: 'cancelled' } }).populate("managerId", "first_name last_name email phone");
+        const tournaments = await TournamentModel.find({ managerId, status: { $ne: 'cancelled' } }).populate("managerId", "firstName lastName email phone");
         return TournamentMongoMapper.toDomainArray(tournaments) ?? null;
     }
 
@@ -51,7 +51,7 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
         const skip = (page - 1) * limit;
 
         const data = await TournamentModel.find(query)
-            .populate("managerId", "first_name last_name email phone")
+            .populate("managerId", "firstName lastName email phone")
             .skip(skip)
             .limit(limit)
             .sort({ createdAt: -1 });
@@ -65,7 +65,7 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
             tournamentId,
             { $set: updates },
             { new: true }
-        ).populate("managerId", "first_name last_name email phone");
+        ).populate("managerId", "firstName lastName email phone");
         return TournamentMongoMapper.toDomain(updated!);
     }
 
@@ -83,7 +83,7 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
                 }
             },
             { new: true }
-        ).populate("managerId", "first_name last_name email phone");
+        ).populate("managerId", "firstName lastName email phone");
 
         if (!tournament) {
             throw new BadRequestError("Cannot cancel a tournament that has ended or does not exist");

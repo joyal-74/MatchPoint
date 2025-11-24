@@ -1,6 +1,6 @@
 import { Schema, model, Types, Document } from "mongoose";
 
-interface ManagerDocument extends Document {
+export interface ManagerDocument extends Document {
     _id : Types.ObjectId;
     userId: Types.ObjectId;
     wallet: number;

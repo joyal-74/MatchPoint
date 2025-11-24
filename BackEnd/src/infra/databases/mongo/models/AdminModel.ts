@@ -2,7 +2,7 @@ import { Document, Schema, Types, model } from 'mongoose';
 import { Admin } from 'domain/entities/Admin';
 import { Theme, ThemeValues } from 'domain/enums';
 
-interface AdminDocument extends Document<Types.ObjectId>, Omit<Admin, '_id'> { }
+export interface AdminDocument extends Document<Types.ObjectId>, Omit<Admin, '_id'> { }
 
 const AdminSchema = new Schema<AdminDocument>({
     firstName: { type: String, required: true, trim: true },

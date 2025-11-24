@@ -72,31 +72,31 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
     // Determine button behavior based on player type and max playing reached
     const getActionButtonConfig = () => {
         if (cardStyle === 'playing') {
-            // Playing players always use swap
+            return {
+                label: 'Bench',
+                icon: ArrowRightLeft,
+                action: 'makeSubstitute' as const,
+                disabled: false
+            };
+        }
+
+        if (maxPlayingReached) {
             return {
                 label: 'Swap',
                 icon: ArrowRightLeft,
                 action: 'swap' as const,
                 disabled: false
             };
-        } else {
-            if (maxPlayingReached) {
-                return {
-                    label: 'Swap',
-                    icon: ArrowRightLeft,
-                    action: 'swap' as const,
-                    disabled: false
-                };
-            } else {
-                return {
-                    label: 'Add',
-                    icon: Plus,
-                    action: 'makeActive' as const,
-                    disabled: false
-                };
-            }
         }
+
+        return {
+            label: 'Add',
+            icon: Plus,
+            action: 'makeActive' as const,
+            disabled: false
+        };
     };
+
 
     const actionConfig = getActionButtonConfig();
     const ActionIcon = actionConfig.icon;

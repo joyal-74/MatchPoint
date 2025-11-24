@@ -10,12 +10,14 @@ const PlayersSection = ({
     setActiveTab,
     openPlayerDetails,
     openApprovalModal,
+    openRemoveModal,
 }: {
     team: Team;
     activeTab: 'members' | 'pending';
     setActiveTab: (tab: 'members' | 'pending') => void;
     openPlayerDetails: (player: PlayerDetails) => void;
     openApprovalModal: (player: PlayerDetails) => void;
+    openRemoveModal: (player: PlayerDetails) => void;
 }) => {
     const approvedPlayers = team.members?.filter((p: PlayerDetails) => p.approvalStatus === 'approved') || [];
     const pendingPlayers = team.members?.filter((p: PlayerDetails) => p.approvalStatus === 'pending') || [];
@@ -39,8 +41,8 @@ const PlayersSection = ({
                         <button
                             onClick={() => setActiveTab('members')}
                             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeTab === 'members'
-                                    ? 'bg-white dark:bg-neutral-800 text-neutral-800 dark:text-white shadow-sm'
-                                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-white'
+                                ? 'bg-white dark:bg-neutral-800 text-neutral-800 dark:text-white shadow-sm'
+                                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-white'
                                 }`}
                         >
                             Members ({approvedPlayers.length})
@@ -48,8 +50,8 @@ const PlayersSection = ({
                         <button
                             onClick={() => setActiveTab('pending')}
                             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeTab === 'pending'
-                                    ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 shadow-sm'
-                                    : 'text-neutral-600 dark:text-neutral-400 hover:text-yellow-700 dark:hover:text-yellow-300'
+                                ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 shadow-sm'
+                                : 'text-neutral-600 dark:text-neutral-400 hover:text-yellow-700 dark:hover:text-yellow-300'
                                 }`}
                         >
                             <Clock className="w-4 h-4 inline mr-1" />
@@ -67,7 +69,11 @@ const PlayersSection = ({
                         openApprovalModal={openApprovalModal}
                     />
                 ) : (
-                    <MembersList players={approvedPlayers} openPlayerDetails={openPlayerDetails} />
+                    <MembersList
+                        players={approvedPlayers}
+                        openPlayerDetails={openPlayerDetails}
+                        openRemoveModal={openRemoveModal}
+                    />
                 )}
             </div>
         </div>

@@ -59,6 +59,11 @@ export const rejectPlayerRequest = createAsyncThunk(
     createApiThunk(managerEndpoints.rejectPlayerRequest)
 );
 
+export const removePlayerFromTeam = createAsyncThunk(
+    "manager/removePlayerFromTeam",
+    createApiThunk(managerEndpoints.removePlayerFromTeam)
+);
+
 export const updatePlayerStatus  = createAsyncThunk(
     "manager/updatePlayerStatus",
     createApiThunk(managerEndpoints.updatePlayerStatus)

@@ -6,10 +6,7 @@ import { MatchMongoMapper } from "infra/utils/mappers/MatchMongoMapper";
 
 export class MatchesRepositoryMongo implements IMatchesRepository {
     async createMatches(tournamentId: string, matches: Match[]): Promise<Match[]> {
-        const matchesWithTournament = matches.map(m => ({
-            ...m,
-            tournamentId
-        }));
+        const matchesWithTournament = matches.map(m => ({ ...m, tournamentId }));
 
         const createdMatches = await MatchModel.insertMany(matchesWithTournament);
 
@@ -18,12 +15,11 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
             { path: "teamB", select: "name logo" },
         ]);
 
-
         return MatchMongoMapper.toMatchResponseArray(populatedMatches);
     }
 
 
-    async updateMatchStats(matchId: string, stats: Record<string, any>): Promise<Match> {
+    async updateMatchStats(matchId: string, stats: Record<string, unknown>): Promise<Match> {
         const updatedMatch = await MatchModel.findByIdAndUpdate(matchId,
             { $set: { stats, ...stats } },
             { new: true }

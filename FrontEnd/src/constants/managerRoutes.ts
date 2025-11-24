@@ -16,6 +16,7 @@ export const MANAGER_ROUTES = {
     PAYMENT_STATUS: (registrationId: string) => `/manager/registration/${registrationId}/status`,
     REGISTERED_TEAMS: (tournamentId: string) => `/manager/tournament/${tournamentId}/teams`,
     REJECT_PLAYER: (playerId: string) => `/manager/team/${playerId}/reject`,
+    REMOVE_PLAYER: (playerId: string) => `/manager/team/${playerId}/remove`,
     APPROVE_PLAYER: (playerId: string) => `/manager/team/${playerId}/approve`,
     UPDATE_PLAYER: (playerId: string) => `/manager/team/${playerId}/swap`,
     CREATE_MATCHES: (tournamentId: string) => `/manager/tournament/${tournamentId}/matches`,

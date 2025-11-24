@@ -2,13 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
+import { IAdminRepository } from "app/repositories/interfaces/admin/IAdminRepository";
 
 interface AuthRequest extends Request {
     user?: { id: string; role: string };
 }
 
-export const verifyTokenMiddleware = (jwtService: IJWTRepository, userRepo: IUserRepository, allowedRoles: string[] = []) =>
+export const verifyAdminToken = (jwtService: IJWTRepository, userRepo: IAdminRepository, allowedRoles: string[] = []) =>
     async (req: AuthRequest, res: Response, next: NextFunction) => {
         try {
             const token =
@@ -27,12 +27,6 @@ export const verifyTokenMiddleware = (jwtService: IJWTRepository, userRepo: IUse
 
             if (!user) {
                 return res.status(HttpStatusCode.UNAUTHORIZED).json(buildResponse(false, "User not found"));
-            }
-
-            if (user.isActive === false) {
-                return res
-                    .status(HttpStatusCode.FORBIDDEN)
-                    .json(buildResponse(false, "You are blocked"));
             }
 
             req.user = { id: payload.userId, role: payload.role };

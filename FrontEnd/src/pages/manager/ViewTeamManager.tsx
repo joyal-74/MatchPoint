@@ -7,6 +7,7 @@ import PlayerApprovalModal from '../../components/manager/teams/Modal/PlayerAppr
 import TeamInfoCard from '../../components/manager/teams/TeamDetails/TeamInfoCard';
 import PlayersSection from '../../components/manager/teams/TeamDetails/PlayersSection';
 import { useTeamDetails } from '../../hooks/manager/useTeamDetails';
+import RemovePlayerModal from '../../components/manager/teams/Modal/RemovePlayerModal';
 
 const ViewTeamManager = () => {
     const { teamId } = useParams();
@@ -16,10 +17,13 @@ const ViewTeamManager = () => {
         selectedPlayer,
         isPlayerModalOpen, setIsPlayerModalOpen,
         isApprovalModalOpen, setIsApprovalModalOpen,
+        isRemoveModalOpen, setIsRemoveModalOpen,
         activeTab, setActiveTab,
         openPlayerDetails,
         openApprovalModal,
+        openRemoveModal,
         handleApprove, handleReject,
+        handleRemove,
         refetchTeam,
     } = useTeamDetails(teamId);
 
@@ -69,6 +73,7 @@ const ViewTeamManager = () => {
                         setActiveTab={setActiveTab}
                         openPlayerDetails={openPlayerDetails}
                         openApprovalModal={openApprovalModal}
+                        openRemoveModal={openRemoveModal}
                     />
                 </div>
             </div>
@@ -89,6 +94,14 @@ const ViewTeamManager = () => {
                             onClose={() => setIsApprovalModalOpen(false)}
                             onApprove={() => handleApprove(selectedPlayer.playerId)}
                             onReject={() => handleReject(selectedPlayer.playerId)}
+                        />
+                    )}
+                    {isRemoveModalOpen && (
+                        <RemovePlayerModal
+                            player={selectedPlayer}
+                            isOpen={isRemoveModalOpen}
+                            onClose={() => setIsRemoveModalOpen(false)}
+                            onRemove={handleRemove}
                         />
                     )}
                 </>

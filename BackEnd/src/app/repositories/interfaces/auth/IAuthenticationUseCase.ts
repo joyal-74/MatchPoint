@@ -2,7 +2,7 @@ import { AdminToResponseDTO } from "domain/dtos/Admin.dto";
 import { ILoginSocialUserResponse, UserLoginResponseDTO } from "domain/dtos/User.dto";
 import { ManagerRegister } from "domain/entities/Manager";
 import { PlayerRegister } from "domain/entities/Player";
-import { socialRserRegisterData, UserRegister } from "domain/entities/User";
+import { SocialUserRegisterData, UserRegister } from "domain/entities/User";
 import { OtpContext } from "domain/enums/OtpContext";
 
 
@@ -15,7 +15,7 @@ export interface IAuthUseCase<TAccount> {
 }
 
 export interface ICompleteSocialSignup<TAccount> {
-    execute(useData : socialRserRegisterData): Promise<{
+    execute(useData : SocialUserRegisterData): Promise<{
         user: TAccount;
         accessToken: string;
         refreshToken: string;

@@ -1,21 +1,15 @@
 import { IAdminRepository } from "app/repositories/interfaces/admin/IAdminRepository";
-import { Admin, AdminResponse } from "domain/entities/Admin";
-import { AdminModel } from "infra/databases/mongo/models/AdminModel";
+import { AdminResponse } from "domain/entities/Admin";
+import { AdminDocument, AdminModel } from "infra/databases/mongo/models/AdminModel";
+import { MongoBaseRepository } from "./MongoBaseRepository";
 
-
-export class AdminRepositoryMongo implements IAdminRepository {
-    // Find user by MongoDB _id
-    async findById(id: string): Promise<AdminResponse | null> {
-        return AdminModel.findById(id).lean<AdminResponse>().exec();
+export class AdminRepositoryMongo extends MongoBaseRepository<AdminDocument, AdminResponse> implements IAdminRepository {
+    constructor() {
+        super(AdminModel);
     }
 
-    // Find user by email
     async findByEmail(email: string): Promise<AdminResponse | null> {
-        return AdminModel.findOne({ email }).lean<AdminResponse>().exec();
-    }
-
-
-    async update(_id: string, data: Partial<Admin>): Promise<AdminResponse | null> {
-        return AdminModel.findByIdAndUpdate(_id, data, { new: true }).lean<AdminResponse>().exec();
+        const result = await this.model.findOne({ email }).lean<AdminResponse>().exec();
+        return result || null;
     }
 }
