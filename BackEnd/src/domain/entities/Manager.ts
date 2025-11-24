@@ -1,14 +1,16 @@
 export interface Manager {
     userId: string;
     wallet: number;
-    tournaments: string[];
+    tournamentsCreated: string[];
+    tournamentsParticipated: string[];
     teams: string[];
 }
 
 export interface ManagerRegister {
     userId: string;
     wallet?: number;
-    tournaments?: string[];
+    tournamentsCreated?: string[];
+    tournamentsParticipated?: string[];
     teams?: string[];
 }
 

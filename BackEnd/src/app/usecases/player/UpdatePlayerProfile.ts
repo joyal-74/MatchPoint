@@ -1,43 +1,43 @@
+import { PlayerMapper } from "app/mappers/PlayerMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
-import { PlayerResponseDTO, PlayerUpdateDTO } from "domain/dtos/Player.dto";
+import { ILogger } from "app/providers/ILogger";
+import { IPlayerService } from "app/services/player/IPlayerService";
+import { IUpdatePlayerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
+import { PlayerProfileResponse, PlayerUpdateDTO } from "domain/dtos/Player.dto";
 import { File } from "domain/entities/File";
 import { NotFoundError } from "domain/errors";
 import { validateManagerUpdate } from "domain/validators/ManagerUpdateValidator";
 
-export class UpdatePlayerProfile {
+export class UpdatePlayerProfile implements IUpdatePlayerProfile {
     constructor(
-        private userRepo: IUserRepository,
-        private fileStorage: IFileStorage
+        private _playerService : IPlayerService,
+        private _fileStorage: IFileStorage,
+        private _logger: ILogger,
     ) { }
 
-    async execute(update: PlayerUpdateDTO, file?: File): Promise<{ user: PlayerResponseDTO }> {
-        const validData = validateManagerUpdate(update, file);
+    async execute(updateData: PlayerUpdateDTO, file?: File): Promise<PlayerProfileResponse> {
 
-        if (file) {
-            const fileKey = await this.fileStorage.upload(file);
-            validData.logo = fileKey;
-        }
+        const validData = validateManagerUpdate(updateData, file);
 
-        if (!validData._id) {
+        if (!validData.userId) {
+            this._logger.warn("[UpdatePlayerProfile] Missing user ID in update data");
             throw new NotFoundError("UserId not found");
         }
 
-        const player = await this.userRepo.update(validData._id, validData);
-        const playerDTO: PlayerResponseDTO = {
-            _id: player._id,
-            userId: player.userId,
-            email: player.email,
-            first_name: player.first_name,
-            last_name: player.last_name,
-            username: player.username,
-            sport: player.sport as string,
-            role: player.role,
-            gender: player.gender,
-            phone: player.phone,
-            wallet: player.wallet,
-            logo: player.logo ? this.fileStorage.getUrl(player.logo) : null
-        };
-        return { user: playerDTO };
+        this._logger.info("[UpdatePlayerProfile] Valid data passed validation");
+
+        if (file) {
+            const fileKey = await this._fileStorage.upload(file);
+            validData.profileImage = fileKey;
+        }
+
+        const {userId, ...data} = validData
+
+        const player = await this._playerService.updateUserProfile(userId, data);
+        if(!player) throw new NotFoundError('Player not found')
+
+        this._logger.info("Player profile successfully updated")
+
+        return PlayerMapper.toProfileResponseDTO(player)
     }
 }

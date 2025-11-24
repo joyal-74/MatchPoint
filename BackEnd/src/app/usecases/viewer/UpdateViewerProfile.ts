@@ -1,22 +1,24 @@
+import { UserMapper } from "app/mappers/UserMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
+import { IUpdateViewerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { UserResponseDTO, UserUpdateDTO } from "domain/dtos/User.dto";
 import { File } from "domain/entities/File";
 import { NotFoundError } from "domain/errors";
 import { validateViewerUpdate } from "domain/validators/ViewerUpdateValidators";
 
-export class UpdateViewerProfile {
+export class UpdateViewerProfile implements IUpdateViewerProfile {
     constructor(
         private userRepo: IUserRepository,
         private fileStorage: IFileStorage
     ) { }
 
-    async execute(update: UserUpdateDTO, file?: File): Promise<{ user: UserResponseDTO }> {
+    async execute(update: UserUpdateDTO, file?: File): Promise<UserResponseDTO> {
         const validData = validateViewerUpdate(update, file);
 
         if (file) {
             const fileKey = await this.fileStorage.upload(file);
-            validData.logo = fileKey;
+            validData.profileImage = fileKey;
         }
 
         if (!validData._id) {
@@ -24,19 +26,6 @@ export class UpdateViewerProfile {
         }
 
         const viewer = await this.userRepo.update(validData._id, validData);
-        const viewerDTO: UserResponseDTO= {
-            _id: viewer._id,
-            userId: viewer.userId,
-            email: viewer.email,
-            first_name: viewer.first_name,
-            last_name: viewer.last_name,
-            username: viewer.username,
-            role: viewer.role,
-            gender: viewer.gender,
-            phone: viewer.phone,
-            wallet: viewer.wallet,
-            logo: viewer.logo ? this.fileStorage.getUrl(viewer.logo) : null
-        };
-        return { user: viewerDTO };
+        return UserMapper.toProfileResponseDTO(viewer)
     }
 }

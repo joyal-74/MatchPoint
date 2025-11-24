@@ -1,18 +1,28 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
-import { ManagerResponseDTO } from "domain/dtos/Manager.dto";
+import { PlayerMapper } from "app/mappers/PlayerMapper";
+import { PlayerProfileResponse } from "domain/dtos/Player.dto";
 import { NotFoundError } from "domain/errors";
+import { ILogger } from "app/providers/ILogger";
+import { IGetPlayerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
+import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 
-export class GetPlayerProfile {
+export class GetPlayerProfile implements IGetPlayerProfile {
     constructor(
-        private userRepo: IUserRepository,
+        private _playerRepo: IPlayerRepository,
+        private _logger: ILogger
     ) { }
 
-    async execute(id: string): Promise<ManagerResponseDTO> {
-        const player = await this.userRepo.findById(id);
+    async execute(playerId: string): Promise<PlayerProfileResponse> {
+        this._logger.info(`Fetching player profile for ID: ${playerId}`);
+
+        const player = await this._playerRepo.findById(playerId);
         if (!player) {
+            this._logger.error(`Player profile not found for ID: ${playerId}`);
             throw new NotFoundError("Player account not found");
         }
 
-        return player;
+        const responseDTO = PlayerMapper.toProfileResponseDTO(player);
+        this._logger.info(`Player profile fetched successfully for ID: ${playerId}`);
+
+        return responseDTO;
     }
 }

@@ -1,32 +1,52 @@
-import { UserRegister, UserResponse } from "domain/entities/User";
-import { UserRegisterResponseDTO, UserResponseDTO } from "domain/dtos/User.dto";
+import { ViewerDetails } from "app/usecases/admin/GetViewerDetails";
+import { UserLoginResponseDTO, UserResponseDTO } from "domain/dtos/User.dto";
+import { UserResponse } from "domain/entities/User";
 
 export class UserMapper {
-    static toUserDTO(user: UserResponse): UserResponseDTO {
+    static toUserLoginResponseDTO(user: UserResponse): UserLoginResponseDTO {
         return {
             _id: user._id,
-            userId: user.userId,
             email: user.email,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
             role: user.role,
-            gender: user.gender,
-            phone: user.phone,
             wallet: user.wallet,
-            logo: user.logo,
-            sport: user.sport,
+            profileImage: user.profileImage,
+            isActive: user.isActive
         };
     }
 
-    static toUserRegisterDTO(user: UserRegister & { _id: string }): UserRegisterResponseDTO {
+    static toProfileResponseDTO(user: UserResponseDTO): UserResponseDTO {
         return {
             _id: user._id,
             userId: user.userId,
             email: user.email,
-            first_name: user.first_name,
-            last_name: user.last_name,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username,
             role: user.role,
+            gender: user.gender,
+            phone: user.phone || null,
+            wallet: user.wallet,
+            bio: user.bio,
+            profileImage: user.profileImage,
+            isActive: user.isActive
+        };
+    }
+
+    static toViewerDetailsDTO(user: UserResponse): ViewerDetails {
+        return {
+            _id: user._id,
+            fullName: `${user.firstName} ${user.lastName}`,
+            username: user.username,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            status: user.isActive ? "Active" : "Blocked",
+            subscription: user.subscription || "Free",
+            joinedAt: user.createdAt.toLocaleDateString(),
+            profileImage: user.profileImage || "",
+            isBlocked: !user.isActive,
         };
     }
 }

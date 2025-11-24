@@ -4,8 +4,8 @@ import type { Gender, SignupRole } from "../UserRoles";
 export interface ApiUser {
     _id: string;
     email: string;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     role: string;
     wallet?: number;
     phone?: string;
@@ -25,14 +25,16 @@ export interface ApiUser {
 }
 
 export interface UserRegister {
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
+    phone: string;
     role: SignupRole;
     gender: Gender;
-    phone: string;
     sport?: string;
+    username?: string;
+    tempToken?: string;
 }
 
 export type SignupResponse = {
@@ -43,4 +45,15 @@ export type SignupResponse = {
 export type LoginRequest = {
     email: string;
     password: string;
+}
+
+
+export interface CompleteUserData {
+    tempToken: string;
+    role: SignupRole;
+    gender: Gender;
+    sport?: string;
+    username: string;
+    phone: string;
+    authProvider: string;
 }

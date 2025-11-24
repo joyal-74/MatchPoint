@@ -35,7 +35,6 @@ export const useForgotPassword = () => {
 
         try {
             const resultAction = await dispatch(requestResetOtp(payload.email));
-            console.log(resultAction);
 
             if (requestResetOtp.fulfilled.match(resultAction)) {
                 return {

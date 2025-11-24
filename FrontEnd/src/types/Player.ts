@@ -1,3 +1,5 @@
+import type { playerStatus } from "../components/manager/teams/Types";
+import type { UserProfile } from "./Profile";
 import type { User } from "./User";
 
 export interface PlayerProfileField {
@@ -20,9 +22,39 @@ export interface PlayerTournament {
 }
 
 export interface Player extends User {
-    id:string
+    id: string
     sport: string;
-    profile: PlayerProfileField[];
+    profile: Record<string, string>;
     career_stats: PlayerStatsField[];
     tournaments: PlayerTournament[];
+}
+
+export interface PlayerProfile extends UserProfile {
+    sport: string;
+    profile: Record<string, string>;
+}
+
+export interface playerProfileData {
+    sport: string;
+    profile: Record<string, string | number>;
+}
+
+export interface PlayerCardProps {
+    player: Player;
+    onAction: (action: "swap" | "makeSubstitute" | "makeBench" | "view", player: Player) => void;
+    isSelected: boolean;
+    swapMode: boolean;
+    compact?: boolean;
+}
+
+export type TeamPlayer = {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    position: string;
+    jerseyNumber: number;
+    status: playerStatus;
+    profileImage: string;
+    approvalStatus: 'pending' | 'approved' | 'rejected';
 }

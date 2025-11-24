@@ -1,15 +1,26 @@
-import { IPlayerRepository } from "app/repositories/interfaces/IPlayerRepository";
-import { PlayerRegisterResponseDTO } from "domain/dtos/Player.dto";
+import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
+import { PlayerProfileResponse } from "domain/dtos/Player.dto";
 import { Player, PlayerRegister, PlayerResponse } from "domain/entities/Player";
-import { User, UserResponse } from "domain/entities/User";
 import { UserRole } from "domain/enums/Roles";
+import { NotFoundError } from "domain/errors";
 import { PlayerModel } from "infra/databases/mongo/models/PlayerModel";
-import { UserModel } from "infra/databases/mongo/models/UserModel";
+import { PlayerMongoMapper } from "infra/utils/mappers/PlayerMongoMapper";
 
 
 export class PlayerRepositoryMongo implements IPlayerRepository {
-    async findById(id: string): Promise<PlayerResponse | null> {
-        return PlayerModel.findById(id).lean<PlayerResponse>().exec();
+    async findById(userId: string): Promise<PlayerProfileResponse | null> {
+        const player = await PlayerModel.findOne({ userId }).populate("userId").lean();
+        if (!player) throw new NotFoundError("Player not found");
+        return PlayerMongoMapper.toPlayerProfileResponse(player)
+    }
+
+    async findByUserId(userId: string): Promise<PlayerResponse | null> {
+        return PlayerModel.findOne({ userId }).lean<PlayerResponse>().exec();
+    }
+
+    async findPlayerDetails(userId: string): Promise<PlayerResponse | null> {
+        const res = await PlayerModel.findOne({ userId }).populate('userId').lean<PlayerResponse>().exec();
+        return res;
     }
 
     async findByEmail(email: string): Promise<PlayerResponse | null> {
@@ -33,10 +44,15 @@ export class PlayerRepositoryMongo implements IPlayerRepository {
     }
 
 
-    async update(_id: string, data: Partial<Player>): Promise<PlayerResponse> {
-        const updated = await PlayerModel.findByIdAndUpdate(_id, data, { new: true }).lean<PlayerResponse>().exec();
-        if (!updated) throw new Error("Player not found");
-        return updated;
+    async update(id: string, data: Partial<Player>): Promise<PlayerProfileResponse> {
+        const { userId, ...profileData } = data;
+
+        const updateData = { profile: profileData };
+
+        const updated = await PlayerModel.findOneAndUpdate({ userId }, updateData, { new: true }).populate('userId').lean();
+        if (!updated) throw new NotFoundError("Player not found");
+
+        return PlayerMongoMapper.toPlayerProfileResponse(updated);
     }
 
     async deleteByUserId(userId: string): Promise<void> {

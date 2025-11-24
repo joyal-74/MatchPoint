@@ -1,5 +1,5 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
-import { UsersResponseDTO } from "domain/dtos/User.dto";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
+import { UserResponseDTO } from "domain/dtos/User.dto";
 import { ILogger } from "app/providers/ILogger";
 
 export interface GetAllUsersParams {
@@ -15,7 +15,7 @@ export class GetAllViewers {
         private _logger: ILogger
     ) { }
 
-    async execute(params: GetAllUsersParams): Promise<{ users: UsersResponseDTO[], totalCount: number }> {
+    async execute(params: GetAllUsersParams): Promise<{ users: UserResponseDTO[], totalCount: number }> {
         this._logger.info("Fetching all viewers");
 
         // Fetch players from db

@@ -1,11 +1,9 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { ILogger } from "app/providers/ILogger";
 import { GetAllUsersParams } from "./GetAllViewers";
-import { IChangeStatusUsecase } from "app/repositories/interfaces/IAdminUsecases";
+import { IChangeUserStatus } from "app/repositories/interfaces/admin/IAdminUsecases";
 
-
-
-export class ChangeUserStatus implements IChangeStatusUsecase{
+export class ChangeUserStatus implements IChangeUserStatus{
     constructor(
         private _userRepository: IUserRepository,
         private _logger: ILogger

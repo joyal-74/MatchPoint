@@ -1,16 +1,10 @@
-export interface User {
-    _id: string;
-    userId: string;
-    first_name: string;
-    last_name: string;
-    role: string;
-    email: string;
-    createdAt: string;
-    isActive : boolean;
-}
+import type { PlayerProfileField } from "../../../types/Player";
+import type { User } from "../../../types/User";
+
 
 export interface Player extends User {
-    sport : string;
+    sport: string;
+    profile: PlayerProfileField[];
 }
 
 
@@ -31,3 +25,35 @@ export const initialState: UserState = {
     error: null,
     totalCount: 0,
 };
+
+export interface UserDetailsBase {
+    _id: string;
+    fullName: string;
+    username: string;
+    email: string;
+    phone: string;
+    role: string;
+    status: string;
+    subscription: string;
+    joinedAt: string;
+    profileImage: string;
+    isBlocked?: boolean;
+}
+
+export interface ManagerDetails extends UserDetailsBase {
+    stats: {
+        tournamentsCreated: number;
+        tournamentsParticipated: number;
+        totalTeams: number;
+    };
+}
+
+export interface PlayerDetails extends UserDetailsBase {
+    stats: {
+        battingStyle: string;
+        bowlingStyle: string;
+        position: string;
+    };
+}
+
+export type UserDetails = ManagerDetails | PlayerDetails | UserDetailsBase;

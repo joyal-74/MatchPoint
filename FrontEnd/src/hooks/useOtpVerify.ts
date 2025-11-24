@@ -3,6 +3,7 @@ import { verifyOtp, resendOtp } from "../features/auth/authThunks";
 import { useState } from "react";
 import { getApiErrorMessage } from "../utils/apiError";
 import type { OtpContext } from "../features/auth/authTypes";
+import { useOtpExpiration } from "./auth/useOtpExpiration";
 
 
 type OtpPayload = {
@@ -14,11 +15,13 @@ type ValidationErrors = Partial<Record<keyof OtpPayload | "global", string>>;
 type OtpResult = {
     success: boolean;
     message?: string;
+    expiresAt?: string;
     errors?: ValidationErrors;
 };
 
-export const useOtpVerify = (email: string, context: OtpContext) => {
+export const useOtpVerify = (email: string, context: OtpContext, expiresAt?: string) => {
     const dispatch = useAppDispatch();
+    const { isExpired } = useOtpExpiration(expiresAt);
 
     const validateForm = (payload: OtpPayload): ValidationErrors => {
         const errors: ValidationErrors = {};
@@ -35,7 +38,7 @@ export const useOtpVerify = (email: string, context: OtpContext) => {
         if (!email) return { success: false, errors: { global: "Email is missing" } };
 
         try {
-            const resultAction = await dispatch(verifyOtp({ email, otp: payload.otp , context}));
+            const resultAction = await dispatch(verifyOtp({ email, otp: payload.otp, context }));
             if (verifyOtp.fulfilled.match(resultAction)) {
                 return { success: true, message: "OTP verification successful!" };
             } else {
@@ -55,9 +58,9 @@ export const useOtpVerify = (email: string, context: OtpContext) => {
         if (!email) return { success: false, errors: { global: "Email is missing" } };
 
         try {
-            const resultAction = await dispatch(resendOtp({email, context}));
+            const resultAction = await dispatch(resendOtp({ email, context }));
             if (resendOtp.fulfilled.match(resultAction)) {
-                return { success: true, message: "OTP sent successfully" };
+                return { success: true, message: "OTP sent successfully", expiresAt: resultAction.payload.expiresAt };
             } else {
                 return {
                     success: false,
@@ -100,5 +103,5 @@ export const useOtpVerify = (email: string, context: OtpContext) => {
         return result;
     };
 
-    return { formData, errors, loading, handleFieldChange, handleSubmit, handleResendOtp };
+    return { formData, errors, loading, handleFieldChange, handleSubmit, handleResendOtp, isOtpExpired: isExpired };
 };

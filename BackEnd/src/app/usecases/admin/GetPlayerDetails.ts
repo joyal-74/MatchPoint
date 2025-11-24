@@ -1,0 +1,53 @@
+import { PlayerMapper } from "app/mappers/PlayerMapper";
+import { ILogger } from "app/providers/ILogger";
+import { IGetPlayerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
+import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
+import { User } from "domain/entities/User";
+import { InternalServerError, NotFoundError } from "domain/errors";
+
+export interface PlayerDetails {
+    _id: string;
+    fullName: string;
+    username: string;
+    email: string;
+    phone: string;
+    role: string;
+    status: string;
+    subscription: string;
+    joinedAt: string;
+    profileImage: string;
+    stats: {
+        battingStyle: string | null;
+        bowlingStyle: string | null;
+        position: string | null;
+    };
+    isBlocked?: boolean;
+}
+
+
+export class GetPlayerDetails implements IGetPlayerDetails {
+    constructor(
+        private _playerRepo: IPlayerRepository,
+        private _logger: ILogger
+    ) { }
+
+    async execute(playerId: string): Promise<PlayerDetails> {
+        const player = await this._playerRepo.findPlayerDetails(playerId);
+
+        if (!player) {
+            this._logger.warn(`Player not found for ID: ${playerId}`);
+            throw new NotFoundError("Manager not found");
+        }
+
+        const user = player.userId as unknown as User;
+        if (!user) {
+            this._logger.error(`No user linked for manager ID: ${playerId}`);
+            throw new InternalServerError("User data missing for player");
+        }
+
+        const playerDetails = PlayerMapper.toPlayerDetailsDTO(player);
+        this._logger.info(`Fetched details for manager: ${user.username}`);
+
+        return playerDetails;
+    }
+}

@@ -1,0 +1,1 @@
+export { viewerProfileController } from "./profile";

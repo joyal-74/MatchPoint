@@ -1,9 +1,63 @@
-import { Bell, Search } from "lucide-react"
+import React, { useState, useRef, useEffect } from "react";
+import { Bell } from "lucide-react";
+import ProfileCard from "../shared/ProfileCard";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { logoutUser } from "../../features/auth";
+import { useNavigate } from "react-router-dom";
+import LoadingOverlay from "../shared/LoadingOverlay";
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
+    const [showProfileCard, setShowProfileCard] = useState(false);
+    const profileRef = useRef<HTMLDivElement>(null);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const { user, loading } = useAppSelector((state) => state.auth);
+    const role = user?.role ?? "guest";
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                profileRef.current &&
+                !profileRef.current.contains(event.target as Node)
+            ) {
+                setShowProfileCard(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showProfileCard]);
+
+    const handleLogout = async () => {
+        await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
+        navigate("/login");
+    };
+
+    const handleProfileAction = (action: "logout" | "teams" | "profile") => {
+        switch (action) {
+            case "logout":
+                handleLogout();
+                break;
+            case "profile":
+                navigate("/profile");
+                break;
+        }
+    };
+
+    const menuItems = [
+        { name: "Home", path: "/" },
+        { name: "Tournaments", path: "/tournaments" },
+        { name: "Teams", path: "/teams" },
+        { name: "Live", path: "/live" },
+        { name: "Leaderboard", path: "/leaderboard" },
+    ];
+
     return (
         <div>
-            <nav className="flex items-center justify-between px-6 md:px-20 py-3 bg-[var(--color-surface)] border-b border-[var(--color-border)] shadow-[var(--shadow-sm)]">
+            loading && !user ? <LoadingOverlay show={loading} />
+            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-20 py-3 bg-[var(--color-surface)] border-b border-[var(--color-border)] shadow-[var(--shadow-sm)]">
                 <h1 className="text-[var(--color-text-primary)] text-2xl font-rowdies">
                     <span className="text-[var(--color-primary)]">M</span>
                     atch
@@ -11,64 +65,40 @@ const Navbar = () => {
                     oint
                 </h1>
 
-                <ul className="hidden md:flex gap-8 lg:gap-12 ml-12 text-[var(--color-text-primary)] font-medium">
-                    <li>
-                        <a
-                            href="#"
-                            className="text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors duration-200 font-semibold"
-                        >
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <a 
-                            href="#" 
-                            className="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors duration-200"
-                        >
-                            Tournaments
-                        </a>
-                    </li>
-                    <li>
-                        <a 
-                            href="#" 
-                            className="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors duration-200"
-                        >
-                            Live
-                        </a>
-                    </li>
-                    <li>
-                        <a 
-                            href="#" 
-                            className="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors duration-200"
-                        >
-                            Leaderboard
-                        </a>
-                    </li>
+                <ul className="hidden md:flex gap-8 lg:gap-12 ml-12 text-sm font-medium">
+                    {menuItems.map(item => (
+                        <li key={item.path}>
+                            <h1 onClick={() => navigate(item.path)} className={`${location.pathname === item.path ? 'text-[var(--color-primary)] font-semibold' :
+                                'text-[var(--color-text-secondary)]'} hover:text-[var(--color-primary)] transition-colors duration-200 cursor-pointer`}>
+                                {item.name}
+                            </h1>
+                        </li>
+                    ))}
                 </ul>
 
-                <div className="flex items-center gap-3 md:gap-4">
-                    <div className="relative hidden sm:block">
-                        <input
-                            type="text"
-                            placeholder="Search here..."
-                            className="bg-[var(--color-surface-secondary)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] rounded-full pl-4 pr-10 py-2 border border-[var(--color-border)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all duration-200"
-                        />
-                        <Search className="absolute right-3 top-2.5 w-5 h-5 text-[var(--color-text-tertiary)]" />
-                    </div>
-
+                <div className="flex items-center gap-3 md:gap-4 relative">
                     <button className="relative p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-secondary)] rounded-full transition-all duration-200">
                         <Bell className="w-5 h-5" />
                     </button>
-                
-                    <img
-                        src="https://i.pravatar.cc/40"
-                        alt="Profile"
-                        className="w-8 h-8 rounded-full border-2 border-[var(--color-border)] hover:border-[var(--color-primary)] transition-colors duration-200 cursor-pointer"
-                    />
+
+                    <div ref={profileRef}>
+                        <img
+                            src={user?.profileImage || 'placeholder.png'}
+                            alt="Profile"
+                            className="w-8 h-8 rounded-full border-2 border-[var(--color-border)] hover:border-[var(--color-primary)] transition-colors duration-200 cursor-pointer"
+                            onClick={() => setShowProfileCard((prev) => !prev)}
+                        />
+
+                        {showProfileCard && (
+                            <div className="absolute right-0 mt-2">
+                                <ProfileCard role={role} onAction={handleProfileAction} />
+                            </div>
+                        )}
+                    </div>
                 </div>
             </nav>
         </div>
-    )
-}
+    );
+};
 
-export default Navbar
+export default Navbar;

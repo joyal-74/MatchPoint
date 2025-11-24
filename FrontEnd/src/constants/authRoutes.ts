@@ -2,8 +2,11 @@ import type { SignupRole } from "../types/UserRoles";
 
 export const AUTH_ROUTES = {
     LOGIN: "/auth/login",
+    LOGIN_GOOGLE: "/auth/google-login",
+    LOGIN_FACEBOOK: "/auth/facebook-login",
+    SOCIAL_COMPLETE: "/auth/social-complete",
     ADMIN_LOGIN: "/auth/admin/login",
-    SIGNUP: (role:  SignupRole) => `/auth/${role}/signup`,
+    SIGNUP: (role:  SignupRole) => `/auth/signup/${role}`,
     VERIFY_OTP: "/auth/verify-otp",
     RESEND_OTP: "/auth/resend-otp",
     LOGOUT: "/auth/logout",

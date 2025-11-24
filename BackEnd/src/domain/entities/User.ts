@@ -12,14 +12,16 @@ export interface UserSettings {
 export interface User {
     userId: string;
     email: string;
-    logo: string;
+    profileImage: string;
     role: RoleType;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     username: string;
     gender: GenderType;
     phone: string;
     password: string;
+    authProvider?: string;
+    bio: string;
     settings: UserSettings;
     wallet: number;
     refreshToken?: string | null;
@@ -27,16 +29,21 @@ export interface User {
     isVerified: boolean;
     createdAt: Date;
     updatedAt: Date;
+    subscription : string;
 }
 
 export interface UserRegister {
     userId: string;
     email: string;
     role: RoleType;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    profileImage?: string;
+    authProvider?: string;
+    phone: string;
     gender: GenderType;
-    password: string;
+    password?: string;
     settings: UserSettings;
     wallet: number;
     isActive: boolean;
@@ -47,20 +54,32 @@ export interface UserRegister {
 export interface UserResponse extends User {
     _id: string;
     sport?: string;
+    profile?: Record<string, string | number | boolean | null>;
 }
 
 
 export interface UserEntity {
-  _id: string;
-  userId: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  username: string;
-  role: UserRole;
-  gender: GenderType;
-  phone: string | null;
-  wallet: number;
-  logo?: string | null;
-  sport?: string;
+    _id: string;
+    userId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    role: UserRole;
+    gender: GenderType;
+    phone: string;
+    wallet: number;
+    profileImage?: string;
+    sport?: string;
+}
+
+
+export interface SocialUserRegisterData {
+    tempToken: string,
+    role: UserRole,
+    gender: GenderType,
+    authProvider: string,
+    sport: string,
+    phone: string,
+    username: string
 }

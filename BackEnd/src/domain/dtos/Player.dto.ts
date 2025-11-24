@@ -1,5 +1,5 @@
 import { ThemeType, RoleType, GenderType } from "domain/enums";
-import { UserResponseDTO, UsersResponseDTO } from "./User.dto";
+import { UserResponseDTO } from "./User.dto";
 
 export interface PlayerSettingsDTO {
     location?: string;
@@ -10,11 +10,7 @@ export interface PlayerSettingsDTO {
 }
 
 export interface PlayerResponseDTO extends UserResponseDTO {
-    sport : string;
-}
-
-export interface PlayersResponseDTO extends UsersResponseDTO {
-    sport: string
+    sport?: string;
 }
 
 export interface PlayersResponseDTO {
@@ -23,22 +19,12 @@ export interface PlayersResponseDTO {
     email: string;
     role: RoleType;
     sport: string;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     gender: GenderType;
     phone: string | null;
     wallet: number;
     createdAt: Date
-}
-
-export interface PlayerRegisterResponseDTO {
-    _id: string;
-    userId: string;
-    email: string;
-    sport: string;
-    role: RoleType;
-    first_name: string;
-    last_name: string;
 }
 
 export interface PlayerUpdateDTO {
@@ -48,8 +34,33 @@ export interface PlayerUpdateDTO {
     logo: string;
     phone: string;
     role: RoleType;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     username: string;
     gender: GenderType;
+}
+
+export interface PlayerProfileFieldDTO {
+    _id: string;
+    userId : string;
+    sport?: string;
+    profile: Record<string, string | number | boolean | null>;
+}
+
+
+export interface PlayerProfileResponse {
+    _id: string;
+    userId: string;
+    email: string;
+    phone: string;
+    bio: string;
+    wallet: number;
+    profileImage: string;
+    role: RoleType;
+    firstName: string;
+    lastName: string;
+    username: string;
+    gender: GenderType;
+    sport: string;
+    profile: Record<string, string | number | boolean | null>;
 }

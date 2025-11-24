@@ -1,22 +1,15 @@
-import { ManagerUpdateDTO } from "domain/dtos/Manager.dto";
 import { Validators } from "./common";
 import { BadRequestError } from "domain/errors";
 import { File } from "domain/entities/File";
 
-export function validateManagerUpdate(data: ManagerUpdateDTO, file?: File) {
+export function validateManagerUpdate(data, file?: File) {
     const errors: Record<string, string> = {};
 
-    const id = data._id?.trim();
     const email = data.email?.trim();
     const phone = data.phone?.trim();
     const gender = data.gender?.trim();
 
-    // Only _id is required
-    if (!Validators.notEmpty(id)) {
-        errors.id = "UserId is required";
-    }
 
-    // Optional fields, validate only if they exist
     if (email && !Validators.isEmail(email)) {
         errors.email = "Invalid email format";
     }
@@ -31,9 +24,9 @@ export function validateManagerUpdate(data: ManagerUpdateDTO, file?: File) {
 
     // File validation
     if (file) {
-        const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+        const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
         if (!allowedTypes.includes(file.type)) {
-            errors.file = "Invalid file type. Only PNG/JPG allowed";
+            errors.file = "Invalid file type. Only PNG/JPG/webp allowed";
         }
     }
 

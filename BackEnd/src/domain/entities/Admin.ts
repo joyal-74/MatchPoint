@@ -8,8 +8,8 @@ export interface AdminSettings {
 
 export interface Admin {
     email: string;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     role: "admin";
     password: string;
     settings: AdminSettings;
@@ -25,8 +25,8 @@ export interface AdminResponse extends Admin {
 export interface AdminEntity {
   _id: string;
   email: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   role: "admin";
   wallet: number;
 }

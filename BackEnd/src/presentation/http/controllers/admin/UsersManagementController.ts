@@ -1,21 +1,23 @@
-import { IChangeStatusUsecase, IGetManagersUsecase, IGetPlayersUsecase, IGetViewersUsecase } from "app/repositories/interfaces/IAdminUsecases";
+import { IGetManagersUsecase, IGetPlayersUsecase, IGetViewersUsecase, IGetManagerDetails, IGetPlayerDetails, IGetViewerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { IUsersManagementController } from "presentation/http/interfaces/IUsersManagementController";
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
+import { IUserManagementService } from "app/repositories/interfaces/services/AdminUserServices";
+import { AdminUserMessages } from "domain/constants/admin/AdminUserMessages";
 
-/**
- * Controller responsible for handling user management operations in the Admin module.
- * Supports fetching managers, players, viewers, and changing user status.
- */
+
 export class UsersManagementController implements IUsersManagementController {
     constructor(
         private _getAllManagersUseCase: IGetManagersUsecase,
         private _getAllPlayersUseCase: IGetPlayersUsecase,
         private _getAllViewersUseCase: IGetViewersUsecase,
-        private _changeUserStatus: IChangeStatusUsecase,
+        private _changeUserStatus: IUserManagementService,
+        private _getManagerDetails: IGetManagerDetails,
+        private _getPlayerDetails: IGetPlayerDetails,
+        private _getViewerDetails: IGetViewerDetails,
     ) { }
 
     /**
@@ -38,7 +40,7 @@ export class UsersManagementController implements IUsersManagementController {
             search: search as string | undefined,
         });
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Managers fetched successfully", managers));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.MANAGERS_FETCHED, managers));
     }
 
     /**
@@ -52,7 +54,7 @@ export class UsersManagementController implements IUsersManagementController {
      * @returns IHttpResponse containing the list of players
      */
     getAllPlayers = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { page = 1, limit = 10, filter, search } = httpRequest.query;
+        const { page = 1, limit = 5, filter, search } = httpRequest.query;
 
         const players = await this._getAllPlayersUseCase.execute({
             page: Number(page),
@@ -61,7 +63,7 @@ export class UsersManagementController implements IUsersManagementController {
             search: search as string | undefined,
         });
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Players fetched successfully", players));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.PLAYERS_FETCHED, players));
     }
 
     /**
@@ -84,7 +86,7 @@ export class UsersManagementController implements IUsersManagementController {
             search: search as string | undefined,
         });
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Viewers fetched successfully", viewers));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.VIEWERS_FETCHED, viewers));
     }
 
     /**
@@ -103,8 +105,42 @@ export class UsersManagementController implements IUsersManagementController {
         const { role, userId } = httpRequest.params;
         const { isActive, params } = httpRequest.body;
 
-        const result = await this._changeUserStatus.execute(role, userId, isActive, params);
+        const result = await this._changeUserStatus.changeStatusAndFetch(role, userId, isActive, params);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Status changed successfully", result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.STATUS_CHANGED, result));
+    }
+
+    changeUserBlockStatus = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { userId } = httpRequest.params;
+        const { isActive } = httpRequest.body;
+
+        const result = await this._changeUserStatus.changeBlockStatus(userId, isActive);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.STATUS_CHANGED, result));
+    }
+
+
+    fetchManagerDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { id } = httpRequest.params;
+
+        const result = await this._getManagerDetails.execute(id);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.MANAGER_DETAILS_FETCHED, result));
+    }
+
+    fetchPlayerDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { id } = httpRequest.params;
+
+        const result = await this._getPlayerDetails.execute(id);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.PLAYER_DETAILS_FETCHED, result));
+    }
+
+    fetchViewerDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { id } = httpRequest.params;
+
+        const result = await this._getViewerDetails.execute(id);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.VIEWER_DETAILS_FETCHED, result));
     }
 }

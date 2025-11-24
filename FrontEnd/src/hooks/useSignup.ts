@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAppDispatch } from "../hooks/hooks";
-import { signupUser } from "../features/auth/authThunks";
+import { loginUserGoogle, signupUser } from "../features/auth/authThunks";
 import { UserRole, type Gender } from "../types/UserRoles";
 import { validateSignup } from "../validators/SignpValidators";
 import type { SignUpForm } from "../utils/helpers/SignupFields";
@@ -11,11 +11,11 @@ export const useSignup = () => {
     const dispatch = useAppDispatch();
 
     const [formData, setFormData] = useState<SignUpForm>({
-        first_name: "",
-        last_name: "",
+        firstName: "",
+        lastName: "",
         email: "",
-        phone: "",
-        gender: "" as Gender,
+        phone: '',
+        gender: "male" as Gender,
         password: "",
         confirmPassword: "",
         role: UserRole.Player,
@@ -50,6 +50,7 @@ export const useSignup = () => {
         setLoading(true);
 
         const validationErrors = validateForm(formData);
+        console.log(validationErrors, "validationErrors")
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             setLoading(false);
@@ -79,6 +80,27 @@ export const useSignup = () => {
         }
     };
 
+    const handleGoogleSignUp = async (token: string) => {
+        setLoading(true);
+        try {
+            const resultAction = await dispatch(loginUserGoogle({ token }));
+
+            if (loginUserGoogle.fulfilled.match(resultAction)) {
+                const role: UserRole = resultAction.payload.role;
+                setLoading(false);
+                return { success: true, message: "Google signup successful!", role };
+            } else {
+                const backendError = resultAction.payload || "Google login failed";
+                setLoading(false);
+                return { success: false, errors: { global: backendError } };
+            }
+        } catch (err) {
+            console.error(err);
+            setLoading(false);
+            return { success: false, errors: { global: "Something went wrong" } };
+        }
+    };
+
     return {
         formData,
         confirmPassword,
@@ -86,6 +108,7 @@ export const useSignup = () => {
         handleFieldChange,
         handleConfirmPasswordChange,
         handleSubmit,
+        handleGoogleSignUp,
         errors,
         loading,
     };

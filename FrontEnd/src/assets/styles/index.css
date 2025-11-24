@@ -3,10 +3,29 @@
 @import "tailwindcss";
 @import "./themes.css";
 
+@import "leaflet/dist/leaflet.css";
+
+
 .font-rowdies {
     font-family: 'rowdies';
 }
 
 .font-poppins {
     font-family: 'poppins';
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE & Edge */
+    scrollbar-width: none;     /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+}
+
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 0 !important;
 }

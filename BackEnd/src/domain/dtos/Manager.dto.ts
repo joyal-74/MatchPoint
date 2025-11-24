@@ -12,48 +12,35 @@ export interface ManagerResponseDTO {
     _id: string;
     userId: string;
     email: string;
-    logo: string | null;
+    profileImage?: string | null;
     role: RoleType;
-    first_name: string;
-    last_name: string;
-    username : string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    bio: string;
     gender: GenderType;
     phone: string | null;
     wallet: number;
 }
 
-export interface ManagersResponseDTO {
+export interface ManagerLoginResponseDTO {
     _id: string;
-    userId: string;
+    firstName: string;
+    lastName: string;
     email: string;
-    role: RoleType;
-    first_name: string;
-    last_name: string;
-    username : string;
-    gender: GenderType;
-    phone: string | null;
     wallet: number;
-    createdAt : string,
-}
-
-export interface ManagerRegisterResponseDTO {
-    _id: string;
-    userId: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-    // username : string;
-    role: RoleType; 
+    role: RoleType;
+    profileImage?: string;
 }
 
 
 export interface ManagerUpdateDTO {
-    _id : string;
-    first_name: string;
-    last_name: string;
+    _id: string;
+    firstName: string;
+    lastName: string;
     email: string;
-    phone : string;
-    username : string;
+    phone: string;
+    username: string;
     gender: GenderType;
-    logo?: string;
+    profileImage?: string;
 }

@@ -30,6 +30,7 @@ const DataTable = <T extends { _id: string; status?: string }>({
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4 sm:gap-0">
                 <div className="w-full sm:w-auto">
                     <SearchBar
+                        placeholder={"Search for players"}
                         value={localSearchTerm}
                         onChange={handleSearch}
                     />
@@ -39,11 +40,10 @@ const DataTable = <T extends { _id: string; status?: string }>({
                         <button
                             key={f}
                             onClick={() => onFilterChange(f)}
-                            className={`px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm transition-colors flex-shrink-0 ${
-                                currentFilter === f
-                                    ? "bg-[var(--color-primary)] text-white"
-                                    : "bg-[var(--color-background-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-primary-light)] hover:text-white"
-                            }`}
+                            className={`px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm transition-colors flex-shrink-0 ${currentFilter === f
+                                ? "bg-[var(--color-primary)] text-white"
+                                : "bg-[var(--color-background-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-primary-light)] hover:text-white"
+                                }`}
                         >
                             {f}
                         </button>
@@ -66,6 +66,7 @@ const DataTable = <T extends { _id: string; status?: string }>({
                             ))}
                         </tr>
                     </thead>
+                    
                     <tbody className="bg-[var(--color-background-secondary)] py-1">
                         {data.map((row) => (
                             <tr
@@ -88,7 +89,6 @@ const DataTable = <T extends { _id: string; status?: string }>({
                 </table>
             </div>
 
-            {/* Card Grid View (xl screens and below) */}
             <div className="xl:hidden">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {data.map((row) => (
@@ -103,10 +103,10 @@ const DataTable = <T extends { _id: string; status?: string }>({
                                         : col.accessor
                                             ? (row[col.accessor] as React.ReactNode)
                                             : null;
-                                    
+
                                     // Skip empty values to save space
                                     if (!value && value !== 0) return null;
-                                    
+
                                     return (
                                         <div key={col.id} className="flex flex-col space-y-1">
                                             <span className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wide">
@@ -123,7 +123,6 @@ const DataTable = <T extends { _id: string; status?: string }>({
                     ))}
                 </div>
 
-                {/* Empty state for card view */}
                 {data.length === 0 && (
                     <div className="text-center py-8 text-[var(--color-text-secondary)]">
                         <p>No data available</p>
@@ -131,7 +130,6 @@ const DataTable = <T extends { _id: string; status?: string }>({
                 )}
             </div>
 
-            {/* Empty state for desktop table */}
             {data.length === 0 && (
                 <div className="hidden xl:block text-center py-8 text-[var(--color-text-secondary)] border border-[var(--color-border)] rounded-b-lg">
                     <p>No data available</p>

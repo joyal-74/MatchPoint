@@ -1,18 +1,28 @@
-import { IUserRepository } from "app/repositories/interfaces/IUserRepository";
-import { UserResponseDTO } from "domain/dtos/User.dto";
+import { UserMapper } from "app/mappers/UserMapper";
+import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { NotFoundError } from "domain/errors";
+import { ILogger } from "app/providers/ILogger";
+import { UserResponseDTO } from "domain/dtos/User.dto";
+import { IGetViewerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
 
-export class GetViewerProfile {
+export class GetViewerProfile implements IGetViewerProfile {
     constructor(
-        private userRepo: IUserRepository,
+        private _userRepo: IUserRepository,
+        private _logger: ILogger
     ) { }
 
-    async execute(id: string): Promise<UserResponseDTO> {
-        const viewer = await this.userRepo.findById(id);
-        if (!viewer) {
-            throw new NotFoundError("Viewer account not found");
+    async execute(userId: string): Promise<UserResponseDTO> {
+        this._logger.info(`Fetching User profile for ID: ${userId}`);
+
+        const User = await this._userRepo.findById(userId);
+        if (!User) {
+            this._logger.error(`User profile not found for ID: ${userId}`);
+            throw new NotFoundError("User account not found");
         }
 
-        return viewer;
+        const responseDTO = UserMapper.toProfileResponseDTO(User);
+        this._logger.info(`User profile fetched successfully for ID: ${userId}`);
+
+        return responseDTO;
     }
 }

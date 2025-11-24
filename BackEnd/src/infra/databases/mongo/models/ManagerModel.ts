@@ -1,17 +1,19 @@
 import { Schema, model, Types, Document } from "mongoose";
 
-interface ManagerDocument extends Document {
+export interface ManagerDocument extends Document {
     _id : Types.ObjectId;
     userId: Types.ObjectId;
     wallet: number;
-    tournaments: Types.ObjectId[];
+    tournamentsCreated: Types.ObjectId[];
+    tournamentsParticipated: Types.ObjectId[];
     teams: Types.ObjectId[];
 }
 
 const ManagerSchema = new Schema<ManagerDocument>({
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true, unique: true },
     wallet: { type: Number, default: 0 },
-    tournaments: [{ type: Schema.Types.ObjectId, ref: "Tournament" }],
+    tournamentsCreated: [{ type: Schema.Types.ObjectId, ref: "Tournament" }],
+    tournamentsParticipated: [{ type: Schema.Types.ObjectId, ref: "Tournament" }],
     teams: [{ type: Schema.Types.ObjectId, ref: "Team" }],
 },
     { timestamps: true }

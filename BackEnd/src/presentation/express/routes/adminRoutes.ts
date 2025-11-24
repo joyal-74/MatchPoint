@@ -1,19 +1,19 @@
 import { Router } from "express";
 import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
-import { usersManagementController } from "presentation/container/container";
-
-import { adminOnly } from "presentation/container/container";
-
+import { usersManagementController } from "presentation/composition";
+import { adminOnly } from "presentation/composition/shared/middlewares";
 
 const router = Router();
 
-router.patch("/:role/:userId/status", adminOnly, (req, res) => expressAdapter(req, res, usersManagementController.changeUserStatus));
 
-router.get("/viewers", adminOnly, (req, res) => expressAdapter(req, res, usersManagementController.getAllViewers));
+router.get("/viewers", adminOnly, expressAdapter(usersManagementController.getAllViewers));
+router.get("/viewers/:id", adminOnly, expressAdapter(usersManagementController.fetchViewerDetails));
+router.get("/managers", adminOnly, expressAdapter(usersManagementController.getAllManagers));
+router.get("/managers/:id", adminOnly, expressAdapter(usersManagementController.fetchManagerDetails));
+router.get("/players", adminOnly, expressAdapter(usersManagementController.getAllPlayers));
+router.get("/players/:id", adminOnly, expressAdapter(usersManagementController.fetchPlayerDetails));
 
-router.get("/managers", adminOnly, (req, res) => expressAdapter(req, res, usersManagementController.getAllManagers));
-
-router.get("/players", adminOnly, (req, res) => expressAdapter(req, res, usersManagementController.getAllPlayers));
-
+router.patch( "/:role/:userId/status", adminOnly, expressAdapter(usersManagementController.changeUserStatus));
+router.patch( "/user/:userId/blockStatus", adminOnly, expressAdapter(usersManagementController.changeUserBlockStatus));
 
 export default router;

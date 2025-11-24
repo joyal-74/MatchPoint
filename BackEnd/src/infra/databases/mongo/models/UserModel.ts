@@ -2,26 +2,28 @@ import { User, UserSettings } from 'domain/entities/User';
 import { GenderValues, RoleValues, Theme, ThemeValues } from 'domain/enums';
 import { Schema, model, Document, Types } from 'mongoose';
 
-interface UserDocument extends Omit<User, 'userId'>, Document {
+export interface UserDocument extends Omit<User, 'userId'>, Document {
     _id: Types.ObjectId;
     userId: string;
-    sport : string;
+    sport: string;
     refreshToken?: string | null;
     settings: UserSettings;
 }
 
 const UserSchema = new Schema<UserDocument>({
     userId: { type: String, required: true, unique: true },
-    first_name: { type: String, required: true, trim: true },
-    last_name: { type: String, required: true, trim: true },
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    username: { type: String, unique: true, sparse: true, trim: true, },
     password: { type: String },
-    phone: { type: String },
+    bio: { type: String },
+    phone: { type: String, required : true },
     gender: { type: String, enum: GenderValues },
     role: { type: String, enum: RoleValues, required: true },
     refreshToken: { type: String, default: null },
     wallet: { type: Number, default: 0 },
-    sport : {type : String},
+    sport: { type: String },
     settings: {
         location: { type: String },
         country: { type: String },
@@ -31,7 +33,9 @@ const UserSchema = new Schema<UserDocument>({
     },
     isActive: { type: Boolean, default: true },
     isVerified: { type: Boolean, default: false },
-    logo: { type: String, default: null },
+    profileImage: { type: String, default: null },
+    authProvider: { type: String, default: null },
+    subscription: { type: String, default: 'Free' },
 }, { timestamps: true });
 
 export const UserModel = model<UserDocument>('User', UserSchema);

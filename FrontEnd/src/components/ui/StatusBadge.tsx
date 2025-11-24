@@ -1,7 +1,7 @@
 import React from "react";
 
 interface StatusBadgeProps {
-    isActive: boolean;
+    isActive?: boolean;
     className?: string;
     activeText?: string;
     inactiveText?: string;

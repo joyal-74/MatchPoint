@@ -5,7 +5,25 @@ import { createApiThunk } from "../../utils/createApiThunk";
 
 
 // User login
-export const loginUser = createAsyncThunk("auth/login", createApiThunk(authEndpoints.login));
+export const loginUser = createAsyncThunk(
+    "auth/login",
+    createApiThunk(authEndpoints.login)
+);
+
+export const loginUserGoogle = createAsyncThunk(
+    "auth/loginGoogle",
+    createApiThunk(authEndpoints.loginGoogle)
+);
+
+export const loginUserFacebook = createAsyncThunk(
+    "auth/loginFacebook",
+    createApiThunk(authEndpoints.loginFacebook)
+);
+
+export const loginUserSocialComplete = createAsyncThunk(
+    "auth/socialComplete",
+    createApiThunk(authEndpoints.loginSocialComplete)
+);
 
 // Admin login
 export const loginAdmin = createAsyncThunk("auth/adminLogin", createApiThunk(authEndpoints.adminLogin));
@@ -54,6 +72,6 @@ export const resetPassword = createAsyncThunk(
 
 // Refresh Token
 export const refreshToken = createAsyncThunk(
-  "auth/refresToken",
-  createApiThunk(authEndpoints.refreshToken)
+    "auth/refresToken",
+    createApiThunk(authEndpoints.refreshToken)
 );

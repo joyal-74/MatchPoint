@@ -5,8 +5,8 @@ import { sports } from "./sports";
 const gender: Gender[] = ["male", "female"];
 
 export interface SignUpForm  {
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     role: SignupRole;
     sport?: string | undefined; 
     gender: Gender;
@@ -18,8 +18,8 @@ export interface SignUpForm  {
 
 export const rows: FieldConfig<SignUpForm>[][] = [
     [
-        { id: "first_name", label: "First Name", placeholder: "Enter your First name", className: "w-1/2" },
-        { id: "last_name", label: "Last Name", placeholder: "Enter your Last name", className: "w-1/2" },
+        { id: "firstName", label: "First Name", placeholder: "Enter your First name", className: "w-1/2" },
+        { id: "lastName", label: "Last Name", placeholder: "Enter your Last name", className: "w-1/2" },
     ],
     [
         {

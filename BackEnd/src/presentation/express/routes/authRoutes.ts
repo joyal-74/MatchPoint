@@ -1,52 +1,26 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import { expressAdapter } from 'presentation/adaptors/ExpressAdaptor';
-import { authController } from '../../container/container';
+import { authControllers } from 'presentation/composition';
+
 
 const router = Router();
 
-router.post('/admin/login', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, authController.loginAdmin);
-});
+router.post('/admin/login', expressAdapter(authControllers.loginAdmin));
+router.post('/login', expressAdapter(authControllers.loginUser));
+router.post('/google-login', expressAdapter(authControllers.loginGoogleUser));
+router.post('/facebook-login', expressAdapter(authControllers.loginFacebookUser));
+router.post('/social-complete', expressAdapter(authControllers.completeSocialAccount));
+router.get('/refresh', expressAdapter(authControllers.refreshToken));
 
-router.post('/login', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, authController.loginUser);
-});
+router.post('/signup/viewer', expressAdapter(authControllers.signupViewer));
+router.post('/signup/manager', expressAdapter(authControllers.signupManager));
+router.post('/signup/player', expressAdapter(authControllers.signupPlayer));
 
-router.get('/refresh', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, authController.refreshToken);
-});
+router.post('/logout', expressAdapter(authControllers.logout));
+router.post('/resend-otp', expressAdapter(authControllers.resendOtp));
+router.post('/verify-otp', expressAdapter(authControllers.verifyOtp));
 
-router.post('/signup/viewer', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, authController.signupViewer);
-});
-
-router.post('/signup/manager', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, authController.signupManager);
-});
-
-router.post('/signup/player', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, authController.signupPlayer);
-});
-
-router.post('/logout', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, authController.logout);
-});
-
-router.post('/resend-otp', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, authController.resendOtp);
-});
- 
-router.post('/verify-otp', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, authController.verifyOtp);
-});
-
-router.post('/forgot-password', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, authController.forgotPassword);
-});
-
-router.post('/reset-password', async (req: Request, res: Response) => {
-    await expressAdapter(req, res, authController.resetPassword);
-});
-
+router.post('/forgot-password', expressAdapter(authControllers.forgotPassword));
+router.post('/reset-password', expressAdapter(authControllers.resetPassword));
 
 export default router;

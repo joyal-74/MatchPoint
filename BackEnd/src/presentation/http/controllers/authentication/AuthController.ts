@@ -10,20 +10,21 @@ import cookie from 'cookie';
 import {
     IUserAuthUseCase, IAdminAuthUseCase, ILogoutUseCase, IRefreshTokenUseCase,
     IViewerSignupUseCase, IPlayerSignupUseCase, IManagerSignupUseCase,
-    IForgotPasswordUseCase,
-    IVerifyOtpUseCase,
-    IResendOtpUseCase,
-    IResetPasswordUseCase
-} from 'app/repositories/interfaces/IAuthenticationUseCase';
+    IForgotPasswordUseCase, IVerifyOtpUseCase,
+    IResendOtpUseCase, IResetPasswordUseCase,
+    ILoginGoogleUser,
+    ILoginFacebookUser,
+    ISocialUserAuthUseCase
+} from 'app/repositories/interfaces/auth/IAuthenticationUseCase';
+import { AuthMessages } from 'domain/constants/AuthMessages';
 
-/**
- * Controller responsible for authentication and authorization operations.
- * Handles login, signup, logout, password reset, OTP verification, and token management.
- */
 
 export class AuthController implements IAuthController {
     constructor(
         private _userAuthUseCase: IUserAuthUseCase,
+        private _userGoogleAuthUseCase: ILoginGoogleUser,
+        private _userFacebookAuthUseCase: ILoginFacebookUser,
+        private _completeSocialProfileUC: ISocialUserAuthUseCase,
         private _adminAuthUseCase: IAdminAuthUseCase,
         private _logoutUserUseCase: ILogoutUseCase,
         private _signupViewerUseCase: IViewerSignupUseCase,
@@ -52,11 +53,70 @@ export class AuthController implements IAuthController {
         const result = await this._userAuthUseCase.execute(email, password);
 
         return new HttpResponse(HttpStatusCode.OK, {
-            ...buildResponse(true, 'User login successful', { user: result.account }),
+            ...buildResponse(true, AuthMessages.USER_LOGIN_SUCCESS, { user: result.account }),
             accessToken: result.accessToken,
             refreshToken: result.refreshToken,
         });
     }
+
+    /**
+     * - Authenticate user using google signup
+     * 
+     * @param httpRequest request containing auth code
+     * @returns IHttpResponse with temp token if not signed up else user details
+     */
+
+    loginGoogleUser = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { code } = httpRequest.body;
+
+        const result = await this._userGoogleAuthUseCase.execute(code);
+
+
+        if (result.isNewUser) {
+            return new HttpResponse(HttpStatusCode.OK, {
+                ...buildResponse(true, AuthMessages.GOOGLE_NEW_USER, {
+                    tempToken: result.tempToken,
+                    authProvider: result.authProvider,
+                }),
+            });
+        }
+
+        return new HttpResponse(HttpStatusCode.OK, {
+            ...buildResponse(true, AuthMessages.GOOGLE_LOGIN_SUCCESS, { user: result.user }),
+            accessToken: result.accessToken,
+            refreshToken: result.refreshToken,
+        });
+    };
+
+    /**
+     * - Authenticate user using facebook signup
+     * 
+     * @param httpRequest request containing auth code of facebook
+     * @returns with temp token if not signed up else user details
+     */
+
+    loginFacebookUser = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { code } = httpRequest.body;
+
+        const result = await this._userFacebookAuthUseCase.execute(code);
+
+
+        if (result.isNewUser) {
+            return new HttpResponse(HttpStatusCode.OK, {
+                ...buildResponse(true, AuthMessages.FACEBOOK_NEW_USER, {
+                    tempToken: result.tempToken,
+                    authProvider: result.authProvider,
+                }),
+            });
+        }
+
+        return new HttpResponse(HttpStatusCode.OK, {
+            ...buildResponse(true, AuthMessages.FACEBOOK_LOGIN_SUCCESS, { user: result.user }),
+            accessToken: result.accessToken,
+            refreshToken: result.refreshToken,
+        });
+    };
+
 
     /**
      * Authenticate an admin with email and password.
@@ -74,7 +134,7 @@ export class AuthController implements IAuthController {
         const result = await this._adminAuthUseCase.execute(email, password);
 
         return new HttpResponse(HttpStatusCode.OK, {
-            ...buildResponse(true, 'Admin login successful', { admin: result.account }),
+            ...buildResponse(true, AuthMessages.ADMIN_LOGIN_SUCCESS, { admin: result.account }),
             accessToken: result.accessToken,
             refreshToken: result.refreshToken,
         });
@@ -91,7 +151,7 @@ export class AuthController implements IAuthController {
         const { userId, role } = httpRequest.body;
         const result = await this._logoutUserUseCase.execute(userId, role);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, result.message, { clearCookies: result.clearCookies }));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AuthMessages.LOGOUT_SUCCESS, { clearCookies: result.clearCookies }));
     }
 
     /**
@@ -102,11 +162,19 @@ export class AuthController implements IAuthController {
      */
 
     signupViewer = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+
         const result = await this._signupViewerUseCase.execute(httpRequest.body);
-        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, 'Viewer account created', {
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, AuthMessages.VIEWER_SIGNUP_SUCCESS, {
             user: result.user,
             expiresAt: result.expiresAt,
         }));
+    }
+
+
+    completeSocialAccount = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+
+        const result = await this._completeSocialProfileUC.execute(httpRequest.body);
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, AuthMessages.SOCIAL_SIGNUP_SUCCESS, { user: result.user, }));
     }
 
     /**
@@ -118,7 +186,7 @@ export class AuthController implements IAuthController {
 
     signupPlayer = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const result = await this._signupPlayerUseCase.execute(httpRequest.body);
-        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, 'Player account created', {
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, AuthMessages.PLAYER_SIGNUP_SUCCESS, {
             user: result.user,
             expiresAt: result.expiresAt,
         }));
@@ -133,7 +201,7 @@ export class AuthController implements IAuthController {
 
     signupManager = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const result = await this._signupManagerUseCase.execute(httpRequest.body);
-        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, 'Manager account created', {
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, AuthMessages.MANAGER_SIGNUP_SUCCESS, {
             user: result.user,
             expiresAt: result.expiresAt,
         }));
@@ -159,7 +227,7 @@ export class AuthController implements IAuthController {
         const result = await this._refreshTokenUserUseCase.execute(refreshToken);
 
         return new HttpResponse(HttpStatusCode.OK, {
-            ...buildResponse(true, 'Token refreshed', { user: result.user }),
+            ...buildResponse(true,AuthMessages.TOKEN_REFRESHED, { user: result.user }),
             accessToken: result.accessToken,
             refreshToken: result.refreshToken,
         });
@@ -178,7 +246,7 @@ export class AuthController implements IAuthController {
         if (!email) throw new BadRequestError('Email is missing');
 
         const result = await this._forgotPasswordUseCase.execute(email);
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, result.message, result.data));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AuthMessages.FORGOT_PASSWORD_EMAIL_SENT, result.data));
     }
 
     /**
@@ -195,7 +263,7 @@ export class AuthController implements IAuthController {
         if (!Object.values(OtpContext).includes(context)) throw new BadRequestError('Invalid OTP context');
 
         const result = await this._verifyOtpUseCase.execute(email, otp, context);
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, result.message, result ?? null));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AuthMessages.OTP_VERIFIED, result ?? null));
     }
 
     /**
@@ -212,7 +280,7 @@ export class AuthController implements IAuthController {
         if (!Object.values(OtpContext).includes(context)) throw new BadRequestError('Invalid OTP context');
 
         const result = await this._resendOtpUseCase.execute(email, context);
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, result.message, result ?? null));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AuthMessages.OTP_RESENT, result ?? null));
     }
 
     /**
@@ -227,7 +295,7 @@ export class AuthController implements IAuthController {
         const { email, newPassword } = httpRequest.body || {};
         if (!email || !newPassword) throw new BadRequestError('Missing required fields: email, newPassword');
 
-        const result = await this._resetPasswordUseCase.execute(email, newPassword);
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, result.message));
+        await this._resetPasswordUseCase.execute(email, newPassword);
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AuthMessages.PASSWORD_RESET_SUCCESS));
     }
 }

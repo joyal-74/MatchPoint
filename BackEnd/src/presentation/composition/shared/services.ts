@@ -1,0 +1,21 @@
+import { PlayerService } from "infra/services/PlayerService";
+import { adminRepository, playerRepository, registrationRepository, teamRepository, userRepository } from "./repositories";
+import { LogoutService } from "infra/services/LogoutService";
+import { PlayerTeamServices } from "infra/services/PlayerTeamServices";
+import { TournamentRegistrationValidator } from "infra/services/TournamentRegistrationValidator";
+import { UserServices } from "infra/services/UserServices";
+import { jwtService, roleIdGenerator } from "./providers";
+import { GoogleAuthService } from "infra/services/GoogleAuthServices";
+import { EnvConfigProvider } from "infra/providers/EnvConfigProvider";
+import { UserAuthServices } from "infra/services/UserAuthServices";
+import { FacebookServices } from "infra/services/FacebookServices";
+
+export const playerServices = new PlayerService(userRepository, playerRepository);
+export const logoutServices = new LogoutService(userRepository, adminRepository);
+export const teamServices = new PlayerTeamServices(teamRepository);
+export const tournamentRegistrationServices = new TournamentRegistrationValidator(registrationRepository, teamRepository);
+export const userServices = new UserServices(userRepository, roleIdGenerator);
+export const configProvider = new EnvConfigProvider();
+export const googleAuthService = new GoogleAuthService(configProvider);
+export const userAuthService = new UserAuthServices(userRepository, jwtService);
+export const facebookServices = new FacebookServices();
