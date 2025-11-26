@@ -7,6 +7,7 @@ import adminRoutes from "presentation/express/routes/adminRoutes";
 import managerRoutes from "presentation/express/routes/managerRoutes";
 import playerRoutes from "presentation/express/routes/playerRoutes";
 import viewerRoutes from "presentation/express/routes/viewerRoutes";
+import chatRoutes from "presentation/express/routes/chatRoutes";
 import { errorHandler } from "presentation/express/middlewares/errorHandler";
 import cookieParser from 'cookie-parser';
 
@@ -33,6 +34,7 @@ app.use("/admin", adminRoutes);
 app.use("/manager", managerRoutes);
 app.use("/player", playerRoutes);
 app.use("/viewer", viewerRoutes);
+app.use("/chat", chatRoutes);
 
 app.use(errorHandler);
 

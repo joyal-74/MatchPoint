@@ -7,18 +7,23 @@ import { TeamController } from "presentation/http/controllers/manager/TeamContro
 import { ImageKitFileStorage } from "infra/providers/ImageKitFileStorage";
 import { WinstonLogger } from "infra/providers/WinstonLogger";
 import { TeamIdGenerator } from "infra/providers/IdGenerator";
-import { managerRepository, teamRepository } from "presentation/composition/shared/repositories";
+import { chatRepository, managerRepository, teamRepository } from "presentation/composition/shared/repositories";
 import { GetMyTeamDetails } from "app/usecases/manager/GetMyTeamDetails";
 import { ApprovePlayerUseCase } from "app/usecases/manager/teams/ApprovePlayer";
 import { RejectPlayerUseCase } from "app/usecases/manager/teams/RejectPlayer";
 import { SwapPlayers } from "app/usecases/manager/teams/SwapPlayers";
+import { CreateChatForTeamUseCase } from "app/usecases/manager/teams/CreateChatForTeamUseCase";
+import { TeamSetupService } from "infra/services/TeamSetupServices";
 
 
 const logger = new WinstonLogger();
 const imageKitfileProvider = new ImageKitFileStorage();
 const teamId = new TeamIdGenerator();
 
-const addNewTeam = new AddNewTeamUseCase(teamRepository, managerRepository, teamId, imageKitfileProvider, logger);
+
+export const addNewTeam = new AddNewTeamUseCase(teamRepository, managerRepository, teamId, imageKitfileProvider, logger);
+export const createChatUC = new CreateChatForTeamUseCase(chatRepository)
+export const teamSetupService = new TeamSetupService(addNewTeam, createChatUC);
 const editTeam = new EditTeamUseCase(teamRepository, imageKitfileProvider, logger);
 const deleteTeam = new SoftDeleteTeam(teamRepository, logger);
 const getallTeams = new GetAllTeamUseCase(teamRepository, logger);
@@ -29,7 +34,7 @@ const rejectFromTeam = new RejectPlayerUseCase(teamRepository);
 const swapPlayersUC = new SwapPlayers(teamRepository,logger);
 
 export const teamManagementController = new TeamController(
-    addNewTeam,
+    teamSetupService,
     editTeam,
     deleteTeam,
     getallTeams,

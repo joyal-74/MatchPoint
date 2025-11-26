@@ -1,5 +1,4 @@
 import {
-    IAddTeamUseCase,
     IApprovePlayerUseCase,
     IChangePlayerStatusUseCase,
     IChangeTeamStatusUseCase,
@@ -18,10 +17,11 @@ import { ILogger } from "app/providers/ILogger";
 import { BadRequestError } from "domain/errors";
 import { IGetMyTeamDetailsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 import { TeamMessages } from "domain/constants/TeamMessages";
+import { TeamSetupService } from "infra/services/TeamSetupServices";
 
 export class TeamController implements ITeamController {
     constructor(
-        private _addTeamUsecase: IAddTeamUseCase,
+        private _teamSetupService: TeamSetupService,
         private _editTeamUsecase: IEditTeamUseCase,
         private _deleteTeamUsecase: IChangeTeamStatusUseCase,
         private _getTeamsUsecase: IGetAllTeamsUseCase,
@@ -47,7 +47,7 @@ export class TeamController implements ITeamController {
 
         this._logger.info(`[Controller] addNewTeam → managerId=${teamData.managerId}, team=${teamData?.name}`);
 
-        const team = await this._addTeamUsecase.execute(teamData, file);
+        const team = await this._teamSetupService.execute(teamData, file);
 
         this._logger.info(`[Controller] Team created successfully → managerId=${teamData.managerId}`);
 

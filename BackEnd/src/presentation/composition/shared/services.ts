@@ -10,6 +10,7 @@ import { EnvConfigProvider } from "infra/providers/EnvConfigProvider";
 import { UserAuthServices } from "infra/services/UserAuthServices";
 import { FacebookServices } from "infra/services/FacebookServices";
 
+
 export const playerServices = new PlayerService(userRepository, playerRepository);
 export const logoutServices = new LogoutService(userRepository, adminRepository);
 export const teamServices = new PlayerTeamServices(teamRepository);
@@ -19,3 +20,4 @@ export const configProvider = new EnvConfigProvider();
 export const googleAuthService = new GoogleAuthService(configProvider);
 export const userAuthService = new UserAuthServices(userRepository, jwtService);
 export const facebookServices = new FacebookServices();
+

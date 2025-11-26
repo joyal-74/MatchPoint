@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Bell } from "lucide-react";
+import { Bell, MessageCircle } from "lucide-react";
 import ProfileCard from "../shared/ProfileCard";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { logoutUser } from "../../features/auth";
@@ -68,6 +68,14 @@ const Navbar: React.FC = () => {
                 <button className="relative p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-secondary)] rounded-full transition-all duration-200">
                     <Bell className="w-5 h-5" />
                 </button>
+
+                <button
+                    className="relative p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-secondary)] rounded-full transition-all duration-200"
+                    onClick={() => navigate('/player/chat')}
+                >
+                    <MessageCircle className="w-5 h-5" />
+                </button>
+
 
                 <div ref={profileRef}>
                     <img src={user?.profileImage || '/placeholder.png'}

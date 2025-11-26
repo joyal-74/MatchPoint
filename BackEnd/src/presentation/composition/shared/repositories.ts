@@ -8,6 +8,8 @@ import { TournamentRepositoryMongo } from 'infra/repositories/mongo/TournamentRe
 import { RegistrationRepository } from 'infra/repositories/mongo/RegistrationRepository';
 import { FixturesRepositoryMongo } from 'infra/repositories/mongo/FixturesRepositoryMongo';
 import { MatchesRepositoryMongo } from 'infra/repositories/mongo/MatchesRepositoryMongo';
+import { ChatRepositoryMongo } from 'infra/repositories/mongo/ChatRepositoryMongo';
+import { MessageRepositoryMongo } from 'infra/repositories/mongo/MessageRepositoryMongo';
 
 export const userRepository = new UserRepositoryMongo();
 export const adminRepository = new AdminRepositoryMongo();
@@ -19,3 +21,5 @@ export const tournamentRepository = new TournamentRepositoryMongo();
 export const registrationRepository = new RegistrationRepository();
 export const fixturesRepository = new FixturesRepositoryMongo();
 export const matchRepository = new MatchesRepositoryMongo();
+export const chatRepository = new ChatRepositoryMongo();
+export const messageRepository = new MessageRepositoryMongo();
