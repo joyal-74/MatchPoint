@@ -5,6 +5,7 @@ import {
     IEditTeamUseCase,
     IGetAllTeamsUseCase,
     IRejectPlayerUseCase,
+    IRemovePlayerUseCase,
     ISwapPlayers
 } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
@@ -30,6 +31,7 @@ export class TeamController implements ITeamController {
         private _approvetoTeamUsecase: IApprovePlayerUseCase,
         private _rejectfromTeamUsecase: IRejectPlayerUseCase,
         private _swapPlayersUsecase: ISwapPlayers,
+        private _removePlayersUsecase: IRemovePlayerUseCase,
         private _logger: ILogger,
     ) { }
 
@@ -184,5 +186,15 @@ export class TeamController implements ITeamController {
         await this._swapPlayersUsecase.execute(teamId, playerId, status);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.PLAYER_SWAPPED));
+    }
+
+    removePlayers = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { teamId, playerId } = httpRequest.body;
+
+        this._logger.info(`[TeamController] remove player in team → teamId=${teamId}`);
+
+        await this._removePlayersUsecase.execute(teamId, playerId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.PLAYER_REMOVED));
     }
 }

@@ -45,7 +45,7 @@ export const initSocket = (server: http.Server) => {
         });
 
         // Send message
-        authSocket.on("send-message", async ({ chatId, text, clientId }: { chatId: string; text: string; clientId: string }) => {
+        authSocket.on("send-message", async ({ chatId, text, clientId, profileImage }: { chatId: string; text: string; clientId: string; profileImage?: string }) => {
             try {
                 const savedMessage = await MessageModel.create({
                     chatId: new Types.ObjectId(chatId),
@@ -64,7 +64,7 @@ export const initSocket = (server: http.Server) => {
                     createdAt: savedMessage.createdAt,
                     status: "sent" as const,
                     clientId,
-                    profileImage: authSocket.user.profileImage || ""
+                    profileImage: profileImage || ""
                 };
 
                 io.to(chatId).emit("receive-message", messageToSend);

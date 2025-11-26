@@ -14,6 +14,7 @@ import { RejectPlayerUseCase } from "app/usecases/manager/teams/RejectPlayer";
 import { SwapPlayers } from "app/usecases/manager/teams/SwapPlayers";
 import { CreateChatForTeamUseCase } from "app/usecases/manager/teams/CreateChatForTeamUseCase";
 import { TeamSetupService } from "infra/services/TeamSetupServices";
+import { RemovePlayerUseCase } from "app/usecases/manager/teams/RemovePlayer";
 
 
 const logger = new WinstonLogger();
@@ -30,6 +31,7 @@ const getallTeams = new GetAllTeamUseCase(teamRepository, logger);
 const getTeamDetails = new GetMyTeamDetails(teamRepository, logger);
 const changeTeamStatus = new ChangePlayerStatusUseCase(teamRepository);
 const approveToTeam = new ApprovePlayerUseCase(teamRepository);
+const removeFromTeam = new RemovePlayerUseCase(teamRepository);
 const rejectFromTeam = new RejectPlayerUseCase(teamRepository);
 const swapPlayersUC = new SwapPlayers(teamRepository,logger);
 
@@ -43,5 +45,6 @@ export const teamManagementController = new TeamController(
     approveToTeam,
     rejectFromTeam,
     swapPlayersUC,
+    removeFromTeam,
     logger
 );

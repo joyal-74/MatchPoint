@@ -8,6 +8,7 @@ export const TeamMessages = {
     PLAYER_STATUS_CHANGED: "Player status changed successfully",
     PLAYER_APPROVED: "Player approved successfully",
     PLAYER_REJECTED: "Player rejected successfully",
+    PLAYER_REMOVED: "Player removed successfully",
     PLAYER_SWAPPED: "Player swapped successfully",
     NO_LOGO: "No logo provided",
 };
