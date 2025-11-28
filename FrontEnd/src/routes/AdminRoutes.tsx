@@ -11,6 +11,7 @@ const ViewersManagement = lazy(() => import("../pages/admin/Viewer/ViewersManage
 const ManagerDetails = lazy(() => import("../pages/admin/Manager/ManagerDetails"));
 const PlayerDetails = lazy(() => import("../pages/admin/Player/PlayerDetails"));
 const ViewerDetails = lazy(() => import("../pages/admin/Viewer/ViewerDetails"));
+const SubscriptionManagement = lazy(() => import("../pages/admin/shared/SubscriptionManagement"));
 
 const withAdminProtection = (component: JSX.Element) => (
     <ProtectedRoute redirectTo="/admin/login" allowedRoles={["admin"]}>
@@ -28,4 +29,5 @@ export const adminRoutes = [
     { path: "/admin/managers/:id/details", element: withAdminProtection(<ManagerDetails />) },
     { path: "/admin/players/:id/details", element: withAdminProtection(<PlayerDetails />) },
     { path: "/admin/viewers/:id/details", element: withAdminProtection(<ViewerDetails />) },
+    { path: "/admin/subscriptions", element: withAdminProtection(<SubscriptionManagement />) },
 ];

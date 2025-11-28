@@ -17,6 +17,7 @@ export class UserMapper {
             password: doc.password,
             authProvider: doc.authProvider,
             bio: doc.bio,
+            sport : doc.sport,
             settings: doc.settings,
             wallet: doc.wallet,
             refreshToken: doc.refreshToken,

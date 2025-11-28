@@ -112,7 +112,7 @@ const DataTable = <T extends { _id: string; status?: string }>({
                                             <span className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wide">
                                                 {col.label}
                                             </span>
-                                            <div className="text-sm text-[var(--color-text-primary)] break-words">
+                                            <div className="text-sm text-[var(--color-text-primary)] break-words truncate">
                                                 {value}
                                             </div>
                                         </div>

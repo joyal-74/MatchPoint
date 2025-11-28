@@ -39,6 +39,7 @@ export interface UserResponseDTO {
     lastName: string;
     username: string;
     bio: string;
+    sport?: string;
     gender: GenderType;
     phone: string | null;
     wallet: number;

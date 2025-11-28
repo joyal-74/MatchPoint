@@ -105,7 +105,7 @@ export const playerColumns = (
         { id: "email", label: "Email", accessor: "email" as keyof User },
         { id: "sport", label: "Sport", render: (row: User) => `${row.sport}` },
         {
-            id: "memberSince", label: "Member Since", render: (row: User) => new Date(row.createdAt).toLocaleDateString()
+            id: "memberSince", label: "Joined", render: (row: User) => new Date(row.createdAt).toLocaleDateString()
         },
         {
             id: "status",
