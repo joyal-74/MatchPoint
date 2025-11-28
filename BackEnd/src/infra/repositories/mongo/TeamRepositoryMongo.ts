@@ -130,4 +130,18 @@ export class TeamRepositoryMongo implements ITeamRepository {
 
         return TeamMongoMapper.toDomainFull(updated as unknown as TeamPopulatedDocument);
     }
+
+    async removePlayer(teamId: string, playerId: string): Promise<TeamDataFull | null> {
+        const team = await TeamModel.findById(teamId);
+        if (!team) return null;
+
+        const memberIndex = team.members.findIndex(m => m.playerId.toString() === playerId);
+        if (memberIndex === -1) return null;
+
+        team.members.splice(memberIndex, 1);
+
+        await team.save();
+
+        return TeamMongoMapper.toDomainFull(team as unknown as TeamPopulatedDocument);
+    }
 }

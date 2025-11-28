@@ -6,14 +6,17 @@
   "scripts": {
     "dev": "nodemon --watch src --ext ts --exec \"tsx --tsconfig tsconfig.json\" src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
-    "@eslint/js": "^9.35.0",
+    "@eslint/js": "^9.39.1",
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
@@ -21,17 +24,20 @@
     "@types/morgan": "^1.9.10",
     "@types/multer": "^2.0.0",
     "@types/nodemailer": "^7.0.1",
-    "eslint": "^9.35.0",
+    "@types/socket.io": "^3.0.1",
+    "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
-    "globals": "^16.4.0",
+    "eslint-plugin-unused-imports": "^4.3.0",
+    "globals": "^16.5.0",
     "jiti": "^2.5.1",
     "nodemon": "^3.1.10",
-    "prettier": "^3.6.2",
+    "prettier": "^3.7.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.20.5",
-    "typescript-eslint": "^8.44.0"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.892.0",
@@ -53,6 +59,7 @@
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.6",
     "razorpay": "^2.9.6",
+    "socket.io": "^4.8.1",
     "stripe": "^19.1.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",

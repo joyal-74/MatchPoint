@@ -12,4 +12,5 @@ export interface ITeamRepository {
     create(teamData: TeamRegister): Promise<TeamDataFull>;
     addMember(teamId: string, userId: string, playerId: string): Promise<TeamData>;
     update(teamId: string, updates: Partial<TeamRegister>): Promise<TeamData>;
+    removePlayer(teamId: string, playerId: string): Promise<TeamDataFull | null>; 
 }

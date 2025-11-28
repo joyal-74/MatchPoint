@@ -7,29 +7,36 @@ import { TeamController } from "presentation/http/controllers/manager/TeamContro
 import { ImageKitFileStorage } from "infra/providers/ImageKitFileStorage";
 import { WinstonLogger } from "infra/providers/WinstonLogger";
 import { TeamIdGenerator } from "infra/providers/IdGenerator";
-import { managerRepository, teamRepository } from "presentation/composition/shared/repositories";
+import { chatRepository, managerRepository, teamRepository } from "presentation/composition/shared/repositories";
 import { GetMyTeamDetails } from "app/usecases/manager/GetMyTeamDetails";
 import { ApprovePlayerUseCase } from "app/usecases/manager/teams/ApprovePlayer";
 import { RejectPlayerUseCase } from "app/usecases/manager/teams/RejectPlayer";
 import { SwapPlayers } from "app/usecases/manager/teams/SwapPlayers";
+import { CreateChatForTeamUseCase } from "app/usecases/manager/teams/CreateChatForTeamUseCase";
+import { TeamSetupService } from "infra/services/TeamSetupServices";
+import { RemovePlayerUseCase } from "app/usecases/manager/teams/RemovePlayer";
 
 
 const logger = new WinstonLogger();
 const imageKitfileProvider = new ImageKitFileStorage();
 const teamId = new TeamIdGenerator();
 
-const addNewTeam = new AddNewTeamUseCase(teamRepository, managerRepository, teamId, imageKitfileProvider, logger);
+
+export const addNewTeam = new AddNewTeamUseCase(teamRepository, managerRepository, teamId, imageKitfileProvider, logger);
+export const createChatUC = new CreateChatForTeamUseCase(chatRepository)
+export const teamSetupService = new TeamSetupService(addNewTeam, createChatUC);
 const editTeam = new EditTeamUseCase(teamRepository, imageKitfileProvider, logger);
 const deleteTeam = new SoftDeleteTeam(teamRepository, logger);
 const getallTeams = new GetAllTeamUseCase(teamRepository, logger);
 const getTeamDetails = new GetMyTeamDetails(teamRepository, logger);
 const changeTeamStatus = new ChangePlayerStatusUseCase(teamRepository);
 const approveToTeam = new ApprovePlayerUseCase(teamRepository);
+const removeFromTeam = new RemovePlayerUseCase(teamRepository);
 const rejectFromTeam = new RejectPlayerUseCase(teamRepository);
 const swapPlayersUC = new SwapPlayers(teamRepository,logger);
 
 export const teamManagementController = new TeamController(
-    addNewTeam,
+    teamSetupService,
     editTeam,
     deleteTeam,
     getallTeams,
@@ -38,5 +45,6 @@ export const teamManagementController = new TeamController(
     approveToTeam,
     rejectFromTeam,
     swapPlayersUC,
+    removeFromTeam,
     logger
 );
