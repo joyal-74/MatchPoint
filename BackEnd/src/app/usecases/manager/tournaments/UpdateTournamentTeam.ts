@@ -1,7 +1,7 @@
 import { ILogger } from "app/providers/ILogger";
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
-import { IUpdateTournamentTeam } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { IUpdateTournamentTeam } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { Tournament } from "domain/entities/Tournaments";
 import { NotFoundError } from "domain/errors";
 

@@ -13,7 +13,7 @@ import {
     ICreateTournamentFixtures,
     ICreateMatchesUseCase,
     IGetTournamentMatches
-} from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+} from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { TournamentMessages } from "domain/constants/TournamentMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";

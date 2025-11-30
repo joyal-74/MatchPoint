@@ -1,5 +1,5 @@
 import { ILogger } from "app/providers/ILogger";
-import { IGetPlayerTournaments } from "app/repositories/interfaces/player/ITournamentsRepoUsecaes";
+import { IGetPlayerTournaments } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 import { TournamentMessages } from "domain/constants/TournamentMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";

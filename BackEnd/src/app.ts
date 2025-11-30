@@ -4,9 +4,11 @@ import helmet from "helmet";
 import morgan from "morgan";
 import authRoutes from "presentation/express/routes/authRoutes";
 import adminRoutes from "presentation/express/routes/adminRoutes";
+import planRoutes from "presentation/express/routes/planRoutes";
 import managerRoutes from "presentation/express/routes/managerRoutes";
 import playerRoutes from "presentation/express/routes/playerRoutes";
 import viewerRoutes from "presentation/express/routes/viewerRoutes";
+import subscriptionsRoutes from "presentation/express/routes/subscriptionsRoutes";
 import chatRoutes from "presentation/express/routes/chatRoutes";
 import { errorHandler } from "presentation/express/middlewares/errorHandler";
 import cookieParser from 'cookie-parser';
@@ -31,10 +33,12 @@ app.use(morgan("dev"));
 
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
+app.use("/admin/subscriptions", planRoutes);
 app.use("/manager", managerRoutes);
 app.use("/player", playerRoutes);
 app.use("/viewer", viewerRoutes);
 app.use("/chat", chatRoutes);
+app.use("/subscriptions", subscriptionsRoutes);
 
 app.use(errorHandler);
 

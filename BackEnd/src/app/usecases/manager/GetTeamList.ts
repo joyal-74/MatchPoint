@@ -1,6 +1,6 @@
 import { ILogger } from "app/providers/ILogger";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { IGetAllTeamsUseCase } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
+import { IGetAllTeamsUseCase } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 import { TeamDataFull } from "domain/dtos/Team.dto";
 
 export class GetAllTeamsUseCase implements IGetAllTeamsUseCase {

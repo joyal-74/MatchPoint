@@ -32,6 +32,7 @@ export interface ISwapPlayers {
 export interface IRejectPlayerUseCase {
     execute(teamId: string, playerId: string): Promise<TeamDataFull>;
 }
+
 export interface IRemovePlayerUseCase {
     execute(teamId: string, playerId: string): Promise<TeamDataFull>;
 }

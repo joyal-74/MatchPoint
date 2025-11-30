@@ -7,7 +7,7 @@ import {
     IRejectPlayerUseCase,
     IRemovePlayerUseCase,
     ISwapPlayers
-} from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
+} from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";

@@ -1,6 +1,6 @@
 import { ILogger } from "app/providers/ILogger";
 import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
-import { IGetTournamentMatches } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { IGetTournamentMatches } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { Match } from "domain/entities/Match";
 import { BadRequestError, NotFoundError } from "domain/errors";
 

@@ -1,6 +1,6 @@
 import { ILogger } from "app/providers/ILogger";
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
-import { IGetRegisteredTeams } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { IGetRegisteredTeams } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { TournamentTeamData } from "domain/dtos/Tournament";
 import { BadRequestError } from "domain/errors";
 

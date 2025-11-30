@@ -5,6 +5,7 @@ import { ViewerDetails } from "app/usecases/admin/GetViewerDetails";
 import { ManagerResponseDTO } from "domain/dtos/Manager.dto";
 import { PlayerResponseDTO } from "domain/dtos/Player.dto";
 import { UserResponseDTO } from "domain/dtos/User.dto";
+import { Plan } from "domain/entities/Plan";
 
 export interface IGetUsersUsecase<TUser> {
     execute(params: GetAllUsersParams): Promise<{ users: TUser[], totalCount: number }>;
@@ -38,4 +39,15 @@ export interface IGetPlayerDetails {
 
 export interface IGetViewerDetails {
     execute(id: string): Promise<ViewerDetails>;
+}
+
+export interface ICreatePlan {
+    execute(planData: Plan): Promise<Plan>
+}
+export interface IGetPlans {
+    execute(): Promise<Plan[]>
+}
+
+export interface IDeletePlan {
+    execute(id: string): Promise<boolean>
 }

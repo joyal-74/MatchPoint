@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { adminRoutes } from "./AdminRoutes";
-import { publicRoutes } from "./publicRoutes";
+import { publicRoutes } from "./PublicRoutes";
 import { playerRoutes } from "./PlayerRoutes";
 import { managerRoutes } from "./ManagerRoutes";
 import NotFoundPage from "../pages/shared/PageNotFound";

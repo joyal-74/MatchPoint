@@ -1,7 +1,7 @@
 import { Tournament } from "domain/entities/Tournaments";
 import { ILogger } from "app/providers/ILogger";
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { IAddTournament } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { IAddTournament } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { ITournamentIdGenerator } from "app/providers/IIdGenerator";
 import { IFileStorage } from "app/providers/IFileStorage";
 import type { File } from "domain/entities/File";

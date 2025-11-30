@@ -1,7 +1,7 @@
 import { PlayerMapper } from "app/mappers/PlayerMapper";
 import { ILogger } from "app/providers/ILogger";
 import { IPlayerService } from "app/services/player/IPlayerService";
-import { IUpdatePlayerFields } from "app/repositories/interfaces/shared/IUserProfileRepository";
+import { IUpdatePlayerFields } from "app/repositories/interfaces/usecases/IUserProfileRepository";
 import { PlayerProfileFieldDTO, PlayerProfileResponse } from "domain/dtos/Player.dto";
 import { NotFoundError } from "domain/errors";
 import { validatePlayerSportsFields } from "domain/validators/PlayerFieldValidators";

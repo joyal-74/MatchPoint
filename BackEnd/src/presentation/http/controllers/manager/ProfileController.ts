@@ -1,4 +1,4 @@
-import { IGetManagerProfile, IUpdateManagerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
+import { IGetManagerProfile, IUpdateManagerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
 import { ProfileMessages } from "domain/constants/manager/ManagerProfileMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";

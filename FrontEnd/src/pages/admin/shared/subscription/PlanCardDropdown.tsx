@@ -1,17 +1,7 @@
 import { Edit3, Eye, MoreVertical, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import type { Plan } from "./SubscriptionTypes";
 
-type UserRole = 'Player' | 'Manager' | 'Viewer';
-type PlanLevel = 'Free' | 'Premium' | 'Super';
-
-interface Plan {
-    id: string;
-    userType: UserRole;
-    level: PlanLevel;
-    title: string;
-    price: number;
-    features: string[];
-}
 
 // Dropdown Menu Component for PlanCard
 export const PlanCardDropdown: React.FC<{ plan: Plan; onView: (plan: Plan) => void; onEdit: (plan: Plan) => void; onDelete: (id: string) => void }> = ({ plan, onView, onEdit, onDelete }) => {
@@ -59,7 +49,7 @@ export const PlanCardDropdown: React.FC<{ plan: Plan; onView: (plan: Plan) => vo
                         <Edit3 className="w-4 h-4 mr-2 text-yellow-400" /> Edit Plan
                     </button>
                     <button
-                        onClick={() => handleAction(() => onDelete(plan.id))}
+                        onClick={() => handleAction(() => onDelete(plan._id))}
                         className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:bg-neutral-600 transition"
                     >
                         <Trash2 className="w-4 h-4 mr-2" /> Delete Plan

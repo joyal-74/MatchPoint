@@ -3,7 +3,7 @@ import { ILogger } from "app/providers/ILogger";
 import { File } from "domain/entities/File";
 import { ITeamIdGenerator } from "app/providers/IIdGenerator";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { IAddTeamUseCase } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
+import { IAddTeamUseCase } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 import { TeamDataFull, TeamRegister } from "domain/dtos/Team.dto";
 import { BadRequestError } from "domain/errors";
 import { IFileStorage } from "app/providers/IFileStorage";

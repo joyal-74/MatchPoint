@@ -1,6 +1,6 @@
 import { ILogger } from "app/providers/ILogger";
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { ICancelTournament } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { ICancelTournament } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { BadRequestError, NotFoundError } from "domain/errors";
 
 export class CancelTournamentUsecase implements ICancelTournament {

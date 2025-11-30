@@ -6,6 +6,8 @@ import LoginPage from '../pages/auth/LoginPage';
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 import SignupPage from '../pages/auth/SignupPage';
 import Blocked from '../pages/shared/Blocked';
+import RoleLayoutWrapper from '../pages/shared/RoleLayoutWrapper';
+import UserSubscriptionPage from '../pages/shared/SubscriptionsPage';
 import Unauthorized from '../pages/shared/Unauthorized';
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
@@ -28,4 +30,14 @@ export const publicRoutes = [
     // Shared pages
     { path: "/unauthorized", element: <Unauthorized /> },
     { path: "/blocked", element: <Blocked /> },
+    {
+        path: "/:role/subscription",
+        element: (
+            <ProtectedRoute>
+                <RoleLayoutWrapper>
+                    <UserSubscriptionPage />
+                </RoleLayoutWrapper>
+            </ProtectedRoute>
+        )
+    }
 ];

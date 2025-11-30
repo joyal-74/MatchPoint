@@ -1,0 +1,7 @@
+export const SUBSCRIPTION_ROUTES = {
+    GET_PLANS: `/admin/subscriptions/plans`,
+    ADD_PLAN: `/admin/subscriptions/plan`,
+    DELETE_PLAN: (id: string) => `/admin/subscriptions/plan/${id}`,
+    GET_USER_PLANS: (userId: string, role: string) => `/subscriptions/roles/${role}/${userId}/plans`,
+    UPDATE_USER_PLAN: (userId: string) => `/subscriptions/users/${userId}/plan`,
+} as const;

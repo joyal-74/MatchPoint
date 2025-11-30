@@ -1,6 +1,6 @@
 import { UserMapper } from "app/mappers/UserMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
-import { IUpdateViewerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
+import { IUpdateViewerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { UserResponseDTO, UserUpdateDTO } from "domain/dtos/User.dto";
 import { File } from "domain/entities/File";
