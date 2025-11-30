@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAvailablePlans, updateUserPlan } from "./subscriptionThunks";
+import { fetchAvailablePlans, finalizeSubscriptionPayment, initiateSubscriptionOrder } from "./subscriptionThunks";
 import type { AvailablePlan, UserSubscription } from "./subscriptionTypes";
 
 interface SubscriptionState {
@@ -40,20 +40,36 @@ const subscriptionSlice = createSlice({
             state.error = action.payload as string;
         });
 
-        // UPDATE PLAN
-        builder.addCase(updateUserPlan.pending, (state) => {
-            state.updating = true;
+        // INITIATE ORDER
+        builder.addCase(initiateSubscriptionOrder.pending, (state) => {
+            state.loading = true;
             state.error = null;
         });
-        builder.addCase(updateUserPlan.fulfilled, (state, action) => {
-            state.updating = false;
-            state.userSubscription = action.payload;
+
+        builder.addCase(initiateSubscriptionOrder.fulfilled, (state) => {
+            state.loading = false;
         });
-        builder.addCase(updateUserPlan.rejected, (state, action) => {
-            state.updating = false;
+
+        builder.addCase(initiateSubscriptionOrder.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload as string;
+        });
+
+        // FINALIZE PAYMENT
+        builder.addCase(finalizeSubscriptionPayment.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+
+        builder.addCase(finalizeSubscriptionPayment.fulfilled, (state) => {
+            state.loading = false;
+        });
+
+        builder.addCase(finalizeSubscriptionPayment.rejected, (state, action) => {
+            state.loading = false;
             state.error = action.payload as string;
         });
     },
-});
+},);
 
 export default subscriptionSlice.reducer;

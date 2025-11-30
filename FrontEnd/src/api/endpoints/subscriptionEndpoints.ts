@@ -1,6 +1,6 @@
 import { SUBSCRIPTION_ROUTES } from "../../constants/SubscriptionRoutes";
 import type { Plan } from "../../features/admin/subscription/subscriptionTypes";
-import type { UserSubscription, AvailablePlan } from "../../features/shared/subscription/subscriptionTypes";
+import type { UserSubscription, AvailablePlan, InitiateOrderPayload, InitiateOrderResponse, FinalizePaymentPayload, FinalizePaymentResponse } from "../../features/shared/subscription/subscriptionTypes";
 import axiosClient from "../http/axiosClient";
 
 export const subscriptionEndpoints = {
@@ -29,8 +29,14 @@ export const subscriptionEndpoints = {
         return data.data;
     },
 
-    updateUserPlan: async ({ userId, level, billingCycle }: { userId: string, level: string, billingCycle: string }): Promise<UserSubscription> => {
-        const { data } = await axiosClient.patch(SUBSCRIPTION_ROUTES.UPDATE_USER_PLAN(userId), { level, billingCycle });
+    initiateOrder: async (InitiateOrderPayload: InitiateOrderPayload): Promise<InitiateOrderResponse> => {
+        const { data } = await axiosClient.post(SUBSCRIPTION_ROUTES.INITIALIZE_ORDER, { InitiateOrderPayload });
+
         return data.data;
     },
+
+    finalizePayment: async (finalizePayment: FinalizePaymentPayload): Promise<FinalizePaymentResponse> => {
+        const { data } = await axiosClient.post(SUBSCRIPTION_ROUTES.VERIFY_PAYMENT, { finalizePayment });
+        return data.data;
+    }
 };

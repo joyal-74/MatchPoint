@@ -1,22 +1,35 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Award, RefreshCw } from 'lucide-react';
 import type { AvailablePlan, PlanLevel } from './subscription/SubscriptionTypes';
 import { UserButton } from './subscription/UserButton';
 import { PlanCardUser } from './subscription/PlanCardUser';
-import { fetchAvailablePlans, updateUserPlan } from '../../features/shared/subscription/subscriptionThunks';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import type { RootState } from '../../app/rootReducer';
 import LoadingOverlay from '../../components/shared/LoadingOverlay';
+import { PaymentModal } from './subscription/PaymentModal';
+import { fetchAvailablePlans, initiateSubscriptionOrder } from '../../features/shared/subscription/subscriptionThunks';
+import { useSubscribePlan } from '../../hooks/useSubscribePlan';
 
 
 export default function UserSubscriptionPage() {
+    const user = useAppSelector((state: RootState) => state.auth.user);
     const role = useAppSelector((state: RootState) => state.auth.user?.role);
     const userId = useAppSelector((state: RootState) => state.auth.user?._id);
     const dispatch = useAppDispatch();
+    const [selectedPlan, setSelectedPlan] = useState<AvailablePlan | null>(null);
+    const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
     const { availablePlans, userSubscription, loading, updating } = useAppSelector(
         (state: RootState) => state.userSubscription
     );
+
+    const { handleRazorpaySubscription } = useSubscribePlan({
+        plan: selectedPlan,
+        userId: user?._id,
+        userName: `${user?.firstName} ${user?.lastName}`,
+        userEmail: user?.email,
+        onModalClose: () => setPaymentModalOpen(false)
+    });
 
     useEffect(() => {
         if (role && userId) {
@@ -25,16 +38,39 @@ export default function UserSubscriptionPage() {
     }, [role, userId, dispatch]);
 
     const handleChoosePlan = (plan: AvailablePlan) => {
-        if (userId) {
-            dispatch(updateUserPlan({ userId: userId, level: plan.level, billingCycle : plan.billingCycle }));
-        }
+        setSelectedPlan(plan);
+        setPaymentModalOpen(true);
     };
+
+    const handlePaymentMethod = async (method: "razorpay" | "stripe" | "paypal") => {
+        if (!selectedPlan || !userId) return;
+
+        if (method === "razorpay") {
+            await handleRazorpaySubscription();
+
+            if (role && userId) {
+                dispatch(fetchAvailablePlans({ userId, role }));
+            }
+        } else {
+            await dispatch(initiateSubscriptionOrder({
+                userId,
+                level: selectedPlan.level,
+                billingCycle: selectedPlan.billingCycle
+            }));
+            if (role && userId) {
+                dispatch(fetchAvailablePlans({ userId, role }));
+            }
+        }
+
+        setPaymentModalOpen(false);
+    };
+
+
 
     const handleManageSubscription = () => {
         console.log("Navigate to billing portal…");
     };
 
-    console.log(userSubscription)
 
     if ((!loading && availablePlans.length === 0) || !userSubscription) {
         return (
@@ -146,6 +182,14 @@ export default function UserSubscriptionPage() {
                         ))}
                     </div>
                 </div>
+
+                <PaymentModal
+                    open={paymentModalOpen}
+                    planTitle={selectedPlan?.title || ""}
+                    amount={selectedPlan?.price || 0}
+                    onClose={() => setPaymentModalOpen(false)}
+                    onSelect={handlePaymentMethod}
+                />
             </div>
         </>
     );
