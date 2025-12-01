@@ -1,7 +1,7 @@
 import { ILogger } from "app/providers/ILogger";
 import { IPlanRepository } from "app/repositories/interfaces/admin/IPlanRepository";
 import { ISubscriptionRepository } from "app/repositories/interfaces/shared/ISubscriptionRepository";
-import { IGetPlansAndUserSubscription } from "app/services/SubscriptionServices";
+import { IGetPlansAndUserSubscription } from "app/services/ISubscriptionServices";
 
 
 export class GetPlansAndUserSubscription implements IGetPlansAndUserSubscription {

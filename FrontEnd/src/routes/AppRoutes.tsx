@@ -6,6 +6,7 @@ import { managerRoutes } from "./ManagerRoutes";
 import NotFoundPage from "../pages/shared/PageNotFound";
 import { viewerRoutes } from "./ViewerRoutes";
 import TeamChat from "../pages/player/TeamChat/TeamChat";
+import PaymentSuccessPage from "../components/manager/tournaments/TournamentDetails/PaymentSuccessPage";
 
 const AppRoutes = () => {
     return (
@@ -33,6 +34,7 @@ const AppRoutes = () => {
 
                 <Route path="*" element={<NotFoundPage />} />
                 <Route path="player/chat" element={<TeamChat />} />
+                <Route path="subscription/complete" element={<PaymentSuccessPage />} />
             </Routes>
         </BrowserRouter>
     );

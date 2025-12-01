@@ -6,8 +6,9 @@ export class SubscriptionMapper {
         return {
             userId: (doc.userId).toString(),
             level: doc.level,
-            billingCycle : doc.billingCycle,
+            billingCycle: doc.billingCycle,
             expiryDate: doc.expiryDate,
+            transactionId: doc.transactionId,
             createdAt: doc.createdAt,
             updatedAt: doc.updatedAt
         };

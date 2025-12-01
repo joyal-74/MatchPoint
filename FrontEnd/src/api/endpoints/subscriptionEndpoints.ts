@@ -25,18 +25,18 @@ export const subscriptionEndpoints = {
     // User side
     fetchAvailablePlans: async ({ userId, role }: { userId: string, role: string }): Promise<{ plans: AvailablePlan[], userSubscription: UserSubscription }> => {
         const { data } = await axiosClient.get(SUBSCRIPTION_ROUTES.GET_USER_PLANS(userId, role));
-        console.log(data.data)
+
         return data.data;
     },
 
     initiateOrder: async (InitiateOrderPayload: InitiateOrderPayload): Promise<InitiateOrderResponse> => {
-        const { data } = await axiosClient.post(SUBSCRIPTION_ROUTES.INITIALIZE_ORDER, { InitiateOrderPayload });
+        const { data } = await axiosClient.post(SUBSCRIPTION_ROUTES.INITIALIZE_ORDER, InitiateOrderPayload);
 
         return data.data;
     },
 
     finalizePayment: async (finalizePayment: FinalizePaymentPayload): Promise<FinalizePaymentResponse> => {
-        const { data } = await axiosClient.post(SUBSCRIPTION_ROUTES.VERIFY_PAYMENT, { finalizePayment });
+        const { data } = await axiosClient.post(SUBSCRIPTION_ROUTES.VERIFY_PAYMENT, finalizePayment);
         return data.data;
     }
 };

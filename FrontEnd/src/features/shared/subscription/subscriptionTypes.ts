@@ -1,3 +1,6 @@
+import type { BillingCycle } from "../../../pages/shared/subscription/SubscriptionTypes";
+import type { PlanLevel } from "../../admin/subscription/subscriptionTypes";
+
 export interface AvailablePlan {
   _id: string;
   level: "Free" | "Premium" | "Super";
@@ -20,28 +23,34 @@ export interface UserSubscription {
 
 
 export interface InitiateOrderPayload {
-    userId: string;
-    level: string;
-    billingCycle: string;
+  amount: number;
+  currency: string;
+  title: string;
+  metadata: {
+    type: "subscription",
+    userId: string,
+    planLevel: PlanLevel,
+    billingCycle: BillingCycle
+  };
 }
 
 export interface InitiateOrderResponse {
-    keyId: string;
-    orderId: string;
-    transactionId: string;
-    amount: number;
+  keyId: string;
+  orderId: string;
+  transactionId: string;
+  amount: number;
 }
 
 export interface FinalizePaymentPayload {
-    userId: string;
-    transactionId: string;
-    paymentId: string;
-    razorpayOrderId: string;
-    razorpaySignature: string;
+  userId: string;
+  transactionId: string;
+  paymentId: string;
+  razorpayOrderId: string;
+  razorpaySignature: string;
 }
 
 export interface FinalizePaymentResponse {
-    status: "completed" | "pending";
-    subscriptionId: string;
-    message: string;
+  status: "completed" | "pending";
+  subscriptionId: string;
+  message: string;
 }

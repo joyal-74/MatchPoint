@@ -1,6 +1,7 @@
 import Razorpay from 'razorpay';
-import { IPaymentProvider, PaymentMetadata, PaymentSession } from '../../app/providers/IPaymentProvider';
-import { BadRequestError } from 'domain/errors'; 
+import { IPaymentProvider, PaymentSession } from '../../app/providers/IPaymentProvider';
+import { BadRequestError } from 'domain/errors';
+import { PaymentMetadata } from 'app/repositories/interfaces/IBasePaymentMetaData';
 
 export class RazorpayProvider implements IPaymentProvider {
     private razorpay: Razorpay;
@@ -9,40 +10,51 @@ export class RazorpayProvider implements IPaymentProvider {
         this.razorpay = new Razorpay({ key_id: keyId, key_secret: keySecret });
     }
 
-    async createPaymentSession(
-        amount: number,
-        currency: string,
-        teamName: string,
-        metadata: PaymentMetadata
-    ): Promise<PaymentSession> {
+    async createPaymentSession(amount: number, currency: string, title: string, metadata: PaymentMetadata): Promise<PaymentSession> {
         if (currency !== 'INR') {
             throw new BadRequestError('Razorpay only supports INR currency');
         }
 
         try {
-            const order = await this.razorpay.orders.create({
-                amount,
-                currency: 'INR',
-                receipt: `${metadata.teamId}_${Date.now()}`,
-                notes: {
-                    tournamentId: metadata.tournamentId,
-                    teamId: metadata.teamId,
-                    captainId: metadata.captainId,
-                } as Record<string, string>,
-            });
+            let order;
+            if (metadata.type === 'tournament') {
+                order = await this.razorpay.orders.create({
+                    amount: amount * 100,
+                    currency: 'INR',
+                    receipt: `${metadata.teamId}_${Date.now()}`,
+                    notes: {
+                        tournamentId: metadata.tournamentId,
+                        teamId: metadata.teamId,
+                        captainId: metadata.captainId,
+                    } as Record<string, string>,
+                });
+            } else if (metadata.type === 'subscription') {
+                order = await this.razorpay.orders.create({
+                    amount: amount * 100,
+                    currency: 'INR',
+                    receipt: `sub_${metadata.userId.slice(0, 10)}_${Date.now().toString().slice(-6)}`,
+                    notes: {
+                        userId: metadata.userId,
+                        planLevel: metadata.planLevel,
+                        billingCycle: metadata.billingCycle,
+                    } as Record<string, string>,
+                });
+            }
 
-            if (!order.id) throw new BadRequestError('Failed to create Razorpay order');
+            if (!order?.id) throw new BadRequestError('Failed to create Razorpay order');
 
             return {
                 sessionId: order.id,
                 orderId: order.id,
                 keyId: process.env.RAZOR_API_KEY!,
-                url : ''
+                url: '',
             };
-        } catch (error: any) {
-            throw new BadRequestError(`Razorpay order creation failed: ${error.message}`);
+        } catch (error) {
+            console.log(error)
+            throw new BadRequestError(`Razorpay order creation failed: ${error}`);
         }
     }
+
 
     async verifyPayment(paymentId: string): Promise<{ status: 'completed' | 'failed'; paymentId: string; metadata: PaymentMetadata }> {
         try {
@@ -50,16 +62,32 @@ export class RazorpayProvider implements IPaymentProvider {
             if (!payment) throw new BadRequestError('Payment not found');
 
             const notes = payment.notes ?? {};
-            const metadata: PaymentMetadata = {
-                tournamentId: notes.tournamentId || '',
-                teamId: notes.teamId || '',
-                captainId: notes.captainId || '',
-            };
+            let metadata: PaymentMetadata;
+
+            if ('tournamentId' in notes) {
+                metadata = {
+                    type: 'tournament',
+                    tournamentId: notes.tournamentId || '',
+                    teamId: notes.teamId || '',
+                    captainId: notes.captainId || '',
+                    managerId: notes.managerId || '',
+                };
+            } else if ('userId' in notes) {
+                metadata = {
+                    type: 'subscription',
+                    userId: notes.userId || '',
+                    planLevel: notes.planLevel || '',
+                    billingCycle: notes.billingCycle || '',
+                };
+            } else {
+                throw new BadRequestError('Unknown payment metadata');
+            }
 
             const status: 'completed' | 'failed' = payment.status === 'captured' ? 'completed' : 'failed';
             return { status, paymentId: payment.id, metadata };
-        } catch (error: any) {
-            throw new BadRequestError(`Payment verification failed: ${error.message}`);
+        } catch (error) {
+            console.log(error)
+            throw new BadRequestError(`Payment verification failed: ${error}`);
         }
     }
 }

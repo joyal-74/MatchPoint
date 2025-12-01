@@ -1,10 +1,10 @@
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../hooks/hooks';
 import { useRazorpayGateway } from './useRazorpayGateway';
 import type { AvailablePlan } from '../features/shared/subscription/subscriptionTypes';
 
 import { initiateSubscriptionOrder, finalizeSubscriptionPayment } from '../features/shared/subscription/subscriptionThunks';
+import toast from 'react-hot-toast';
 
 interface PlanDetails {
     plan: AvailablePlan | null;
@@ -22,7 +22,7 @@ export function useSubscribePlan({ plan, userId, userEmail, userName, userPhone,
     const { isProcessing: isRazorpayProcessing, initiatePayment } = useRazorpayGateway();
 
     const navigateToSuccess = () => {
-        navigate(`/dashboard/subscription/complete`);
+        navigate(`/subscription/complete`);
     }
 
     if (!plan || !userId) {
@@ -42,18 +42,25 @@ export function useSubscribePlan({ plan, userId, userEmail, userName, userPhone,
         try {
             initiationResult = await dispatch(
                 initiateSubscriptionOrder({
-                    userId: userId,
-                    level: plan.level,
-                    billingCycle: plan.billingCycle,
+                    amount: plan.price * 100,
+                    currency: "INR",
+                    title: "Premium Subscription",
+                    metadata: {
+                        type: "subscription",
+                        userId: userId,
+                        planLevel: plan.level,
+                        billingCycle: plan.billingCycle
+                    }
                 })
             ).unwrap();
+            console.log(initiationResult)
         } catch (error) {
             console.log(error)
             toast.error("Failed to prepare order. Please try again.");
             return;
         }
 
-        if (!initiationResult.keyId || !initiationResult.orderId || !initiationResult.transactionId) {
+        if (!initiationResult.keyId || !initiationResult.orderId) {
             toast.error("Payment configuration missing from server.");
             return;
         }
@@ -83,7 +90,7 @@ export function useSubscribePlan({ plan, userId, userEmail, userName, userPhone,
                     await dispatch(
                         finalizeSubscriptionPayment({
                             userId: userId,
-                            transactionId: initiationResult.transactionId,
+                            transactionId: initiationResult.transactionId ?? "",
                             paymentId: response.razorpay_payment_id,
                             razorpayOrderId: response.razorpay_order_id,
                             razorpaySignature: response.razorpay_signature,
@@ -104,7 +111,7 @@ export function useSubscribePlan({ plan, userId, userEmail, userName, userPhone,
                 console.error("Razorpay Payment Error:", error);
 
                 if ('message' in error && error.message.includes("cancelled")) {
-                    toast.warn("Subscription payment was cancelled.");
+                    toast.error("Subscription payment was cancelled.");
                 } else {
                     toast.error("Payment failed. Please try again.");
                 }

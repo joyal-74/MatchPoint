@@ -20,4 +20,3 @@ export const configProvider = new EnvConfigProvider();
 export const googleAuthService = new GoogleAuthService(configProvider);
 export const userAuthService = new UserAuthServices(userRepository, jwtService);
 export const facebookServices = new FacebookServices();
-

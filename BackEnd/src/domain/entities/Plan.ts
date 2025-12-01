@@ -20,4 +20,5 @@ export interface UserSubscription {
     expiryDate: Date;
     createdAt: Date;
     updatedAt: Date;
+    status: "pending" | "active" | "expired";
 }

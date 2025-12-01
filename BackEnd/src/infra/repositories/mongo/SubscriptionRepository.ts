@@ -7,17 +7,26 @@ import { BadRequestError, NotFoundError } from "domain/errors";
 export class SubscriptionRepository implements ISubscriptionRepository {
 
     async updateUserPlan(userId: string, level: PlanLevel, billingCycle?: BillingCycle): Promise<UserSubscription> {
+
         let expiryDate: Date | undefined;
 
         if (level !== "Free") {
-            if (!billingCycle) throw new BadRequestError("Billing cycle is required for paid plans");
-            const expiryDays = billingCycle === "Monthly" ? 30 : 365;
-            expiryDate = new Date(Date.now() + expiryDays * 24 * 60 * 60 * 1000);
+            if (!billingCycle) throw new BadRequestError("Billing cycle required");
+            const now = new Date();
+            expiryDate = new Date(now);
+
+            if (billingCycle === "Monthly") {
+                expiryDate.setMonth(now.getMonth() + 1);
+            } else {
+                expiryDate.setFullYear(now.getFullYear() + 1);
+            }
         }
 
-        const updateData: Partial<UserSubscription> = { level };
-        if (expiryDate) updateData.expiryDate = expiryDate;
-        if (billingCycle) updateData.billingCycle = billingCycle;
+        const updateData: Partial<UserSubscription> = {
+            level,
+            ...(billingCycle ? { billingCycle } : {}),
+            ...(expiryDate ? { expiryDate } : {})
+        };
 
         const doc = await UserSubscriptionModel.findOneAndUpdate(
             { userId },
@@ -25,16 +34,30 @@ export class SubscriptionRepository implements ISubscriptionRepository {
             { upsert: true, new: true }
         );
 
-        if (!doc) throw new NotFoundError("Failed to update subscription");
+        if (!doc) throw new NotFoundError("Update failed");
 
         return SubscriptionMapper.toDomain(doc);
     }
 
-
-
     async getUserSubscription(userId: string): Promise<UserSubscription | null> {
         const doc = await UserSubscriptionModel.findOne({ userId });
+        return doc ? SubscriptionMapper.toDomain(doc) : null;
+    }
 
+    async findByTransactionId(transactionId: string): Promise<UserSubscription | null> {
+        const doc = await UserSubscriptionModel.findOne({ transactionId });
+        return doc ? SubscriptionMapper.toDomain(doc) : null;
+    }
+
+    async updateSubscriptionStatus(
+        transactionId: string,
+        status: "active" | "pending" | "expired"
+    ): Promise<UserSubscription | null> {
+        const doc = await UserSubscriptionModel.findOneAndUpdate(
+            { transactionId },
+            { status },
+            { new: true }
+        );
         return doc ? SubscriptionMapper.toDomain(doc) : null;
     }
 }

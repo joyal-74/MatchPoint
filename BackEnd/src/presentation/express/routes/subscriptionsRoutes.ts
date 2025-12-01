@@ -7,6 +7,8 @@ const router = Router();
 
 router.get("/roles/:role/:userId/plans", expressAdapter(subscriptionController.getUserPlan));
 
-router.patch("/users/:userId/plan", expressAdapter(subscriptionController.updateUserPlan));
+router.post("/plan/order", expressAdapter(subscriptionController.initiateOrder));
+
+router.post("/plan/verify", expressAdapter(subscriptionController.finalizeOrder));
 
 export default router;
