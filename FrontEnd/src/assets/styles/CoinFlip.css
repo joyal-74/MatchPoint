@@ -1,0 +1,25 @@
+@keyframes flip-coin {
+    0% { transform: rotateX(0deg); }
+    50% { transform: rotateX(1080deg); }
+    100% { transform: rotateX(360deg); }
+}
+
+.perspective {
+    perspective: 1000px;
+}
+
+.backface-hidden {
+    backface-visibility: hidden;
+}
+
+.animate-flip {
+    animation: flip-coin 2500ms ease-in-out forwards;
+}
+
+.rotate-y-0 { 
+    transform: rotateY(0deg); 
+}
+
+.rotate-y-180 { 
+    transform: rotateY(180deg); 
+}

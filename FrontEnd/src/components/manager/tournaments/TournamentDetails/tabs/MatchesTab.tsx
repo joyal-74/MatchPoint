@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks/hooks";
-import { useParams } from "react-router-dom";
-import { Swords } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+import { ArrowRight, Swords } from "lucide-react";
 import EmptyState from "../shared/EmptyState";
 import LoadingOverlay from "../../../../shared/LoadingOverlay";
 import { getTournamentMatches } from "../../../../../features/manager/Tournaments/tournamentThunks";
@@ -71,20 +71,27 @@ export default function MatchesTab() {
                             <span className="font-medium text-white">{match.teamB}</span>
                         </div>
 
-                        {/* Status */}
-                        <span
-                            className={`${match.status === "completed"
-                                ? "text-green-400"
-                                : match.status === "upcoming"
-                                    ? "text-yellow-400"
-                                    : "text-blue-400"
-                                } text-sm font-medium`}
-                        >
-                            {match.status}
-                        </span>
 
-                        {/* Icon */}
-                        <Swords className="text-green-400" size={24} />
+                        <div className="flex justify-center items-center gap-3">
+                            <span
+                                className={`${match.status === "completed"
+                                    ? "text-green-400"
+                                    : match.status === "upcoming"
+                                        ? "text-yellow-400"
+                                        : "text-blue-400"
+                                    } text-sm font-medium`}
+                            >
+                                {match.status}
+                            </span>
+
+                            <Link
+                                to={'/manager/match/dashboard'}
+                                className="flex items-center gap-2 px-4 py-1.5 bg-green-600 text-white  text-sm font-semibold rounded-full  hover:bg-green-700 transition-colors duration-200  w-full md:w-auto justify-center"
+                            >
+                                Go to Dashboard
+                                <ArrowRight size={20} />
+                            </Link>
+                        </div>
                     </div>
                 ))}
             </div>
