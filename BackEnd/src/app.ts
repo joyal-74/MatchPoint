@@ -10,6 +10,7 @@ import playerRoutes from "presentation/express/routes/playerRoutes";
 import viewerRoutes from "presentation/express/routes/viewerRoutes";
 import subscriptionsRoutes from "presentation/express/routes/subscriptionsRoutes";
 import chatRoutes from "presentation/express/routes/chatRoutes";
+import leaderboardRoutes from "presentation/express/routes/leaderboardRoutes";
 import { errorHandler } from "presentation/express/middlewares/errorHandler";
 import cookieParser from 'cookie-parser';
 
@@ -39,6 +40,7 @@ app.use("/player", playerRoutes);
 app.use("/viewer", viewerRoutes);
 app.use("/chat", chatRoutes);
 app.use("/subscriptions", subscriptionsRoutes);
+app.use("/leaderboard", leaderboardRoutes);
 
 app.use(errorHandler);
 

@@ -1,6 +1,7 @@
 import { lazy, Suspense, type JSX } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
+import MyStatisticsPage from "../pages/player/MyStats/MyStatisticsPage";
 
 const PlayerDashboard = lazy(() => import("../pages/player/LandingPage"));
 const ViewTeam = lazy(() => import("../pages/player/TeamDetailsPage"));
@@ -24,4 +25,5 @@ export const playerRoutes = [
     { path: "/player/teams", element: withPlayerProtection(<TeamFinderPage />) },
     { path: "/player/myteams/:status", element: withPlayerProtection(<TeamsListPage />) },
     { path: "/player/myteam/:teamId", element: withPlayerProtection(<ViewTeam />) },
+    { path: "/player/mystats", element: withPlayerProtection(<MyStatisticsPage />) },
 ];

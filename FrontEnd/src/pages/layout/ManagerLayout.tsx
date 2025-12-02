@@ -3,7 +3,7 @@ import Navbar from '../../components/manager/Navbar'
 import type { ReactNode } from "react";
 
 interface PlayerLayoutProps {
-    children: ReactNode;
+    children?: ReactNode;
 }
 
 const ManagerLayout: React.FC<PlayerLayoutProps> = ({ children }) => {

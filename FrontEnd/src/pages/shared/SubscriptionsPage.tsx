@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import type { RootState } from '../../app/rootReducer';
 import LoadingOverlay from '../../components/shared/LoadingOverlay';
 import { PaymentModal } from './subscription/PaymentModal';
-import { fetchAvailablePlans, initiateSubscriptionOrder } from '../../features/shared/subscription/subscriptionThunks';
+import { fetchAvailablePlans } from '../../features/shared/subscription/subscriptionThunks';
 import { useSubscribePlan } from '../../hooks/useSubscribePlan';
 
 
@@ -52,11 +52,6 @@ export default function UserSubscriptionPage() {
                 dispatch(fetchAvailablePlans({ userId, role }));
             }
         } else {
-            await dispatch(initiateSubscriptionOrder({
-                userId,
-                level: selectedPlan.level,
-                billingCycle: selectedPlan.billingCycle
-            }));
             if (role && userId) {
                 dispatch(fetchAvailablePlans({ userId, role }));
             }

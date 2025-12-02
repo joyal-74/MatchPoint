@@ -32,7 +32,7 @@ export const sportCareerStatsConfig: Record<string, Record<string, CareerStatFie
             { key: "fifties", label: "Half Centuries", type: "batting" },
             { key: "fours", label: "Fours", type: "batting" },
             { key: "sixes", label: "Sixes", type: "batting" },
-            { key: "highestScore", label: "Highest Score", type: "batting" }
+            { key: "highestScore", label: "Highest Score", type: "batting" },
         ],
         bowling: [
             { key: "ballsBowled", label: "Balls Bowled", type: "bowling" },

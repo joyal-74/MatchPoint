@@ -11,6 +11,8 @@ import teamMessageReducer from "../features/player/Chat/messages/messagesSlice";
 import teamChatReducer from "../features/player/Chat/chatSlice";
 import subscriptionReducer from "../features/admin/subscription/subscriptionSlice";
 import userSubscriptionReducer from "../features/shared/subscription/subscriptionSlice";
+import leaderboardReducer from "../features/shared/leaderboard/leaderboardSlice";
+
 
 const appReducer = combineReducers({
     auth: authReducer,
@@ -25,6 +27,7 @@ const appReducer = combineReducers({
     chats : teamChatReducer,
     subscription : subscriptionReducer,
     userSubscription : userSubscriptionReducer,
+    leaderboard: leaderboardReducer,
 });
 
 export type RootState = ReturnType<typeof appReducer>;

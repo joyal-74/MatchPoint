@@ -12,6 +12,7 @@ import { ChatRepositoryMongo } from 'infra/repositories/mongo/ChatRepositoryMong
 import { MessageRepositoryMongo } from 'infra/repositories/mongo/MessageRepositoryMongo';
 import { PlanRepository } from 'infra/repositories/mongo/PlanRepository';
 import { SubscriptionRepository } from 'infra/repositories/mongo/SubscriptionRepository';
+import { LeaderboardRepository } from 'infra/repositories/mongo/LeaderboardRepository';
 
 export const userRepository = new UserRepositoryMongo();
 export const adminRepository = new AdminRepositoryMongo();
@@ -27,3 +28,4 @@ export const chatRepository = new ChatRepositoryMongo();
 export const messageRepository = new MessageRepositoryMongo();
 export const planRepository = new PlanRepository();
 export const subscriptionRepository = new SubscriptionRepository();
+export const leaderboardRepository = new LeaderboardRepository();

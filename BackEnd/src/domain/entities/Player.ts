@@ -16,3 +16,17 @@ export interface PlayerRegister {
 export interface PlayerResponse extends Omit<Player, "stats"> {
     _id: string;
 }
+
+
+export interface LeaderBoardPlayer {
+    name: string;
+    handle: string;
+    matches: number;
+    runs: string;
+    average: number;
+    hundreds: number;
+    fifties: number;
+    strikeRate: number;
+    role: "Batter" | "Bowler" | "Allrounder" | "WK";
+    best: string;
+}
