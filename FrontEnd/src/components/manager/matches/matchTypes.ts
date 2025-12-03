@@ -1,22 +1,4 @@
-export interface Player {
-    id: number;
-    name: string;
-    stats: {
-        totalMatch: number;
-        totalRuns: number;
-        average: number;
-        strikeRate: number;
-    };
-    imageUrl: string;
-}
-
-export interface Team {
-    id: string;
-    name: string;
-    color: 'red' | 'blue';
-    playingXI: Player[];
-    substitutions: Player[];
-}
+import type { Team } from "../../../features/manager/Matches/matchTypes";
 
 export interface MatchData {
     matchNo: number;
@@ -29,4 +11,4 @@ export interface MatchData {
 }
 
 export type TossDecision = 'Batting' | 'Bowling' | null;
-export type TeamId = 'red_giants' | 'blue_tigers';
+export type TeamId = string;

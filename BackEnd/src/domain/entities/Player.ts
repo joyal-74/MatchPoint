@@ -30,3 +30,13 @@ export interface LeaderBoardPlayer {
     role: "Batter" | "Bowler" | "Allrounder" | "WK";
     best: string;
 }
+
+export interface PlayerEntity {
+    _id: string;
+    name: string;
+    role: string;
+    profileImage?: string;
+    battingStyle?: string;
+    bowlingStyle?: string;
+    stats: Record<string, number>;
+}

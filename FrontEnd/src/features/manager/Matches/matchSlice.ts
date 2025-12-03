@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loadMatchDashboard } from "./matchThunks";
+import { loadMatchDashboard, saveMatchData } from "./matchThunks";
 import type { Team, Match } from "./matchTypes";
 
 interface MatchState {
@@ -35,6 +35,18 @@ const matchSlice = createSlice({
                 state.teamB = action.payload.teamB;
             })
             .addCase(loadMatchDashboard.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+
+            .addCase(saveMatchData.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(saveMatchData.fulfilled, (state, action) => {
+                state.loading = false;
+                state.match = action.payload;
+            })
+            .addCase(saveMatchData.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });

@@ -3,6 +3,7 @@ import multer from "multer";
 import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
 import { expressFileUpdateHandler } from "presentation/adaptors/ExpressFileAdaptor";
 import { managerProfileController, teamManagementController, tournamentManagementController } from "presentation/composition";
+import { matchController } from "presentation/composition/manager/matches";
 
 const router = Router();
 const upload = multer();
@@ -36,5 +37,8 @@ router.post("/tournament/:tournamentId/matches", expressAdapter(tournamentManage
 router.get("/tournament/:tournamentId/matches", expressAdapter(tournamentManagementController.getTournamentMatches));
 router.get("/tournament/:tournamentId/fixture", expressAdapter(tournamentManagementController.getTournamentFixtures));
 router.post("/tournament/:tournamentId/fixture", expressAdapter(tournamentManagementController.createTournamentFixtures));
+
+router.get("/tournament/matches/:matchId/details", expressAdapter(matchController.getMatchDetails));
+router.post("/tournament/matches/:matchId/save", expressAdapter(matchController.saveMatchData));
 
 export default router;

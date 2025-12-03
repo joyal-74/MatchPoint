@@ -1,9 +1,10 @@
 import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 import { PlayerProfileResponse } from "domain/dtos/Player.dto";
-import { Player, PlayerRegister, PlayerResponse } from "domain/entities/Player";
+import { Player, PlayerEntity, PlayerRegister, PlayerResponse } from "domain/entities/Player";
 import { UserRole } from "domain/enums/Roles";
 import { NotFoundError } from "domain/errors";
 import { PlayerModel } from "infra/databases/mongo/models/PlayerModel";
+import { PlayerDetailsMapper } from "infra/utils/mappers/PlayerDetailsMapper";
 import { PlayerMongoMapper } from "infra/utils/mappers/PlayerMongoMapper";
 
 
@@ -58,4 +59,15 @@ export class PlayerRepositoryMongo implements IPlayerRepository {
     async deleteByUserId(userId: string): Promise<void> {
         await PlayerModel.deleteMany({ userId });
     }
+
+
+    async getPlayersByIds(ids: string[]): Promise<PlayerEntity[]> {
+        const docs = await PlayerModel.find({ _id: { $in: ids } })
+            .populate("userId", "firstName lastName profileImage gender phone email username")
+            .lean();
+
+        return PlayerDetailsMapper.toEntityList(docs);
+    }
+
+
 }

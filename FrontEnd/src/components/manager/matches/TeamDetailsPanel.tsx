@@ -1,19 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { PlayerCard } from "./PlayerCard";
-import type { Player, Team, TeamId } from "./matchTypes";
+import type { TeamId, TossDecision } from "./matchTypes";
 import { Play, Save, Settings } from "lucide-react";
 import { ActionButton } from "./ActionButton";
+import type { Team, Player } from "../../../features/manager/Matches/matchTypes";
+import toast from "react-hot-toast";
+import { useAppDispatch } from "../../../hooks/hooks";
+import { saveMatchData } from "../../../features/manager/Matches/matchThunks";
 
 interface TeamDetailsPanelProps {
+    matchId: string;
     team: Team;
     team1: Team;
     team2: Team;
     activeTeamId: TeamId;
     handleTeamSwitch: (id: TeamId) => void;
+    tossWinnerId: TeamId | null;
+    tossDecision: TossDecision;
 }
 
 export const TeamDetailsPanel: React.FC<TeamDetailsPanelProps> = React.memo(
-    ({ team, team1, team2, activeTeamId, handleTeamSwitch }) => {
+    ({ matchId, team, team1, team2, activeTeamId, handleTeamSwitch, tossWinnerId, tossDecision }) => {
+
+        const [isSaved, setIsSaved] = useState(false);
+        const dispatch = useAppDispatch();
 
         const renderPlayerSection = (title: string, players: Player[]) => (
             <div className="mb-10">
@@ -22,7 +32,7 @@ export const TeamDetailsPanel: React.FC<TeamDetailsPanelProps> = React.memo(
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {players.map((p) => (
-                        <PlayerCard key={p.id} player={p} />
+                        <PlayerCard key={p._id} player={p} />
                     ))}
                 </div>
             </div>
@@ -30,9 +40,40 @@ export const TeamDetailsPanel: React.FC<TeamDetailsPanelProps> = React.memo(
 
         const teams = [team1, team2];
 
-        const handleSaveData = () => console.log('Saving match data...');
-        const handleStartMatch = () => console.log('Starting the match...');
-        const handleStreamSettings = () => console.log('Opening stream settings...');
+        const playingXI = team.members.filter((p: Player) => p.status === "playing");
+        const substitutions = team.members.filter((p: Player) => p.status !== "playing");
+
+
+        const handleSaveData = async () => {
+            if (!tossWinnerId || !tossDecision) {
+                toast.error("Please update toss details.");
+                return;
+            }
+
+            const result = await dispatch(
+                saveMatchData({
+                    matchId,
+                    tossWinnerId,
+                    tossDecision,
+                })
+            );
+
+            if (saveMatchData.fulfilled.match(result)) {
+                toast.success("Match data saved + Match started");
+            } else {
+                toast.error("Failed to save match");
+            }
+            setIsSaved(true);
+        };
+
+        const handleStartMatch = () => {
+            if (!isSaved) {
+                toast.error("Please save match data before starting the match.");
+                return;
+            }
+        };
+
+        const handleStreamSettings = () => console.log("Opening stream settings...");
 
         return (
             <div className="lg:flex-1 p-5 bg-neutral-900/40 backdrop-blur-md rounded-xl border border-neutral-700/30 shadow-lg">
@@ -63,13 +104,13 @@ export const TeamDetailsPanel: React.FC<TeamDetailsPanelProps> = React.memo(
 
                 {/* Content */}
                 <div className="space-y-8">
-                    {renderPlayerSection("Playing XI", team.playingXI)}
-                    {renderPlayerSection("Substitutions", team.substitutions)}
+                    {renderPlayerSection("Playing XI", playingXI)}
+                    {renderPlayerSection("Substitutions", substitutions)}
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-gray-700 flex flex-col sm:flex-row gap-4 justify-end">
                     <ActionButton icon={<Save size={20} />} label="Save Data" color="yellow" onClick={handleSaveData} />
-                    <ActionButton icon={<Play size={20} />} label="Start Match" color="green" onClick={handleStartMatch} />
+                    <ActionButton icon={<Play size={20} />} label="Start Match" color="green" onClick={handleStartMatch} disabled={!isSaved} />
                     <ActionButton icon={<Settings size={20} />} label="Stream Settings" color="indigo" onClick={handleStreamSettings} />
                 </div>
             </div>

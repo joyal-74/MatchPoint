@@ -6,3 +6,8 @@ export const loadMatchDashboard = createAsyncThunk(
     "manager/loadMatchDashboard",
     createApiThunk(matchEndpoints.getMatchById)
 );
+
+export const saveMatchData = createAsyncThunk(
+    "manager/saveMatchData",
+    createApiThunk(matchEndpoints.saveMatchData)
+);

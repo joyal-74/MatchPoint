@@ -1,5 +1,5 @@
 import { PlayerProfileResponse } from "domain/dtos/Player.dto";
-import { Player, PlayerRegister, PlayerResponse } from "domain/entities/Player";
+import { Player, PlayerEntity, PlayerRegister, PlayerResponse } from "domain/entities/Player";
 
 export interface IPlayerRepository {
     findById(userId: string): Promise<PlayerProfileResponse | null>;
@@ -15,4 +15,6 @@ export interface IPlayerRepository {
     update(userId: string, data: Partial<Player>): Promise<PlayerProfileResponse>;
 
     deleteByUserId(userId: string): Promise<void>;
+
+    getPlayersByIds(ids: string[]): Promise<PlayerEntity[]> 
 }

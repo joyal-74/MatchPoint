@@ -12,6 +12,7 @@ import teamChatReducer from "../features/player/Chat/chatSlice";
 import subscriptionReducer from "../features/admin/subscription/subscriptionSlice";
 import userSubscriptionReducer from "../features/shared/subscription/subscriptionSlice";
 import leaderboardReducer from "../features/shared/leaderboard/leaderboardSlice";
+import matchReducer from "../features/manager/Matches/matchSlice";
 
 
 const appReducer = combineReducers({
@@ -23,11 +24,12 @@ const appReducer = combineReducers({
     managerTournaments: managerTournamentReducer,
     playerTeams: playerTeamsReducer,
     playerTournaments: playerTournamentReducer,
-    messages : teamMessageReducer,
-    chats : teamChatReducer,
-    subscription : subscriptionReducer,
-    userSubscription : userSubscriptionReducer,
+    messages: teamMessageReducer,
+    chats: teamChatReducer,
+    subscription: subscriptionReducer,
+    userSubscription: userSubscriptionReducer,
     leaderboard: leaderboardReducer,
+    match: matchReducer,
 });
 
 export type RootState = ReturnType<typeof appReducer>;

@@ -85,7 +85,7 @@ export default function MatchesTab() {
                             </span>
 
                             <Link
-                                to={'/manager/match/dashboard'}
+                                to={`/manager/match/${match._id}/dashboard`}
                                 className="flex items-center gap-2 px-4 py-1.5 bg-green-600 text-white  text-sm font-semibold rounded-full  hover:bg-green-700 transition-colors duration-200  w-full md:w-auto justify-center"
                             >
                                 Go to Dashboard

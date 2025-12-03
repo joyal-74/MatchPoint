@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-export const ActionButton: React.FC<{ icon: React.ReactNode; label: string; color: 'yellow' | 'green' | 'indigo'; onClick: () => void }> = memo(({ icon, label, color, onClick }) => {
+export const ActionButton: React.FC<{ icon: React.ReactNode; label: string; color: 'yellow' | 'green' | 'indigo'; onClick: () => void, disabled?: boolean }> = memo(({ icon, label, color, onClick, disabled }) => {
     let colorClasses;
     switch (color) {
         case 'yellow':
@@ -17,6 +17,7 @@ export const ActionButton: React.FC<{ icon: React.ReactNode; label: string; colo
     return (
         <button
             onClick={onClick}
+            disabled={disabled}
             className={`py-2 px-4 rounded-lg font-semibold text-sm transition duration-200 flex items-center justify-center space-x-2 text-white shadow-lg ${colorClasses}`}
         >
             {icon}

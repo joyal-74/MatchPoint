@@ -33,6 +33,6 @@ export const managerRoutes = [
     { path: "/manager/tournaments/:id/:type", element: withManagerProtection(<TournamentDetailsPage />) },
     { path: "/manager/tournaments/:tournamentId/:teamId/payment-success", element: withManagerProtection(<PaymentSuccessPage />) },
     { path: "/manager/tournaments/:tournamentId/:teamId/payment-failed", element: withManagerProtection(<PaymentFailedPage />) },
-    { path: "/manager/match/dashboard", element: withManagerProtection(<MatchDashboard />) },
+    { path: "/manager/match/:matchId/dashboard", element: withManagerProtection(<MatchDashboard />) },
     { path: "/manager/tournaments/match/control", element: withManagerProtection(<MatchControlPage />) },
 ];

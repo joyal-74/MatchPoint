@@ -2,15 +2,17 @@ export interface Player {
     _id: string;
     name: string;
     role: string;
+    status: string;
+    profileImage?: string;
     battingStyle?: string;
     bowlingStyle?: string;
-    stats?: Record<string, any>;
+    stats: Record<string, any>;
 }
 
 export interface Team {
-    _id: string;
-    teamName: string;
-    players: Player[];
+    id: string;
+    name: string;
+    members: Player[];
     logo?: string;
 }
 
@@ -23,9 +25,12 @@ export interface Match {
     round: number;
     date: string;
     venue: string;
+    tossWinner: string | null;
+    tossDecision: string | null;
     status: MatchStatus;
     winner: string;
     teamA: Team;
     teamB: Team;
     stats?: Record<string, any>;
+    overs?: number;
 }

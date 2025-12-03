@@ -45,4 +45,28 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
         const match = await MatchModel.findById(matchId).lean();
         return MatchMongoMapper.toMatchResponse(match);
     }
+
+    async getMatchDetails(matchId: string): Promise<any | null> {
+        return await MatchModel.findById(matchId)
+            .populate("teamA")
+            .populate("teamB")
+            .lean();
+    }
+
+    async updateTossDetails(matchId: string, tossWinnerId: string, tossDecision: string): Promise<any | null> {
+        await MatchModel.findByIdAndUpdate(
+            { _id: matchId },
+            {
+                $set: {
+                    tossWinner: tossWinnerId,
+                    tossDecision: tossDecision
+                }
+            }
+        );
+
+        return await MatchModel.findById(matchId)
+            .populate("teamA")
+            .populate("teamB")
+            .lean();
+    }
 }
