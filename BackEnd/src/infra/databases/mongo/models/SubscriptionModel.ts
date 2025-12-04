@@ -19,7 +19,7 @@ const UserSubscriptionSchema = new Schema<UserSubscriptionDocument>(
         userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
         planId: { type: Schema.Types.ObjectId, ref: "Plan" },
         level: { type: String, enum: ["Free", "Premium", "Super"], required: true },
-        billingCycle: { type: String, enum: ["Monthly", "Yearly"], required: false },
+        billingCycle: { type: String, enum: ["Monthly", "Yearly"] },
         expiryDate: { type: Date },
         price: { type: Number },
         transactionId: { type: String },

@@ -23,6 +23,8 @@ export default function UserSubscriptionPage() {
         (state: RootState) => state.userSubscription
     );
 
+    console.log(availablePlans)
+
     const { handleRazorpaySubscription } = useSubscribePlan({
         plan: selectedPlan,
         userId: user?._id,

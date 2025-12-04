@@ -11,6 +11,7 @@ import type { RootState } from '../../../app/rootReducer';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import type { BallEvent, LiveScoreState } from '../../../features/manager/Matches/matchTypes';
 import LoadingOverlay from '../../shared/LoadingOverlay';
+import Navbar from '../Navbar';
 
 const ScoreboardDashboard: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -62,10 +63,10 @@ const ScoreboardDashboard: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-neutral-900 to-neutral-950 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
-                    <p className="mt-4 text-gray-400">Loading match details...</p>
+                    <p className="mt-4 text-neutral-400">Loading match details...</p>
                 </div>
             </div>
         );
@@ -73,11 +74,11 @@ const ScoreboardDashboard: React.FC = () => {
 
     if (error || !match || !teamA || !teamB) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-neutral-900 to-neutral-950 flex items-center justify-center">
                 <div className="bg-red-900/30 border border-red-700/50 p-8 rounded-xl max-w-md">
                     <div className="text-red-400 text-2xl mb-4">⚠️</div>
                     <h2 className="text-xl font-bold text-white mb-2">Error Loading Match</h2>
-                    <p className="text-gray-300">{error}</p>
+                    <p className="text-neutral-300">{error}</p>
                 </div>
             </div>
         );
@@ -86,7 +87,8 @@ const ScoreboardDashboard: React.FC = () => {
     return (
         <>
             <LoadingOverlay show={loading} />
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 text-white p-4 md:p-8">
+            <Navbar />
+            <div className="bg-gradient-to-br from-neutral-900 to-neutral-950 text-white p-4 md:p-8 mt-12">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -98,41 +100,35 @@ const ScoreboardDashboard: React.FC = () => {
                                 <span className="px-3 py-1 bg-blue-900/30 text-blue-300 rounded-full text-sm">
                                     #{match.matchNumber}
                                 </span>
-                                <span className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm">
+                                <span className="px-3 py-1 bg-neutral-800 text-neutral-300 rounded-full text-sm">
                                     {match.venue}
                                 </span>
                                 <span className="px-3 py-1 bg-green-900/30 text-green-300 rounded-full text-sm">
-                                    {match.date}
+                                    {new Date(match.date).toLocaleDateString()}
                                 </span>
-                            </div>
-                        </div>
-                        <div className="mt-4 md:mt-0">
-                            <div className="flex items-center space-x-4">
-                                <div className="text-right">
-                                    <div className="text-lg font-bold">{match.teamA.name}</div>
-                                    <div className="text-sm text-gray-400">vs</div>
-                                    <div className="text-lg font-bold">{match.teamB.name}</div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Main Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
                     {/* Live Score & Controls */}
                     <div className="lg:col-span-2 space-y-8">
                         <div>
                             <div className="flex items-center mb-4">
-                                <div className="h-1 w-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full mr-3"></div>
                                 <h2 className="text-2xl font-bold">Live Match State</h2>
                             </div>
-                            <CurrentMatchState match={match} liveScore={liveScore} />
+                            <CurrentMatchState
+                                match={match}
+                                teamA={teamA}
+                                teamB={teamB}
+                                liveScore={liveScore}
+                            />
                         </div>
 
                         <div>
                             <div className="flex items-center mb-4">
-                                <div className="h-1 w-8 bg-gradient-to-r from-yellow-400 to-red-500 rounded-full mr-3"></div>
                                 <h2 className="text-2xl font-bold">Score Update Panel</h2>
                             </div>
                             <ScoreUpdateControls
@@ -149,7 +145,6 @@ const ScoreboardDashboard: React.FC = () => {
                     <div className="lg:col-span-1">
                         <div className="sticky top-8">
                             <div className="flex items-center mb-4">
-                                <div className="h-1 w-8 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full mr-3"></div>
                                 <h2 className="text-2xl font-bold">Detailed Scoreboard</h2>
                             </div>
                             <FullScoreboardTabs teamA={teamA} teamB={teamB} match={match} liveScore={liveScore} />
@@ -158,25 +153,25 @@ const ScoreboardDashboard: React.FC = () => {
                 </div>
 
                 {/* Footer Stats */}
-                <div className="mt-12 pt-8 border-t border-gray-800">
+                <div className="mt-12 pt-8 border-t border-neutral-800">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="text-center p-6 bg-gray-800/30 rounded-xl">
+                        <div className="text-center p-6 bg-neutral-800/30 rounded-xl">
                             <div className="text-3xl font-bold text-blue-400">
                                 {liveScore?.innings1?.overs || 0} / {match.overs || 50}
                             </div>
-                            <div className="text-gray-400 mt-2">Overs Remaining</div>
+                            <div className="text-neutral-400 mt-2">Overs Remaining</div>
                         </div>
-                        <div className="text-center p-6 bg-gray-800/30 rounded-xl">
+                        <div className="text-center p-6 bg-neutral-800/30 rounded-xl">
                             <div className="text-3xl font-bold text-green-400">
                                 {liveScore?.innings1?.wickets || 0} / 10
                             </div>
-                            <div className="text-gray-400 mt-2">Wickets Lost</div>
+                            <div className="text-neutral-400 mt-2">Wickets Lost</div>
                         </div>
-                        <div className="text-center p-6 bg-gray-800/30 rounded-xl">
+                        <div className="text-center p-6 bg-neutral-800/30 rounded-xl">
                             <div className="text-3xl font-bold text-yellow-400">
                                 {liveScore?.currentRunRate?.toFixed(2) || '0.00'}
                             </div>
-                            <div className="text-gray-400 mt-2">Current Run Rate</div>
+                            <div className="text-neutral-400 mt-2">Current Run Rate</div>
                         </div>
                     </div>
                 </div>

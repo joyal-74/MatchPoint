@@ -1,8 +1,9 @@
-import type { Team } from "../../components/manager/teams/Types";
+import type { PlayerDetails, Team } from "../../components/manager/teams/Types";
 import type { RegisteredTeam } from "../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
 import type { PaymentInitiateResponse } from "../../components/manager/tournaments/Types";
 import { MANAGER_ROUTES } from "../../constants/routes/managerRoutes";
 import type { Fixture, Leaderboard, Match, Tournament } from "../../features/manager/managerTypes";
+import type { TeamPlayer } from "../../types/Player";
 import type { User } from "../../types/User";
 import axiosClient from "../http/axiosClient";
 import { TournamentMapper } from "../mappers/TournamentMapper";
@@ -142,8 +143,19 @@ export const managerEndpoints = {
         return data.data
     },
 
-    fetchLeaderboard : async (tournamentId: string): Promise<Leaderboard> => {
+    fetchLeaderboard: async (tournamentId: string): Promise<Leaderboard> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_LEADERBOARD(tournamentId));
         return data.data
+    },
+
+
+    getAvailablePlayers: async (teamId: string): Promise<TeamPlayer[]> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.GET_AVAILABLE_PLAYERS(teamId));
+        return data.data
+    },
+
+    addPlayerToTeam: async ({ teamId, playerId }: { teamId: string, playerId: string }): Promise<PlayerDetails> => {
+        const { data } = await axiosClient.post(MANAGER_ROUTES.ADD_PLAYER(playerId), teamId);
+        return data.data;
     },
 }

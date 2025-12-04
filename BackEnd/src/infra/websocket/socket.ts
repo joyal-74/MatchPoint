@@ -179,8 +179,8 @@ export class SocketManager {
                             bowlingStats: updatedMatch.innings1.bowlers || [], // Replace with actual field name if different
 
                             // Add other required Innings-specific fields here (e.g., battingTeamId, bowlingTeamId, status)
-                            battingTeamId: updatedMatch.innings1.battingTeamId ? updatedMatch.innings1.battingTeamId.toString() : null,
-                            bowlingTeamId: updatedMatch.innings1.bowlingTeamId ? updatedMatch.innings1.bowlingTeamId.toString() : null,
+                            battingTeamId: updatedMatch.innings1.battingTeam ? updatedMatch.innings1.battingTeam.toString() : null,
+                            bowlingTeamId: updatedMatch.innings1.bowlingTeam ? updatedMatch.innings1.bowlingTeam.toString() : null,
 
                         },
 
@@ -202,8 +202,8 @@ export class SocketManager {
                             bowlingStats: updatedMatch.innings2.bowlers || [],
 
                             // Add other required Innings-specific fields here
-                            battingTeamId: updatedMatch.innings2.battingTeamId ? updatedMatch.innings2.battingTeamId.toString() : null,
-                            bowlingTeamId: updatedMatch.innings2.bowlingTeamId ? updatedMatch.innings2.bowlingTeamId.toString() : null,
+                            battingTeamId: updatedMatch.innings2.battingTeam ? updatedMatch.innings2.battingTeam.toString() : null,
+                            bowlingTeamId: updatedMatch.innings2.bowlingTeam ? updatedMatch.innings2.bowlingTeam.toString() : null,
                         }
                     };
 

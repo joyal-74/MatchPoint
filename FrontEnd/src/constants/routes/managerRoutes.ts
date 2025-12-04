@@ -20,10 +20,12 @@ export const MANAGER_ROUTES = {
     REJECT_PLAYER: (playerId: string) => `${API_PREFIX}/manager/team/${playerId}/reject`,
     REMOVE_PLAYER: (playerId: string) => `${API_PREFIX}/manager/team/${playerId}/remove`,
     APPROVE_PLAYER: (playerId: string) => `${API_PREFIX}/manager/team/${playerId}/approve`,
+    ADD_PLAYER: (playerId: string) => `${API_PREFIX}/manager/team/${playerId}/add`,
     UPDATE_PLAYER: (playerId: string) => `${API_PREFIX}/manager/team/${playerId}/swap`,
     CREATE_MATCHES: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/matches`,
     GET_MATCHES: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/matches`,
     GET_LEADERBOARD: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/leaderboard`,
     CREATE_FIXTURE: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/fixture`,
     GET_FIXTURES: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/fixture`,
+    GET_AVAILABLE_PLAYERS: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/available-players`,
 } as const;

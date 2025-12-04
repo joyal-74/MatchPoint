@@ -6,7 +6,6 @@ import {
     CreditCard,
     Settings,
     Users2,
-    DollarSign,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
@@ -24,7 +23,6 @@ const Sidebar: React.FC = () => {
         { name: "Tournaments", path: "/player/tournaments", icon: <Trophy size={20} /> },
         { name: "My Statistics", path: "/player/statistics", icon: <BarChart3 size={20} /> },
         { name: "Subscription", path: "/player/subscription", icon: <CreditCard size={20} /> },
-        { name: "Payments", path: "/player/payments", icon: <DollarSign size={20} /> },
         { name: "Settings", path: "/player/settings", icon: <Settings size={20} /> },
     ];
 

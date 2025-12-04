@@ -27,5 +27,5 @@ export const playerRoutes = [
     { path: "/player/myteams/:status", element: withPlayerProtection(<TeamsListPage />) },
     { path: "/player/myteam/:teamId", element: withPlayerProtection(<ViewTeam />) },
     { path: "/player/mystats", element: withPlayerProtection(<MyStatisticsPage />) },
-    { path: "/player/chats", element: withPlayerProtection(<TeamChat />) },
+    { path: "/player/chat", element: withPlayerProtection(<TeamChat />) },
 ];

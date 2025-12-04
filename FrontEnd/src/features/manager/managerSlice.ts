@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllTeams, createTeam, deleteTeam, editTeam, fetchManagerData, updateManagerData, getMyTeamDetails } from "./managerThunks";
+import { getAllTeams, createTeam, deleteTeam, editTeam, fetchManagerData, updateManagerData, getMyTeamDetails, addPlayerToTeam } from "./managerThunks";
 import type { Team } from "../../components/manager/teams/Types";
 import type { User } from "../../types/User";
 
@@ -135,7 +135,33 @@ const managerSlice = createSlice({
             .addCase(getMyTeamDetails.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? "Edit failed";
+            })
+
+        builder
+            .addCase(addPlayerToTeam.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(addPlayerToTeam.fulfilled, (state, action) => {
+                state.loading = false;
+
+                if (!state.selectedTeam) return;
+
+                const exists = state.selectedTeam.members.some(
+                    (player) => player._id === action.payload._id
+                );
+
+                if (!exists) {
+                    state.selectedTeam.members.push(action.payload);
+                    state.selectedTeam.membersCount += 1;
+                }
+            })
+            .addCase(addPlayerToTeam.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
             });
+
+
     },
 });
 

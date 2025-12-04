@@ -17,14 +17,14 @@ export class LiveScoreMapper {
 
         // Shared innings mapper (reusable for innings1/2)
         const mapInnings = (innings: any) => ({
-            battingTeamId: safeIdToString(innings.battingTeamId),
-            bowlingTeamId: safeIdToString(innings.bowlingTeamId),
+            battingTeamId: innings.battingTeam,
+            bowlingTeamId: innings.bowlingTeam,
             score: innings.runs || 0,
             wickets: innings.wickets || 0,
             overs: ballsToOvers(innings.balls || 0),
             ballsInOver: (innings.balls || 0) % 6,
-            currentBatsmanId: safeIdToString(innings.currentStriker),
-            nonStrikerId: safeIdToString(innings.currentNonStriker),
+            currentBatsmanId: innings.currentStriker,
+            nonStrikerId: innings.currentNonStriker,
             currentBowlerId: safeIdToString(innings.currentBowler),
             isCompleted: innings.isCompleted || false,
             ballEvents: innings.ballEvents || [],

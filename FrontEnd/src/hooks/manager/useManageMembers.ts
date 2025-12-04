@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import type { RootState } from "../../app/store";
 import type { TeamPlayer } from "../../types/Player";
-import { getAllTeams, updatePlayerStatus } from "../../features/manager";
+import { addPlayerToTeam, getAllTeams, getAvailablePlayers, updatePlayerStatus } from "../../features/manager";
 
-
-export function useManageMembers(teamId?: string) {
+export function useManageMembers(teamId: string) {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -21,7 +20,10 @@ export function useManageMembers(teamId?: string) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [viewPlayer, setViewPlayer] = useState<TeamPlayer | null>(null);
 
-    // fetch teams
+    const [isSelectionModalOpen, setIsSelectionModalOpen] = useState(false);
+    const [availablePlayers, setAvailablePlayers] = useState<TeamPlayer[]>([]);
+
+    // Fetch teams on mount
     useEffect(() => {
         if (!isInitialized) return;
 
@@ -38,14 +40,14 @@ export function useManageMembers(teamId?: string) {
 
     const team = teams.find((t) => t._id === teamId) || null;
 
-    // map team members to players
+    // Map team members to players
     useEffect(() => {
         if (team && team.members) {
             const mapped: TeamPlayer[] = team.members.map((m) => ({
                 id: m.playerId,
                 name: `${m.firstName} ${m.lastName}`,
-                email : m.email,
-                phone : m.phone,
+                email: m.email,
+                phone: m.phone,
                 position: String(m.profile.position),
                 jerseyNumber: Number(m.profile?.jerseyNumber || 0),
                 status: m.status,
@@ -56,19 +58,48 @@ export function useManageMembers(teamId?: string) {
         }
     }, [team]);
 
-    const activePlayers = players.filter((p) => p.status === "playing" && p.approvalStatus === 'approved');
-    const substitutePlayers = players.filter((p) => p.status === "substitute" && p.approvalStatus === 'approved');
+    // Memoized filtered arrays
+    const activePlayers = useMemo(
+        () => players.filter((p) => p.status === "playing" && p.approvalStatus === 'approved'),
+        [players]
+    );
 
-    // backend update helper
+    const substitutePlayers = useMemo(
+        () => players.filter((p) => p.status === "substitute" && p.approvalStatus === 'approved'),
+        [players]
+    );
+
+    // Backend update helper
     const updateStatus = async (playerId: string, status: string) => {
         await dispatch(updatePlayerStatus({ teamId: teamId!, playerId, status })).unwrap();
     };
 
+    const fetchAvailablePlayers = useCallback(async () => {
+        try {
+            const result = await dispatch(getAvailablePlayers(teamId)).unwrap();
+            setAvailablePlayers(result);
+        } catch (err) {
+            console.error("Failed to fetch available players:", err);
+            toast.error("Failed to fetch available players.");
+        }
+    }, [teamId, dispatch]);
+
+    const handleAddPlayer = async (playerId: string) => {
+        if (!teamId) {
+            toast.error("Team ID missing.");
+            return;
+        }
+
+        await dispatch(addPlayerToTeam({ teamId, playerId }))
+            .unwrap()
+            .then(() => setIsSelectionModalOpen(false))
+            .catch(() => { });
+    };
 
     const handleSwapPlayers = async (player1: TeamPlayer, player2: TeamPlayer) => {
         // Optimistic update
-        setPlayers((prev) =>
-            prev.map((p) => {
+        setPlayers(prev =>
+            prev.map(p => {
                 if (p.id === player1.id) return { ...p, status: player2.status };
                 if (p.id === player2.id) return { ...p, status: player1.status };
                 return p;
@@ -84,8 +115,8 @@ export function useManageMembers(teamId?: string) {
         } catch {
             toast.error("Failed to swap players.");
             // revert
-            setPlayers((prev) =>
-                prev.map((p) => {
+            setPlayers(prev =>
+                prev.map(p => {
                     if (p.id === player1.id) return { ...p, status: player1.status };
                     if (p.id === player2.id) return { ...p, status: player2.status };
                     return p;
@@ -110,10 +141,21 @@ export function useManageMembers(teamId?: string) {
             }
         } else if (action === "makeSubstitute" || action === "makeActive") {
             const newStatus = action === "makeSubstitute" ? "substitute" : "playing";
-            setPlayers((prev) =>
-                prev.map((p) => (p.id === player.id ? { ...p, status: newStatus } : p))
+            const prevStatus = player.status;
+
+            // Optimistic update with revert on failure
+            setPlayers(prev =>
+                prev.map(p => p.id === player.id ? { ...p, status: newStatus } : p)
             );
-            await updateStatus(player.id, newStatus);
+
+            try {
+                await updateStatus(player.id, newStatus);
+            } catch {
+                toast.error("Failed to update player status.");
+                setPlayers(prev =>
+                    prev.map(p => p.id === player.id ? { ...p, status: prevStatus } : p)
+                );
+            }
         } else if (action === "view") {
             setViewPlayer(player);
             setIsModalOpen(true);
@@ -134,6 +176,13 @@ export function useManageMembers(teamId?: string) {
         substitutePlayers,
         selectedPlayer,
         swapMode,
+
+        isSelectionModalOpen,
+        setIsSelectionModalOpen,
+        availablePlayers,
+        fetchAvailablePlayers,
+        handleAddPlayer,
+
         cancelSwap,
         handlePlayerAction,
         isModalOpen,

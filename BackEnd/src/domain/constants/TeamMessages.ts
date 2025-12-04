@@ -10,5 +10,6 @@ export const TeamMessages = {
     PLAYER_REJECTED: "Player rejected successfully",
     PLAYER_REMOVED: "Player removed successfully",
     PLAYER_SWAPPED: "Player swapped successfully",
+    PLAYER_FETCHED: "Available Player feched successfully",
     NO_LOGO: "No logo provided",
 };

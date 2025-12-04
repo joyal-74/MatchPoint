@@ -7,7 +7,7 @@ import { TeamController } from "presentation/http/controllers/manager/TeamContro
 import { ImageKitFileStorage } from "infra/providers/ImageKitFileStorage";
 import { WinstonLogger } from "infra/providers/WinstonLogger";
 import { TeamIdGenerator } from "infra/providers/IdGenerator";
-import { chatRepository, managerRepository, teamRepository } from "presentation/composition/shared/repositories";
+import { chatRepository, managerRepository, playerRepository, teamRepository } from "presentation/composition/shared/repositories";
 import { GetMyTeamDetails } from "app/usecases/manager/GetMyTeamDetails";
 import { ApprovePlayerUseCase } from "app/usecases/manager/teams/ApprovePlayer";
 import { RejectPlayerUseCase } from "app/usecases/manager/teams/RejectPlayer";
@@ -15,6 +15,8 @@ import { SwapPlayers } from "app/usecases/manager/teams/SwapPlayers";
 import { CreateChatForTeamUseCase } from "app/usecases/manager/teams/CreateChatForTeamUseCase";
 import { TeamSetupService } from "infra/services/TeamSetupServices";
 import { RemovePlayerUseCase } from "app/usecases/manager/teams/RemovePlayer";
+import { GetAvailablePlayersService } from "infra/services/GetAvailablePlayersService";
+import { AddPlayerToTeamUseCase } from "app/usecases/manager/teams/AddPlayerToTeamUseCase";
 
 
 const logger = new WinstonLogger();
@@ -33,7 +35,9 @@ const changeTeamStatus = new ChangePlayerStatusUseCase(teamRepository);
 const approveToTeam = new ApprovePlayerUseCase(teamRepository);
 const removeFromTeam = new RemovePlayerUseCase(teamRepository);
 const rejectFromTeam = new RejectPlayerUseCase(teamRepository);
-const swapPlayersUC = new SwapPlayers(teamRepository,logger);
+const swapPlayersUC = new SwapPlayers(teamRepository, logger);
+const addPlayerUC = new AddPlayerToTeamUseCase(teamRepository);
+const getAvailablePlayerService = new GetAvailablePlayersService(teamRepository, playerRepository);
 
 export const teamManagementController = new TeamController(
     teamSetupService,
@@ -46,5 +50,7 @@ export const teamManagementController = new TeamController(
     rejectFromTeam,
     swapPlayersUC,
     removeFromTeam,
+    getAvailablePlayerService,
+    addPlayerUC,
     logger
 );

@@ -17,6 +17,7 @@ router.get('/team/:teamId/details', expressAdapter(teamManagementController.getT
 router.post('/team/:playerId/approve', expressAdapter(teamManagementController.approvePlayertoTeam));
 router.post('/team/:playerId/reject', expressAdapter(teamManagementController.rejectPlayerfromTeam));
 router.post('/team/:playerId/remove', expressAdapter(teamManagementController.removePlayers));
+router.post('/team/:playerId/add', expressAdapter(teamManagementController.addPlayer));
 router.patch('/team/:playerId/swap', expressAdapter(teamManagementController.swapPlayers));
 router.patch('/team/:teamId', expressAdapter(teamManagementController.deleteTeam));
 router.post("/team", upload.single("logo"), expressFileUpdateHandler(teamManagementController.addNewTeam));
@@ -32,6 +33,7 @@ router.post("/tournament/:tournamentId/payment", expressAdapter(tournamentManage
 
 router.post("/registration/:registrationId/status", expressAdapter(tournamentManagementController.updateTounamentTeam));
 router.get("/tournament/:tournamentId/teams", expressAdapter(tournamentManagementController.getTournamentTeams));
+router.get("/tournament/:tournamentId/available-players", expressAdapter(teamManagementController.availablePlayers));
 
 router.post("/tournament/:tournamentId/matches", expressAdapter(tournamentManagementController.createTournamentMatches));
 router.get("/tournament/:tournamentId/matches", expressAdapter(tournamentManagementController.getTournamentMatches));

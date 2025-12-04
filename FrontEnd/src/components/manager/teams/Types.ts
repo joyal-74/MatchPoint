@@ -18,7 +18,6 @@ export interface Team {
     description?: string;
     phase: string;
     stats: Record<string, string | number>;
-
 }
 
 export interface Members {

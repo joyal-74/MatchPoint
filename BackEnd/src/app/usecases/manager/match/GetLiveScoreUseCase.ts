@@ -8,7 +8,8 @@ export class GetLiveScoreUseCase implements IGetLiveScoreUseCase {
 
     async execute(matchId: string) {
         const match = await this.repo.getMatch(matchId);
-        if (!match) throw new NotFoundError("")
+        if (!match) throw new NotFoundError(`Match not found for ID: ${matchId}`);
+        
         const liveScore = LiveScoreMapper.toDto(match);
         return liveScore
     }

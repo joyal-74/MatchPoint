@@ -42,7 +42,7 @@ export function useSubscribePlan({ plan, userId, userEmail, userName, userPhone,
         try {
             initiationResult = await dispatch(
                 initiateSubscriptionOrder({
-                    amount: plan.price * 100,
+                    amount: plan.price,
                     currency: "INR",
                     title: "Premium Subscription",
                     metadata: {

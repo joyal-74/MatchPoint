@@ -1,9 +1,10 @@
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
+import { PlayerDetails } from "app/usecases/admin/GetPlayerDetails";
 import { Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "domain/dtos/Team.dto";
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { TeamModel } from "infra/databases/mongo/models/TeamModel";
 import { TeamMongoMapper, TeamPopulatedDocument } from "infra/utils/mappers/TeamMongoMapper";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 export class TeamRepositoryMongo implements ITeamRepository {
     async create(teamData: TeamRegister): Promise<TeamDataFull> {
@@ -143,5 +144,32 @@ export class TeamRepositoryMongo implements ITeamRepository {
         await team.save();
 
         return TeamMongoMapper.toDomainFull(team as unknown as TeamPopulatedDocument);
+    }
+
+    async findTeamsByIds(teamIds: string[]) {
+        return TeamModel.find({ _id: { $in: teamIds } }).lean();
+    }
+
+    async existOrAddMember(teamId: string, userId: string, playerId: string): Promise<PlayerDetails | null> {
+        const team = await TeamModel.findById(teamId);
+        if (!team) return null;
+
+        // Check if the player already exists
+        const exists = team.members.some(member => member.toString() === playerId);
+        if (exists) return null;
+
+        // Add new member
+        const newMember = {
+            playerId: new Types.ObjectId(playerId),
+            userId: new Types.ObjectId(userId),
+            status: "substitute" as playerStatus,
+            approvalStatus: "approved" as PlayerApprovalStatus,
+        };
+
+        team.members.push(newMember);
+
+        await team.save();
+
+        return newMember;
     }
 }

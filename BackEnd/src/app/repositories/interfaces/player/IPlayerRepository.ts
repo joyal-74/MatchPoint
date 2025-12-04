@@ -16,5 +16,9 @@ export interface IPlayerRepository {
 
     deleteByUserId(userId: string): Promise<void>;
 
-    getPlayersByIds(ids: string[]): Promise<PlayerEntity[]> 
+    getPlayersByIds(ids: string[]): Promise<PlayerEntity[]> ;
+
+    getPlayersExcluding(ids: string[]): Promise<PlayerEntity[]> ;
+
+    findAllPlayers(): Promise<PlayerEntity[]>;
 }

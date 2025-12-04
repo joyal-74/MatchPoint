@@ -69,5 +69,19 @@ export class PlayerRepositoryMongo implements IPlayerRepository {
         return PlayerDetailsMapper.toEntityList(docs);
     }
 
+    async getPlayersExcluding(ids: string[]): Promise<PlayerEntity[]> {
+        const docs = await PlayerModel.find({ _id: { $nin: ids } })
+            .populate("userId", "firstName lastName")
+            .lean();
+            
+        return PlayerDetailsMapper.toEntityList(docs);
+    }
 
+    async findAllPlayers() {
+        const docs = await PlayerModel.find()
+            .populate("userId", "firstName lastName email")
+            .lean();
+
+        return PlayerDetailsMapper.toEntityList(docs);
+    }
 }
