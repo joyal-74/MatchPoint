@@ -1,4 +1,4 @@
-import { LEADERBOARD_ROUTES } from "../../constants/leaderboardRoutes";
+import { LEADERBOARD_ROUTES } from "../../constants/routes/leaderboardRoutes";
 import type { LeaderboardRow, TopPlayerStats } from "../../features/shared/leaderboard/leaderboardTypes";
 import axiosClient from "../http/axiosClient";
 

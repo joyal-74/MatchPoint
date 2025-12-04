@@ -1,4 +1,4 @@
-import { SUBSCRIPTION_ROUTES } from "../../constants/SubscriptionRoutes";
+import { SUBSCRIPTION_ROUTES } from "../../constants/routes/SubscriptionRoutes";
 import type { Plan } from "../../features/admin/subscription/subscriptionTypes";
 import type { UserSubscription, AvailablePlan, InitiateOrderPayload, InitiateOrderResponse, FinalizePaymentPayload, FinalizePaymentResponse } from "../../features/shared/subscription/subscriptionTypes";
 import axiosClient from "../http/axiosClient";

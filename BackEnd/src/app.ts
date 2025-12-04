@@ -32,17 +32,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
+const API_V1 = "/api/v1";
 
-app.use("/auth", authRoutes);
-app.use("/admin", adminRoutes);
-app.use("/admin/subscriptions", planRoutes);
-app.use("/manager", managerRoutes);
-app.use("/player", playerRoutes);
-app.use("/viewer", viewerRoutes);
-app.use("/chat", chatRoutes);
-app.use("/subscriptions", subscriptionsRoutes);
-app.use("/leaderboard", leaderboardRoutes);
-app.use("/match", matchRoutes);
+app.use(`${API_V1}/auth`, authRoutes);
+app.use(`${API_V1}/admin`, adminRoutes);
+app.use(`${API_V1}/admin/subscriptions`, planRoutes);
+app.use(`${API_V1}/manager`, managerRoutes);
+app.use(`${API_V1}/player`, playerRoutes);
+app.use(`${API_V1}/viewer`, viewerRoutes);
+app.use(`${API_V1}/chat`, chatRoutes);
+app.use(`${API_V1}/subscriptions`, subscriptionsRoutes);
+app.use(`${API_V1}/leaderboard`, leaderboardRoutes);
+app.use(`${API_V1}/match`, matchRoutes);
 
 app.use(errorHandler);
 

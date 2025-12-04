@@ -1,6 +1,6 @@
 import axiosClient from "../http/axiosClient";
 import type { User } from "../../types/User";
-import { VIEWER_ROUTES } from "../../constants/viewerRoutes";
+import { VIEWER_ROUTES } from "../../constants/routes/viewerRoutes";
 import type { UpdateUserDataPayload } from "../../features/manager/managerTypes";
 
 export const viewerEndpoints = {

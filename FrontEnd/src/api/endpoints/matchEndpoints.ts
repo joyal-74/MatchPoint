@@ -1,4 +1,4 @@
-import { MATCH_ROUTES } from "../../constants/matchRoutes";
+import { MATCH_ROUTES } from "../../constants/routes/matchRoutes";
 import type { LiveScoreState, Match, Team } from "../../features/manager/Matches/matchTypes";
 import axiosClient from "../http/axiosClient";
 

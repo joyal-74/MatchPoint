@@ -1,7 +1,7 @@
 import type { Team } from "../../components/manager/teams/Types";
 import type { RegisteredTeam } from "../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
 import type { PaymentInitiateResponse } from "../../components/manager/tournaments/Types";
-import { MANAGER_ROUTES } from "../../constants/managerRoutes";
+import { MANAGER_ROUTES } from "../../constants/routes/managerRoutes";
 import type { Fixture, Leaderboard, Match, Tournament } from "../../features/manager/managerTypes";
 import type { User } from "../../types/User";
 import axiosClient from "../http/axiosClient";
