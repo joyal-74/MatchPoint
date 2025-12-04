@@ -1,4 +1,5 @@
 import type { Team, TeamStatus } from "../../components/manager/teams/Types";
+import LeaderBoardData from "../../components/manager/tournaments/TournamentDetails/tabs/LeaderboardTab";
 
 export interface EditTeamPayload {
     teamId: string;
@@ -141,4 +142,30 @@ export interface Fixture {
     format: FixtureFormat;
     matches: Match[];
     createdAt?: Date;
+}
+
+interface LeaderBoardData {
+    playerId: string;
+    name: string;
+    matches: string;
+}
+
+interface RunsBoard extends LeaderBoardData {
+    value: number;
+}
+
+interface WicketBoard extends LeaderBoardData {
+    value: number;
+}
+
+interface MvpBoard extends LeaderBoardData {
+    value: number;
+}
+
+
+export interface Leaderboard {
+    tournamentId: string;
+    topRuns: RunsBoard[];
+    topWickets: WicketBoard[];
+    mvp: MvpBoard[];
 }

@@ -63,3 +63,29 @@ export interface TournamentRegister {
     entryFee: string;
     format: Format;
 }
+
+interface LeaderBoardData {
+    playerId: string;
+    name: string;
+    matches: string;
+}
+
+export interface RunsBoard extends LeaderBoardData {
+    value: number;
+}
+
+export interface WicketBoard extends LeaderBoardData {
+    value: number;
+}
+
+export interface MvpBoard extends LeaderBoardData {
+    value: number;
+}
+
+
+export interface Leaderboard {
+    tournamentId: string;
+    topRuns: RunsBoard[];
+    topWickets: WicketBoard[];
+    mvp: MvpBoard[];
+}

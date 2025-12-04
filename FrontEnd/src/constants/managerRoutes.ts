@@ -21,6 +21,7 @@ export const MANAGER_ROUTES = {
     UPDATE_PLAYER: (playerId: string) => `/manager/team/${playerId}/swap`,
     CREATE_MATCHES: (tournamentId: string) => `/manager/tournament/${tournamentId}/matches`,
     GET_MATCHES: (tournamentId: string) => `/manager/tournament/${tournamentId}/matches`,
+    GET_LEADERBOARD: (tournamentId: string) => `/manager/tournament/${tournamentId}/leaderboard`,
     CREATE_FIXTURE: (tournamentId: string) => `/manager/tournament/${tournamentId}/fixture`,
     GET_FIXTURES: (tournamentId: string) => `/manager/tournament/${tournamentId}/fixture`,
 } as const;

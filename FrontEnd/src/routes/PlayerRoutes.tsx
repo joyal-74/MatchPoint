@@ -9,6 +9,7 @@ const TeamsListPage = lazy(() => import("../pages/player/TeamsListPage"));
 const TournamentsPage = lazy(() => import("../pages/player/Tournaments"));
 const PlayerProfilePage = lazy(() => import("../pages/player/ProfilePage"));
 const TeamFinderPage = lazy(() => import("../pages/player/TeamsPage"));
+const TeamChat = lazy(() => import("../pages/player/TeamChat/TeamChat"));
 
 const withPlayerProtection = (component: JSX.Element) => (
     <ProtectedRoute allowedRoles={["player"]}>
@@ -26,4 +27,5 @@ export const playerRoutes = [
     { path: "/player/myteams/:status", element: withPlayerProtection(<TeamsListPage />) },
     { path: "/player/myteam/:teamId", element: withPlayerProtection(<ViewTeam />) },
     { path: "/player/mystats", element: withPlayerProtection(<MyStatisticsPage />) },
+    { path: "/player/chats", element: withPlayerProtection(<TeamChat />) },
 ];

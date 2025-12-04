@@ -38,7 +38,11 @@ router.get("/tournament/:tournamentId/matches", expressAdapter(tournamentManagem
 router.get("/tournament/:tournamentId/fixture", expressAdapter(tournamentManagementController.getTournamentFixtures));
 router.post("/tournament/:tournamentId/fixture", expressAdapter(tournamentManagementController.createTournamentFixtures));
 
+router.get("/tournament/:tournamentId/leaderboard", expressAdapter(tournamentManagementController.getTournamentLeaderBoard));
+
 router.get("/tournament/matches/:matchId/details", expressAdapter(matchController.getMatchDetails));
+router.get("/tournament/matches/:matchId/livescore", expressAdapter(matchController.getLiveScore));
 router.post("/tournament/matches/:matchId/save", expressAdapter(matchController.saveMatchData));
+
 
 export default router;

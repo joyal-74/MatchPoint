@@ -28,7 +28,7 @@ export const TossSection: React.FC<TossSectionProps> = React.memo((props) => {
 
     const teams = [team1, team2];
 
-    const tossWinner = teams.find(t => t.id === tossWinnerId);
+    const tossWinner = teams.find(t => t._id === tossWinnerId);
 
     // Coin Flip Logic
     const handleCoinFlip = useCallback(() => {
@@ -38,11 +38,11 @@ export const TossSection: React.FC<TossSectionProps> = React.memo((props) => {
         setIsFlipping(true);
 
         setTimeout(() => {
-            const winner = Math.random() < 0.5 ? team1.id : team2.id;
+            const winner = Math.random() < 0.5 ? team1._id : team2._id;
             setTossWinnerId(winner as TeamId);
             setIsFlipping(false);
         }, COIN_FLIP_TIME_MS + 200);
-    }, [isFlipping, team1.id, team2.id, setTossWinnerId, setTossDecision, setIsFlipping]);
+    }, [isFlipping, team1._id, team2._id, setTossWinnerId, setTossDecision, setIsFlipping]);
 
     // Manual Selection Logic
     const handleManualTossSelect = useCallback((teamId: TeamId) => {
@@ -91,12 +91,12 @@ export const TossSection: React.FC<TossSectionProps> = React.memo((props) => {
                 <div className="flex flex-col space-y-3 mb-5">
                     {teams.map((team) => (
                         <button
-                            key={team.id}
+                            key={team._id}
 
-                            onClick={() => handleManualTossSelect(team.id as TeamId)}
+                            onClick={() => handleManualTossSelect(team._id as TeamId)}
                             className={`
                         w-full py-2 px-4 rounded-lg font-bold text-md transition duration-200 ease-in-out
-                        ${tossWinnerId === team.id
+                        ${tossWinnerId === team._id
                                     ? 'bg-green-600 text-white shadow-lg shadow-green-700/50'
                                     : 'bg-neutral-600 text-neutral-200 hover:bg-neutral-600'
                                 }

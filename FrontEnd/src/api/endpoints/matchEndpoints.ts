@@ -1,5 +1,5 @@
 import { MATCH_ROUTES } from "../../constants/matchRoutes";
-import type { Match, Team } from "../../features/manager/Matches/matchTypes";
+import type { LiveScoreState, Match, Team } from "../../features/manager/Matches/matchTypes";
 import axiosClient from "../http/axiosClient";
 
 interface MatchResponse {
@@ -11,6 +11,11 @@ interface MatchResponse {
 export const matchEndpoints = {
     getMatchById: async (matchId: string): Promise<MatchResponse> => {
         const { data } = await axiosClient.get(MATCH_ROUTES.GET_MATCH(matchId));
+        return data.data;
+    },
+
+    loadInitialLiveScore: async (matchId: string): Promise<LiveScoreState> => {
+        const { data } = await axiosClient.get(MATCH_ROUTES.GET_LIVE_SCORE(matchId));
         return data.data;
     },
 

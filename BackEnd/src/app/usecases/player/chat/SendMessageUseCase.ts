@@ -1,7 +1,7 @@
 import { IChatRepository } from "app/repositories/interfaces/player/IChatRepository";
 import { IMessageRepository } from "app/repositories/interfaces/player/IMessageRepository";
 import { NotFoundError } from "domain/errors";
-import { getIO } from "infra/websocket/socket";
+import { getIO } from "presentation/composition/socketConfig";
 
 
 interface SendMessageDTO {

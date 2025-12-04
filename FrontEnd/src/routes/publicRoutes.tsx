@@ -32,6 +32,7 @@ export const publicRoutes = [
     // Shared pages
     { path: "/unauthorized", element: <Unauthorized /> },
     { path: "/blocked", element: <Blocked /> },
+    { path: "/leaderboard", element: <AllTimeLeaderboard /> },
     {
         path: "/:role/subscription",
         element: (

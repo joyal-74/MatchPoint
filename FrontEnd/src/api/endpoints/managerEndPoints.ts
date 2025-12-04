@@ -2,7 +2,7 @@ import type { Team } from "../../components/manager/teams/Types";
 import type { RegisteredTeam } from "../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
 import type { PaymentInitiateResponse } from "../../components/manager/tournaments/Types";
 import { MANAGER_ROUTES } from "../../constants/managerRoutes";
-import type { Fixture, Match, Tournament } from "../../features/manager/managerTypes";
+import type { Fixture, Leaderboard, Match, Tournament } from "../../features/manager/managerTypes";
 import type { User } from "../../types/User";
 import axiosClient from "../http/axiosClient";
 import { TournamentMapper } from "../mappers/TournamentMapper";
@@ -139,6 +139,11 @@ export const managerEndpoints = {
 
     getTournamentMatches: async (tournamentId: string): Promise<Match[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_MATCHES(tournamentId));
+        return data.data
+    },
+
+    fetchLeaderboard : async (tournamentId: string): Promise<Leaderboard> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.GET_LEADERBOARD(tournamentId));
         return data.data
     },
 }

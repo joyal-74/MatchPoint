@@ -7,6 +7,7 @@ import type { Team, Player } from "../../../features/manager/Matches/matchTypes"
 import toast from "react-hot-toast";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { saveMatchData } from "../../../features/manager/Matches/matchThunks";
+import { useNavigate } from "react-router-dom";
 
 interface TeamDetailsPanelProps {
     matchId: string;
@@ -22,8 +23,12 @@ interface TeamDetailsPanelProps {
 export const TeamDetailsPanel: React.FC<TeamDetailsPanelProps> = React.memo(
     ({ matchId, team, team1, team2, activeTeamId, handleTeamSwitch, tossWinnerId, tossDecision }) => {
 
-        const [isSaved, setIsSaved] = useState(false);
+        const [isSaved, setIsSaved] = useState(() => {
+            return !!(tossWinnerId && tossDecision);
+        });
+
         const dispatch = useAppDispatch();
+        const navigate = useNavigate();
 
         const renderPlayerSection = (title: string, players: Player[]) => (
             <div className="mb-10">
@@ -70,7 +75,10 @@ export const TeamDetailsPanel: React.FC<TeamDetailsPanelProps> = React.memo(
             if (!isSaved) {
                 toast.error("Please save match data before starting the match.");
                 return;
+            } else {
+                navigate(`/manager/match/${matchId}/control`)
             }
+
         };
 
         const handleStreamSettings = () => console.log("Opening stream settings...");
@@ -78,20 +86,18 @@ export const TeamDetailsPanel: React.FC<TeamDetailsPanelProps> = React.memo(
         return (
             <div className="lg:flex-1 p-5 bg-neutral-900/40 backdrop-blur-md rounded-xl border border-neutral-700/30 shadow-lg">
 
-                {/* Header */}
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold text-purple-300">
                         {team.name} – Team Details
                     </h2>
 
-                    {/* Switch Tabs — Minimal pill design */}
                     <div className="flex bg-neutral-800/60 rounded-full p-1">
                         {teams.map((t) => (
                             <button
-                                key={t.id}
-                                onClick={() => handleTeamSwitch(t.id as TeamId)}
+                                key={t._id}
+                                onClick={() => handleTeamSwitch(t._id as TeamId)}
                                 className={`px-4 py-2 text-sm rounded-full transition-all
-                                    ${activeTeamId === t.id
+                                    ${activeTeamId === t._id
                                         ? "bg-white text-neutral-900 shadow-sm"
                                         : "text-neutral-300 hover:bg-neutral-700"
                                     }`}

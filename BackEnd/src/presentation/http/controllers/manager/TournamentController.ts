@@ -1,4 +1,5 @@
 import { ILogger } from "app/providers/ILogger";
+import { IGetTourLeaderboard } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 import {
     IAddTournament,
     ICancelTournament,
@@ -37,6 +38,7 @@ export class TournamentController implements ITournamentController {
         private _createFixturesUsecase: ICreateTournamentFixtures,
         private _createMatchesUsecase: ICreateMatchesUseCase,
         private _getMatchesUsecase: IGetTournamentMatches,
+        private _getLeaderBoardUsecase: IGetTourLeaderboard,
         private _logger: ILogger
     ) { }
 
@@ -222,5 +224,15 @@ export class TournamentController implements ITournamentController {
         const result = await this._createFixturesUsecase.execute(tournamentId, matchIds, format);
 
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, TournamentMessages.FIXTURES_CREATED, result));
+    };
+
+
+    getTournamentLeaderBoard = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const tournamentId = httpRequest.params.tournamentId;
+        
+        const result = await this._getLeaderBoardUsecase.execute(tournamentId);
+        console.log(result)
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.LEADERBOARD_FETCHED, result));
     };
 }

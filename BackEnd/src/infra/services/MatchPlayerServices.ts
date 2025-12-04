@@ -59,6 +59,4 @@ export class MatchPlayerServices implements IMatchPlayerServices {
             }
         };
     }
-
-
 }

@@ -5,7 +5,7 @@ import { MatchTeamMapper } from "./MatchTeamMapper";
 export class MatchMapper {
     static toMatchEntity(raw: any): MatchEntity {
         return {
-            id: raw._id.toString(),
+            _id: raw._id.toString(),
             tournamentId: raw.tournamentId.toString(),
             matchNumber: raw.matchNumber,
             round: raw.round,

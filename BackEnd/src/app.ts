@@ -11,6 +11,7 @@ import viewerRoutes from "presentation/express/routes/viewerRoutes";
 import subscriptionsRoutes from "presentation/express/routes/subscriptionsRoutes";
 import chatRoutes from "presentation/express/routes/chatRoutes";
 import leaderboardRoutes from "presentation/express/routes/leaderboardRoutes";
+import matchRoutes from "presentation/express/routes/matchRoutes";
 import { errorHandler } from "presentation/express/middlewares/errorHandler";
 import cookieParser from 'cookie-parser';
 
@@ -41,6 +42,7 @@ app.use("/viewer", viewerRoutes);
 app.use("/chat", chatRoutes);
 app.use("/subscriptions", subscriptionsRoutes);
 app.use("/leaderboard", leaderboardRoutes);
+app.use("/match", matchRoutes);
 
 app.use(errorHandler);
 

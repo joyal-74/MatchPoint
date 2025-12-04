@@ -23,22 +23,20 @@ export const MatchDashboard: React.FC = () => {
 
     const teamMap = useMemo(
         () => ({
-            [teamA?.id ?? ""]: teamA,
-            [teamB?.id ?? ""]: teamB,
+            [teamA?._id ?? ""]: teamA,
+            [teamB?._id ?? ""]: teamB,
         }),
         [teamA, teamB]
     );
 
-
-
-    const [activeTeamId, setActiveTeamId] = useState(teamA?.id ?? "");
+    const [activeTeamId, setActiveTeamId] = useState(teamA?._id ?? "");
     const [tossWinnerId, setTossWinnerId] = useState<TeamId | null>(null);
     const [tossDecision, setTossDecision] = useState<TossDecision>(null);
     const [isFlipping, setIsFlipping] = useState(false);
 
     useEffect(() => {
-        if (teamA?.id) {
-            setActiveTeamId(teamA.id);
+        if (teamA?._id) {
+            setActiveTeamId(teamA._id);
         }
     }, [teamA]);
 
