@@ -8,6 +8,7 @@ export class PlayerDetailsMapper {
 
         return {
             _id: doc._id?.toString(),
+            userId: user._id.toString(),
             name: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
             profileImage: user.profileImage || "",
 

@@ -6,6 +6,7 @@ import { ITournamentIdGenerator } from "app/providers/IIdGenerator";
 import { IFileStorage } from "app/providers/IFileStorage";
 import type { File } from "domain/entities/File";
 import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
+import { BadRequestError } from "domain/errors";
 
 
 export class AddTournamentUseCase implements IAddTournament {
@@ -28,6 +29,15 @@ export class AddTournamentUseCase implements IAddTournament {
             this._logger.info("[AddTournamentUseCase] Uploading banner...");
             bannerUrl = await this._fileStorage.upload(file);
         }
+
+        // const existingTournamnts = await this._tournamentRepo.findByManagerId(data.managerId);
+
+        // const date = new Date().getDate();
+        // const sameDayTournaments = existingTournamnts.filter((t) => new Date(t.createdAt).getDate() === date)
+
+        // if(sameDayTournaments.length >= 2){
+        //     throw new BadRequestError('You can only create two tournamnet in a day')
+        // }
 
         const newData = {
             ...data,

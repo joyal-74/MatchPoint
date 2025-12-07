@@ -1,4 +1,3 @@
-import { PlayerDetails } from "app/usecases/admin/GetPlayerDetails";
 import { TeamData, TeamDataFull, TeamRegister } from "domain/dtos/Team.dto";
 import { File } from "domain/entities/File";
 
@@ -39,5 +38,5 @@ export interface IRemovePlayerUseCase {
 }
 
 export interface IAddPlayerToTeamUseCase {
-    execute(teamId: string, userId: string, playerId: string): Promise<PlayerDetails>;
+    execute(teamId: string, userId: string, playerId: string): Promise<{ success: boolean; message: string }>;
 }

@@ -1,6 +1,6 @@
 import { Schema, model, Types, Document } from "mongoose";
 import { PhaseStatus, playerStatus, statsType, TeamStatus } from "../types/Team";
-import { PlayerApprovalStatus } from "domain/dtos/Team.dto";
+import { PlayerApprovalStatus, requestType } from "domain/dtos/Team.dto";
 
 export interface TeamDocument extends Document {
     _id: Types.ObjectId;
@@ -16,6 +16,7 @@ export interface TeamDocument extends Document {
         userId: Types.ObjectId;
         status: playerStatus;
         approvalStatus: PlayerApprovalStatus;
+        requestType: requestType;
     }[];
     state: string;
     city: string;
@@ -39,7 +40,8 @@ const TeamSchema = new Schema<TeamDocument>({
             playerId: { type: Schema.Types.ObjectId, ref: "Player" },
             userId: { type: Schema.Types.ObjectId, ref: "User" },
             status: { type: String, enum: ["playing", "substitute"], default: "substitute" },
-            approvalStatus: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" }
+            approvalStatus: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
+            requestType: { type: String, enum: ["join", "invite"], default: "join" }
         }],
         default: []
     },

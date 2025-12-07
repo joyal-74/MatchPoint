@@ -40,6 +40,7 @@ export class TeamMongoMapper {
             lastName: m.userId.lastName,
             profileImage: m.userId.profileImage,
             email: m.userId.email,
+            role : m.userId.role,
             profile: m.playerId.profile,
             stats: m.playerId.stats,
             status: m.status,

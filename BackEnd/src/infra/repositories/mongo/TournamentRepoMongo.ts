@@ -126,7 +126,7 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
 
         return { tournaments: tournamentData, total };
     }
-    
+
     async findManyByIds(ids: string[], page: number, limit: number): Promise<{ tournaments: Tournament[]; total: number }> {
 
         const skip = (page - 1) * limit;
@@ -141,6 +141,11 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
 
         const tournamentData = TournamentMongoMapper.toDomainArray(tournaments);
 
-        return { tournaments : tournamentData, total };
+        return { tournaments: tournamentData, total };
+    }
+
+    async findByManagerId(managerId: string): Promise<Tournament[]> {
+        const tournaments = await TournamentModel.find({ managerId })
+        return TournamentMongoMapper.toDomainArray(tournaments);
     }
 }

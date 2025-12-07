@@ -3,7 +3,7 @@ import { getApiErrorMessage } from "./apiError";
 
 export const createApiThunk =
     <Returned, ThunkArg>(
-        apiCall: (arg: ThunkArg, dispatch: Dispatch) => Promise<Returned>, // now passing dispatch
+        apiCall: (arg: ThunkArg, dispatch: Dispatch) => Promise<Returned>,
         transform?: (data: Returned) => Returned
     ): AsyncThunkPayloadCreator<Returned, ThunkArg, { rejectValue: string }> =>
     async (arg, { rejectWithValue, dispatch }) => {

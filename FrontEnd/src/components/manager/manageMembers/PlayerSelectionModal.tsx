@@ -6,7 +6,7 @@ import { X, Search, Users, Loader2 } from 'lucide-react';
 interface PlayerSelectionModalProps {
     availablePlayers: TeamPlayer[] | undefined;
     onClose: () => void;
-    onAddPlayer: (playerId: string) => void;
+    onAddPlayer: (playerId: string, usesId: string) => void;
 }
 
 const PlayerCard = ({ player, onSelect }: { player: TeamPlayer; onSelect: (id: string) => void }) => {
@@ -65,10 +65,9 @@ export default function PlayerSelectionModal({
     const roles = useMemo(() => {
         if (!availablePlayers) return ['All'];
         const uniqueRoles = [...new Set(availablePlayers.map(p => p.role))];
-        return ['All', ...uniqueRoles].sort(); // Sort roles alphabetically
+        return ['All', ...uniqueRoles].sort();
     }, [availablePlayers]);
 
-    // Filter players based on search and role
     const filteredPlayers = useMemo(() => {
         if (!availablePlayers) return [];
 
@@ -79,7 +78,6 @@ export default function PlayerSelectionModal({
         });
     }, [availablePlayers, searchTerm, selectedRole]);
 
-    // Focus search input on mount
     useEffect(() => {
         const timer = setTimeout(() => {
             // Use a ref for better React practice, but keeping document.querySelector for minimal change
@@ -88,17 +86,18 @@ export default function PlayerSelectionModal({
         }, 100);
         return () => clearTimeout(timer);
     }, []);
+    
 
-    const handleSelectPlayer = (playerId: string) => {
-        onAddPlayer(playerId);
+    const handleSelectPlayer = (playerId: string, userId: string) => {
+        onAddPlayer(playerId, userId);
         onClose();
     };
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
             {/* Reduced max-w for smaller, tighter modal */}
-            <div className="relative bg-neutral-900 rounded-xl shadow-2xl w-full max-w-xl mx-auto border border-neutral-800 transition-transform duration-300 ease-out scale-95 opacity-100">
-                
+            <div className="relative bg-neutral-900 rounded-xl shadow-2xl w-full max-w-2xl mx-auto border border-neutral-800 transition-transform duration-300 ease-out scale-95 opacity-100">
+
                 {/* Modal Header */}
                 <div className="p-5 border-b border-neutral-800 flex items-start justify-between">
                     <div>
@@ -107,8 +106,7 @@ export default function PlayerSelectionModal({
                         </h2>
                         <p className="text-neutral-400 text-sm mt-1">Search and filter available players to add.</p>
                     </div>
-                    
-                    {/* Close Button - more minimal style */}
+
                     <button
                         onClick={onClose}
                         className="text-neutral-400 hover:text-white transition-all duration-200 p-2 rounded-full hover:bg-neutral-800"
@@ -118,7 +116,6 @@ export default function PlayerSelectionModal({
                     </button>
                 </div>
 
-                {/* Search and Filters Section */}
                 <div className="p-5 border-b border-neutral-800">
                     <div className="mb-4 relative">
                         {/* Search Input */}
@@ -141,11 +138,10 @@ export default function PlayerSelectionModal({
                             <button
                                 key={role}
                                 onClick={() => setSelectedRole(role)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150 ${
-                                    selectedRole === role
-                                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
-                                        : 'bg-neutral-700 text-neutral-300 hover:bg-neutral-600 hover:text-white'
-                                }`}
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150 ${selectedRole === role
+                                    ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
+                                    : 'bg-neutral-700 text-neutral-300 hover:bg-neutral-600 hover:text-white'
+                                    }`}
                             >
                                 {role}
                             </button>
@@ -163,12 +159,12 @@ export default function PlayerSelectionModal({
                         </div>
                     ) : filteredPlayers.length > 0 ? (
                         /* Player List (Reduced grid columns and card size) */
-                        <div className="grid grid-cols-2 gap-3 max-h-[350px] overflow-y-auto pr-1">
+                        <div className="grid grid-cols-2 gap-3 max-h-[350px] overflow-y-auto pr-1 scrollbar-hide">
                             {filteredPlayers.map((player) => (
                                 <PlayerCard
                                     key={player._id}
                                     player={player}
-                                    onSelect={handleSelectPlayer}
+                                    onSelect={() => handleSelectPlayer(player._id, player.userId)}
                                 />
                             ))}
                         </div>
@@ -187,7 +183,7 @@ export default function PlayerSelectionModal({
                         </div>
                     )}
                 </div>
-                
+
                 {/* Footer with Summary and Action */}
                 <div className="px-5 py-4 border-t border-neutral-800 bg-neutral-900 sticky bottom-0">
                     <div className="flex justify-between items-center">
@@ -204,7 +200,7 @@ export default function PlayerSelectionModal({
                             </button>
                             {filteredPlayers.length > 0 && (
                                 <button
-                                    onClick={() => handleSelectPlayer(filteredPlayers[0]._id)}
+                                    onClick={() => handleSelectPlayer(filteredPlayers[0]._id, filteredPlayers[0].userId)}
                                     className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-md shadow-emerald-600/30 transition-all text-sm"
                                 >
                                     Add First

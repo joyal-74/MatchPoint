@@ -1,4 +1,4 @@
-import type { PlayerDetails, Team } from "../../components/manager/teams/Types";
+import type { Team } from "../../components/manager/teams/Types";
 import type { RegisteredTeam } from "../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
 import type { PaymentInitiateResponse } from "../../components/manager/tournaments/Types";
 import { MANAGER_ROUTES } from "../../constants/routes/managerRoutes";
@@ -154,8 +154,8 @@ export const managerEndpoints = {
         return data.data
     },
 
-    addPlayerToTeam: async ({ teamId, playerId }: { teamId: string, playerId: string }): Promise<PlayerDetails> => {
-        const { data } = await axiosClient.post(MANAGER_ROUTES.ADD_PLAYER(playerId), teamId);
+    addPlayerToTeam: async ({ teamId, userId, playerId }: { teamId: string, userId: string, playerId: string }): Promise<{ message: string }> => {
+        const { data } = await axiosClient.post(MANAGER_ROUTES.ADD_PLAYER(playerId), { teamId, userId });
         return data.data;
     },
 }

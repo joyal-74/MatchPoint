@@ -1,10 +1,9 @@
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { PlayerDetails } from "app/usecases/admin/GetPlayerDetails";
 import { Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "domain/dtos/Team.dto";
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { TeamModel } from "infra/databases/mongo/models/TeamModel";
 import { TeamMongoMapper, TeamPopulatedDocument } from "infra/utils/mappers/TeamMongoMapper";
-import mongoose, { Types } from "mongoose";
+import mongoose from "mongoose";
 
 export class TeamRepositoryMongo implements ITeamRepository {
     async create(teamData: TeamRegister): Promise<TeamDataFull> {
@@ -15,7 +14,7 @@ export class TeamRepositoryMongo implements ITeamRepository {
     async addMember(teamId: string, userId: string, playerId: string): Promise<TeamData> {
         const updated = await TeamModel.findByIdAndUpdate(
             teamId,
-            { $push: { members: { playerId, userId, status: "substitute", approvalStatus: "pending" } } },
+            { $push: { members: { playerId, userId, status: "substitute", approvalStatus: "pending", requestType: "join" } } },
             { new: true }
         ).populate('members.playerId').populate('members.userId');
 
@@ -150,26 +149,23 @@ export class TeamRepositoryMongo implements ITeamRepository {
         return TeamModel.find({ _id: { $in: teamIds } }).lean();
     }
 
-    async existOrAddMember(teamId: string, userId: string, playerId: string): Promise<PlayerDetails | null> {
+    async existOrAddMember(teamId, userId, playerId): Promise<{ success: boolean; playerId: string }> {
         const team = await TeamModel.findById(teamId);
-        if (!team) return null;
+        if (!team) return { success: false, playerId: "" };
 
-        // Check if the player already exists
-        const exists = team.members.some(member => member.toString() === playerId);
-        if (exists) return null;
+        const exists = team.members.some(m => m.playerId.toString() === playerId);
+        if (exists) return { success: false, playerId };
 
-        // Add new member
-        const newMember = {
-            playerId: new Types.ObjectId(playerId),
-            userId: new Types.ObjectId(userId),
-            status: "substitute" as playerStatus,
-            approvalStatus: "approved" as PlayerApprovalStatus,
-        };
-
-        team.members.push(newMember);
+        team.members.push({
+            playerId,
+            userId,
+            approvalStatus: "pending",
+            requestType: "invite",
+            status: "substitute"
+        });
 
         await team.save();
-
-        return newMember;
+        return { success: true, playerId };
     }
+
 }

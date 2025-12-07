@@ -24,7 +24,7 @@ export interface TeamEntity {
 }
 
 export interface MatchEntity {
-    id: string;
+    _id: string;
     tournamentId: string;
     teamA: TeamEntity;
     teamB: TeamEntity;

@@ -3,6 +3,7 @@ import { PlayerProfileType } from "./Sports.dto";
 export type TeamStatus = 'active' | 'blocked' | 'deleted'
 export type playerStatus = "playing" | "substitute";
 export type PlayerApprovalStatus = "pending" | "approved" | "rejected";
+export type requestType = "join" | "invite";
 export type TeamPhase = "recruiting" | "active" | "competing" | "completed" | "inactive";
 export type statsType = {
     totalMatches: number;
@@ -31,6 +32,7 @@ export interface MapMember {
         firstName: string;
         lastName: string;
         email: string;
+        role: string;
         profileImage: string;
     };
     status: playerStatus;
@@ -100,8 +102,8 @@ export interface Filters {
 }
 
 export interface PlayerTeamResponseDTO {
-    approvedTeams : TeamDataSummary[];
-    pendingTeams : TeamDataSummary[];
-    totalApprovedTeams : number;
-    totalPendingTeams : number;
+    approvedTeams: TeamDataSummary[];
+    pendingTeams: TeamDataSummary[];
+    totalApprovedTeams: number;
+    totalPendingTeams: number;
 }

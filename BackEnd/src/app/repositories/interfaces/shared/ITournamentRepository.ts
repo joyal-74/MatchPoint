@@ -12,4 +12,5 @@ export interface ITournamentRepository {
     update(teamId: string, updates: Partial<Tournament>): Promise<Tournament>;
     cancel(teamId: string, reason: string): Promise<Tournament>;
     findManyByIds(ids: string[], page: number, limit: number): Promise<{ tournaments: Tournament[]; total: number }>;
+    findByManagerId(managerId : string) : Promise<Tournament[]>
 }

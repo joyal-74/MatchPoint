@@ -7,10 +7,10 @@ interface HeaderProps {
 }
 
 export function Header({ team, playersCount, onAddPlayerClick }: HeaderProps) {
-
-    const handleAddPlayerClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleAddPlayerClick = () => {
         onAddPlayerClick();
     };
+
     return (
         <div className="flex justify-between items-center mb-8">
             <div>

@@ -6,8 +6,8 @@ import { PlayerEntity } from "domain/entities/Player";
 export class GetAvailablePlayersService implements IGetAvailablePlayersService {
 
     constructor(
-        private readonly teamRepo: ITeamRepository,
-        private readonly playerRepo: IPlayerRepository
+        private teamRepo: ITeamRepository,
+        private playerRepo: IPlayerRepository
     ) {}
 
     async execute(teamId: string): Promise<PlayerEntity[]> {
@@ -17,6 +17,6 @@ export class GetAvailablePlayersService implements IGetAvailablePlayersService {
 
         const availablePlayers = await this.playerRepo.getPlayersExcluding(existingPlayerIds);
 
-        return availablePlayers;
+        return availablePlayers; 
     }
 }

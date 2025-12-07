@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import type { RootState } from "../../app/store";
 import type { TeamPlayer } from "../../types/Player";
 import { addPlayerToTeam, getAllTeams, getAvailablePlayers, updatePlayerStatus } from "../../features/manager";
+import toast from "react-hot-toast";
 
 export function useManageMembers(teamId: string) {
     const dispatch = useAppDispatch();
@@ -23,6 +23,9 @@ export function useManageMembers(teamId: string) {
     const [isSelectionModalOpen, setIsSelectionModalOpen] = useState(false);
     const [availablePlayers, setAvailablePlayers] = useState<TeamPlayer[]>([]);
 
+
+    console.log(availablePlayers, '-----------------')
+    console.log(players, '++++++++')
     // Fetch teams on mount
     useEffect(() => {
         if (!isInitialized) return;
@@ -44,10 +47,12 @@ export function useManageMembers(teamId: string) {
     useEffect(() => {
         if (team && team.members) {
             const mapped: TeamPlayer[] = team.members.map((m) => ({
-                id: m.playerId,
+                _id: m.playerId,
+                userId : m.userId,
                 name: `${m.firstName} ${m.lastName}`,
                 email: m.email,
                 phone: m.phone,
+                role : m.role,
                 position: String(m.profile.position),
                 jerseyNumber: Number(m.profile?.jerseyNumber || 0),
                 status: m.status,
@@ -84,32 +89,38 @@ export function useManageMembers(teamId: string) {
         }
     }, [teamId, dispatch]);
 
-    const handleAddPlayer = async (playerId: string) => {
+    const handleAddPlayer = async (playerId: string, userId: string) => {
         if (!teamId) {
             toast.error("Team ID missing.");
             return;
         }
 
-        await dispatch(addPlayerToTeam({ teamId, playerId }))
-            .unwrap()
-            .then(() => setIsSelectionModalOpen(false))
-            .catch(() => { });
+        const result = await dispatch(addPlayerToTeam({ teamId, userId, playerId }));
+
+        if (addPlayerToTeam.fulfilled.match(result)) {
+            toast.success(result.payload.message || "Request submitted.");
+            setIsSelectionModalOpen(false);
+        }
+        else {
+            toast.error(result.payload || "Something went wrong.");
+        }
     };
+
 
     const handleSwapPlayers = async (player1: TeamPlayer, player2: TeamPlayer) => {
         // Optimistic update
         setPlayers(prev =>
             prev.map(p => {
-                if (p.id === player1.id) return { ...p, status: player2.status };
-                if (p.id === player2.id) return { ...p, status: player1.status };
+                if (p._id === player1._id) return { ...p, status: player2.status };
+                if (p._id === player2._id) return { ...p, status: player1.status };
                 return p;
             })
         );
 
         try {
             await Promise.all([
-                updateStatus(player1.id, player2.status),
-                updateStatus(player2.id, player1.status),
+                updateStatus(player1._id, player2.status),
+                updateStatus(player2._id, player1.status),
             ]);
             toast.success("Players swapped successfully!");
         } catch {
@@ -117,8 +128,8 @@ export function useManageMembers(teamId: string) {
             // revert
             setPlayers(prev =>
                 prev.map(p => {
-                    if (p.id === player1.id) return { ...p, status: player1.status };
-                    if (p.id === player2.id) return { ...p, status: player2.status };
+                    if (p._id === player1._id) return { ...p, status: player1.status };
+                    if (p._id === player2._id) return { ...p, status: player2.status };
                     return p;
                 })
             );
@@ -133,7 +144,7 @@ export function useManageMembers(teamId: string) {
         player: TeamPlayer
     ) => {
         if (action === "swap") {
-            if (swapMode && selectedPlayer && selectedPlayer.id !== player.id) {
+            if (swapMode && selectedPlayer && selectedPlayer._id !== player._id) {
                 await handleSwapPlayers(selectedPlayer, player);
             } else {
                 setSelectedPlayer(player);
@@ -145,15 +156,15 @@ export function useManageMembers(teamId: string) {
 
             // Optimistic update with revert on failure
             setPlayers(prev =>
-                prev.map(p => p.id === player.id ? { ...p, status: newStatus } : p)
+                prev.map(p => p._id === player._id ? { ...p, status: newStatus } : p)
             );
 
             try {
-                await updateStatus(player.id, newStatus);
+                await updateStatus(player._id, newStatus);
             } catch {
                 toast.error("Failed to update player status.");
                 setPlayers(prev =>
-                    prev.map(p => p.id === player.id ? { ...p, status: prevStatus } : p)
+                    prev.map(p => p._id === player._id ? { ...p, status: prevStatus } : p)
                 );
             }
         } else if (action === "view") {

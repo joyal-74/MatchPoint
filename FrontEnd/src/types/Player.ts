@@ -22,7 +22,7 @@ export interface PlayerTournament {
 }
 
 export interface Player extends User {
-    id: string
+    _id: string
     sport: string;
     profile: Record<string, string>;
     career_stats: PlayerStatsField[];
@@ -48,8 +48,8 @@ export interface PlayerCardProps {
 }
 
 export type TeamPlayer = {
-    id: string;
     _id: string;
+    userId: string;
     name: string;
     email: string;
     role: string;

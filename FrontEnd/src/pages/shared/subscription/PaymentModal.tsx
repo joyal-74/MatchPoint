@@ -1,4 +1,4 @@
-import { X, ArrowRight, Wallet, CreditCard, ShoppingBag } from "lucide-react";
+import { X, ArrowRight, Wallet, CreditCard, ShoppingBag, Lock, Shield } from "lucide-react";
 
 type Props = {
     open: boolean;
@@ -11,25 +11,30 @@ type Props = {
 export function PaymentModal({ open, planTitle, amount, onClose, onSelect }: Props) {
     if (!open) return null;
 
-    // Helper to format the Indian Rupee amount
     const formattedAmount = new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR',
-        minimumFractionDigits: 0, // Assuming whole rupees for subscription plans
+        minimumFractionDigits: 0,
     }).format(amount);
 
-    // Common Tailwind classes for the payment buttons
-    const paymentButtonClasses = "flex items-center justify-between p-4 rounded-xl transition-all duration-200 border cursor-pointer";
+    const paymentButtonClasses = "flex items-center justify-between p-4 rounded transition-all duration-200 border cursor-pointer";
 
     return (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[999] p-4">
-            <div className="bg-neutral-900 p-8 rounded-3xl w-full max-w-sm shadow-2xl border border-neutral-700/50 transform transition-all duration-300 scale-100 opacity-100">
+            <div className="bg-neutral-900 p-8 rounded-3xl w-full max-w-md shadow-2xl border border-neutral-700/50 transform transition-all duration-300 scale-100 opacity-100">
 
                 {/* Header Section */}
                 <div className="flex justify-between items-start mb-6">
-                    <div>
-                        <h2 className="text-2xl font-extrabold text-white">Secure Checkout 🔒</h2>
-                        <p className="text-neutral-500 text-sm mt-1">Select your preferred payment gateway.</p>
+                    <div className="flex items-center gap-3">
+                        <div className="bg-emerald-500/10 p-2.5 rounded-xl">
+                            <Shield className="w-6 h-6 text-emerald-400" />
+                        </div>
+                        <div>
+                            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                                Secure Checkout
+                            </h2>
+                            <p className="text-neutral-400 text-sm mt-0.5">Complete your subscription upgrade</p>
+                        </div>
                     </div>
                     <button 
                         onClick={onClose}
@@ -41,52 +46,67 @@ export function PaymentModal({ open, planTitle, amount, onClose, onSelect }: Pro
                 </div>
 
                 {/* Plan Summary */}
-                <div className="bg-neutral-800/50 p-4 rounded-xl mb-6">
-                    <p className="text-sm text-neutral-400 mb-1">
-                        Upgrading to <span className="text-emerald-400 font-semibold">{planTitle}</span>
-                    </p>
-                    <p className="text-4xl font-black text-white">{formattedAmount}</p>
+                <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 p-5 rounded-2xl mb-6 border border-emerald-500/20">
+                    <div className="flex items-center justify-between mb-2">
+                        <p className="text-sm text-neutral-400">
+                            Plan Selected
+                        </p>
+                        <Lock className="w-4 h-4 text-emerald-400" />
+                    </div>
+                    <p className="text-lg text-emerald-400 font-semibold mb-1">{planTitle}</p>
+                    <p className="text-3xl font-bold text-white">{formattedAmount}</p>
                 </div>
                 
                 {/* Payment Method Selection */}
-                <h3 className="text-neutral-300 font-semibold mb-3">Payment Gateways</h3>
+                <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wide">Payment Method</h3>
 
                 <div className="grid grid-cols-1 gap-3">
-                    {/* Razorpay Button */}
+                    {/* Razorpay Button - Active */}
                     <button
                         onClick={() => onSelect("razorpay")}
-                        className={`${paymentButtonClasses} bg-neutral-800 border-emerald-500/30 hover:bg-emerald-600/20`}
+                        className={`${paymentButtonClasses} bg-gradient-to-r from-emerald-600/20 to-emerald-500/10 border-emerald-500/50 hover:from-emerald-600/30 hover:to-emerald-500/20 hover:border-emerald-400`}
                     >
                         <div className="flex items-center">
-                            <Wallet className="w-5 h-5 text-emerald-400 mr-3" />
-                            <span className="font-semibold text-white">Razorpay (India)</span>
+                            <div className="bg-emerald-500/20 p-2 rounded-lg mr-3">
+                                <Wallet className="w-5 h-5 text-emerald-400" />
+                            </div>
+                            <div className="text-left">
+                                <span className="font-semibold text-white block">Razorpay</span>
+                                <span className="text-xs text-neutral-400">UPI, Cards, Wallets & More</span>
+                            </div>
                         </div>
-                        <ArrowRight className="w-5 h-5 text-neutral-400" />
+                        <ArrowRight className="w-5 h-5 text-emerald-400" />
                     </button>
 
-                    {/* Stripe Button */}
-                    <button
-                        onClick={() => onSelect("stripe")}
-                        className={`${paymentButtonClasses} bg-neutral-800 border-blue-500/30 hover:bg-blue-600/20`}
+                    <div
+                        className={`${paymentButtonClasses} bg-neutral-800/50 border-neutral-700 opacity-50 cursor-not-allowed`}
                     >
                         <div className="flex items-center">
-                            <CreditCard className="w-5 h-5 text-blue-400 mr-3" />
-                            <span className="font-semibold text-white">Stripe (Global Card)</span>
+                            <div className="bg-neutral-700/50 p-2 rounded-lg mr-3">
+                                <CreditCard className="w-5 h-5 text-neutral-500" />
+                            </div>
+                            <div className="text-left">
+                                <span className="font-semibold text-neutral-400 block">Stripe</span>
+                                <span className="text-xs text-neutral-500">Coming Soon</span>
+                            </div>
                         </div>
-                        <ArrowRight className="w-5 h-5 text-neutral-400" />
-                    </button>
+                        <Lock className="w-4 h-4 text-neutral-500" />
+                    </div>
 
-                    {/* PayPal Button */}
-                    <button
-                        onClick={() => onSelect("paypal")}
-                        className={`${paymentButtonClasses} bg-neutral-800 border-yellow-500/30 hover:bg-yellow-600/20`}
+                    <div
+                        className={`${paymentButtonClasses} bg-neutral-800/50 border-neutral-700 opacity-50 cursor-not-allowed`}
                     >
                         <div className="flex items-center">
-                            <ShoppingBag className="w-5 h-5 text-yellow-400 mr-3" />
-                            <span className="font-semibold text-white">PayPal</span>
+                            <div className="bg-neutral-700/50 p-2 rounded-lg mr-3">
+                                <ShoppingBag className="w-5 h-5 text-neutral-500" />
+                            </div>
+                            <div className="text-left">
+                                <span className="font-semibold text-neutral-400 block">PayPal</span>
+                                <span className="text-xs text-neutral-500">Coming Soon</span>
+                            </div>
                         </div>
-                        <ArrowRight className="w-5 h-5 text-neutral-400" />
-                    </button>
+                        <Lock className="w-4 h-4 text-neutral-500" />
+                    </div>
                 </div>
             </div>
         </div>

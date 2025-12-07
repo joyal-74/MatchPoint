@@ -213,11 +213,11 @@ export class TeamController implements ITeamController {
 
 
     addPlayer = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { teamId } = httpRequest.params;
-        const { playerId, userId } = httpRequest.body;
+        const { playerId } = httpRequest.params;
+        const { teamId, userId } = httpRequest.body;
 
-        const players = await this._addnewPlayerUsecase.execute(teamId, userId, playerId);
+        const result = await this._addnewPlayerUsecase.execute(teamId, userId, playerId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.PLAYER_FETCHED, players));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.PLAYER_FETCHED, result));
     }
 }

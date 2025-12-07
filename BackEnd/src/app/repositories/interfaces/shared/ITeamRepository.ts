@@ -1,4 +1,3 @@
-import { PlayerDetails } from "app/usecases/admin/GetPlayerDetails";
 import { Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "domain/dtos/Team.dto";
 
 export interface ITeamRepository {
@@ -15,5 +14,5 @@ export interface ITeamRepository {
     update(teamId: string, updates: Partial<TeamRegister>): Promise<TeamData>;
     removePlayer(teamId: string, playerId: string): Promise<TeamDataFull | null>;
     findTeamsByIds(teamIds: string[]);
-    existOrAddMember(teamId: string, userId: string, playerId: string): Promise<PlayerDetails | null>;
+    existOrAddMember(teamId: string, userId: string, playerId: string): Promise<{ success: boolean; playerId: string }>
 }

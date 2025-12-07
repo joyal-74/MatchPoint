@@ -2,7 +2,7 @@ import type { TeamEntity as Team } from "domain/entities/Match";
 
 export interface MatchResponseDTO {
     match: {
-        id: string;
+        _id: string;
         tournamentId: string;
         matchNumber: string;
         round: number;

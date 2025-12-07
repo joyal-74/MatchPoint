@@ -23,8 +23,6 @@ export default function UserSubscriptionPage() {
         (state: RootState) => state.userSubscription
     );
 
-    console.log(availablePlans)
-
     const { handleRazorpaySubscription } = useSubscribePlan({
         plan: selectedPlan,
         userId: user?._id,
@@ -32,6 +30,7 @@ export default function UserSubscriptionPage() {
         userEmail: user?.email,
         onModalClose: () => setPaymentModalOpen(false)
     });
+    
 
     useEffect(() => {
         if (role && userId) {
@@ -121,10 +120,10 @@ export default function UserSubscriptionPage() {
                 <div className="pt-10 max-w-7xl mx-auto">
 
                     {/* CURRENT SUBSCRIPTION */}
-                    <div className="bg-neutral-800 p-6 sm:p-8 rounded-2xl shadow-xl border border-neutral-700 mb-10">
+                    <div className="bg-neutral-800 p-4 sm:p-8 rounded-2xl shadow-xl border border-neutral-700 mb-10">
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
 
-                            <div className="flex items-center space-x-4 mb-4 sm:mb-0">
+                            <div className="flex items-center space-x-3 mb-4 sm:mb-0">
                                 <Award className="w-10 h-10 text-emerald-500" />
                                 <div>
                                     <h1 className="text-2xl font-extrabold text-white">Your Subscription Status</h1>
@@ -168,7 +167,7 @@ export default function UserSubscriptionPage() {
                         </p>
                     </header>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-5">
                         {availablePlans.map(plan => (
                             <PlanCardUser
                                 key={plan._id}

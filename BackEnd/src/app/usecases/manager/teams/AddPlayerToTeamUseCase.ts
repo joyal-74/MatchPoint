@@ -1,21 +1,30 @@
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { IAddPlayerToTeamUseCase } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
-import { PlayerDetails } from "app/usecases/admin/GetPlayerDetails";
-import { BadRequestError } from "domain/errors";
-
+import { BadRequestError, NotFoundError } from "domain/errors";
 
 export class AddPlayerToTeamUseCase implements IAddPlayerToTeamUseCase {
     constructor(
-        private teamRepo: ITeamRepository,
+        private _teamRepo: ITeamRepository,
     ) { }
 
-    async execute(teamId: string, userId: string, playerId: string): Promise<PlayerDetails> {
-        const result = await this.teamRepo.existOrAddMember(teamId, userId, playerId);
+    async execute(teamId: string, userId: string, playerId: string): Promise<{ success: boolean; message: string }> {
 
-        if (!result) {
+        console.log(teamId, "teamId")
+        console.log(userId, "userId")
+        console.log(playerId, "playerId")
+
+        if(!userId) throw new NotFoundError('UserId not found')
+
+        const result = await this._teamRepo.existOrAddMember(teamId, userId, playerId);
+        console.log(result, " reult")
+
+        if (!result.success) {
             throw new BadRequestError("Player already exists in team or team not found");
         }
 
-        return result;
+        return {
+            success: true,
+            message: "Invite request submitted successfully"
+        };
     }
 }

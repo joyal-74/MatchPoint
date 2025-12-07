@@ -1,6 +1,8 @@
 import { IPaymentProvider, PaymentSession } from "app/providers/IPaymentProvider";
+import { IPlanRepository } from "app/repositories/interfaces/admin/IPlanRepository";
 import { PaymentMetadata } from "app/repositories/interfaces/IBasePaymentMetaData";
 import { ICreatePaymentSession } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
+import { BadRequestError } from "domain/errors";
 
 export interface CreatePaymentSessionDTO {
     amount: number;
@@ -10,19 +12,20 @@ export interface CreatePaymentSessionDTO {
 }
 
 export class CreatePaymentSession implements ICreatePaymentSession {
-    private paymentProvider: IPaymentProvider;
 
-    constructor(paymentProvider: IPaymentProvider) {
-        this.paymentProvider = paymentProvider;
-    }
+    constructor(
+        private _paymentProvider: IPaymentProvider,
+        private _subscriptionPlanRepo: IPlanRepository,
+
+    ) { }
 
     async execute(dto: CreatePaymentSessionDTO): Promise<PaymentSession> {
 
         if (!dto.amount || dto.amount <= 0) {
-            throw new Error("Invalid amount provided");
+            throw new BadRequestError("Invalid amount provided");
         }
 
-        return await this.paymentProvider.createPaymentSession(
+        return await this._paymentProvider.createPaymentSession(
             dto.amount,
             dto.currency,
             dto.title,
