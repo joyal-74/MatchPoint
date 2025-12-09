@@ -23,7 +23,7 @@ export interface TeamEntity {
     members: any[];
 }
 
-export interface MatchEntity {
+export interface MatchDetails {
     _id: string;
     tournamentId: string;
     teamA: TeamEntity;

@@ -18,6 +18,15 @@ export interface Team {
 
 export type MatchStatus = "upcoming" | "live" | "completed";
 
+export interface MatchExtras {
+    wides: number;
+    noBalls: number;
+    legByes: number;
+    byes: number;
+    penalty: number;
+    total: number;
+}
+
 export interface Match {
     _id: string;
     tournamentId: string;
@@ -32,7 +41,7 @@ export interface Match {
     teamA: Team;
     teamB: Team;
     stats?: Record<string, any>;
-    overs?: number;
+    overs: number;
 }
 
 
@@ -65,18 +74,20 @@ export interface BallEvent {
 export interface InningsState {
     battingTeamId: string;
     bowlingTeamId: string;
-    score: number;
+    runs: number;
     wickets: number;
     overs: number;
-    ballsInOver: number;
-    currentBatsmanId: string | null;
-    nonStrikerId: string | null;
-    currentBowlerId: string | null;
+    balls: number;
+    currentStriker: string | null;
+    currentNonStriker: string | null;
+    currentBowler: string | null;
+    currentRunRate : string;
     isCompleted: boolean;
     ballEvents: BallEvent[];
     // Stats for players currently participating/who have participated
     battingStats: Record<string, Omit<PlayerStats, 'overs' | 'maidens' | 'wickets' | 'runsConceded'>>;
     bowlingStats: Record<string, Omit<PlayerStats, 'runs' | 'balls' | 'fours' | 'sixes' | 'dismissal'>>;
+    extras : MatchExtras
 }
 
 export interface LiveScoreState {

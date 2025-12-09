@@ -1,26 +1,25 @@
-import { IMatchScoreRepository } from "app/repositories/interfaces/manager/IMatcheScoreRepository";
+import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { IInitInningsUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { InitInningsPayload, MatchEntity } from "domain/entities/MatchEntity";
+import { NotFoundError } from "domain/errors";
 
 export class InitInningsUseCase implements IInitInningsUseCase {
-    constructor(private readonly repo: IMatchScoreRepository) { }
+    constructor(private matchRepo: IMatchRepo) { }
 
-    async execute(matchId: string) {
-        let match = await this.repo.getMatch(matchId);
+    async execute(payload: InitInningsPayload): Promise<MatchEntity | null> {
+        const match = await this.matchRepo.findByMatchId(payload.matchId);
+        if (!match) throw new NotFoundError("Match not found");
 
-        if (!match) {
-            match = await this.repo.createInitialMatch(matchId);
-        }
+        match.initInnings({
+            oversLimit: payload.oversLimit,
+            strikerId: payload.strikerId,
+            nonStrikerId: payload.nonStrikerId,
+            bowlerId: payload.bowlerId,
+            battingTeamId: payload.battingTeamId,
+            bowlingTeamId: payload.bowlingTeamId
+        });
 
-        const inn = match.currentInnings === 1 ? match.innings1 : match.innings2;
-
-        if (!inn) return match;
-
-        if (inn.currentStriker && inn.currentNonStriker && inn.currentBowler) {
-            return match;
-        }
-
-        await this.repo.save(match);
-
-        return this.repo.getMatch(matchId);
+        const saved = await this.matchRepo.save(match);
+        return saved;
     }
 }

@@ -19,17 +19,26 @@ interface UpdateLiveScorePayload {
 const initialInningsState: InningsState = {
     battingTeamId: '',
     bowlingTeamId: '',
-    score: 0,
+    runs: 0,
     wickets: 0,
     overs: 0,
-    ballsInOver: 0,
-    currentBatsmanId: null,
-    nonStrikerId: null,
-    currentBowlerId: null,
+    balls : 0,
+    currentStriker: null,
+    currentNonStriker: null,
+    currentBowler: null,
     isCompleted: false,
+    currentRunRate : '',
     ballEvents: [],
     battingStats: {},
     bowlingStats: {},
+    extras : {
+        wides : 0,
+        byes : 0,
+        legByes : 0,
+        noBalls : 0,
+        penalty : 0,
+        total : 0
+    }
 };
 
 const initialState: MatchState = {

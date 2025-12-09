@@ -1,5 +1,5 @@
 import { PlayerModel } from "infra/databases/mongo/models/PlayerModel";
-import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentMatchStatsModel"; 
+import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentStatsModel"; 
 
 export const updatePlayerStatsFromMatch = async (matchStatsId: string) => {
     const stats = await TournamentMatchStatsModel.findById(matchStatsId);

@@ -6,5 +6,5 @@ export interface IMatchesRepository {
     getMatchesByTournament(tournamentId: string): Promise<Match[]>;
     getMatchById(matchId: string): Promise<Match | null>;
     getMatchDetails(matchId: string): Promise<MatchEntity | null>;
-    updateTossDetails(matchId: string, tossWinnerId: string, tossDecision: string) : Promise<MatchEntity | null>;
+    updateTossDetails(matchId: string, tossWinnerId: string, tossDecision: string): Promise<MatchEntity | null>;
 }

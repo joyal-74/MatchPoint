@@ -1,16 +1,19 @@
-import { IMatchScoreRepository } from "app/repositories/interfaces/manager/IMatcheScoreRepository";
-import { LiveScoreMapper } from "app/mappers/LiveScoreMapper";
+import { mapToLiveScoreDto } from "app/mappers/LiveScoreMapper";
 import { NotFoundError } from "domain/errors";
 import { IGetLiveScoreUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { LiveScoreDto } from "domain/dtos/LiveScoreDto";
 
 export class GetLiveScoreUseCase implements IGetLiveScoreUseCase {
-    constructor(private repo: IMatchScoreRepository) { }
+    constructor(
+        private _matchRepo: IMatchRepo
+    ) { }
 
-    async execute(matchId: string) {
-        const match = await this.repo.getMatch(matchId);
+    async execute(matchId: string) : Promise<LiveScoreDto> {
+        const match = await this._matchRepo.findByMatchId(matchId);
         if (!match) throw new NotFoundError(`Match not found for ID: ${matchId}`);
         
-        const liveScore = LiveScoreMapper.toDto(match);
-        return liveScore
+        const liveScore = mapToLiveScoreDto(match);
+        return liveScore;
     }
 }

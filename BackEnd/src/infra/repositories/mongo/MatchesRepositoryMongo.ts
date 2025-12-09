@@ -2,7 +2,7 @@ import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatches
 import type { Match } from "domain/entities/Match";
 import { NotFoundError } from "domain/errors";
 import MatchModel from "infra/databases/mongo/models/MatchesModel";
-import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentMatchStatsModel";
+import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentStatsModel";
 import { MatchMongoMapper } from "infra/utils/mappers/MatchMongoMapper";
 
 export class MatchesRepositoryMongo implements IMatchesRepository {
@@ -69,6 +69,19 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
 
         if (!match) return null;
 
+        if (!match.teamB) {
+            return await MatchModel.findByIdAndUpdate(
+                matchId,
+                {
+                    $set: {
+                        status: "bye",
+                        winner: match.teamA._id,
+                    }
+                },
+                { new: true }
+            );
+        }
+
         const teamA = match.teamA._id.toString();
         const teamB = match.teamB._id.toString() ?? null;
 
@@ -107,7 +120,7 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
                     isLive: true
                 },
                 $setOnInsert: {
-                    tournamentId: match.tournamentId,  // REQUIRED for first insert
+                    tournamentId: match.tournamentId,
                     innings2: {
                         battingTeam: null,
                         bowlingTeam: null,
@@ -131,5 +144,4 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
 
         return match;
     }
-
 }

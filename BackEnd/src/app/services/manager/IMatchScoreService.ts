@@ -1,10 +1,29 @@
-import { TournamentMatchStatsDocument } from "infra/databases/mongo/models/TournamentMatchStatsModel";
+import { InitInningsPayload, MatchEntity } from "domain/entities/MatchEntity";
 
 export interface IMatchScoreService {
-    initInnings(matchId: string): Promise<TournamentMatchStatsDocument | null>;
-    setStriker(matchId: string, batsmanId: string): Promise<TournamentMatchStatsDocument | null>;
-    setNonStriker(matchId: string, batsmanId: string): Promise<TournamentMatchStatsDocument | null>;
-    setBowler(matchId: string, bowlerId: string): Promise<TournamentMatchStatsDocument | null>;
-    addRuns(matchId: string, runs: number): Promise<TournamentMatchStatsDocument | null>;
-    addWicket(matchId: string, dismissalType: string, nextBatsmanId: string): Promise<TournamentMatchStatsDocument | null>;
+    initInnings(payload: InitInningsPayload): Promise<MatchEntity | null>;
+
+    setStriker(matchId: string, batsmanId: string): Promise<MatchEntity | null>;
+
+    setNonStriker(matchId: string, batsmanId: string): Promise<MatchEntity | null>;
+
+    setBowler(matchId: string, bowlerId: string): Promise<MatchEntity | null>;
+
+    addRuns(matchId: string, runs: number): Promise<MatchEntity | null>;
+
+    addExtras(matchId: string, type: string, runs: number): Promise<MatchEntity | null>;
+
+    addWicket(matchId: string, dismissalType: string, outBatsmanId: string, nextBatsmanId: string, fielderId?: string): Promise<MatchEntity | null>;
+
+    undoLastBall(matchId: string): Promise<MatchEntity | null>;
+
+    startSuperOver(matchId: string): Promise<MatchEntity | null>;
+
+    endOver(matchId: string): Promise<MatchEntity | null>;
+
+    endInnings(matchId: string): Promise<MatchEntity | null>;
+
+    addPenalty(matchId: string, runs: number): Promise<MatchEntity | null>;
+
+    retireBatsman(matchId: string, outBatsmanId: string, newBatsmanId: string, isRetiredHurt: boolean): Promise<MatchEntity | null>;
 }

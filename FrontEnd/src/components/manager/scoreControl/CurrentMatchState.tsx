@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trophy, Target, Activity, CircleDot, MoveRight } from 'lucide-react';
+import { Target, CircleDot } from 'lucide-react';
 import type { Match, LiveScoreState, Team } from '../../../features/manager/Matches/matchTypes';
 
 interface CurrentMatchStateProps {
@@ -27,6 +27,8 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
         );
     }
 
+    // console.log(liveScore)
+
     // --- Data Preparation ---
     const currentInnings = liveScore.currentInnings === 1 ? liveScore.innings1 : liveScore.innings2;
     if (!currentInnings) return <div className="text-neutral-500 text-center italic p-6">Waiting for match data...</div>;
@@ -43,7 +45,7 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
         return player?.name || 'Unknown';
     };
 
-    const toArray = (data: any) => {
+    const toArray = (data : unknown) => {
         if (Array.isArray(data)) return data;
         if (data && typeof data === "object") return Object.values(data);
         return [];
@@ -52,12 +54,10 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
     const battingStatsArray = toArray(currentInnings.battingStats);
     const bowlingStatsArray = toArray(currentInnings.bowlingStats);
 
-    const strikerStats = battingStatsArray.find(s => s.playerId === currentInnings.currentBatsmanId) || { runs: 0, balls: 0, fours: 0, sixes: 0 };
-    const nonStrikerStats = battingStatsArray.find(s => s.playerId === currentInnings.nonStrikerId) || { runs: 0, balls: 0, fours: 0, sixes: 0 };
-    const bowlerStats = bowlingStatsArray.find(s => s.playerId === currentInnings.currentBowlerId) || { overs: 0, maidens: 0, wickets: 0, runsConceded: 0 };
+    const strikerStats = battingStatsArray.find(s => s.playerId === currentInnings.currentStriker) || { runs: 0, balls: 0, fours: 0, sixes: 0 };
+    const nonStrikerStats = battingStatsArray.find(s => s.playerId === currentInnings.currentNonStriker) || { runs: 0, balls: 0, fours: 0, sixes: 0 };
+    const bowlerStats = bowlingStatsArray.find(s => s.playerId === currentInnings.currentBowler) || { overs: 0, maidens: 0, wickets: 0, runsConceded: 0 };
 
-    const currentOverDisplay = `${Math.floor(currentInnings.overs)}.${currentInnings.ballsInOver}`;
-    
     const calculateOversDisplay = (overs: number): string => {
         const fullOvers = Math.floor(overs);
         const balls = Math.round((overs % 1) * 10);
@@ -65,7 +65,6 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
     };
     const bowlerOversDisplay = calculateOversDisplay(bowlerStats.overs);
     const economy = bowlerStats.overs > 0 ? (bowlerStats.runsConceded / bowlerStats.overs).toFixed(2) : '0.00';
-    const crr = (currentInnings.score / (currentInnings.overs + currentInnings.ballsInOver / 6)).toFixed(2) || '0.00';
 
     const getMatchInfo = () => {
         if (!match.tossWinner || !match.tossDecision) return null;
@@ -73,8 +72,6 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
         return { tossWinner, decision: match.tossDecision };
     };
     const matchInfo = getMatchInfo();
-
-    // --- Components ---
 
     const StatPill = ({ label, value, colorClass = "text-white" }: { label: string, value: string | number, colorClass?: string }) => (
         <div className="flex flex-col items-center px-3 min-w-[60px]">
@@ -85,7 +82,7 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
 
     return (
         <div className="w-full mx-auto bg-neutral-950 rounded-2xl border border-neutral-800 shadow-2xl overflow-hidden font-sans">
-            
+
             {/* 1. Header & Toss Info */}
             <div className="bg-neutral-900/50 px-4 py-2 border-b border-neutral-800 flex justify-between items-center text-xs text-neutral-400">
                 <div className="flex items-center gap-2">
@@ -106,24 +103,24 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
                         </div>
                         <div className="flex items-baseline gap-3">
                             <span className="text-5xl font-bold tracking-tighter text-white tabular-nums">
-                                {currentInnings.score}/{currentInnings.wickets}
+                                {currentInnings.runs}/{currentInnings.wickets}
                             </span>
                             <span className="text-xl text-neutral-400 font-light">
-                                in {currentOverDisplay} ov
+                                in {currentInnings.overs} ov
                             </span>
                         </div>
                     </div>
 
                     <div className="text-right flex items-center gap-3">
                         <div className="text-right">
-                             <div className="text-xs text-neutral-500 uppercase">CRR</div>
-                             <div className="text-lg  font-bold text-blue-400">{crr}</div>
+                            <div className="text-xs text-neutral-500 uppercase">CRR</div>
+                            <div className="text-lg font-bold text-blue-400">{currentInnings.currentRunRate}</div>
                         </div>
                         {liveScore.currentInnings === 2 && (
-                             <div className="text-right border-l border-neutral-800 pl-3">
+                            <div className="text-right border-l border-neutral-800 pl-3">
                                 <div className="text-xs text-neutral-500 uppercase">Req</div>
                                 <div className="text-lg  font-bold text-yellow-500">{liveScore.requiredRunRate.toFixed(2)}</div>
-                             </div>
+                            </div>
                         )}
                     </div>
                 </div>
@@ -133,12 +130,12 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
                     <div className="mt-4 pt-4 border-t border-neutral-800/50">
                         <div className="flex justify-between text-xs text-neutral-400 mb-1.5">
                             <span className="flex items-center gap-1"><Target size={12} /> Target: {liveScore.target}</span>
-                            <span className="text-yellow-500 font-medium">Need {liveScore.requiredRuns} off {match.overs * 6 - (currentInnings.overs * 6 + currentInnings.ballsInOver)} balls</span>
+                            <span className="text-yellow-500 font-medium">Need {liveScore.requiredRuns} off {match.overs * 6 - currentInnings.overs * 6} balls</span>
                         </div>
                         <div className="w-full h-1.5 bg-neutral-800 rounded-full overflow-hidden">
-                            <div 
-                                className="h-full bg-gradient-to-r from-blue-500 to-blue-400" 
-                                style={{ width: `${Math.min(((currentInnings.score / liveScore.target) * 100), 100)}%` }}
+                            <div
+                                className="h-full bg-gradient-to-r from-blue-500 to-blue-400"
+                                style={{ width: `${Math.min(((currentInnings.runs / liveScore.target) * 100), 100)}%` }}
                             ></div>
                         </div>
                     </div>
@@ -158,7 +155,7 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
                 {/* Striker */}
                 <div className="grid grid-cols-[1fr_repeat(3,auto)] gap-4 px-6 py-4 border-b border-neutral-800/50 items-center hover:bg-neutral-900/20 transition-colors bg-blue-900/5 border-l-2 border-l-blue-500">
                     <div className="flex items-center gap-2">
-                        <span className="font-bold text-white text-md">{getPlayerName(currentInnings.currentBatsmanId)}</span>
+                        <span className="font-bold text-white text-md">{getPlayerName(currentInnings.currentStriker)}</span>
                         <CircleDot size={12} className="text-blue-500 animate-pulse" fill="currentColor" />
                     </div>
                     <div className="w-15 text-center  text-white font-bold">
@@ -170,7 +167,7 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
 
                 {/* Non-Striker */}
                 <div className="grid grid-cols-[1fr_repeat(3,auto)] gap-4 px-6 py-4 items-center hover:bg-neutral-900/20 transition-colors">
-                    <div className="text-neutral-300 text-md">{getPlayerName(currentInnings.nonStrikerId)}</div>
+                    <div className="text-neutral-300 text-md">{getPlayerName(currentInnings.currentNonStriker)}</div>
                     <div className="w-15 text-center  text-neutral-300">
                         {nonStrikerStats.runs} <span className="text-neutral-500 font-normal">({nonStrikerStats.balls})</span>
                     </div>
@@ -181,32 +178,47 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
 
             {/* 4. Bowler Section */}
             <div className="bg-neutral-900/30 border-t border-neutral-800">
-                 <div className="grid grid-cols-[1fr_auto] gap-4 px-6 py-5 items-center">
+                <div className="grid grid-cols-[1fr_auto] gap-4 px-6 py-5 items-center">
                     <div>
                         <div className="text-[10px] uppercase text-neutral-500 font-semibold mb-0.5">Current Bowler</div>
-                        <div className="text-md font-bold text-white">{getPlayerName(currentInnings.currentBowlerId)}</div>
+                        <div className="text-md font-bold text-white">{getPlayerName(currentInnings.currentBowler)}</div>
                     </div>
                     <div className="flex items-center divide-x divide-neutral-800">
-                         <StatPill label="Ov" value={bowlerOversDisplay} />
-                         <StatPill label="Runs" value={bowlerStats.runsConceded} />
-                         <StatPill label="Wkts" value={bowlerStats.wickets} colorClass="text-red-400" />
-                         <StatPill label="Eco" value={economy} colorClass="text-neutral-400" />
+                        <StatPill label="Ov" value={bowlerOversDisplay} />
+                        <StatPill label="Runs" value={bowlerStats.runsConceded} />
+                        <StatPill label="Wkts" value={bowlerStats.wickets} colorClass="text-red-400" />
+                        <StatPill label="Eco" value={economy} colorClass="text-neutral-400" />
                     </div>
-                 </div>
+                </div>
             </div>
 
             {/* 5. Footer: Extras */}
             <div className="px-6 py-5 bg-neutral-950 border-t border-neutral-800 flex justify-between items-center text-xs text-neutral-400">
-                <div className="flex gap-4">
-                    <span>Extras: <strong className="text-white">{Object.values(currentInnings.extras || {}).reduce((a, b) => a + b, 0)}</strong></span>
+                <div className="flex gap-4 text-sm items-center">
+                    <span>
+                        Extras:{" "}
+                        <strong className="text-white">
+                            {currentInnings.extras?.total ??
+                                ((currentInnings.extras?.wides || 0) +
+                                    (currentInnings.extras?.noBalls || 0) +
+                                    (currentInnings.extras?.legByes || 0) +
+                                    (currentInnings.extras?.byes || 0) +
+                                    (currentInnings.extras?.penalty || 0))}
+                        </strong>
+                    </span>
+
                     <span className="text-neutral-600">|</span>
+
                     <span>Wd: {currentInnings.extras?.wides || 0}</span>
                     <span>Nb: {currentInnings.extras?.noBalls || 0}</span>
                     <span>Lb: {currentInnings.extras?.legByes || 0}</span>
                     <span>B: {currentInnings.extras?.byes || 0}</span>
+                    {currentInnings.extras?.penalty > 0 && (
+                        <span>P: {currentInnings.extras.penalty}</span>
+                    )}
                 </div>
                 <div className="flex items-center gap-1 text-neutral-500">
-                   <span className="uppercase text-[10px] tracking-wider font-semibold">{bowlingTeam.name}</span>
+                    <span className="uppercase text-[10px] tracking-wider font-semibold">{bowlingTeam.name}</span>
                 </div>
             </div>
         </div>

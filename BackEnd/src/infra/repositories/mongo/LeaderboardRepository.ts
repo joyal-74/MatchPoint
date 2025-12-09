@@ -2,7 +2,7 @@ import { ILeaderboardRepository } from "app/repositories/interfaces/shared/ILead
 import { LeaderBoardPlayer } from "domain/entities/Player";
 import { Leaderboard, RunsBoard, WicketBoard, MvpBoard } from "domain/entities/Tournaments";
 import { PlayerModel } from "infra/databases/mongo/models/PlayerModel";
-import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentMatchStatsModel";
+import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentStatsModel";
 import { Types } from "mongoose";
 
 

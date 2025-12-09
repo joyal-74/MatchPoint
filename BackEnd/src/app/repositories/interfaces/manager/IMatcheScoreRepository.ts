@@ -1,7 +1,9 @@
-import { TournamentMatchStatsDocument } from "infra/databases/mongo/models/TournamentMatchStatsModel";
+import { MatchEntity } from "domain/entities/MatchEntity";
+import { TournamentMatchStatsDocument } from "domain/types/match.types";
 
 export interface IMatchScoreRepository {
-    getMatch(matchId: string): Promise<TournamentMatchStatsDocument | null>;
-    createInitialMatch(matchId: string): Promise<TournamentMatchStatsDocument>;
+    getMatch(matchId: string): Promise<MatchEntity | null>;
+    createInitialMatch(matchId: string, oversLimit: number): Promise<TournamentMatchStatsDocument>;
+    addExtras(matchId: string, type: string, runs: number) : Promise<TournamentMatchStatsDocument>;
     save(doc: TournamentMatchStatsDocument): Promise<void>;
 }

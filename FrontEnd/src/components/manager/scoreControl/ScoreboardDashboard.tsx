@@ -4,14 +4,15 @@ import { loadInitialLiveScore, loadMatchDashboard } from '../../../features/mana
 import { setInitialInnings, updateLiveScore } from '../../../features/manager/Matches/matchSlice';
 import { createSocket, getSocket } from '../../../socket/socket';
 import CurrentMatchState from './CurrentMatchState';
-import ScoreUpdateControls from './ScoreUpdateControls';
+import ScoreUpdateControls from './scoreControlMenu/ScoreUpdateControls';
 import FullScoreboardTabs from './FullScoreboardTabs';
 import type { RootState } from '../../../app/rootReducer';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
-import type { BallEvent, LiveScoreState } from '../../../features/manager/Matches/matchTypes';
+import type { LiveScoreState } from '../../../features/manager/Matches/matchTypes';
 import LoadingOverlay from '../../shared/LoadingOverlay';
 import Navbar from '../Navbar';
 import { Calendar, MapPin, Trophy, Activity } from 'lucide-react';
+import type { ScoreUpdatePayload } from './scoreControlMenu/useScoreControls';
 
 const ScoreboardDashboard: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -38,6 +39,7 @@ const ScoreboardDashboard: React.FC = () => {
         const handleConnect = () => {
             joinMatchRoom();
         };
+
         const handleScoreUpdate = (data: { matchId: string, liveScore: LiveScoreState }) => {
             if (data.matchId === matchId) {
                 dispatch(updateLiveScore({ liveScore: data.liveScore }));
@@ -55,13 +57,10 @@ const ScoreboardDashboard: React.FC = () => {
         };
     }, [matchId, dispatch]);
 
-    const emitScoreUpdate = useCallback((ballData: BallEvent) => {
+    const emitScoreUpdate = useCallback((payload: ScoreUpdatePayload) => {
         const socket = getSocket();
         if (socket && matchId) {
-            socket.emit('score:update', {
-                matchId,
-                ...ballData,
-            });
+            socket.emit('score:update', payload);
         }
     }, [matchId]);
 
@@ -93,15 +92,11 @@ const ScoreboardDashboard: React.FC = () => {
             <LoadingOverlay show={loading} />
             <Navbar />
             
-            <main className="max-w-[1600px] mx-auto p-4 md:p-6 mt-15">
+            <main className="mx-auto p-4 md:p-6 mt-15">
                 
-                {/* --- 1. Compact Hero Header --- */}
                 <header className="mb-6 relative overflow-hidden rounded-2xl bg-neutral-900 border border-neutral-800 shadow-lg group">
-                    {/* Subtle Background Elements */}
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none transition-opacity opacity-50 group-hover:opacity-100"></div>
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3 pointer-events-none transition-opacity opacity-50 group-hover:opacity-100"></div>
-
-                    <div className="relative z-10 px-6 py-5 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        
+                    <div className="relative px-6 py-5 flex flex-col md:flex-row md:items-center justify-between gap-6">
                         
                         {/* Match Info (Left) */}
                         <div className="flex flex-col gap-2">
@@ -133,24 +128,21 @@ const ScoreboardDashboard: React.FC = () => {
 
                         {/* Teams (Right/Center) */}
                         <div className="flex items-center gap-3 md:gap-5">
-                            <h1 className="text-2xl md:text-3xl font-black tracking-tighter text-white">
+                            <h1 className="text-2xl md:text-3xl font-medium tracking-tighter text-white">
                                 {teamA.name}
                             </h1>
                             <div className="flex flex-col items-center justify-center w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700/50 shadow-inner">
                                 <span className="text-[10px] font-bold text-neutral-500 italic">VS</span>
                             </div>
-                            <h1 className="text-2xl md:text-3xl font-black tracking-tighter text-white">
+                            <h1 className="text-2xl md:text-3xl font-medium tracking-tighter text-white">
                                 {teamB.name}
                             </h1>
                         </div>
-
                     </div>
                 </header>
 
-                {/* --- 2. Dashboard Grid --- */}
                 <div className="grid grid-cols-1 xl:grid-cols-[1fr_420px] gap-6 items-start">
                     
-                    {/* Left Column: Match State & Scoreboard */}
                     <div className="space-y-6 min-w-0">
                         <section aria-label="Live Match State">
                             <CurrentMatchState
@@ -165,14 +157,13 @@ const ScoreboardDashboard: React.FC = () => {
                             <FullScoreboardTabs 
                                 teamA={teamA} 
                                 teamB={teamB} 
-                                match={match} 
                                 liveScore={liveScore} 
                             />
                         </section>
                     </div>
 
                     {/* Right Column: Scoring Controls (Sticky) */}
-                    <div className="xl:sticky xl:top-6 space-y-6">
+                    <div className="xl:sticky xl:top-18 space-y-6">
                         <div className="bg-neutral-900/50 rounded-2xl border border-neutral-800 p-1">
                             <ScoreUpdateControls
                                 match={match}
@@ -183,7 +174,6 @@ const ScoreboardDashboard: React.FC = () => {
                             />
                         </div>
 
-                        {/* Helper Tip Card */}
                         <div className="bg-blue-900/10 border border-blue-900/30 p-4 rounded-xl flex gap-3 items-start">
                              <div className="bg-blue-500/20 p-2 rounded-lg text-blue-400 mt-0.5">
                                  <Activity size={16} />
@@ -196,7 +186,6 @@ const ScoreboardDashboard: React.FC = () => {
                              </div>
                         </div>
                     </div>
-
                 </div>
             </main>
         </div>

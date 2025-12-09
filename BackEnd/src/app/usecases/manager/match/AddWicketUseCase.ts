@@ -1,66 +1,27 @@
-import { Types } from "mongoose";
-import { IMatchScoreRepository } from "app/repositories/interfaces/manager/IMatcheScoreRepository";
-import { NotFoundError } from "domain/errors";
+import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { IAddWicketUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { AddWicketPayload } from "domain/entities/Innings";
+import { MatchEntity } from "domain/entities/MatchEntity";
+import { NotFoundError } from "domain/errors";
 
 export class AddWicketUseCase implements IAddWicketUseCase {
-    constructor(private readonly repo: IMatchScoreRepository) {}
+    constructor(private matchRepo: IMatchRepo) {}
 
-    async execute({
-        matchId,
-        dismissalType,
-        outBatsmanId,
-        nextBatsmanId,
-        fielderId
-    }: {
-        matchId: string;
-        dismissalType: string;
-        outBatsmanId: string;
-        nextBatsmanId: string;
-        fielderId?: string;
-    }) {
-        const match = await this.repo.getMatch(matchId);
+    async execute(payload: AddWicketPayload): Promise<MatchEntity> {
+        const match = await this.matchRepo.findByMatchId(payload.matchId);
         if (!match) throw new NotFoundError("Match not found");
 
-        const inn = match.currentInnings === 1 ? match.innings1 : match.innings2;
-        if (!inn) throw new Error("Innings not initialized");
-
-        inn.wickets++;
-        inn.balls++;
-
-        const outBatsman = inn.batsmen.find(
-            b => b.playerId.toString() === outBatsmanId
-        );
-
-        if (!outBatsman) {
-            throw new Error("Out batsman not found in innings");
-        }
-
-        outBatsman.out = true;
-        outBatsman.dismissalType = dismissalType;
-        if (fielderId) outBatsman.fielderId = new Types.ObjectId(fielderId);
-
-
-        const isStrikerOut =
-            inn.currentStriker &&
-            inn.currentStriker.toString() === outBatsmanId;
-
-
-        if (isStrikerOut) {
-            inn.currentStriker = new Types.ObjectId(nextBatsmanId);
-        }
-
-
-        inn.batsmen.push({
-            playerId: new Types.ObjectId(nextBatsmanId),
-            runs: 0,
-            balls: 0,
-            fours: 0,
-            sixes: 0,
-            out: false
+        match.addWicketToCurrentInnings({
+            matchId: payload.matchId,
+            outBatsmanId: payload.outBatsmanId,
+            nextBatsmanId : payload.nextBatsmanId,
+            bowlerId: payload.bowlerId,
+            dismissalType: payload.dismissalType,
+            fielderId: payload.fielderId ?? null,
+            isLegalBall: payload.isLegalBall,
+            runsCompleted: payload.runsCompleted ?? 0
         });
 
-        await this.repo.save(match);
-        return this.repo.getMatch(matchId);
+        return await this.matchRepo.save(match);
     }
 }

@@ -1,16 +1,25 @@
-import { initiInningsUC, addRunsUC, addWicketUC, setBowlerUC, setNonStrikerUC, setStrikerUC } from "./manager/matches";
-import { SocketManager } from "../../infra/websocket/socket";
+import { initiInningsUC, addRunsUC, addWicketUC, setBowlerUC, setNonStrikerUC, setStrikerUC, addExtrasUC, undoLastBallUC, startSuperOverUC, addPenaltyUC, endInningsUC, endOverUC, retireBatsmanUC } from "./manager/matches";
 import http from "http";
+import { SocketServer } from "presentation/socket/SocketServer";
+import { matchRepo } from "./shared/repositories";
 
 
-export const socketManager = new SocketManager(
+export const socketServer = new SocketServer(
+    matchRepo,
     setStrikerUC,
     setNonStrikerUC,
     setBowlerUC,
     initiInningsUC,
     addRunsUC,
-    addWicketUC
+    addWicketUC,
+    addExtrasUC,
+    undoLastBallUC,
+    startSuperOverUC,
+    addPenaltyUC,
+    endInningsUC,
+    endOverUC,
+    retireBatsmanUC
 );
 
-export const initSocket = (server: http.Server) => socketManager.init(server);
-export const getIO = () => socketManager.getIO();
+export const initSocket = (server: http.Server) => socketServer.init(server);
+export const getIO = () => socketServer.getIO();

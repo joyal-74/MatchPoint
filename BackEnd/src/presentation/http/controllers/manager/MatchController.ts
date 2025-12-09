@@ -1,4 +1,3 @@
-import { ILogger } from "app/providers/ILogger";
 import { IGetLiveScoreUseCase, ISaveMatchData } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { IMatchPlayerServices } from "app/services/manager/IMatchPlayerService";
 import { IMatchScoreService } from "app/services/manager/IMatchScoreService";
@@ -14,38 +13,68 @@ export class MatchController {
         private _matchScoreService: IMatchScoreService,
         private _saveMatchData: ISaveMatchData,
         private _getLiveScoreUseCase: IGetLiveScoreUseCase,
-        private _logger: ILogger,
     ) { }
 
+    /**
+     * ---------------------------
+     * @route GET /matches/:matchId
+     * @description Fetch full match dashboard data
+     * @returns Match summary including players, teams, stats
+     * ---------------------------
+     */
     getMatchDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const matchId = httpRequest.params.matchId;
-
         const result = await this._matchDetailsService.getMatchDashboard(matchId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Match fetched', result));
-    }
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, 'Match fetched', result)
+        );
+    };
 
+    /**
+     * ---------------------------
+     * @route GET /matches/live/:matchId
+     * @description Fetch live scorecard with real-time ball-by-ball data
+     * ---------------------------
+     */
     getLiveScore = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const matchId = httpRequest.params.matchId;
 
         const result = await this._getLiveScoreUseCase.execute(matchId);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Match fetched', result));
-    }
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, 'Match fetched', result)
+        );
+    };
 
-
+    /**
+     * ---------------------------
+     * @route PATCH /matches/:matchId/save
+     * @description Save toss details (toss winner + decision)
+     * ---------------------------
+     */
     saveMatchData = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const matchId = httpRequest.params.matchId;
         const { tossWinnerId, tossDecision } = httpRequest.body;
 
         const result = await this._saveMatchData.execute(matchId, tossWinnerId, tossDecision);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Match saved', result));
-    }
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, 'Match saved', result)
+        );
+    };
 
+    /**
+     * ---------------------------
+     * @route PATCH /matches/striker
+     * @description Set current striker batsman
+     * ---------------------------
+     */
     setStriker = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { matchId, batsmanId } = httpRequest.body;
-        console.log(httpRequest.body)
 
         const result = await this._matchScoreService.setStriker(matchId, batsmanId);
 
@@ -53,8 +82,14 @@ export class MatchController {
             HttpStatusCode.OK,
             buildResponse(true, "Striker set", result)
         );
-    }
+    };
 
+    /**
+     * ---------------------------
+     * @route PATCH /matches/non-striker
+     * @description Set current non-striker batsman
+     * ---------------------------
+     */
     setNonStriker = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { matchId, batsmanId } = httpRequest.body;
 
@@ -64,8 +99,14 @@ export class MatchController {
             HttpStatusCode.OK,
             buildResponse(true, "Non-striker set", result)
         );
-    }
+    };
 
+    /**
+     * ---------------------------
+     * @route PATCH /matches/bowler
+     * @description Set current bowler for the over
+     * ---------------------------
+     */
     setBowler = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { matchId, bowlerId } = httpRequest.body;
 
@@ -75,8 +116,14 @@ export class MatchController {
             HttpStatusCode.OK,
             buildResponse(true, "Bowler set", result)
         );
-    }
+    };
 
+    /**
+     * ---------------------------
+     * @route PATCH /matches/add-runs
+     * @description Add normal runs to the current ball
+     * ---------------------------
+     */
     addRuns = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { matchId, runs } = httpRequest.body;
 
@@ -86,27 +133,48 @@ export class MatchController {
             HttpStatusCode.OK,
             buildResponse(true, `${runs} Runs added`, result)
         );
-    }
+    };
 
+    /**
+     * ---------------------------
+     * @route PATCH /matches/wicket
+     * @description Register a wicket event
+     * @details Supports bowled, caught, run-out, lbw, stumped, etc.
+     * ---------------------------
+     */
     addWicket = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { matchId, dismissalType, nextBatsmanId } = httpRequest.body;
+        const {
+            matchId,
+            dismissalType,
+            outBatsmanId,
+            nextBatsmanId,
+            fielderId
+        } = httpRequest.body;
 
         const result = await this._matchScoreService.addWicket(
             matchId,
             dismissalType,
-            nextBatsmanId
+            outBatsmanId,
+            nextBatsmanId,
+            fielderId
         );
 
         return new HttpResponse(
             HttpStatusCode.OK,
             buildResponse(true, "Wicket added", result)
         );
-    }
+    };
 
+    /**
+     * ---------------------------
+     * @route POST /matches/init-innings
+     * @description Initialize the innings with striker, non-striker, bowler, teams, overs limit
+     * ---------------------------
+     */
     initInnings = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { matchId } = httpRequest.body;
+        const payload = httpRequest.body;
 
-        const result = await this._matchScoreService.initInnings(matchId);
+        const result = await this._matchScoreService.initInnings(payload);
 
         return new HttpResponse(
             HttpStatusCode.OK,
@@ -114,4 +182,131 @@ export class MatchController {
         );
     };
 
+    /**
+     * ---------------------------
+     * @route PATCH /matches/extras
+     * @description Add wides, no-balls, byes, leg-byes
+     * ---------------------------
+     */
+    addExtras = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { matchId, type, runs } = httpRequest.body;
+
+        const result = await this._matchScoreService.addExtras(matchId, type, runs);
+
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, "Extras added", result)
+        );
+    };
+
+    /**
+     * ---------------------------
+     * @route PATCH /matches/:matchId/undo-ball
+     * @description Undo last ball (revert runs, wicket, bowler stats, batsman stats)
+     * ---------------------------
+     */
+    undoLastBall = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { matchId } = httpRequest.params;
+
+        const result = await this._matchScoreService.undoLastBall(matchId);
+
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, "Last ball undone", result)
+        );
+    };
+
+    /**
+     * ---------------------------
+     * @route PATCH /matches/:matchId/super-over
+     * @description Starts Super Over and resets all necessary fields
+     * ---------------------------
+     */
+    startSuperOver = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { matchId } = httpRequest.params;
+
+        const result = await this._matchScoreService.startSuperOver(matchId);
+
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, "Super Over started", result)
+        );
+    };
+
+    // =========================================================================
+    // NEW CONTROLLER METHODS ADDED BELOW
+    // =========================================================================
+
+    /**
+     * ---------------------------
+     * @route PATCH /matches/end-over
+     * @description Manually end the current over
+     * ---------------------------
+     */
+    endOver = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { matchId } = httpRequest.body;
+
+        const result = await this._matchScoreService.endOver(matchId);
+
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, "Over ended", result)
+        );
+    };
+
+    /**
+     * ---------------------------
+     * @route PATCH /matches/end-innings
+     * @description End the current innings and switch/complete match
+     * ---------------------------
+     */
+    endInnings = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { matchId } = httpRequest.body;
+
+        const result = await this._matchScoreService.endInnings(matchId);
+
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, "Innings ended", result)
+        );
+    };
+
+    /**
+     * ---------------------------
+     * @route PATCH /matches/penalty
+     * @description Add penalty runs (e.g. 5 runs for hitting helmet)
+     * ---------------------------
+     */
+    addPenalty = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { matchId, runs } = httpRequest.body;
+
+        const result = await this._matchScoreService.addPenalty(matchId, runs);
+
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, "Penalty added", result)
+        );
+    };
+
+    /**
+     * ---------------------------
+     * @route PATCH /matches/retire
+     * @description Retire a batsman (Hurt or Out)
+     * ---------------------------
+     */
+    retireBatsman = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { matchId, outBatsmanId, newBatsmanId, isRetiredHurt } = httpRequest.body;
+
+        const result = await this._matchScoreService.retireBatsman(
+            matchId,
+            outBatsmanId,
+            newBatsmanId,
+            isRetiredHurt
+        );
+
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, "Batsman retired", result)
+        );
+    };
 }
