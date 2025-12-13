@@ -85,27 +85,30 @@ interface BowlerChangeModalProps {
     ballsInOver: number;
 }
 
-export const BowlerChangeModal = ({ isOpen, onClose, forms, updateForm, actions, bowlingTeam, currentInnings, ballsInOver }: BowlerChangeModalProps) => (
-    <Modal isOpen={isOpen} onClose={onClose} title="Change Bowler" icon={RotateCw}>
-        <div className="bg-neutral-900 rounded-lg p-3 mb-4 border border-neutral-800 flex justify-between items-center">
-            <div className="text-xs text-neutral-500 uppercase tracking-wider font-semibold">Current Over</div>
-            <div className="font-mono font-bold text-white">{Math.floor(ballsInOver / 6)}.{ballsInOver % 6}</div>
-        </div>
-        <SelectInput
-            label="New Bowler"
-            value={forms.newBowlerId}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateForm('newBowlerId', e.target.value)}
-            options={bowlingTeam.members.filter((p: Player) => p._id !== currentInnings?.currentBowler).map((p: Player) => ({ value: p._id, label: p.name }))}
-        />
-        <button
-            onClick={actions.handleBowlerChange}
-            disabled={!forms.newBowlerId}
-            className={`w-full py-3 mt-2 rounded-xl font-bold text-sm transition-all ${!forms.newBowlerId ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' : 'bg-white text-black hover:bg-neutral-200'}`}
-        >
-            {ballsInOver >= 6 ? 'End Over & Change Bowler' : 'Change Bowler'}
-        </button>
-    </Modal>
-);
+export const BowlerChangeModal = ({ isOpen, onClose, forms, updateForm, actions, bowlingTeam, currentInnings, ballsInOver }: BowlerChangeModalProps) => {
+    console.log(bowlingTeam);
+    return (
+        <Modal isOpen={isOpen} onClose={onClose} title="Change Bowler" icon={RotateCw}>
+            <div className="bg-neutral-900 rounded-lg p-3 mb-4 border border-neutral-800 flex justify-between items-center">
+                <div className="text-xs text-neutral-500 uppercase tracking-wider font-semibold">Current Over</div>
+                <div className="font-mono font-bold text-white">{Math.floor(ballsInOver / 6)}.{ballsInOver % 6}</div>
+            </div>
+            <SelectInput
+                label="New Bowler"
+                value={forms.newBowlerId}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateForm('newBowlerId', e.target.value)}
+                options={bowlingTeam.members.filter((p: Player) => p._id !== currentInnings?.currentBowler).map((p: Player) => ({ value: p._id, label: p.name }))}
+            />
+            <button
+                onClick={actions.handleBowlerChange}
+                disabled={!forms.newBowlerId}
+                className={`w-full py-3 mt-2 rounded-xl font-bold text-sm transition-all ${!forms.newBowlerId ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' : 'bg-white text-black hover:bg-neutral-200'}`}
+            >
+                {ballsInOver >= 6 ? 'End Over & Change Bowler' : 'Change Bowler'}
+            </button>
+        </Modal>
+    )
+};
 
 interface ChangeStrikerModalProps {
     isOpen: boolean;

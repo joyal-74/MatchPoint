@@ -10,7 +10,6 @@ const BatsmanSchema = new Schema<BatsmanStat>({
     out: { type: Boolean, default: false },
     dismissalType: String,
     fielderId: { type: Schema.Types.ObjectId, ref: "Player" },
-
     retiredHurt: { type: Boolean, default: false },
 });
 
@@ -22,45 +21,49 @@ const BowlerSchema = new Schema<BowlerStat>({
     wickets: { type: Number, default: 0 },
 });
 
-
 const ExtraSchema = new Schema({
     wides: { type: Number, default: 0 },
     noBalls: { type: Number, default: 0 },
     legByes: { type: Number, default: 0 },
     byes: { type: Number, default: 0 },
     penalty: { type: Number, default: 0 },
-    total: { type: Number, default: 0 }
 });
 
-
 const BallLogSchema = new Schema({
-    ballNumber: Number,
+    over: Number,
+    ballInOver: Number,
+
     strikerId: { type: Schema.Types.ObjectId, ref: "Player" },
     nonStrikerId: { type: Schema.Types.ObjectId, ref: "Player" },
     bowlerId: { type: Schema.Types.ObjectId, ref: "Player" },
 
-    runs: Number,
-    extras: {
-        type: {
-            type: String,
-            enum: ["wide", "no-ball", "bye", "leg-bye", "penalty"],
-        },
-        runs: Number,
-        isLegalBall: Boolean
+    runs: { type: Number, default: 0 },
+
+    extrasType: {
+        type: String,
+        enum: ["wide", "noBall", "bye", "legBye", "penalty"]
     },
+    extrasRuns: { type: Number, default: 0 },
+
+    isLegalBall: { type: Boolean, default: true },
+
     dismissal: {
         type: {
             type: String,
-            enum: ["bowled", "caught", "runout", "lbw", "stumped", "hit-wicket", "retired-hurt", "retired-out"]
+            enum: [
+                "bowled", "caught", "run-out", "lbw", "stumped", "hit-wicket",
+                "retired-hurt", "retired-out", "timed-out", "obstructing-field", "hit-ball-twice"
+            ]
         },
         outBatsmanId: { type: Schema.Types.ObjectId, ref: "Player" },
         fielderId: { type: Schema.Types.ObjectId, ref: "Player" }
     },
 
-    over: Number,
-    ballInOver: Number
-});
+    nextBatsmanId: { type: Schema.Types.ObjectId, ref: "Player" },
+    outWasStriker: { type: Boolean, default: false },
 
+    timestamp: { type: Number, default: Date.now }
+});
 
 const InningsSchema = new Schema<InningsDTO>({
     battingTeam: { type: Schema.Types.ObjectId, ref: "Team", default: null },
@@ -68,12 +71,16 @@ const InningsSchema = new Schema<InningsDTO>({
 
     runs: { type: Number, default: 0 },
     wickets: { type: Number, default: 0 },
-    balls: { type: Number, default: 0 },
-    
+    deliveries: { type: Number, default: 0 },
+    legalBalls: { type: Number, default: 0 },
 
     currentStriker: { type: Schema.Types.ObjectId, ref: "Player", default: null },
     currentNonStriker: { type: Schema.Types.ObjectId, ref: "Player", default: null },
     currentBowler: { type: Schema.Types.ObjectId, ref: "Player", default: null },
+
+    initialStriker: { type: Schema.Types.ObjectId, ref: "Player", default: null },
+    initialNonStriker: { type: Schema.Types.ObjectId, ref: "Player", default: null },
+    initialBowler: { type: Schema.Types.ObjectId, ref: "Player", default: null },
 
     batsmen: [BatsmanSchema],
     bowlers: [BowlerSchema],
@@ -82,9 +89,9 @@ const InningsSchema = new Schema<InningsDTO>({
     logs: [BallLogSchema],
 
     isCompleted: { type: Boolean, default: false },
-    isSuperOver: { type: Boolean, default: false }
+    isSuperOver: { type: Boolean, default: false },
+    oversLimit: { type: Number, default: 20 }
 });
-
 
 const TournamentStatsSchema = new Schema<TournamentMatchStatsDocument>(
     {
@@ -103,6 +110,7 @@ const TournamentStatsSchema = new Schema<TournamentMatchStatsDocument>(
         currentInnings: { type: Number, default: 1 },
 
         isLive: { type: Boolean, default: true },
+        venue: { type: String, default: "" }
     },
     { timestamps: true }
 );

@@ -59,14 +59,20 @@ export const useScoreControls = ({ match, teamA, teamB, liveScore, emitScoreUpda
         ? (liveScore.currentInnings === 1 ? liveScore.innings1 : liveScore.innings2)
         : null;
 
-    const battingTeam = match.teamA._id === currentInnings?.battingTeamId ? teamA : teamB;
-    const bowlingTeam = match.teamA._id === currentInnings?.bowlingTeamId ? teamA : teamB;
+
+    const battingTeam = currentInnings?.battingTeam === teamA._id ? teamA : teamB;
+    const bowlingTeam = currentInnings?.bowlingTeam === teamA._id ? teamA : teamB;
+
 
     const needsInitialSetup = !currentInnings?.currentStriker || !currentInnings?.currentNonStriker || !currentInnings?.currentBowler;
 
-    const bowlingStats = Array.isArray(currentInnings?.bowlingStats) ? currentInnings.bowlingStats : [];
-    const currentBowlerStat = bowlingStats.find(stat => String(stat.playerId) === String(currentInnings?.currentBowler));
-    const ballsInOver = currentBowlerStat?.balls ?? 0;
+    const ballsInOver = useMemo(() => {
+        if (!currentInnings) return 0;
+        const bowlingStats = Array.isArray(currentInnings.bowlingStats) ? currentInnings.bowlingStats : [];
+        const currentBowlerStat = bowlingStats.find(stat => String(stat.playerId) === String(currentInnings?.currentBowler));
+        return currentBowlerStat?.balls ?? 0;
+    }, [currentInnings?.bowlingStats, currentInnings?.currentBowler]);
+
 
     const allPlayers = useMemo(() => [...battingTeam.members, ...bowlingTeam.members], [battingTeam, bowlingTeam]);
 
@@ -102,6 +108,10 @@ export const useScoreControls = ({ match, teamA, teamB, liveScore, emitScoreUpda
             player._id !== currentInnings?.currentStriker &&
             player._id !== currentInnings?.currentNonStriker
         );
+    };
+
+    const getAvailableBowlers = () => {
+        return bowlingTeam.members.filter(player => player._id !== currentInnings?.currentBowler);
     };
 
     const getFielders = () => bowlingTeam.members.filter(player => player._id !== currentInnings?.currentBowler);
@@ -166,7 +176,7 @@ export const useScoreControls = ({ match, teamA, teamB, liveScore, emitScoreUpda
             toggleModal('initialSetup', false);
         },
         handleBowlerChange: () => {
-            if (!forms.newBowlerId) return;
+            // if (!forms.newBowlerId) return;
             if (ballsInOver >= 6) {
                 emitScoreUpdate({ matchId: match._id, type: 'END_OVER' });
             }
@@ -202,6 +212,7 @@ export const useScoreControls = ({ match, teamA, teamB, liveScore, emitScoreUpda
 
         getPlayerName,
         getAvailableBatsmen,
+        getAvailableBowlers,
         getFielders,
 
         actions

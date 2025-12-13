@@ -42,7 +42,8 @@ const ScoreboardDashboard: React.FC = () => {
 
         const handleScoreUpdate = (data: { matchId: string, liveScore: LiveScoreState }) => {
             if (data.matchId === matchId) {
-                dispatch(updateLiveScore({ liveScore: data.liveScore }));
+                const clonedLiveScore = JSON.parse(JSON.stringify(data.liveScore));
+                dispatch(updateLiveScore({ liveScore: clonedLiveScore }));
             }
         };
         socket.on("connect", handleConnect);
@@ -75,7 +76,7 @@ const ScoreboardDashboard: React.FC = () => {
         );
     }
 
-    if (error || !match || !teamA || !teamB) {
+    if (error || !match || !teamA || !teamB || !liveScore) {
         return (
             <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
                 <div className="bg-red-900/10 border border-red-900/50 p-8 rounded-2xl max-w-md text-center">
@@ -91,13 +92,13 @@ const ScoreboardDashboard: React.FC = () => {
         <div className="min-h-screen bg-neutral-950 text-white font-sans selection:bg-blue-500/30">
             <LoadingOverlay show={loading} />
             <Navbar />
-            
+
             <main className="mx-auto p-4 md:p-6 mt-15">
-                
+
                 <header className="mb-6 relative overflow-hidden rounded-2xl bg-neutral-900 border border-neutral-800 shadow-lg group">
-        
+
                     <div className="relative px-6 py-5 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        
+
                         {/* Match Info (Left) */}
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2.5">
@@ -109,7 +110,7 @@ const ScoreboardDashboard: React.FC = () => {
                                 <span className="w-px h-3 bg-neutral-800"></span>
                                 <span className="text-neutral-400 text-xs font-mono">#{match.matchNumber}</span>
                             </div>
-                            
+
                             <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-neutral-500 font-medium">
                                 <span className="flex items-center gap-1.5 hover:text-neutral-300 transition-colors">
                                     <Calendar size={12} className="text-neutral-600" />
@@ -142,7 +143,7 @@ const ScoreboardDashboard: React.FC = () => {
                 </header>
 
                 <div className="grid grid-cols-1 xl:grid-cols-[1fr_420px] gap-6 items-start">
-                    
+
                     <div className="space-y-6 min-w-0">
                         <section aria-label="Live Match State">
                             <CurrentMatchState
@@ -152,12 +153,12 @@ const ScoreboardDashboard: React.FC = () => {
                                 liveScore={liveScore}
                             />
                         </section>
-                        
+
                         <section aria-label="Full Scoreboard">
-                            <FullScoreboardTabs 
-                                teamA={teamA} 
-                                teamB={teamB} 
-                                liveScore={liveScore} 
+                            <FullScoreboardTabs
+                                teamA={teamA}
+                                teamB={teamB}
+                                liveScore={liveScore}
                             />
                         </section>
                     </div>
@@ -175,15 +176,15 @@ const ScoreboardDashboard: React.FC = () => {
                         </div>
 
                         <div className="bg-blue-900/10 border border-blue-900/30 p-4 rounded-xl flex gap-3 items-start">
-                             <div className="bg-blue-500/20 p-2 rounded-lg text-blue-400 mt-0.5">
-                                 <Activity size={16} />
-                             </div>
-                             <div>
-                                 <h4 className="text-sm font-bold text-blue-200">Scorer Tip</h4>
-                                 <p className="text-xs text-blue-300/70 mt-1 leading-relaxed">
-                                     Use the "Special" menu for penalty runs or retirements. Wicket mode will lock other controls to prevent errors.
-                                 </p>
-                             </div>
+                            <div className="bg-blue-500/20 p-2 rounded-lg text-blue-400 mt-0.5">
+                                <Activity size={16} />
+                            </div>
+                            <div>
+                                <h4 className="text-sm font-bold text-blue-200">Scorer Tip</h4>
+                                <p className="text-xs text-blue-300/70 mt-1 leading-relaxed">
+                                    Use the "Special" menu for penalty runs or retirements. Wicket mode will lock other controls to prevent errors.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>

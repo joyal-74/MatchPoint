@@ -9,6 +9,17 @@ export const fetchViewerData = createAsyncThunk(
     createApiThunk(viewerEndpoints.fetchViewerData)
 );
 
+
+export const fetchLiveMatches  = createAsyncThunk(
+    "manager/fetchLiveMatches ",
+    createApiThunk(viewerEndpoints.fetchLiveMatches )
+);
+
+export const fetchMatchUpdates  = createAsyncThunk(
+    "manager/fetchMatchUpdates ",
+    createApiThunk(viewerEndpoints.fetchMatchUpdates )
+);
+
 export const updateViewerData = createAsyncThunk(
     "manager/updateViewerData",
     createApiThunk(async (data: UpdateUserDataPayload, dispatch) => {

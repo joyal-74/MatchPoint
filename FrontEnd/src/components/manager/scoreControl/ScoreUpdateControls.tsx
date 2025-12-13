@@ -33,6 +33,8 @@ const ScoreUpdateControls: React.FC<ScoreUpdateControlsProps> = ({
     emitScoreUpdate,
     emitUndoAction
 }) => {
+
+    console.log(liveScore, 'Ltt')
     // --- State ---
     const [newBatsmanId, setNewBatsmanId] = useState<string>('');
     const [dismissalType, setDismissalType] = useState<string>('Caught');
@@ -71,6 +73,7 @@ const ScoreUpdateControls: React.FC<ScoreUpdateControlsProps> = ({
 
     const battingTeam = match.teamA._id === currentInnings.battingTeamId ? teamA : teamB;
     const bowlingTeam = match.teamA._id === currentInnings.bowlingTeamId ? teamA : teamB;
+    
     const needsInitialSetup = !currentInnings.currentStriker || !currentInnings.currentNonStriker || !currentInnings.currentBowler;
     const bowlingStats = Array.isArray(currentInnings?.bowlingStats)
         ? currentInnings.bowlingStats

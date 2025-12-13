@@ -44,8 +44,6 @@ export interface Match {
     overs: number;
 }
 
-
-
 export interface PlayerStats {
     runs: number;
     balls: number;
@@ -58,7 +56,6 @@ export interface PlayerStats {
     runsConceded: number;
 }
 
-// History of a single ball event
 export interface BallEvent {
     over: number;
     ball: number;
@@ -68,26 +65,27 @@ export interface BallEvent {
     dismissalType: string | null;
     batsmanId: string;
     bowlerId: string;
+    isLegalBall?: boolean;
 }
 
-// Defines the state for a single innings
 export interface InningsState {
-    battingTeamId: string;
-    bowlingTeamId: string;
+    battingTeam: string;
+    bowlingTeam: string;
     runs: number;
     wickets: number;
-    overs: number;
-    balls: number;
+    overLimit: number;
+    legalBalls: number;
+    deliveries: number;
     currentStriker: string | null;
     currentNonStriker: string | null;
     currentBowler: string | null;
-    currentRunRate : string;
+    currentRunRate: string;
     isCompleted: boolean;
     ballEvents: BallEvent[];
-    // Stats for players currently participating/who have participated
-    battingStats: Record<string, Omit<PlayerStats, 'overs' | 'maidens' | 'wickets' | 'runsConceded'>>;
-    bowlingStats: Record<string, Omit<PlayerStats, 'runs' | 'balls' | 'fours' | 'sixes' | 'dismissal'>>;
-    extras : MatchExtras
+    recentLogs: BallEvent[];
+    battingStats: BattingStats[];
+    bowlingStats: BowlingStats[];
+    extras: MatchExtras;
 }
 
 export interface LiveScoreState {
@@ -101,17 +99,53 @@ export interface LiveScoreState {
 }
 
 export interface BattingStats {
+    playerId: string;
     runs: number;
     balls: number;
     fours: number;
     sixes: number;
     dismissal: string;
+    out: boolean;
+    strikeRate : string;
 }
 
-// --- Derived Bowling Statistics ---
 export interface BowlingStats {
-    overs: number; 
+    playerId: string;
+    overs: number;
+    balls : number;
     maidens: number;
     wickets: number;
     runsConceded: number;
+    economy: number;
+}
+
+export interface InningsSummary {
+    runs: number;
+    wickets: number;
+    legalBalls: number;
+    deliveries: number;
+    overs: string;
+    currentRunRate: number;
+    extras: MatchExtras;
+}
+
+export interface PlayerInningsStats {
+    playerId: string;
+    batting?: {
+        runs: number;
+        balls: number;
+        fours: number;
+        sixes: number;
+        strikeRate: number;
+        out: boolean;
+        dismissalType?: string;
+    };
+    bowling?: {
+        overs: number;
+        maidens: number;
+        wickets: number;
+        runsConceded: number;
+        economy: number;
+        deliveries: number;
+    };
 }

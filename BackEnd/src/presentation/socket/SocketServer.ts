@@ -13,6 +13,8 @@ import {
     IInitInningsUseCase, IRetireBatsmanUseCase, ISetBowlerUseCase, ISetNonStrikerUseCase,
     ISetStrikerUseCase, IStartSuperOverUseCase, IUndoLastBallUseCase
 } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { MatchViewerHandler } from "./handlers/MatchViewerHandler";
+import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 
 export interface AuthenticatedSocket extends Socket {
     user: {
@@ -30,6 +32,7 @@ export class SocketServer {
 
     constructor(
         private matchRepo: IMatchRepo,
+        private playerRepo: IPlayerRepository,
         
         private setStrikerUseCase: ISetStrikerUseCase,
         private setNonStrikerUseCase: ISetNonStrikerUseCase,
@@ -62,7 +65,6 @@ export class SocketServer {
 
             new ChatHandler(this.io, authSocket);
 
-            // Pass the repo as the 4th argument
             new MatchHandler(
                 this.io, 
                 authSocket, 
@@ -81,8 +83,11 @@ export class SocketServer {
                     endOver : this.endOverUseCase,
                     retireBatsman : this.retireBatsmanUseCase
                 },
-                this.matchRepo
+                this.matchRepo,
+                this.playerRepo,
             );
+
+            new MatchViewerHandler(this.io, authSocket, this.matchRepo);
 
             authSocket.on("disconnect", () => {
                 console.log(`User disconnected: ${authSocket.user.firstName}`);

@@ -3,7 +3,6 @@ import { Bowler } from "./Bowler";
 import { Extras, ExtraType } from "./Extra";
 import { BallLog } from "./BallLog";
 
-
 export interface RetireBatsmanPayload {
     outBatsmanId: string;
     newBatsmanId: string;
@@ -37,6 +36,7 @@ export type BowlerCreditedDismissal =
 export type NonBowlerDismissal =
     | "run-out"
     | "retired-hurt"
+    | "retired-out"
     | "timed-out"
     | "obstructing-field"
     | "hit-ball-twice";
@@ -56,10 +56,6 @@ export interface AddWicketPayload {
     runsCompleted?: number;
 }
 
-// ----------------------
-// Class Definition
-// ----------------------
-
 export class Innings {
     batsmen: Map<string, Batsman> = new Map();
     bowlers: Map<string, Bowler> = new Map();
@@ -69,15 +65,19 @@ export class Innings {
 
     runs = 0;
     wickets = 0;
-    balls = 0;
-
+    deliveries = 0;
+    legalBalls = 0;
     // Pointers
     currentStriker?: string;
     currentNonStriker?: string;
     currentBowler?: string;
     battingTeam?: string;
     bowlingTeam?: string;
-    oversLimit = 20;
+    oversLimit?: number;
+
+    initialStriker?: string;
+    initialNonStriker?: string;
+    initialBowler?: string;
 
     // Status
     isCompleted = false;
@@ -87,7 +87,19 @@ export class Innings {
     }
 
     get oversFormatted() {
-        return `${Math.floor(this.balls / 6)}.${this.balls % 6}`;
+        return `${Math.floor(this.legalBalls / 6)}.${this.legalBalls % 6}`;
+    }
+
+    get totalDeliveries() {
+        return this.deliveries;
+    }
+
+    get deliveryInOver() {
+        return (this.legalBalls % 6) || 6;
+    }
+
+    get overNumber() {
+        return Math.floor(this.legalBalls / 6);
     }
 
     initializeInnings(data: {
@@ -97,6 +109,9 @@ export class Innings {
         bowlerId: string;
         battingTeamId?: string;
         bowlingTeamId?: string;
+        initialStriker?: string;
+        initialNonStriker?: string;
+        initialBowler?: string;
     }) {
         this.oversLimit = data.oversLimit;
         this.battingTeam = data.battingTeamId;
@@ -107,18 +122,33 @@ export class Innings {
         this.currentBowler = data.bowlerId;
         this.isCompleted = false;
 
+        this.initialStriker = data.strikerId;
+        this.initialNonStriker = data.nonStrikerId;
+        this.initialBowler = data.bowlerId;
+
+        this.deliveries = 0;
+        this.legalBalls = 0;
+
         this.ensureBatsmanStarted(data.strikerId);
         this.ensureBatsmanStarted(data.nonStrikerId);
         this.ensureBowlerStarted(data.bowlerId);
     }
 
     private ensureBatsmanStarted(playerId: string) {
+        if (!playerId || playerId === 'undefined') {
+            console.warn(`Attempted to ensure batsman with invalid playerId: ${playerId}`);
+            return;
+        }
         if (!this.batsmen.has(playerId)) {
             this.batsmen.set(playerId, new Batsman(playerId));
         }
     }
 
     private ensureBowlerStarted(playerId: string) {
+        if (!playerId || playerId === 'undefined') {
+            console.warn(`Attempted to ensure bowler with invalid playerId: ${playerId}`);
+            return;
+        }
         if (!this.bowlers.has(playerId)) {
             this.bowlers.set(playerId, new Bowler(playerId));
         }
@@ -140,17 +170,16 @@ export class Innings {
         const striker = this.batsmen.get(strikerId)!;
         const bowler = this.bowlers.get(bowlerId)!;
 
-        // Logic: Valid ball if not Wide or No-Ball
         const isWideOrNoBall = extrasType === "wide" || extrasType === "no-ball";
         const isLegalBall = !isWideOrNoBall;
 
-        // Update Total Score
         const totalRunsOnBall = runs + extrasRuns;
         this.runs += totalRunsOnBall;
 
-        // Update Ball Count
+        this.deliveries += 1;
+
         if (isLegalBall) {
-            this.balls += 1;
+            this.legalBalls += 1;
         }
 
         // Update Extras Entity
@@ -158,31 +187,27 @@ export class Innings {
             this.extras.add(extrasType as ExtraType, extrasRuns);
         }
 
-        // Update Batsman Stats (Wides don't count as balls faced)
         if (extrasType !== "wide") {
             striker.addRuns(runs);
             if (isLegalBall) striker.addBallFaced();
         }
 
-        // Update Bowler Stats
         bowler.addRunsConceded(totalRunsOnBall);
         if (isLegalBall) {
             bowler.addLegalBall();
         }
 
-        // Handle Dismissal
         if (payload.dismissal) {
             this.handleDismissalLogic(payload.dismissal, bowler);
         }
 
-        // Log Event
         const log: BallLog = {
             ...payload,
             extrasType: payload.extrasType as ExtraType,
             isLegalBall: isLegalBall,
             extrasRuns: extrasRuns,
-            over: Math.floor(this.balls / 6),
-            ballInOver: this.balls % 6 === 0 ? 6 : this.balls % 6,
+            over: this.overNumber,
+            ballInOver: this.deliveryInOver,
             nonStrikerId: this.currentNonStriker,
             timestamp: Date.now()
         };
@@ -191,11 +216,11 @@ export class Innings {
         this.handleStrikeRotation(runs, isLegalBall);
     }
 
-
     addExtras(payload: AddExtrasPayload) {
         if (this.isCompleted) return;
 
         this.runs += payload.runs;
+        this.deliveries += 1;
 
         this.extras.add(payload.type as ExtraType, payload.runs);
 
@@ -206,10 +231,10 @@ export class Innings {
             extrasRuns: payload.runs,
             extrasType: payload.type as ExtraType,
             isLegalBall: false,
-            over: Math.floor(this.balls / 6),
-            ballInOver: this.balls % 6,
+            over: this.overNumber,
+            ballInOver: this.deliveryInOver,
             nonStrikerId: this.currentNonStriker,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         };
         this.logs.push(log);
     }
@@ -234,7 +259,6 @@ export class Innings {
 
         if (this.isCompleted) throw new Error("Innings is already completed.");
 
-
         // Normalize dismissalType
         const norm = this.normalizeDismissalType(dismissalType);
 
@@ -251,9 +275,10 @@ export class Innings {
             if (bowler && isLegalBall) bowler.addRunsConceded(runsCompleted);
         }
 
-        // Ball count
+        this.deliveries += 1;
+
         if (isLegalBall) {
-            this.balls += 1;
+            this.legalBalls += 1;
             bowler?.addLegalBall();
         }
 
@@ -293,15 +318,16 @@ export class Innings {
                 outBatsmanId: outBatsmanId,
                 fielderId: fielderId ?? undefined
             },
-            over: Math.floor(this.balls / 6),
-            ballInOver: (this.balls % 6 === 0) ? 6 : (this.balls % 6),
+            over: this.overNumber,
+            ballInOver: this.deliveryInOver,
             nonStrikerId: this.currentNonStriker,
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            nextBatsmanId,
+            outWasStriker: outBatsmanId === this.currentStriker,
         });
 
-        // Change strike
         if (runsCompleted % 2 !== 0) this.swapStrikers();
-        if (isLegalBall && this.balls % 6 === 0) this.swapStrikers();
+        if (isLegalBall && this.legalBalls % 6 === 0) this.swapStrikers();
     }
 
     retireBatsman(payload: RetireBatsmanPayload) {
@@ -336,14 +362,14 @@ export class Innings {
             extrasRuns: 0,
             isLegalBall: false,
             dismissal: { type: dismissalType, outBatsmanId: outBatsmanId },
-            over: Math.floor(this.balls / 6),
-            ballInOver: this.balls % 6,
+            over: this.overNumber,
+            ballInOver: this.deliveryInOver,
             timestamp: Date.now()
         };
         this.logs.push(log);
     }
 
-    // 4. HELPERS
+    // HELPERS
 
     private handleDismissalLogic(dismissal: { type: string; outBatsmanId?: string; fielderId?: string }, bowler: Bowler) {
         this.wickets += 1;
@@ -363,7 +389,7 @@ export class Innings {
         if (runs % 2 !== 0) {
             this.swapStrikers();
         }
-        if (isLegalBall && this.balls > 0 && this.balls % 6 === 0) {
+        if (isLegalBall && this.legalBalls > 0 && this.legalBalls % 6 === 0) {
             this.swapStrikers();
         }
     }
@@ -399,89 +425,194 @@ export class Innings {
     }
 
     undoLastBall() {
-        if (this.logs.length === 0) return;
-        if (this.isCompleted) this.isCompleted = false;
+        if (this.logs.length === 0) {
+            console.log('No balls to undo');
+            return;
+        }
+
+        const lastBall = this.logs[this.logs.length - 1];
+        console.log('Undoing last ball:', lastBall);
 
         this.logs.pop();
 
-        this.runs = 0;
-        this.wickets = 0;
-        this.balls = 0;
-        this.extras = new Extras();
+        // Determine if ball was legal
+        const isWide = lastBall.extrasType === 'wide';
+        const isNoBall = lastBall.extrasType === 'noBall';
+        const isLegalBall = lastBall.isLegalBall !== undefined
+            ? lastBall.isLegalBall
+            : !isWide && !isNoBall;
 
-        this.batsmen.forEach(b => b.resetStats());
-        this.bowlers.forEach(b => b.resetStats());
+        // ALWAYS decrement deliveries count
+        this.deliveries = Math.max(0, this.deliveries - 1);
+        console.log(`Deliveries reduced by 1, now ${this.deliveries}`);
 
-        const logsToReplay = [...this.logs];
-        this.logs = [];
+        // Only decrement legalBalls for legal deliveries
+        if (isLegalBall) {
+            this.legalBalls = Math.max(0, this.legalBalls - 1);
+            console.log(`Legal balls reduced by 1, now ${this.legalBalls}`);
+        }
 
-        logsToReplay.forEach(log => {
-            if (log.extrasType === 'penalty') {
-                this.addPenaltyRuns(log.extrasRuns || 0);
-                return;
+        // Revert extras
+        if (lastBall.extrasType && lastBall.extrasRuns) {
+            this.extras.subtract(lastBall.extrasType, lastBall.extrasRuns);
+        }
+
+        // Revert total runs
+        const totalRunsOnLastBall = (lastBall.runs || 0) + (lastBall.extrasRuns || 0);
+        this.runs -= totalRunsOnLastBall;
+
+        if (lastBall.dismissal) {
+            const dismissalType = this.normalizeDismissalType(lastBall.dismissal.type || "");
+            if (dismissalType !== 'retired-hurt') {
+                this.wickets = Math.max(0, this.wickets - 1);
+                console.log(`Wickets reduced by 1, now ${this.wickets}`);
+            }
+        }
+
+        // Revert player stats
+        this.revertPlayerStats(lastBall, isLegalBall, isWide);
+
+        // Revert striker positions
+        this.revertStrikerPositions(lastBall, isLegalBall);
+
+        // Handle over completion revert
+        this.handleOverCompletionRevert(lastBall, isLegalBall);
+
+        console.log('Undo completed successfully');
+    }
+
+    private revertPlayerStats(lastBall: BallLog, isLegalBall: boolean, isWide: boolean) {
+        const strikerId = lastBall.strikerId?.toString();
+        const bowlerId = lastBall.bowlerId?.toString();
+
+        // REVERT BATSMAN STATS
+        if (strikerId && this.batsmen.has(strikerId)) {
+            const striker = this.batsmen.get(strikerId)!;
+            const runsToSubtract = lastBall.runs || 0;
+
+            console.log(`Before reduction - batsman ${strikerId}: runs=${striker.runs}, balls=${striker.balls}`);
+
+            // Subtract runs
+            striker.runs = Math.max(0, striker.runs - runsToSubtract);
+
+            // Subtract fours/sixes
+            if (lastBall.runs === 4) {
+                striker.fours = Math.max(0, striker.fours - 1);
+            }
+            if (lastBall.runs === 6) {
+                striker.sixes = Math.max(0, striker.sixes - 1);
             }
 
-            if (log.dismissal) {
-                const dtype = this.normalizeDismissalType(log.dismissal.type || "");
-                if (dtype.includes('retired')) {
-                    const outId = log.dismissal.outBatsmanId!;
-                    const newId = (log as BallLog).nextBatsmanId || undefined;
-                    if (outId) {
-                        this.ensureBatsmanStarted(outId);
-                        const b = this.batsmen.get(outId)!;
-                        b.setOut(dtype);
-                        if (newId) {
-                            this.ensureBatsmanStarted(newId);
-                            if (this.currentStriker === outId) this.currentStriker = newId;
-                            else if (this.currentNonStriker === outId) this.currentNonStriker = newId;
-                        }
-                    }
-                    return;
-                }
-
-                if (log.isLegalBall) {
-                    this.addRuns({
-                        strikerId: log.strikerId!,
-                        bowlerId: log.bowlerId!,
-                        runs: log.runs || 0,
-                        extrasType: log.extrasType,
-                        extrasRuns: log.extrasRuns,
-                        dismissal: log.dismissal,
-                        isLegalBall: log.isLegalBall
-                    });
-                } else {
-                    this.addRuns({
-                        strikerId: log.strikerId!,
-                        bowlerId: log.bowlerId!,
-                        runs: log.runs || 0,
-                        extrasType: log.extrasType,
-                        extrasRuns: log.extrasRuns,
-                        dismissal: log.dismissal,
-                        isLegalBall: log.isLegalBall
-                    });
-                }
-                return;
+            // Subtract ball faced (only for legal balls that aren't wides)
+            if (isLegalBall && !isWide) {
+                striker.balls = Math.max(0, striker.balls - 1);
             }
 
-            this.addRuns({
-                strikerId: log.strikerId!,
-                bowlerId: log.bowlerId!,
-                runs: log.runs || 0,
-                extrasType: log.extrasType,
-                extrasRuns: log.extrasRuns,
-                dismissal: log.dismissal,
-                isLegalBall: log.isLegalBall
-            });
-        });
+            // Revert dismissal if batsman was out
+            if (lastBall.dismissal && lastBall.dismissal.outBatsmanId?.toString() === strikerId) {
+                striker.out = false;
+                striker.dismissalType = undefined;
+                striker.fielderId = undefined;
+                striker.retiredHurt = false;
+            }
 
+            console.log(`After reduction - batsman ${strikerId}: runs=${striker.runs}, balls=${striker.balls}`);
+        }
+
+        // REVERT BOWLER STATS
+        if (bowlerId && this.bowlers.has(bowlerId)) {
+            const bowler = this.bowlers.get(bowlerId)!;
+            const totalRunsToSubtract = (lastBall.runs || 0) + (lastBall.extrasRuns || 0);
+
+            console.log(`Before reduction - bowler ${bowlerId}: runsConceded=${bowler.runsConceded}, balls=${bowler.totalBalls}`);
+
+            // Subtract runs conceded (including extras)
+            bowler.runsConceded = Math.max(0, bowler.runsConceded - totalRunsToSubtract);
+
+            // Subtract ball if it was a legal delivery
+            if (isLegalBall) {
+                bowler.totalBalls = Math.max(0, bowler.totalBalls - 1);
+            }
+
+            // Subtract wicket if bowler was credited
+            const bowlerCreditedDismissals = ["bowled", "caught", "lbw", "stumped", "hit-wicket"];
+            if (lastBall.dismissal && bowlerCreditedDismissals.includes(lastBall.dismissal.type)) {
+                bowler.wickets = Math.max(0, bowler.wickets - 1);
+            }
+
+            console.log(`After reduction - bowler ${bowlerId}: runsConceded=${bowler.runsConceded}, balls=${bowler.totalBalls}`);
+        }
+    }
+
+    private revertStrikerPositions(lastBall: BallLog, isLegalBall: boolean) {
+        // Calculate legal balls before undo
+        const legalBallsBeforeUndo = this.legalBalls + (isLegalBall ? 1 : 0);
+
+        // 1. Revert strike rotation from odd runs
+        if ((lastBall.runs || 0) % 2 !== 0) {
+            this.swapStrikers();
+        }
+
+        // 2. Revert over-end rotation (only for legal balls at end of over)
+        if (isLegalBall && legalBallsBeforeUndo % 6 === 0) {
+            this.swapStrikers();
+        }
+
+        // 3. Handle dismissal/replacement reversal
+        if (lastBall.dismissal && lastBall.dismissal.outBatsmanId && lastBall.nextBatsmanId) {
+            const outId = lastBall.dismissal.outBatsmanId.toString();
+            const nextId = lastBall.nextBatsmanId.toString();
+            const wasStrikerOut = lastBall.outWasStriker;
+
+            if (wasStrikerOut && this.currentStriker === nextId) {
+                this.currentStriker = outId;
+            } else if (!wasStrikerOut && this.currentNonStriker === nextId) {
+                this.currentNonStriker = outId;
+            }
+        }
+
+        // 4. Handle retired batsmen reversal
+        if (lastBall.dismissal &&
+            (lastBall.dismissal.type === 'retired-hurt' ||
+                lastBall.dismissal.type === 'retired-out')) {
+
+            const retiredBatsmanId = lastBall.dismissal.outBatsmanId!.toString();
+
+            if (this.batsmen.has(retiredBatsmanId)) {
+                const batsman = this.batsmen.get(retiredBatsmanId)!;
+                batsman.out = false;
+                batsman.dismissalType = undefined;
+                batsman.retiredHurt = false;
+            }
+
+            if (lastBall.outWasStriker) {
+                this.currentStriker = retiredBatsmanId;
+            } else {
+                this.currentNonStriker = retiredBatsmanId;
+            }
+        }
+    }
+
+    private handleOverCompletionRevert(lastBall: BallLog, isLegalBall: boolean) {
+        const legalBallsBeforeUndo = this.legalBalls + (isLegalBall ? 1 : 0);
+
+        // If we undid the 6th legal ball of an over, restore the current bowler
+        if (isLegalBall && legalBallsBeforeUndo % 6 === 0) {
+            if (lastBall.bowlerId) {
+                this.currentBowler = lastBall.bowlerId.toString();
+            }
+        }
     }
 
     toDTO() {
         return {
             runs: this.runs,
             wickets: this.wickets,
+            battingTeam : this.battingTeam,
+            bowlingTeam : this.bowlingTeam,
             overs: this.oversFormatted,
-            balls: this.balls,
+            legalBalls: this.legalBalls,
+            deliveries: this.deliveries,
             isCompleted: this.isCompleted,
             currentStriker: this.currentStriker,
             currentNonStriker: this.currentNonStriker,

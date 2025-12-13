@@ -1,15 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { User } from "../../types/User";
-import { fetchViewerData, updateViewerData } from "./viewerThunks";
+import { fetchLiveMatches, fetchViewerData, updateViewerData } from "./viewerThunks";
+import type { Match } from "./viewerTypes";
 
 interface viewerState {
     viewer : User | null;
     loading: boolean;
+    liveMatches : Match[];
     error: string | null;
 }
 
 const initialState: viewerState = {
     viewer: null,
+    liveMatches : [],
     loading: false,
     error: null,
 };
@@ -48,6 +51,19 @@ const viewerSlice = createSlice({
             .addCase(updateViewerData.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? "Profile update failed";
+            })
+
+
+            .addCase(fetchLiveMatches.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchLiveMatches.fulfilled, (state, action) => {
+                state.loading = false;
+                state.liveMatches = action.payload;
+            })
+            .addCase(fetchLiveMatches.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error?.message || "Failed to load matches";
             });
     },
 });

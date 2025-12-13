@@ -15,7 +15,7 @@ const matchesSchema = new Schema({
     stats: { type: Map, of: Schema.Types.Mixed, default: {} },
     tossWinner: { type: Schema.Types.ObjectId, ref: "Team" },
     tossDecision: { type: String, enum: ["bat", "bowl"] },
-    overs: { type: Number, default: 20 },
+    oversLimit: { type: Number, default: 20 },
 });
 
 export default model("Matches", matchesSchema);

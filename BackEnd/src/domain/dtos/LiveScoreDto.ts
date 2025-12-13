@@ -21,11 +21,12 @@ export interface BowlerDto {
 }
 
 export interface InningsDto {
-    battingTeamId: string | null;
-    bowlingTeamId: string | null;
+    battingTeam: string | null;
+    bowlingTeam: string | null;
     runs: number;
     wickets: number;
-    balls: number;
+    legalBalls: number;
+    deliveries: number;
     overs: number;
     currentRunRate: string;
     isCompleted: boolean;

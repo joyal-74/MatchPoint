@@ -1,4 +1,5 @@
-import type { Match, MatchEntity } from "domain/entities/Match";
+import type { Match } from "domain/entities/Match";
+import { MatchEntity } from "domain/entities/MatchEntity";
 
 export interface IMatchesRepository {
     createMatches(tournamentId: string, matches: Match[]): Promise<Match[]>;

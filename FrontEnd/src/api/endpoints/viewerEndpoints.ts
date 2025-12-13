@@ -2,10 +2,21 @@ import axiosClient from "../http/axiosClient";
 import type { User } from "../../types/User";
 import { VIEWER_ROUTES } from "../../constants/routes/viewerRoutes";
 import type { UpdateUserDataPayload } from "../../features/manager/managerTypes";
+import type { Match } from "../../features/viewer/viewerTypes";
 
 export const viewerEndpoints = {
     fetchViewerData: async (viewerId: string): Promise<User> => {
         const { data } = await axiosClient.get(VIEWER_ROUTES.GET_DETAILS(viewerId));
+        return data.data;
+    },
+
+    fetchLiveMatches : async (viewerId : string): Promise<Match[]> => {
+        const { data } = await axiosClient.get(VIEWER_ROUTES.GET_LIVE_MATCHES(viewerId));
+        return data.data;
+    },
+
+    fetchMatchUpdates : async (matchId : string): Promise<Match[]> => {
+        const { data } = await axiosClient.get(VIEWER_ROUTES.FETCH_MATCH_UPDATES(matchId));
         return data.data;
     },
 

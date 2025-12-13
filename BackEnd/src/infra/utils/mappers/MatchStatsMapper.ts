@@ -23,7 +23,6 @@ export class MatchStatsMapper {
                 b.fielderId,
                 b.retiredHurt
             );
-
             innings.batsmen.set(String(b.playerId), batsman);
         });
 
@@ -34,12 +33,9 @@ export class MatchStatsMapper {
                 bw.wickets,
                 0
             );
-
             bowler.totalBalls = bw.balls;
-
             innings.bowlers.set(String(bw.playerId), bowler);
         });
-
 
         const extrasDomain = new Extras();
         if (doc.extras) {
@@ -50,13 +46,17 @@ export class MatchStatsMapper {
             extrasDomain.penalty = doc.extras.penalty || 0;
         }
         innings.extras = extrasDomain;
-        // ---- FIX END ----
 
         innings.logs = doc.logs ?? [];
 
         innings.runs = doc.runs ?? 0;
         innings.wickets = doc.wickets ?? 0;
-        innings.balls = doc.balls ?? 0;
+        
+ 
+        innings.legalBalls = doc.legalBalls ?? 0;
+        
+        innings.deliveries = doc.deliveries ?? 0;
+        
         innings.isCompleted = doc.isCompleted ?? false;
 
         innings.currentBowler = doc.currentBowler ? String(doc.currentBowler) : undefined;
@@ -66,12 +66,27 @@ export class MatchStatsMapper {
         innings.battingTeam = doc.battingTeam ?? undefined;
         innings.bowlingTeam = doc.bowlingTeam ?? undefined;
 
+        innings.initialStriker = doc.initialStriker ? String(doc.initialStriker) : undefined;
+        innings.initialNonStriker = doc.initialNonStriker ? String(doc.initialNonStriker) : undefined;
+        innings.initialBowler = doc.initialBowler ? String(doc.initialBowler) : undefined;
+
+        if (doc.oversLimit !== undefined) {
+            innings.oversLimit = doc.oversLimit;
+        }
+
         return innings;
     }
 
     static toDomain(doc: TournamentMatchStatsDocument): MatchEntity {
         const innings1 = this.mapInnings(doc.innings1) ?? new Innings();
         const innings2 = this.mapInnings(doc.innings2);
+
+        if (innings1.oversLimit === 20 && doc.oversLimit) {
+            innings1.oversLimit = doc.oversLimit;
+        }
+        if (innings2 && innings2.oversLimit === 20 && doc.oversLimit) {
+            innings2.oversLimit = doc.oversLimit;
+        }
 
         return new MatchEntity({
             tournamentId: String(doc.tournamentId),
@@ -80,7 +95,9 @@ export class MatchStatsMapper {
             innings1,
             innings2,
             currentInnings: doc.currentInnings,
-            hasSuperOver: doc.hasSuperOver
+            hasSuperOver: doc.hasSuperOver,
+            venue: doc.venue || "",
+            isLive: doc.isLive || false
         });
     }
 
@@ -88,17 +105,24 @@ export class MatchStatsMapper {
         const mapInningsToPersistence = (inn: Innings | null) => {
             if (!inn) return null;
 
+            console.log(inn, 'inn')
+
             return {
                 battingTeam: inn.battingTeam,
                 bowlingTeam: inn.bowlingTeam,
                 runs: inn.runs || 0,
                 wickets: inn.wickets,
-                balls: inn.balls,
+                deliveries: inn.deliveries,
+                legalBalls: inn.legalBalls,
                 isCompleted: inn.isCompleted,
 
                 currentStriker: inn.currentStriker,
                 currentNonStriker: inn.currentNonStriker,
                 currentBowler: inn.currentBowler,
+
+                initialStriker: inn.initialStriker,
+                initialNonStriker: inn.initialNonStriker,
+                initialBowler: inn.initialBowler,
 
                 batsmen: Array.from(inn.batsmen.values()).map(b => ({
                     playerId: b.playerId,
@@ -121,7 +145,8 @@ export class MatchStatsMapper {
                 })),
 
                 extras: inn.extras,
-                logs: inn.logs
+                logs: inn.logs,
+                oversLimit: inn.oversLimit
             };
         };
 
@@ -132,7 +157,9 @@ export class MatchStatsMapper {
             innings2: mapInningsToPersistence(match.innings2 ?? null),
             oversLimit: match.oversLimit,
             currentInnings: match.currentInningsNumber,
-            hasSuperOver: match.hasSuperOver
+            hasSuperOver: match.hasSuperOver,
+            venue: match.venue,
+            isLive: match.isLive
         };
     }
 }

@@ -63,6 +63,7 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
         const balls = Math.round((overs % 1) * 10);
         return `${fullOvers}.${balls}`;
     };
+
     const bowlerOversDisplay = calculateOversDisplay(bowlerStats.overs);
     const economy = bowlerStats.overs > 0 ? (bowlerStats.runsConceded / bowlerStats.overs).toFixed(2) : '0.00';
 

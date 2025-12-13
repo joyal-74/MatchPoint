@@ -20,6 +20,7 @@ const ScoreUpdateControls: React.FC<ScoreUpdateControlsProps> = (props) => {
         match, currentInnings, ballsInOver, needsInitialSetup, disabled,
         modals, isWicketMode,
         setIsWicketMode, updateForm, toggleModal,
+        bowlingTeam,
         actions
     } = logic;
 
@@ -129,7 +130,7 @@ const ScoreUpdateControls: React.FC<ScoreUpdateControlsProps> = (props) => {
                         >
                             {ballsInOver >= 6 ? <><RotateCw size={16} /> End Over & Switch</> : 'End Over Early'}
                         </button>
-                        {((currentInnings.wickets >= 10) || (currentInnings.overs >= (match.overs || 50) && ballsInOver >= 6)) && (
+                        {((currentInnings.wickets >= 10) || (currentInnings.overLimit >= (match.overs || 50) && ballsInOver >= 6)) && (
                             <button onClick={actions.handleEndInnings} className="w-full mt-2 py-3 rounded-xl font-bold text-sm bg-red-600 text-white hover:bg-red-500 transition-all shadow-lg shadow-red-900/20">
                                 Finish Innings
                             </button>
@@ -155,7 +156,7 @@ const ScoreUpdateControls: React.FC<ScoreUpdateControlsProps> = (props) => {
                 />
             )}
 
-            {currentInnings && (
+            {currentInnings && bowlingTeam && (
                 <BowlerChangeModal
                     isOpen={modals.bowlerChange}
                     onClose={() => toggleModal('bowlerChange', false)}

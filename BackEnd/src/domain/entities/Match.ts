@@ -17,7 +17,7 @@ export interface Match {
 }
 
 export interface TeamEntity {
-    id: string;
+    _id: string;
     name: string;
     logo: string;
     members: any[];

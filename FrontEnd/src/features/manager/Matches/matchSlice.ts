@@ -17,20 +17,22 @@ interface UpdateLiveScorePayload {
 }
 
 const initialInningsState: InningsState = {
-    battingTeamId: '',
-    bowlingTeamId: '',
+    battingTeam: '',
+    bowlingTeam: '',
     runs: 0,
     wickets: 0,
-    overs: 0,
-    balls : 0,
+    overLimit: 0,
+    legalBalls : 0,
+    deliveries : 0,
     currentStriker: null,
     currentNonStriker: null,
     currentBowler: null,
     isCompleted: false,
     currentRunRate : '',
     ballEvents: [],
-    battingStats: {},
-    bowlingStats: {},
+    recentLogs: [],
+    battingStats: [],
+    bowlingStats: [],
     extras : {
         wides : 0,
         byes : 0,
@@ -81,8 +83,8 @@ const matchSlice = createSlice({
             }
 
             if (state.liveScore?.innings1) {
-                state.liveScore.innings1.battingTeamId = battingTeamId;
-                state.liveScore.innings1.bowlingTeamId = bowlingTeamId;
+                state.liveScore.innings1.battingTeam = battingTeamId;
+                state.liveScore.innings1.bowlingTeam = bowlingTeamId;
             }
         },
     },
@@ -102,6 +104,7 @@ const matchSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
+            
             .addCase(saveMatchData.pending, (state) => {
                 state.loading = true;
             })
@@ -113,6 +116,7 @@ const matchSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
+
             .addCase(loadInitialLiveScore.pending, (state) => {
                 state.loading = true;
             })

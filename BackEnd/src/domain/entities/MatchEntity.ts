@@ -10,7 +10,6 @@ export interface AddRunsPayload {
     isLegalBall?: boolean;
 }
 
-
 export interface InitInningsPayload {
     matchId: string;
     oversLimit: number;
@@ -31,6 +30,8 @@ export class MatchEntity {
     tournamentId: string;
     matchId: string;
     oversLimit: number;
+    venue: string;
+    isLive: boolean;
 
     currentInningsNumber = 1;
 
@@ -44,6 +45,8 @@ export class MatchEntity {
         tournamentId: string;
         matchId: string;
         oversLimit: number;
+        venue: string;
+        isLive: boolean;
         innings1?: Innings;
         innings2?: Innings | null;
         currentInnings?: number;
@@ -52,8 +55,15 @@ export class MatchEntity {
         this.tournamentId = init.tournamentId;
         this.matchId = init.matchId;
         this.oversLimit = init.oversLimit;
+        this.venue = init.venue ?? "";
+        this.isLive = init.isLive;
 
-        this.innings1 = init.innings1 ?? new Innings();
+        this.innings1 = init.innings1 ?? new Innings({
+            oversLimit: this.oversLimit,
+            battingTeam: undefined,
+            bowlingTeam: undefined
+        });
+
         this.innings2 = init.innings2 ?? null;
 
         if (init.currentInnings !== undefined) {
@@ -71,7 +81,11 @@ export class MatchEntity {
         }
         if (this.currentInningsNumber === 2) {
             if (!this.innings2) {
-                this.innings2 = new Innings();
+                this.innings2 = new Innings({
+                    oversLimit: this.oversLimit,
+                    battingTeam: undefined,
+                    bowlingTeam: undefined
+                });
             }
             return this.innings2;
         }
@@ -109,11 +123,16 @@ export class MatchEntity {
             throw new Error("Cannot add runs: Striker or Bowler not set for this innings.");
         }
 
-        this.activeInnings.addRuns({
-            ...payload,
+        const inningsPayload = {
             strikerId: striker,
-            bowlerId: bowler
-        });
+            bowlerId: bowler,
+            runs: payload.runs,
+            extrasType: payload.extrasType,
+            extrasRuns: payload.extrasRuns,
+            isLegalBall: payload.isLegalBall
+        };
+
+        this.activeInnings.addRuns(inningsPayload);
     }
 
     addWicketToCurrentInnings(payload: AddWicketPayload) {
@@ -134,7 +153,10 @@ export class MatchEntity {
 
     addExtras(type: string, runs: number) {
         console.log(type, runs, '//////')
-        this.activeInnings.addExtras({ runs, type });
+        this.activeInnings.addExtras({
+            type: type as ExtraType,
+            runs: runs
+        });
     }
 
     undoLastBall() {
@@ -143,6 +165,22 @@ export class MatchEntity {
 
     startSuperOver() {
         this.hasSuperOver = true;
+        // Reset overs limit for super over
+        this.oversLimit = 1;
+
+        // Reset innings for super over
+        this.innings1 = new Innings({
+            oversLimit: 1,
+            battingTeam: undefined,
+            bowlingTeam: undefined
+        });
+        this.innings2 = new Innings({
+            oversLimit: 1,
+            battingTeam: undefined,
+            bowlingTeam: undefined
+        });
+        this.currentInningsNumber = 1;
+        this.isMatchComplete = false;
     }
 
     endOver() {
@@ -150,9 +188,7 @@ export class MatchEntity {
     }
 
     endInnings() {
-        if (typeof this.activeInnings.completeInnings === 'function') {
-            this.activeInnings.completeInnings();
-        }
+        this.activeInnings.completeInnings();
 
         if (this.currentInningsNumber === 1) {
             this.currentInningsNumber = 2;
@@ -162,26 +198,35 @@ export class MatchEntity {
     }
 
     addPenaltyRuns(runs: number) {
-        if (typeof this.activeInnings.addPenaltyRuns === 'function') {
-            this.activeInnings.addPenaltyRuns(runs);
-        } else {
-            this.addRunsToCurrentInnings({
-                runs: 0,
-                extrasRuns: runs,
-                extrasType: 'PENALTY'
-            });
-        }
+        this.activeInnings.addPenaltyRuns(runs);
     }
 
     retireBatsman(payload: RetireBatsmanPayload) {
         this.activeInnings.retireBatsman(payload);
     }
 
+    // Helper method to check if innings is complete
+    isInningsComplete(inningsNumber: number): boolean {
+        if (inningsNumber === 1) {
+            return this.innings1.isCompleted;
+        } else if (inningsNumber === 2 && this.innings2) {
+            return this.innings2.isCompleted;
+        }
+        return false;
+    }
+
+    // Helper to get innings by number
+    getInnings(inningsNumber: number): Innings | null {
+        if (inningsNumber === 1) return this.innings1;
+        if (inningsNumber === 2) return this.innings2 || null;
+        return null;
+    }
 
     toDTO() {
         return {
             matchId: this.matchId,
             tournamentId: this.tournamentId,
+            isLive: this.isLive,
             currentInnings: this.currentInningsNumber,
             oversLimit: this.oversLimit,
             hasSuperOver: this.hasSuperOver,
@@ -192,7 +237,7 @@ export class MatchEntity {
                 striker: this.currentStriker,
                 nonStriker: this.currentNonStriker,
                 bowler: this.currentBowler
-            }
+            },
         };
     }
 }

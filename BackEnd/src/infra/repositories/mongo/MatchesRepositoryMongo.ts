@@ -1,5 +1,8 @@
 import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
+import { Extras } from "domain/entities/Extra";
+import { Innings } from "domain/entities/Innings";
 import type { Match } from "domain/entities/Match";
+import { MatchEntity } from "domain/entities/MatchEntity";
 import { NotFoundError } from "domain/errors";
 import MatchModel from "infra/databases/mongo/models/MatchesModel";
 import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentStatsModel";
@@ -55,13 +58,11 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
     }
 
     async updateTossDetails(matchId: string, tossWinnerId: string, tossDecision: string): Promise<any | null> {
-        // 1. Update tossWinner + tossDecision in Match collection
         await MatchModel.findByIdAndUpdate(
             matchId,
             { $set: { tossWinner: tossWinnerId, tossDecision } }
         );
 
-        // 2. Fetch updated match with teams
         const match = await MatchModel.findById(matchId)
             .populate("teamA")
             .populate("teamB")
@@ -83,58 +84,54 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
         }
 
         const teamA = match.teamA._id.toString();
-        const teamB = match.teamB._id.toString() ?? null;
+        const teamB = match.teamB._id.toString();
 
-        let battingTeam: string;
-        let bowlingTeam: string;
+        let battingTeamId: string;
+        let bowlingTeamId: string;
 
         if (tossDecision === "Batting") {
-            battingTeam = tossWinnerId;
-            bowlingTeam = tossWinnerId === teamA ? teamB : teamA;
+            battingTeamId = tossWinnerId;
+            bowlingTeamId = tossWinnerId === teamA ? teamB : teamA;
         } else {
-            // chose to bowl
-            bowlingTeam = tossWinnerId;
-            battingTeam = tossWinnerId === teamA ? teamB : teamA;
+            bowlingTeamId = tossWinnerId;
+            battingTeamId = tossWinnerId === teamA ? teamB : teamA;
         }
 
-        // 4. Initialize innings1 in TournamentMatchStats using UPSERT
+        console.log(battingTeamId, " batting")
+        console.log(bowlingTeamId, " bowling")
+
+        const innings1 = new Innings({
+            battingTeam: battingTeamId,
+            bowlingTeam: bowlingTeamId,
+            oversLimit: match.oversLimit || 20,
+            runs: 0,
+            wickets: 0,
+            legalBalls: 0,
+            deliveries: 0,
+            isCompleted: false,
+            extras: new Extras(),
+            batsmen: new Map(),
+            bowlers: new Map(),
+            logs: []
+        });
+
+        const innings1DTO = innings1.toDTO(); 
+
+        const matchStatsData = {
+            tournamentId: match.tournamentId.toString(),
+            matchId: matchId,
+            oversLimit: match.oversLimit || 20,
+            venue: match.venue || "",
+            isLive: true,
+            innings1: innings1DTO,
+            innings2: null,
+            currentInnings: 1,
+            hasSuperOver: false
+        };
+
         await TournamentMatchStatsModel.findOneAndUpdate(
             { matchId },
-            {
-                $set: {
-                    innings1: {
-                        battingTeam,
-                        bowlingTeam,
-                        runs: 0,
-                        wickets: 0,
-                        balls: 0,
-
-                        currentStriker: null,
-                        currentNonStriker: null,
-                        currentBowler: null,
-
-                        batsmen: [],
-                        bowlers: []
-                    },
-                    currentInnings: 1,
-                    isLive: true
-                },
-                $setOnInsert: {
-                    tournamentId: match.tournamentId,
-                    innings2: {
-                        battingTeam: null,
-                        bowlingTeam: null,
-                        runs: 0,
-                        wickets: 0,
-                        balls: 0,
-                        currentStriker: null,
-                        currentNonStriker: null,
-                        currentBowler: null,
-                        batsmen: [],
-                        bowlers: []
-                    }
-                }
-            },
+            { $set: matchStatsData },
             {
                 upsert: true,
                 new: true,

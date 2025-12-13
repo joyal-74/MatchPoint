@@ -8,6 +8,13 @@ interface FullScoreboardTabsProps {
     liveScore: LiveScoreState | null;
 }
 
+interface TabButtonProps {
+    id: 'batting' | 'bowling' | 'extras';
+    label: string;
+    icon: React.ComponentType<{ size?: number }>;
+    colorClass: string;
+}
+
 const FullScoreboardTabs: React.FC<FullScoreboardTabsProps> = ({ teamA, teamB, liveScore }) => {
     const [activeInnings, setActiveInnings] = useState<1 | 2>(1);
     const [activeTab, setActiveTab] = useState<'batting' | 'bowling' | 'extras'>('batting');
@@ -46,21 +53,22 @@ const FullScoreboardTabs: React.FC<FullScoreboardTabsProps> = ({ teamA, teamB, l
 
     // --- Components ---
 
-    const TabButton = ({ id, label, icon: Icon, colorClass }: any) => (
+    const TabButton: React.FC<TabButtonProps> = ({ id, label, icon: Icon, colorClass }) => (
         <button
             onClick={() => setActiveTab(id)}
             className={`
-                flex-1 py-3 flex items-center justify-center gap-2 text-md font-bold border-b-2 transition-all
-                ${activeTab === id
+            flex-1 py-3 flex items-center justify-center gap-2 text-md font-bold border-b-2 transition-all
+            ${activeTab === id
                     ? `text-white ${colorClass} bg-neutral-900/50`
                     : 'text-neutral-500 border-transparent hover:text-neutral-300 hover:bg-neutral-900/30'
                 }
-            `}
+        `}
         >
             <Icon size={16} />
             {label}
         </button>
     );
+
 
     // --- Renderers ---
 
@@ -169,7 +177,7 @@ const FullScoreboardTabs: React.FC<FullScoreboardTabsProps> = ({ teamA, teamB, l
         const extras = inningsData.extras || { wides: 0, noBalls: 0, byes: 0, legByes: 0, penalty: 0 };
         const totalExtras = (extras.wides || 0) + (extras.noBalls || 0) + (extras.byes || 0) + (extras.legByes || 0) + (extras.penalty || 0);
 
-        const ExtraCard = ({ label, value, color } : { label : string, value : string | number, color : string }) => (
+        const ExtraCard = ({ label, value, color }: { label: string, value: string | number, color: string }) => (
             <div className="bg-neutral-900 border border-neutral-800 p-4 rounded-xl flex flex-col items-center justify-center">
                 <div className={`text-2xl font-bold mb-1 ${color}`}>{value}</div>
                 <div className="text-[10px] uppercase tracking-wider text-neutral-500 font-semibold">{label}</div>

@@ -10,6 +10,8 @@ export class InitInningsUseCase implements IInitInningsUseCase {
         const match = await this.matchRepo.findByMatchId(payload.matchId);
         if (!match) throw new NotFoundError("Match not found");
 
+        console.log(payload, "payload")
+
         match.initInnings({
             oversLimit: payload.oversLimit,
             strikerId: payload.strikerId,

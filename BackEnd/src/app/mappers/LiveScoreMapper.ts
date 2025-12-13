@@ -33,7 +33,7 @@ export class LiveScoreMapper {
 
             if (matchEntity.innings2) {
                 const score2 = matchEntity.innings2.runs || 0;
-                const ballsBowled2 = matchEntity.innings2.balls || 0;
+                const ballsBowled2 = matchEntity.innings2.legalBalls || 0;
 
                 const needed = target - score2;
                 requiredRuns = needed > 0 ? needed : 0;
@@ -57,19 +57,20 @@ export class LiveScoreMapper {
         const mapInnings = (inn: Innings | null | undefined) => {
             if (!inn) return null;
 
-            const crr = inn.balls > 0 ? ((inn.runs / inn.balls) * 6).toFixed(2) : "0.00";
+            const crr = inn.legalBalls > 0 ? ((inn.runs / inn.legalBalls) * 6).toFixed(2) : "0.00";
 
             const batsmenArray = Array.from(inn.batsmen.values());
             const bowlersArray = Array.from(inn.bowlers.values());
 
             return {
-                battingTeamId: safeId(inn.battingTeam),
-                bowlingTeamId: safeId(inn.bowlingTeam),
+                battingTeam: safeId(inn.battingTeam),
+                bowlingTeam: safeId(inn.bowlingTeam),
 
                 runs: inn.runs || 0,
                 wickets: inn.wickets || 0,
-                balls: inn.balls || 0,
-                overs: ballsToOvers(inn.balls || 0),
+                legalBalls: inn.legalBalls || 0,
+                deliveries: inn.deliveries || 0,
+                overs: ballsToOvers(inn.legalBalls || 0),
                 currentRunRate: crr,
                 isCompleted: inn.isCompleted,
 

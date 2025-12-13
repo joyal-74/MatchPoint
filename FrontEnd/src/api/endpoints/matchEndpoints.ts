@@ -16,6 +16,7 @@ export const matchEndpoints = {
 
     loadInitialLiveScore: async (matchId: string): Promise<LiveScoreState> => {
         const { data } = await axiosClient.get(MATCH_ROUTES.GET_LIVE_SCORE(matchId));
+        console.log(data.data)
         return data.data;
     },
 

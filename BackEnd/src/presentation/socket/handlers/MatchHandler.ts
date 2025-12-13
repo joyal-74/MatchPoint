@@ -23,6 +23,7 @@ import {
 } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { NotFoundError } from "domain/errors";
 import { DismissalType } from "domain/entities/Innings";
+import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 
 export interface MatchUseCases {
     setStriker: ISetStrikerUseCase;
@@ -42,12 +43,14 @@ export interface MatchUseCases {
 
 export class MatchHandler {
     private currentMatchId: string | null = null;
+    private playerCache: Map<string, string> = new Map();
 
     constructor(
         private io: Server,
         private socket: AuthenticatedSocket,
         private useCases: MatchUseCases,
-        private matchRepo: IMatchRepo
+        private matchRepo: IMatchRepo,
+        private playerRepo: IPlayerRepository
     ) {
         this.setupEvents();
     }
@@ -72,6 +75,159 @@ export class MatchHandler {
         this.socket.leave(matchId);
         if (this.currentMatchId === matchId) {
             this.currentMatchId = null;
+        }
+    }
+
+    private generateCommentary(type: string, payloadRaw: IncomingScoreUpdatePayload): string {
+        const runs = payloadRaw.runs || 0;
+        const extraType = payloadRaw.extraType;
+
+        if (extraType) {
+            switch (extraType.toUpperCase()) {
+                case "WIDE": return `${runs === 2 ? '2' : ''}Wide! Ball down the leg side${runs > 1 ? `, ${runs} runs` : ''}`;
+                case "NO_BALL": return `No ball! ${runs > 1 ? `${runs} runs` : 'Free hit coming up'}`;
+                case "LEG_BYE": return `Leg bye! ${runs === 4 ? 'FOUR' : runs === 6 ? 'SIX' : runs} run${runs > 1 ? 's' : ''} taken`;
+                case "BYE": return `Bye! ${runs === 4 ? 'FOUR' : runs === 6 ? 'SIX' : runs} run${runs > 1 ? 's' : ''} taken`;
+                default: return `Extra runs! ${runs} run${runs > 1 ? 's' : ''}`;
+            }
+        }
+
+        switch (runs) {
+            case 0: {
+                const descriptions = ["defended solidly", "blocked back to the bowler", "played to mid-wicket", "tapped to point", "left alone outside off", "inside edge onto pad", "played and missed", "beaten outside off"];
+                return descriptions[Math.floor(Math.random() * descriptions.length)]
+            };
+            case 1: return "Single taken, easy run";
+            case 2: return "Two runs, good running between the wickets";
+            case 3: return "Three runs! Excellent placement";
+            case 4: {
+                const fours = ["FOUR! Crunched through covers", "FOUR! Elegant drive down the ground", "FOUR! Glided past third man", "FOUR! Pulled away to square leg", "FOUR! Edged and it runs away", "FOUR! Cuts behind point"];
+                return fours[Math.floor(Math.random() * fours.length)]
+            };
+            case 6: {
+                const sixes = ["SIX! Massive hit into the crowd", "SIX! Clean strike over long-on", "SIX! Deposited over mid-wicket", "SIX! High and handsome over extra cover", "SIX! Flat over square leg", "SIX! Skied but clears the rope"];
+                return sixes[Math.floor(Math.random() * sixes.length)]
+            };
+            default: return `${runs} runs scored`;
+        }
+    }
+
+    private async generateWicketCommentary(payloadRaw: IncomingScoreUpdatePayload): Promise<string> {
+        const dismissalType = payloadRaw.dismissalType as DismissalType;
+        const bowlerId = this.toIdString(payloadRaw.bowlerId);
+        const outBatsmanId = this.toIdString(payloadRaw.outBatsmanId);
+        const fielderId = this.toIdString(payloadRaw.fielderId);
+
+        let bowlerName = "the bowler";
+        let batsmanName = "the batsman";
+        let fielderName = "the fielder";
+
+        try {
+            // Get player names from cache or database
+            if (bowlerId) {
+                bowlerName = await this.getPlayerName(bowlerId);
+            }
+            if (outBatsmanId) {
+                batsmanName = await this.getPlayerName(outBatsmanId);
+            }
+            if (fielderId) {
+                fielderName = await this.getPlayerName(fielderId);
+            }
+        } catch (error) {
+            console.error("Error fetching player names:", error);
+        }
+
+        switch (dismissalType) {
+            case "bowled": {
+                const bowledDescriptions = [
+                    `Clean bowled! ${bowlerName} castles ${batsmanName}`,
+                    `Bowled him! ${batsmanName} completely beaten`,
+                    `Timber! ${bowlerName} knocks the stumps over`,
+                    `Middle stump out of the ground! ${bowlerName} with a beauty`,
+                    `Bowled! ${batsmanName} plays all around it`
+                ];
+                return bowledDescriptions[Math.floor(Math.random() * bowledDescriptions.length)];
+            }
+
+            case "caught": {
+                const caughtDescriptions = [
+                    `Caught! ${batsmanName} edges to ${fielderName}`,
+                    `Great catch! ${fielderName} takes it comfortably`,
+                    `Caught at slip! ${batsmanName} goes fishing`,
+                    `Brilliant catch! ${fielderName} dives to take it`,
+                    `Caught in the deep! ${batsmanName} holes out`,
+                    `Edge and taken! ${fielderName} makes no mistake`
+                ];
+                return caughtDescriptions[Math.floor(Math.random() * caughtDescriptions.length)];
+            }
+
+            case "lbw": {
+                const lbwDescriptions = [
+                    `LBW! Plumb in front, ${bowlerName} appeals and gets it`,
+                    `LBW! ${batsmanName} trapped on the back foot`,
+                    `Given out LBW! ${bowlerName} strikes`,
+                    `Leg before wicket! ${batsmanName} misses the line`,
+                    `LBW! Hits him in line, that's out`
+                ];
+                return lbwDescriptions[Math.floor(Math.random() * lbwDescriptions.length)];
+            }
+
+            case "run-out": {
+                const runoutDescriptions = [
+                    `Run out! ${batsmanName} caught short`,
+                    `Direct hit! ${batsmanName} is well short`,
+                    `Run out! Mix-up in the middle costs ${batsmanName}`,
+                    `Brilliant fielding! ${fielderName} with the run out`,
+                    `Run out at the bowler's end! ${batsmanName} sent back`
+                ];
+                return runoutDescriptions[Math.floor(Math.random() * runoutDescriptions.length)];
+            }
+
+            case "stumped":
+                return `Stumped! ${batsmanName} dances down and misses`;
+
+            case "hit-wicket":
+                return `Hit wicket! ${batsmanName} dislodges the bails`;
+
+            case "retired-hurt":
+                return `${batsmanName} retires hurt, hope it's not serious`;
+
+            case "retired-out":
+                return `${batsmanName} retires out`;
+
+            case "timed-out":
+                return `Timed out! ${batsmanName} took too long to arrive`;
+
+            case "obstructing-field":
+                return `Obstructing the field! ${batsmanName} is out`;
+
+            case "hit-ball-twice":
+                return `Hit ball twice! ${batsmanName} is out`;
+
+            default:
+                return `Wicket! ${batsmanName} dismissed`;
+        }
+    }
+
+    private async getPlayerName(playerId: string): Promise<string> {
+
+        const cachedName = this.playerCache.get(playerId);
+        if (cachedName) {
+            return cachedName;
+        }
+
+        try {
+            // Fetch from repository
+            const player = await this.playerRepo.findById(playerId);
+            if (player && player.firstName) {
+                const name = `${player.firstName} ${player.lastName}`
+                this.playerCache.set(playerId, name);
+                return name;
+            }
+            return "the player";
+        } catch (error) {
+            console.error("Error fetching player:", error);
+            return "the player";
         }
     }
 
@@ -148,7 +304,8 @@ export class MatchHandler {
                     const nextBatsmanId = this.toIdString(payloadRaw.nextBatsmanId);
                     const fielderId = this.toIdString(payloadRaw.fielderId) ?? undefined;
                     const bowlerId = this.toIdString(payloadRaw.bowlerId) ?? null;
-                    const isLegalBall = this.toIdString(payloadRaw.isLegalBall) as unknown as boolean;
+                    const isLegalBall = Boolean(payloadRaw.isLegalBall);
+                    const runsCompleted = this.toFiniteNumber(payloadRaw.runs, 0);
 
                     if (!outBatsmanId || !nextBatsmanId) throw new NotFoundError("Missing wicket player IDs");
 
@@ -159,7 +316,8 @@ export class MatchHandler {
                         nextBatsmanId,
                         fielderId,
                         bowlerId,
-                        isLegalBall
+                        isLegalBall,
+                        runsCompleted
                     });
                     break;
                 }
@@ -206,20 +364,48 @@ export class MatchHandler {
 
             const updatedMatchEntity = await this.matchRepo.findByMatchId(matchId);
 
-            
+
             if (!updatedMatchEntity) {
                 this.socket.emit("score-error", { error: "Match not found after update" });
                 return;
             }
-            
+
             const liveScoreDto = updatedMatchEntity.toDTO();
-            
+
             // console.log('Sending liveScore:', JSON.stringify(liveScoreDto, null, 2));
-            
+
             this.io.to(matchId).emit("live-score:update", {
                 matchId,
                 liveScore: liveScoreDto
             });
+
+
+            this.io.to(`viewer-match-${matchId}`).emit("match:update", {
+                matchId,
+                liveScore: liveScoreDto,
+                timestamp: new Date().toISOString(),
+                updateType: type // "RUNS", "WICKET", etc.
+            });
+
+            // Also send detailed commentary events
+            if (type === "RUNS") {
+                const commentary = this.generateCommentary(type, payloadRaw);
+                this.io.to(`commentary-match-${matchId}`).emit("commentary", {
+                    matchId,
+                    text: commentary,
+                    type: "RUNS"
+                });
+            }
+
+            if (type === "WICKET") {
+                const commentary = this.generateWicketCommentary(payloadRaw);
+                this.io.to(`commentary-match-${matchId}`).emit("commentary", {
+                    matchId,
+                    text: commentary,
+                    type: "WICKET",
+                    isHighlight: true
+                });
+            }
 
             if (["SET_STRIKER", "SET_NON_STRIKER", "SET_BOWLER"].includes(type)) {
                 this.io.to(matchId).emit("player-change", {

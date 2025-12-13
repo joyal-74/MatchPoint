@@ -13,4 +13,5 @@ export interface BallLog {
     dismissal?: { type: string; outBatsmanId?: string; fielderId?: string };
     timestamp?: number;
     nextBatsmanId?: string;
+    outWasStriker?: boolean;
 }

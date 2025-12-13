@@ -1,11 +1,12 @@
 import { initiInningsUC, addRunsUC, addWicketUC, setBowlerUC, setNonStrikerUC, setStrikerUC, addExtrasUC, undoLastBallUC, startSuperOverUC, addPenaltyUC, endInningsUC, endOverUC, retireBatsmanUC } from "./manager/matches";
 import http from "http";
 import { SocketServer } from "presentation/socket/SocketServer";
-import { matchRepo } from "./shared/repositories";
+import { matchRepo, playerRepository } from "./shared/repositories";
 
 
 export const socketServer = new SocketServer(
     matchRepo,
+    playerRepository,
     setStrikerUC,
     setNonStrikerUC,
     setBowlerUC,

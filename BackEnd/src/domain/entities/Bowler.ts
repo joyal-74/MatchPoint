@@ -36,6 +36,7 @@ export class Bowler {
             playerId: this.playerId,
             runsConceded: this.runsConceded,
             wickets: this.wickets,
+            balls : this.totalBalls,
             overs: `${completedOvers}.${ballsInOver}`,
             economy: this.totalBalls > 0 ? (this.runsConceded / (this.totalBalls / 6)).toFixed(2) : "0.00"
         };

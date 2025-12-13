@@ -11,6 +11,16 @@ export class MatchRepoMongo implements IMatchRepo {
         return MatchStatsMapper.toDomain(doc);
     }
 
+    async findLiveMatches(): Promise<MatchEntity[]> {
+        const docs = await TournamentMatchStatsModel
+            .find({ isLive: true })
+            .lean();
+
+        if (!docs || docs.length === 0) return [];
+
+        return docs.map(doc => MatchStatsMapper.toDomain(doc));
+    }
+
     async save(match: MatchEntity): Promise<MatchEntity> {
         const persistence = MatchStatsMapper.toPersistence(match);
 
