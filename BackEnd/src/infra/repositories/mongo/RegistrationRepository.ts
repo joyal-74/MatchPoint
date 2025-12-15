@@ -60,4 +60,9 @@ export class RegistrationRepository implements IRegistrationRepository {
 
         return registrations.length ? registrations : null;
     }
+
+
+    async findTeamIdsByTournament(tournamentId: string) {
+        return RegistrationModel.find({ tournamentId }).distinct("teamId");
+    }
 }

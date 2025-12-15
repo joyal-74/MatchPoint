@@ -3,7 +3,7 @@ import { ITournamentRepository } from "app/repositories/interfaces/shared/ITourn
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { ILogger } from "../../providers/ILogger";
 import { Tournament } from "domain/entities/Tournaments";
-import { IGetPlayerTournaments } from "app/repositories/interfaces/player/ITournamentsRepoUsecaes";
+import { IGetPlayerTournaments } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 
 
 export class FetchTournamentsUseCase implements IGetPlayerTournaments {

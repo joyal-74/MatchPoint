@@ -22,7 +22,6 @@ export class JoinTeamUseCase implements IJoinTeamUseCase {
         if (!player) throw new NotFoundError('player not found')
 
         const alreadyMember = team.members.some(m => {
-            console.log(m.userId)
             return m.userId === userId;
         });
 

@@ -27,8 +27,6 @@ export const authenticateSocket = async (
             .split(";")
             .find((c) => c.trim().startsWith("accessToken="));
 
-            console.log(accessTokenCookie, "???")
-
         if (!accessTokenCookie) {
             return next(new Error("Authentication error: No accessToken found"));
         }

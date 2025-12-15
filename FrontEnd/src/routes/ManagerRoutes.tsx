@@ -1,6 +1,8 @@
 import { lazy, Suspense, type JSX } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
+import MatchDashboard from "../components/manager/matches/MatchDashboard";
+import ScoreboardDashboard from "../components/manager/scoreControl/ScoreboardDashboard";
 
 // Lazy load manager pages
 const Dashboard = lazy(() => import("../pages/manager/Dashboard"));
@@ -31,4 +33,6 @@ export const managerRoutes = [
     { path: "/manager/tournaments/:id/:type", element: withManagerProtection(<TournamentDetailsPage />) },
     { path: "/manager/tournaments/:tournamentId/:teamId/payment-success", element: withManagerProtection(<PaymentSuccessPage />) },
     { path: "/manager/tournaments/:tournamentId/:teamId/payment-failed", element: withManagerProtection(<PaymentFailedPage />) },
+    { path: "/manager/match/:matchId/dashboard", element: withManagerProtection(<MatchDashboard />) },
+    { path: "/manager/match/:matchId/control", element: withManagerProtection(<ScoreboardDashboard />) },
 ];

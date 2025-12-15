@@ -2,7 +2,7 @@ import { TeamMapper } from "app/mappers/TeamMappers";
 import { ILogger } from "app/providers/ILogger";
 import { File } from "domain/entities/File";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { IEditTeamUseCase } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
+import { IEditTeamUseCase } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 import { TeamData, TeamRegister } from "domain/dtos/Team.dto";
 import { BadRequestError } from "domain/errors";
 import { IFileStorage } from "app/providers/IFileStorage";

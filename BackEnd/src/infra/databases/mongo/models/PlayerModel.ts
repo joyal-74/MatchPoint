@@ -4,8 +4,8 @@ export interface PlayerDocument extends Document {
     _id: Types.ObjectId;
     userId: Types.ObjectId;
     sport: string;
-    profile: Map<string, any>;
-    stats: Map<string, any>;
+    profile: Record<string, any>; 
+    stats: Record<string, any>; 
 }
 
 const PlayerSchema = new Schema<PlayerDocument>({

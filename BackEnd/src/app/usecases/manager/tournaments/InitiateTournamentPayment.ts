@@ -2,7 +2,7 @@ import { ILogger } from "app/providers/ILogger";
 import { IPaymentProvider } from "app/providers/IPaymentProvider";
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
-import { IInitiateTournamentPayment, ITournamentRegistrationValidator } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { IInitiateTournamentPayment, ITournamentRegistrationValidator } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { BadRequestError, NotFoundError } from "domain/errors";
 
 

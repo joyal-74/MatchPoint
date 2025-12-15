@@ -14,7 +14,7 @@ export class TeamRepositoryMongo implements ITeamRepository {
     async addMember(teamId: string, userId: string, playerId: string): Promise<TeamData> {
         const updated = await TeamModel.findByIdAndUpdate(
             teamId,
-            { $push: { members: { playerId, userId, status: "substitute", approvalStatus: "pending" } } },
+            { $push: { members: { playerId, userId, status: "substitute", approvalStatus: "pending", requestType: "join" } } },
             { new: true }
         ).populate('members.playerId').populate('members.userId');
 
@@ -144,4 +144,28 @@ export class TeamRepositoryMongo implements ITeamRepository {
 
         return TeamMongoMapper.toDomainFull(team as unknown as TeamPopulatedDocument);
     }
+
+    async findTeamsByIds(teamIds: string[]) {
+        return TeamModel.find({ _id: { $in: teamIds } }).lean();
+    }
+
+    async existOrAddMember(teamId, userId, playerId): Promise<{ success: boolean; playerId: string }> {
+        const team = await TeamModel.findById(teamId);
+        if (!team) return { success: false, playerId: "" };
+
+        const exists = team.members.some(m => m.playerId.toString() === playerId);
+        if (exists) return { success: false, playerId };
+
+        team.members.push({
+            playerId,
+            userId,
+            approvalStatus: "pending",
+            requestType: "invite",
+            status: "substitute"
+        });
+
+        await team.save();
+        return { success: true, playerId };
+    }
+
 }

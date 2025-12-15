@@ -1,4 +1,5 @@
 import {
+    IAddPlayerToTeamUseCase,
     IApprovePlayerUseCase,
     IChangePlayerStatusUseCase,
     IChangeTeamStatusUseCase,
@@ -7,7 +8,7 @@ import {
     IRejectPlayerUseCase,
     IRemovePlayerUseCase,
     ISwapPlayers
-} from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
+} from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -19,6 +20,7 @@ import { BadRequestError } from "domain/errors";
 import { IGetMyTeamDetailsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 import { TeamMessages } from "domain/constants/TeamMessages";
 import { TeamSetupService } from "infra/services/TeamSetupServices";
+import { IGetAvailablePlayersService } from "app/services/manager/ITeamSetupService";
 
 export class TeamController implements ITeamController {
     constructor(
@@ -32,6 +34,8 @@ export class TeamController implements ITeamController {
         private _rejectfromTeamUsecase: IRejectPlayerUseCase,
         private _swapPlayersUsecase: ISwapPlayers,
         private _removePlayersUsecase: IRemovePlayerUseCase,
+        private _getAvilablePlayersService: IGetAvailablePlayersService,
+        private _addnewPlayerUsecase: IAddPlayerToTeamUseCase,
         private _logger: ILogger,
     ) { }
 
@@ -143,11 +147,11 @@ export class TeamController implements ITeamController {
     }
 
 
-        /**
-     * @description Approve a player request and add them to the team.
-     * @param {IHttpRequest} httpRequest - The request containing `teamId` and `playerId` in the body.
-     * @returns {Promise<IHttpResponse>} - Returns success response with updated team details.
-     */
+    /**
+ * @description Approve a player request and add them to the team.
+ * @param {IHttpRequest} httpRequest - The request containing `teamId` and `playerId` in the body.
+ * @returns {Promise<IHttpResponse>} - Returns success response with updated team details.
+ */
     approvePlayertoTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { teamId, playerId } = httpRequest.body;
 
@@ -196,5 +200,24 @@ export class TeamController implements ITeamController {
         await this._removePlayersUsecase.execute(teamId, playerId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.PLAYER_REMOVED));
+    }
+
+
+    availablePlayers = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { tournamentId } = httpRequest.params;
+
+        const players = await this._getAvilablePlayersService.execute(tournamentId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.PLAYER_FETCHED, players));
+    }
+
+
+    addPlayer = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { playerId } = httpRequest.params;
+        const { teamId, userId } = httpRequest.body;
+
+        const result = await this._addnewPlayerUsecase.execute(teamId, userId, playerId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.PLAYER_FETCHED, result));
     }
 }

@@ -5,10 +5,15 @@ import { SubstitutePlayersSection } from "../../components/manager/manageMembers
 import { useParams } from "react-router-dom";
 import { useManageMembers } from "../../hooks/manager/useManageMembers";
 import TeamPlayerModal from "../../components/manager/manageMembers/TeamPlayerModal";
+import PlayerSelectionModal from "../../components/manager/manageMembers/PlayerSelectionModal";
+import { useEffect } from "react";
 
 export default function ManageMembersPage() {
     const { teamId } = useParams<{ teamId: string }>();
-    const { loading, team, players,
+    const {
+        loading,
+        team,
+        players,
         activePlayers,
         substitutePlayers,
         selectedPlayer,
@@ -17,8 +22,19 @@ export default function ManageMembersPage() {
         cancelSwap,
         handlePlayerAction,
         isModalOpen,
-        setIsModalOpen
-    } = useManageMembers(teamId);
+        setIsModalOpen,
+        fetchAvailablePlayers,
+
+
+        isSelectionModalOpen,
+        setIsSelectionModalOpen,
+        availablePlayers,
+        handleAddPlayer
+    } = useManageMembers(teamId!);
+
+    useEffect(() => {
+        fetchAvailablePlayers();
+    }, [teamId, fetchAvailablePlayers]);
 
     if (loading || !team) {
         return (
@@ -28,10 +44,18 @@ export default function ManageMembersPage() {
         );
     }
 
+    const handleOpenSelectionModal = () => {
+        setIsSelectionModalOpen(true);
+    };
+
     return (
         <ManagerLayout>
             <div className="text-white py-8">
-                <Header team={team} playersCount={players.length} />
+                <Header
+                    team={team}
+                    playersCount={players.length}
+                    onAddPlayerClick={handleOpenSelectionModal}
+                />
 
                 <ActivePlayersSection
                     team={team}
@@ -56,6 +80,14 @@ export default function ManageMembersPage() {
                     player={viewPlayer}
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
+                />
+            )}
+
+            {isSelectionModalOpen && (
+                <PlayerSelectionModal
+                    availablePlayers={availablePlayers}
+                    onClose={() => setIsSelectionModalOpen(false)}
+                    onAddPlayer={handleAddPlayer}
                 />
             )}
         </ManagerLayout>

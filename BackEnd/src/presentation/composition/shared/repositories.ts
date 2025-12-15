@@ -10,6 +10,10 @@ import { FixturesRepositoryMongo } from 'infra/repositories/mongo/FixturesReposi
 import { MatchesRepositoryMongo } from 'infra/repositories/mongo/MatchesRepositoryMongo';
 import { ChatRepositoryMongo } from 'infra/repositories/mongo/ChatRepositoryMongo';
 import { MessageRepositoryMongo } from 'infra/repositories/mongo/MessageRepositoryMongo';
+import { PlanRepository } from 'infra/repositories/mongo/PlanRepository';
+import { SubscriptionRepository } from 'infra/repositories/mongo/SubscriptionRepository';
+import { LeaderboardRepository } from 'infra/repositories/mongo/LeaderboardRepository';
+import { MatchRepoMongo } from 'infra/repositories/mongo/MatchStatsRepo';
 
 export const userRepository = new UserRepositoryMongo();
 export const adminRepository = new AdminRepositoryMongo();
@@ -23,3 +27,7 @@ export const fixturesRepository = new FixturesRepositoryMongo();
 export const matchRepository = new MatchesRepositoryMongo();
 export const chatRepository = new ChatRepositoryMongo();
 export const messageRepository = new MessageRepositoryMongo();
+export const planRepository = new PlanRepository();
+export const subscriptionRepository = new SubscriptionRepository();
+export const leaderboardRepository = new LeaderboardRepository();
+export const matchRepo = new MatchRepoMongo();

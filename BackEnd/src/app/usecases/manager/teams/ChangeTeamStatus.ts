@@ -1,6 +1,6 @@
 import { ILogger } from "app/providers/ILogger";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { IChangeTeamStatusUseCase, } from "app/repositories/interfaces/manager/ITeamUsecaseRepository";
+import { IChangeTeamStatusUseCase, } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 import { BadRequestError } from "domain/errors";
 
 export class SoftDeleteTeam implements IChangeTeamStatusUseCase {

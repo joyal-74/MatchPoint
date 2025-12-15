@@ -1,3 +1,4 @@
+import NavbarWrapper from '../components/shared/NavbarWrapper';
 import AdminLoginPage from '../pages/auth/AdminLogin';
 import EnterAccountOtpPage from '../pages/auth/EnterAccountOtpPage';
 import EnterForgotOtpPage from '../pages/auth/EnterForgotOtpPage';
@@ -6,6 +7,9 @@ import LoginPage from '../pages/auth/LoginPage';
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 import SignupPage from '../pages/auth/SignupPage';
 import Blocked from '../pages/shared/Blocked';
+import AllTimeLeaderboard from '../pages/shared/LeaderBoard/AllTimeLeaderboard';
+import RoleLayoutWrapper from '../pages/shared/RoleLayoutWrapper';
+import UserSubscriptionPage from '../pages/shared/SubscriptionsPage';
 import Unauthorized from '../pages/shared/Unauthorized';
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
@@ -28,4 +32,25 @@ export const publicRoutes = [
     // Shared pages
     { path: "/unauthorized", element: <Unauthorized /> },
     { path: "/blocked", element: <Blocked /> },
+    { path: "/leaderboard", element: <AllTimeLeaderboard /> },
+    {
+        path: "/:role/subscription",
+        element: (
+            <ProtectedRoute>
+                <RoleLayoutWrapper>
+                    <UserSubscriptionPage />
+                </RoleLayoutWrapper>
+            </ProtectedRoute>
+        )
+    },
+    {
+        path: "/:role/leaderboard",
+        element: (
+            <ProtectedRoute>
+                <NavbarWrapper>
+                    <AllTimeLeaderboard />
+                </NavbarWrapper>
+            </ProtectedRoute>
+        )
+    }
 ];

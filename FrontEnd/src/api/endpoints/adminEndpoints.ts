@@ -1,7 +1,7 @@
 import type { GetAllUsersParams } from '../../types/api/Params';
 import type { SignupRole } from '../../types/UserRoles';
 import { axiosClient } from '../http/axiosClient';
-import { ADMIN_ROUTES } from '../../constants/adminRoutes';
+import { ADMIN_ROUTES } from '../../constants/routes/adminRoutes';
 
 export const adminEndpoints = {
     fetchViewers: async (page = 1, limit = 10, filter?: string, search?: string) => {

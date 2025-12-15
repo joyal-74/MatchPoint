@@ -52,10 +52,18 @@ export function useRegisterTeam(
             })
         ).unwrap();
 
+        if (!window.Razorpay) {
+            toast.error("Payment gateway is not loaded. Please try again.");
+            return;
+        }
+
+
         if (selectedPayment === "razorpay" && result.orderId) {
             const options = {
-                key: result.keyId,
+                key: result.keyId!,
                 amount: entryFee * 100,
+                name: `${selectedTeam} Registration`,
+                description: `Tournament: ${tournament.title}`,
                 currency: "INR",
                 order_id: result.orderId,
                 handler: async (response: { razorpay_payment_id: string }) => {

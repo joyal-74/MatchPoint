@@ -13,12 +13,13 @@ import { WalletProvider } from "infra/providers/WalletProvider";
 import { WinstonLogger } from "infra/providers/WinstonLogger";
 import { TournamentIdGenerator } from "infra/providers/IdGenerator";
 import { imageKitfileProvider, walletRepository } from "presentation/composition/shared/providers";
-import { fixturesRepository, managerRepository, matchRepository, registrationRepository, tournamentRepository } from "presentation/composition/shared/repositories";
+import { fixturesRepository, leaderboardRepository, managerRepository, matchRepository, registrationRepository, tournamentRepository } from "presentation/composition/shared/repositories";
 import { tournamentRegistrationServices } from "../shared/services";
 import { GetTournamentFixtures } from "app/usecases/manager/tournaments/fixtures/GetTournamentFixtures";
 import { CreateMatchesUseCase } from "app/usecases/manager/tournaments/matches/CreateMatchesUseCase";
 import { CreateFixtureUseCase } from "app/usecases/manager/tournaments/fixtures/CreateTournamentFixtures";
 import { GetTournamentMatches } from "app/usecases/manager/tournaments/matches/GetMatchesUseCase";
+import { GetTourLeaderboard } from "app/usecases/manager/tournaments/GetLeaderboardUseCase";
 
 
 const logger = new WinstonLogger();
@@ -51,6 +52,7 @@ const getFixtures = new GetTournamentFixtures(fixturesRepository, logger)
 const createFixtures = new CreateFixtureUseCase(fixturesRepository, logger)
 const createMatchesUC = new CreateMatchesUseCase(matchRepository, logger)
 const getMatchesUC = new GetTournamentMatches(matchRepository, logger)
+const getTourLeaderBoardUC = new GetTourLeaderboard(leaderboardRepository)
 
 export const tournamentManagementController = new TournamentController(
     getMyTournaments,
@@ -66,5 +68,6 @@ export const tournamentManagementController = new TournamentController(
     createFixtures,
     createMatchesUC,
     getMatchesUC,
+    getTourLeaderBoardUC,
     logger
 );

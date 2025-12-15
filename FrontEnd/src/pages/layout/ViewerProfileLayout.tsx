@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import Navbar from "../../components/viewer/Navbar";
 
 interface AdminLayoutProps {
-    children: ReactNode;
+    children?: ReactNode;
 }
 
 const ViewerProfileLayout: React.FC<AdminLayoutProps> = ({ children }) => {

@@ -1,6 +1,6 @@
 import { ILogger } from "app/providers/ILogger";
 import { IFixturesRepository } from "app/repositories/interfaces/manager/IFixturesRepository";
-import { IGetTournamentFixtures } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { IGetTournamentFixtures } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { Fixture } from "domain/entities/Fixture";
 import { BadRequestError, NotFoundError } from "domain/errors";
 

@@ -68,3 +68,14 @@ export const updatePlayerStatus  = createAsyncThunk(
     "manager/updatePlayerStatus",
     createApiThunk(managerEndpoints.updatePlayerStatus)
 );
+
+
+export const getAvailablePlayers  = createAsyncThunk(
+    "manager/updatePlayerStatus",
+    createApiThunk(managerEndpoints.getAvailablePlayers)
+);
+
+export const addPlayerToTeam   = createAsyncThunk(
+    "manager/updatePlayerStatus",
+    createApiThunk(managerEndpoints.addPlayerToTeam )
+);

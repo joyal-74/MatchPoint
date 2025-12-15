@@ -1,4 +1,4 @@
-import { PLAYER_ROUTES } from "../../constants/playerRoutes";
+import { PLAYER_ROUTES } from "../../constants/routes/playerRoutes";
 import axiosClient from "../http/axiosClient";
 import type { Filters, Team, totalTeamResponse } from "../../components/player/Teams/Types";
 import type { UpdatePlayerProfilePayload, UpdateUserDataPayload } from "../../features/manager/managerTypes";

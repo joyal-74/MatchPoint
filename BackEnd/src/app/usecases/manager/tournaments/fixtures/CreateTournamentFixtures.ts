@@ -1,6 +1,6 @@
 import { ILogger } from "app/providers/ILogger";
 import { IFixturesRepository } from "app/repositories/interfaces/manager/IFixturesRepository";
-import { ICreateTournamentFixtures } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { ICreateTournamentFixtures } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { BadRequestError, NotFoundError } from "domain/errors";
 
 export class CreateFixtureUseCase implements ICreateTournamentFixtures {

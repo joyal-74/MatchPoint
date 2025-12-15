@@ -3,7 +3,7 @@ import { IUserRepository } from "app/repositories/interfaces/shared/IUserReposit
 import { NotFoundError } from "domain/errors";
 import { ILogger } from "app/providers/ILogger";
 import { UserResponseDTO } from "domain/dtos/User.dto";
-import { IGetViewerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
+import { IGetViewerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
 
 export class GetViewerProfile implements IGetViewerProfile {
     constructor(

@@ -13,8 +13,9 @@ import {
     createTournamentFixtures,
     createTournamentMatches,
     getTournamentMatches,
+    fetchLeaderboard,
 } from "./tournamentThunks";
-import type { Fixture, Match, Tournament } from "../managerTypes";
+import type { Fixture, Leaderboard, Match, Tournament } from "../managerTypes";
 import type { RegisteredTeam } from "../../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
 
 interface ManagerTournamentState {
@@ -23,7 +24,8 @@ interface ManagerTournamentState {
     selectedTournament: Tournament | null;
     registeredTeams: RegisteredTeam[],
     fixtures: Fixture | null,
-    matches : Match[] | null,
+    matches: Match[] | null,
+    leaderboard: Leaderboard,
     fixturesLoading: boolean,
     paymentStatus: boolean;
     loading: boolean;
@@ -36,6 +38,12 @@ const initialState: ManagerTournamentState = {
     selectedTournament: null,
     fixtures: null,
     matches: null,
+    leaderboard: {
+        tournamentId: "",
+        topRuns: [],
+        topWickets: [],
+        mvp: []
+    },
     fixturesLoading: false,
     registeredTeams: [],
     paymentStatus: false,
@@ -199,7 +207,7 @@ const managerTournamentSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload as string;
             });
-        
+
         // get tournament fixtures
         builder
             .addCase(getTournamentFixtures.pending, (state) => {
@@ -257,6 +265,19 @@ const managerTournamentSlice = createSlice({
             })
             .addCase(createTournamentMatches.rejected, (state, action) => {
                 state.fixturesLoading = false;
+                state.error = action.payload as string;
+            })
+
+            .addCase(fetchLeaderboard.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchLeaderboard.fulfilled, (state, action) => {
+                state.loading = false;
+                state.leaderboard = action.payload;
+            })
+            .addCase(fetchLeaderboard.rejected, (state, action) => {
+                state.loading = false;
                 state.error = action.payload as string;
             });
     },

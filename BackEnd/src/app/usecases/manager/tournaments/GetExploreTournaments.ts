@@ -1,6 +1,6 @@
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
 import { ILogger } from "app/providers/ILogger";
-import { IGetExploreTournaments } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { IGetExploreTournaments } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { Tournament } from "domain/entities/Tournaments";
 
 export class ExploreTournamentsUseCase implements IGetExploreTournaments {

@@ -31,10 +31,10 @@ export function ActivePlayersSection({ team, activePlayers, selectedPlayer, swap
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {activePlayers.map((player) => (
                         <PlayerCard
-                            key={player.id}
+                            key={player._id}
                             player={player}
                             onAction={handlePlayerAction}
-                            isSelected={selectedPlayer?.id === player.id}
+                            isSelected={selectedPlayer?._id === player._id}
                             swapMode={swapMode}
                             cardStyle={'playing'}
                             cancelSwap={cancelSwap}

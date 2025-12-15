@@ -3,7 +3,7 @@ import type { CompleteUserData, UserRegister } from '../../types/api/UserApi';
 import type { ChangePasswordPayload, LoginPayload, OtpPayload, ResetPasswordPayload } from '../../types/api/authPayloads';
 import { axiosClient } from '../http/axiosClient';
 import type { OtpContext } from '../../features/auth/authTypes';
-import { AUTH_ROUTES } from '../../constants/authRoutes';
+import { AUTH_ROUTES } from '../../constants/routes/authRoutes';
 import type { LoginAdmin } from '../../types/Admin';
 
 export const authEndpoints = {

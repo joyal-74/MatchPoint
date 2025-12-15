@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { adminRoutes } from "./AdminRoutes";
-import { publicRoutes } from "./publicRoutes";
+import { publicRoutes } from "./PublicRoutes";
 import { playerRoutes } from "./PlayerRoutes";
 import { managerRoutes } from "./ManagerRoutes";
 import NotFoundPage from "../pages/shared/PageNotFound";
 import { viewerRoutes } from "./ViewerRoutes";
-import TeamChat from "../pages/player/TeamChat/TeamChat";
+import SuccessConfirmation from "../components/shared/SubPaymentSuccess";
 
 const AppRoutes = () => {
     return (
@@ -32,7 +32,7 @@ const AppRoutes = () => {
                 ))}
 
                 <Route path="*" element={<NotFoundPage />} />
-                <Route path="player/chat" element={<TeamChat />} />
+                <Route path="subscription/complete" element={<SuccessConfirmation />} />
             </Routes>
         </BrowserRouter>
     );

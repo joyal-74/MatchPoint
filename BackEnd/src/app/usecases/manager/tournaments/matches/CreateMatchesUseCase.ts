@@ -1,7 +1,7 @@
 import type { Match } from "domain/entities/Match";
 import { ILogger } from "app/providers/ILogger";
 import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
-import { ICreateMatchesUseCase } from "app/repositories/interfaces/manager/ITournamentUsecaseRepository";
+import { ICreateMatchesUseCase } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 
 export class CreateMatchesUseCase implements ICreateMatchesUseCase {
     constructor(

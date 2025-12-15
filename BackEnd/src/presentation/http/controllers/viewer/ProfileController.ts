@@ -1,4 +1,4 @@
-import { IGetViewerProfile, IUpdateViewerProfile } from "app/repositories/interfaces/shared/IUserProfileRepository";
+import { IGetViewerProfile, IUpdateViewerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";

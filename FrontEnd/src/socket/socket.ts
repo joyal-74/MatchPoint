@@ -1,8 +1,8 @@
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 const BASE = import.meta.env.VITE_SERVER_URL ?? "http://localhost:3000";
 
-let _socket: ReturnType<typeof io> | null = null;
+let _socket: Socket | null = null;
 
 export function createSocket() {
     if (_socket) return _socket;
@@ -23,10 +23,4 @@ export function createSocket() {
 
 export function getSocket() {
     return _socket;
-}
-
-export function disconnectSocket() {
-    if (!_socket) return;
-    _socket.disconnect();
-    _socket = null;
 }

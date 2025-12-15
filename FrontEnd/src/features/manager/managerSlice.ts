@@ -135,7 +135,7 @@ const managerSlice = createSlice({
             .addCase(getMyTeamDetails.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? "Edit failed";
-            });
+            })
     },
 });
 

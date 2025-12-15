@@ -83,10 +83,10 @@ export const useSignup = () => {
     const handleGoogleSignUp = async (token: string) => {
         setLoading(true);
         try {
-            const resultAction = await dispatch(loginUserGoogle({ token }));
+            const resultAction = await dispatch(loginUserGoogle(token));
 
             if (loginUserGoogle.fulfilled.match(resultAction)) {
-                const role: UserRole = resultAction.payload.role;
+                const role = resultAction.payload.user?.role;
                 setLoading(false);
                 return { success: true, message: "Google signup successful!", role };
             } else {
