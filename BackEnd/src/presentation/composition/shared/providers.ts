@@ -11,6 +11,7 @@ import { registrationRepository } from './repositories';
 import { ManagerIdGenerator, PlayerIdGenerator, UserIdGenerator } from 'infra/providers/IdGenerator';
 import { RoleIdGenerator } from 'infra/providers/RoleIdGenerator';
 import { EnvConfigProvider } from 'infra/providers/EnvConfigProvider';
+import { RoomRegistry } from 'infra/livestream/mediasoup/RoomRegistry';
 
 export const jwtService = new JWTService();
 export const mailService = new NodeMailerService();
@@ -27,3 +28,5 @@ export const configProvider = new EnvConfigProvider();
 export const walletRepository = new WalletRepository();
 export const walletProvider = new WalletProvider(walletRepository, registrationRepository);
 export const razorpayProvider = new RazorpayProvider(process.env.RAZOR_API_KEY!, process.env.RAZOR_API_SECRET!);
+
+export const roomRegistry = new RoomRegistry()

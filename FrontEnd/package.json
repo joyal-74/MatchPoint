@@ -20,6 +20,7 @@
     "axios": "^1.12.2",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.544.0",
+    "mediasoup-client": "^3.18.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-facebook": "^10.0.1",

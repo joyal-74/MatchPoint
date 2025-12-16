@@ -15,6 +15,8 @@ import {
 } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { MatchViewerHandler } from "./handlers/MatchViewerHandler";
 import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
+import { LiveStreamHandler } from "./handlers/LiveStreamHandler";
+import { ILiveStreamService } from "app/repositories/interfaces/services/LiveStreamService";
 
 export interface AuthenticatedSocket extends Socket {
     user: {
@@ -33,7 +35,7 @@ export class SocketServer {
     constructor(
         private matchRepo: IMatchRepo,
         private playerRepo: IPlayerRepository,
-        
+
         private setStrikerUseCase: ISetStrikerUseCase,
         private setNonStrikerUseCase: ISetNonStrikerUseCase,
         private setBowlerUseCase: ISetBowlerUseCase,
@@ -47,6 +49,7 @@ export class SocketServer {
         private endInningsUseCase: IEndInningsUseCase,
         private endOverUseCase: IEndOverUseCase,
         private retireBatsmanUseCase: IRetireBatsmanUseCase,
+        private liveStreamService: ILiveStreamService,
     ) { }
 
     public init(server: http.Server) {
@@ -60,14 +63,15 @@ export class SocketServer {
         this.io.use((socket, next) => authenticateSocket(socket as AuthenticatedSocket, next));
 
         this.io.on("connection", (socket: Socket) => {
+
             const authSocket = socket as AuthenticatedSocket;
             console.log(`Socket Connected: ${authSocket.id} | User: ${authSocket.user.firstName}`);
 
             new ChatHandler(this.io, authSocket);
 
             new MatchHandler(
-                this.io, 
-                authSocket, 
+                this.io,
+                authSocket,
                 {
                     setStriker: this.setStrikerUseCase,
                     setNonStriker: this.setNonStrikerUseCase,
@@ -78,16 +82,18 @@ export class SocketServer {
                     addExtras: this.addExtrasUseCase,
                     undoLastBall: this.undoLastBallUseCase,
                     startSuperOver: this.startSuperOverUseCase,
-                    addPenalty : this.addPenaltyUseCase,
-                    endInnings : this.endInningsUseCase,
-                    endOver : this.endOverUseCase,
-                    retireBatsman : this.retireBatsmanUseCase
+                    addPenalty: this.addPenaltyUseCase,
+                    endInnings: this.endInningsUseCase,
+                    endOver: this.endOverUseCase,
+                    retireBatsman: this.retireBatsmanUseCase
                 },
                 this.matchRepo,
                 this.playerRepo,
             );
 
             new MatchViewerHandler(this.io, authSocket, this.matchRepo);
+
+            new LiveStreamHandler(this.io, authSocket, this.liveStreamService);
 
             authSocket.on("disconnect", () => {
                 console.log(`User disconnected: ${authSocket.user.firstName}`);

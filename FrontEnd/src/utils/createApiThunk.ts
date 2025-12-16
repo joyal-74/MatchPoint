@@ -1,8 +1,7 @@
 import type { AsyncThunkPayloadCreator, Dispatch } from "@reduxjs/toolkit";
 import { getApiErrorMessage } from "./apiError";
 
-export const createApiThunk =
-    <Returned, ThunkArg>(
+export const createApiThunk = <Returned, ThunkArg>(
         apiCall: (arg: ThunkArg, dispatch: Dispatch) => Promise<Returned>,
         transform?: (data: Returned) => Returned
     ): AsyncThunkPayloadCreator<Returned, ThunkArg, { rejectValue: string }> =>

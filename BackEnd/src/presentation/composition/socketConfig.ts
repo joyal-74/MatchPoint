@@ -2,6 +2,7 @@ import { initiInningsUC, addRunsUC, addWicketUC, setBowlerUC, setNonStrikerUC, s
 import http from "http";
 import { SocketServer } from "presentation/socket/SocketServer";
 import { matchRepo, playerRepository } from "./shared/repositories";
+import { livestreamServices } from "./shared/services";
 
 
 export const socketServer = new SocketServer(
@@ -19,7 +20,8 @@ export const socketServer = new SocketServer(
     addPenaltyUC,
     endInningsUC,
     endOverUC,
-    retireBatsmanUC
+    retireBatsmanUC,
+    livestreamServices
 );
 
 export const initSocket = (server: http.Server) => socketServer.init(server);
