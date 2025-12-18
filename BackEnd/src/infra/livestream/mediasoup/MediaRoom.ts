@@ -18,6 +18,7 @@ export class MediaRoom {
 
     // 🔥 Loopback consumers for ICE keep-alive
     private loopbackConsumers = new Map<string, Consumer>();
+    private peers: Set<string> = new Set();
 
     constructor(
         public readonly matchId: string,
@@ -43,6 +44,7 @@ export class MediaRoom {
         });
 
         this.transports.set(transport.id, transport);
+        this.peers.add(socketId);
 
         transport.on("dtlsstatechange", (state) => {
             console.log(`Transport ${transport.id} DTLS: ${state}`);
@@ -71,6 +73,10 @@ export class MediaRoom {
 
     public getProducerIds(): string[] {
         return Array.from(this.producers.keys());
+    }
+
+    public getPeerCount(): number {
+        return this.peers.size;
     }
 
     async createProducer(
@@ -223,6 +229,7 @@ export class MediaRoom {
         // Consumers
         this.consumers.get(socketId)?.forEach(c => c.close());
         this.consumers.delete(socketId);
+        this.peers.delete(socketId);
 
         // Transports
         for (const [id, transport] of this.transports.entries()) {

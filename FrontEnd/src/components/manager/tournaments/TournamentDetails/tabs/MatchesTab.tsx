@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks/hooks";
 import { Link, useParams } from "react-router-dom";
-import { ArrowRight, Swords, Calendar, Clock, Trophy, Activity, LayoutDashboard } from "lucide-react";
+import { Swords, Calendar, Clock, Trophy, Activity, LayoutDashboard } from "lucide-react";
 import EmptyState from "../shared/EmptyState";
 import LoadingOverlay from "../../../../shared/LoadingOverlay";
 import { getTournamentMatches } from "../../../../../features/manager/Tournaments/tournamentThunks";
@@ -9,9 +9,11 @@ import type { Match } from "../../../../../features/manager/managerTypes";
 
 export default function MatchesTab() {
     const dispatch = useAppDispatch();
-    const { id } = useParams();
+    const { id, type } = useParams(); // type is 'manage' or 'explore'
     const { matches, fixturesLoading } = useAppSelector(state => state.managerTournaments);
     const [fetched, setFetched] = useState(false);
+
+    const isManager = type === 'manage';
 
     useEffect(() => {
         if (id && !fetched) {
@@ -52,9 +54,10 @@ export default function MatchesTab() {
                         </div>
                         <h2 className="text-lg font-bold text-white tracking-wide">Live Now</h2>
                     </div>
-                    <div className="grid gap-4">
+                    {/* Grid Layout: 1 col on mobile, 2 cols on Large screens */}
+                    <div className="grid grid-cols-1 gap-4">
                         {liveMatches.map(match => (
-                            <MatchRow key={match._id} match={match} isLive />
+                            <MatchRow key={match._id} match={match} isLive isManager={isManager} />
                         ))}
                     </div>
                 </div>
@@ -67,9 +70,9 @@ export default function MatchesTab() {
                         <Calendar size={18} />
                         <h2 className="text-sm font-bold uppercase tracking-widest">Upcoming</h2>
                     </div>
-                    <div className="grid gap-3">
+                    <div className="grid grid-cols-1 gap-4">
                         {upcomingMatches.map(match => (
-                            <MatchRow key={match._id} match={match} />
+                            <MatchRow key={match._id} match={match} isManager={isManager} />
                         ))}
                     </div>
                 </div>
@@ -82,9 +85,9 @@ export default function MatchesTab() {
                         <Trophy size={18} />
                         <h2 className="text-sm font-bold uppercase tracking-widest">Completed</h2>
                     </div>
-                    <div className="grid gap-3 opacity-80 hover:opacity-100 transition-opacity">
+                    <div className="grid grid-cols-1 gap-4 opacity-80 hover:opacity-100 transition-opacity">
                         {completedMatches.map(match => (
-                            <MatchRow key={match._id} match={match} />
+                            <MatchRow key={match._id} match={match} isManager={isManager} />
                         ))}
                     </div>
                 </div>
@@ -93,26 +96,28 @@ export default function MatchesTab() {
     );
 }
 
-// Sub-component for individual rows
-function MatchRow({ match, isLive = false }: { match: Match; isLive?: boolean }) {
+// --- Sub-component ---
+
+function MatchRow({ match, isLive = false, isManager = false }: { match: Match; isLive?: boolean; isManager: boolean }) {
 
     // Helper for initials
     const getInitials = (name?: string) => name ? name.substring(0, 2).toUpperCase() : "??";
 
     return (
         <div className={`
-            group relative flex flex-col md:flex-row items-center gap-4 p-4 rounded-xl border transition-all duration-300
+            group relative flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-xl border transition-all duration-300
             ${isLive
                 ? "bg-gradient-to-r from-neutral-900 to-neutral-800 border-emerald-500/30 hover:border-emerald-500/50 shadow-lg shadow-emerald-900/10"
                 : "bg-neutral-900/50 border-white/5 hover:bg-neutral-800 hover:border-white/10"
             }
         `}>
-            {/* Left: Metadata (Round & Date) */}
-            <div className="flex md:flex-col items-center md:items-start justify-between w-full md:w-32 gap-2 text-xs text-neutral-500 shrink-0">
+
+            {/* Top/Left: Match Info */}
+            <div className="flex flex-row sm:flex-col items-center sm:items-start justify-between w-full sm:w-auto gap-2 text-xs text-neutral-500 shrink-0">
                 <span className="font-mono px-2 py-1 rounded bg-white/5 border border-white/5 text-neutral-300">
-                    {match.round}
+                    R{match.round}
                 </span>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 whitespace-nowrap">
                     {isLive ? (
                         <span className="text-emerald-400 font-bold flex items-center gap-1">
                             <Activity size={12} /> Live
@@ -126,61 +131,71 @@ function MatchRow({ match, isLive = false }: { match: Match; isLive?: boolean })
                 </div>
             </div>
 
-            {/* Center: Teams */}
+            {/* Center: Teams (Expanded to take available space) */}
             <div className="flex-1 w-full grid grid-cols-7 items-center gap-2">
 
                 {/* Team A (Right Aligned) */}
                 <div className="col-span-3 flex items-center justify-end gap-3 text-right">
-                    <span className="font-semibold text-white truncate hidden md:block">{match.teamA}</span>
-                    <span className="font-semibold text-white md:hidden">{getInitials(match.teamA)}</span>
+                    <span className="font-semibold text-white text-sm truncate hidden sm:block max-w-[100px] xl:max-w-[140px]" title={match.teamA}>
+                        {match.teamA}
+                    </span>
+                    <span className="font-semibold text-white sm:hidden">{getInitials(match.teamA)}</span>
 
-                    {match.teamLogoA ? (
-                        <img src={match.teamLogoA} alt={match.teamA} className="w-8 h-8 object-contain rounded-full" />
-                    ) : (
-                        <div className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center text-xs font-bold text-neutral-500 border border-white/5">
-                            {getInitials(match.teamA)}
-                        </div>
-                    )}
+                    <div className="relative w-8 h-8 rounded-full bg-neutral-950 overflow-hidden ring-1 ring-white/10 shrink-0">
+                        {match.teamLogoA ? (
+                            <img src={match.teamLogoA} alt={match.teamA} className="w-full h-full object-contain p-0.5" />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-neutral-500">
+                                {getInitials(match.teamA)}
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                {/* VS / Score */}
+                {/* VS Badge */}
                 <div className="col-span-1 flex justify-center">
-                    <div className="px-2 py-1 rounded-md bg-black/40 border border-white/10 text-xs font-mono font-bold text-neutral-400">
+                    <div className="w-7 h-5 flex items-center justify-center rounded bg-black/40 border border-white/10 text-[10px] font-mono font-bold text-neutral-500">
                         VS
                     </div>
                 </div>
 
                 {/* Team B (Left Aligned) */}
                 <div className="col-span-3 flex items-center justify-start gap-3 text-left">
-                    {match.teamLogoB ? (
-                        <img src={match.teamLogoB} alt={match.teamB || 'bye'} className="w-8 h-8 object-contain rounded-full" />
-                    ) : (
-                        <div className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center text-xs font-bold text-neutral-500 border border-white/5">
-                            {getInitials(match.teamB ?? 'bye')}
-                        </div>
-                    )}
-                    <span className="font-semibold text-white truncate hidden md:block">{match.teamB}</span>
-                    <span className="font-semibold text-white md:hidden">{getInitials(match.teamB || 'bye')}</span>
+                    <div className="relative w-8 h-8 rounded-full bg-neutral-950 overflow-hidden ring-1 ring-white/10 shrink-0">
+                        {match.teamLogoB ? (
+                            <img src={match.teamLogoB} alt={match.teamB ?? ''} className="w-full h-full object-contain p-0.5" />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-neutral-500">
+                                {getInitials(match.teamB ?? '')}
+                            </div>
+                        )}
+                    </div>
+
+                    <span className="font-semibold text-white text-sm truncate hidden sm:block max-w-[100px] xl:max-w-[140px]" title={match.teamB}>
+                        {match.teamB}
+                    </span>
+                    <span className="font-semibold text-white sm:hidden">{getInitials(match.teamB ?? '')}</span>
                 </div>
             </div>
 
-            {/* Right: Actions */}
-            <div className="w-full md:w-auto flex justify-end mt-2 md:mt-0">
-                <Link
-                    to={`/manager/match/${match._id}/dashboard`}
-                    className={`
-                        flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all
-                        ${isLive
-                            ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/20"
-                            : "bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white border border-white/5"
-                        }
-                    `}
-                >
-                    <LayoutDashboard size={16} />
-                    <span className="hidden sm:inline">Dashboard</span>
-                    <ArrowRight size={16} className={`transition-transform duration-300 ${isLive ? 'group-hover:translate-x-1' : ''}`} />
-                </Link>
-            </div>
+            {/* Right: Actions (Only visible if Manager) */}
+            {isManager && (
+                <div className="w-full sm:w-auto flex justify-end mt-2 sm:mt-0">
+                    <Link
+                        to={`/manager/match/${match._id}/dashboard`}
+                        className={`
+                            flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all
+                            ${isLive
+                                ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/20"
+                                : "bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white border border-white/5"
+                            }
+                        `}
+                    >
+                        <LayoutDashboard size={14} />
+                        <span className="hidden xl:inline">DashBoard</span>
+                    </Link>
+                </div>
+            )}
         </div>
     );
 }

@@ -3,7 +3,6 @@ import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
 import MatchDashboard from "../components/manager/matches/MatchDashboard";
 import ScoreboardDashboard from "../components/manager/scoreControl/ScoreboardDashboard";
-import StreamManager from "../pages/manager/StreamManager";
 import SettingsPage from "../components/shared/SettingsPage";
 import EarningsPage from "../components/manager/EarningsOverview";
 import FinancialsPage from "../components/manager/PaymentsPage";
@@ -42,5 +41,4 @@ export const managerRoutes = [
     { path: "/manager/tournaments/:tournamentId/:teamId/payment-failed", element: withManagerProtection(<PaymentFailedPage />) },
     { path: "/manager/match/:matchId/dashboard", element: withManagerProtection(<MatchDashboard />) },
     { path: "/manager/match/:matchId/control", element: withManagerProtection(<ScoreboardDashboard />) },
-    { path: "/manager/match/:matchId/control/stream", element: withManagerProtection(<StreamManager />) },
 ];

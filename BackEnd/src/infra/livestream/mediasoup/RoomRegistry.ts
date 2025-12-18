@@ -5,6 +5,7 @@ import { MediaRoom } from "./MediaRoom";
 export class RoomRegistry {
     private rooms = new Map<string, MediaRoom>();
     private workerPromise = createMediaWorker();
+    
 
     async getOrCreateRoom(matchId: string): Promise<MediaRoom> {
         if (this.rooms.has(matchId)) {

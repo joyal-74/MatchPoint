@@ -1,10 +1,49 @@
 import Navbar from "../../components/manager/Navbar";
 import image from '../../assets/images/cricket-3.png'
-
-import { Users, Calendar, BarChart3, ArrowRight } from 'lucide-react';
+import { Users, Calendar, BarChart3, ArrowRight, MapPin, Trophy } from 'lucide-react';
 import Footer from "../../components/viewer/Footer";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { useEffect } from "react";
+import { getExploreTournaments } from "../../features/manager/Tournaments/tournamentThunks";
 
 export default function ManagerDashboard() {
+
+    const activeTournaments = useAppSelector(state => state.managerTournaments.exploreTournaments);
+    const managerId = useAppSelector(state => state.auth.user?._id);
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (activeTournaments.length === 0 && managerId) {
+            dispatch(getExploreTournaments({ managerId, page: 1, limit: 3, filter: '', search: '' }))
+        }
+    }, [activeTournaments.length, managerId, dispatch]);
+
+    // Helper to format dates
+    const formatDate = (dateString : string) => {
+        if (!dateString) return 'TBA';
+        return new Date(dateString).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+        });
+    };
+
+    // Helper for Status Colors
+    const getStatusColor = (status : string) => {
+        switch (status?.toLowerCase()) {
+            case 'ongoing':
+                return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300';
+            case 'upcoming':
+                return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300';
+            case 'completed':
+                return 'bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-300';
+            case 'canceled':
+                return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
+            default:
+                return 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600';
+        }
+    };
+
     const features = [
         {
             icon: Users,
@@ -26,39 +65,6 @@ export default function ManagerDashboard() {
         }
     ];
 
-    const activeTournaments = [
-        {
-            name: 'City Cricket Championship',
-            format: 'T20',
-            status: 'Ongoing',
-            teams: 16,
-            matchesCompleted: 24,
-            totalMatches: 32,
-            progress: 75,
-            upcomingMatch: 'Semi Final 1 - Tomorrow 2:00 PM'
-        },
-        {
-            name: 'Corporate Cricket League',
-            format: 'ODI',
-            status: 'Ongoing',
-            teams: 12,
-            matchesCompleted: 18,
-            totalMatches: 28,
-            progress: 64,
-            upcomingMatch: 'Quarter Final 3 - Today 6:00 PM'
-        },
-        {
-            name: 'Weekend Warriors Cup',
-            format: 'T20',
-            status: 'Registration',
-            teams: 8,
-            matchesCompleted: 0,
-            totalMatches: 14,
-            progress: 0,
-            upcomingMatch: 'Starts Feb 5, 2024'
-        }
-    ];
-
     const managerStats = [
         { number: '12', label: 'Active Tournaments' },
         { number: '156', label: 'Registered Teams' },
@@ -76,7 +82,7 @@ export default function ManagerDashboard() {
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5" />
 
                     {/* Content Container */}
-                    <div className="relative z-10 w-full max-w-8xl p-3 mx-auto ">
+                    <div className="relative z-10 w-full p-3 mx-auto ">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                             {/* Left Content */}
                             <div className="space-y-8">
@@ -190,7 +196,7 @@ export default function ManagerDashboard() {
                         <div className="flex items-center justify-between mb-8">
                             <div>
                                 <h2 className="text-3xl font-bold text-neutral-800 dark:text-neutral-200 mb-2">
-                                    Active Tournaments
+                                    Explore Tournaments
                                 </h2>
                                 <p className="text-neutral-600 dark:text-neutral-400">
                                     Monitor and manage ongoing competitions
@@ -202,92 +208,97 @@ export default function ManagerDashboard() {
                             </button>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-6">
-                            {activeTournaments.map((tournament, index) => (
-                                <div
-                                    key={index}
-                                    className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden hover:shadow-lg transition-all duration-200"
-                                >
-                                    <div className="p-6">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${tournament.status === 'Ongoing'
-                                                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
-                                                : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
-                                                }`}>
-                                                {tournament.status}
-                                            </span>
-                                            <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-2 py-1 rounded text-sm font-medium">
-                                                {tournament.format}
-                                            </span>
-                                        </div>
+                        {activeTournaments && activeTournaments.length > 0 ? (
+                            <div className="grid md:grid-cols-3 gap-6">
+                                {activeTournaments.map((tournament) => {
+                                    // Calculate Registration Progress
+                                    const progressPercentage = tournament.maxTeams > 0
+                                        ? Math.round((tournament.currTeams / tournament.maxTeams) * 100)
+                                        : 0;
 
-                                        <h3 className="font-bold text-lg mb-3 text-neutral-800 dark:text-neutral-200">
-                                            {tournament.name}
-                                        </h3>
+                                    return (
+                                        <div
+                                            key={tournament._id}
+                                            className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden hover:shadow-lg transition-all duration-200 flex flex-col"
+                                        >
+                                            {/* Optional: Add banner image if you want visual richness, otherwise keep text only */}
+                                            {/* <div className="h-32 w-full overflow-hidden">
+                                                <img src={tournament.banner} alt={tournament.title} className="w-full h-full object-cover" />
+                                            </div> */}
 
-                                        <div className="space-y-3 mb-4">
-                                            <div className="flex items-center justify-between text-sm">
-                                                <span className="text-neutral-600 dark:text-neutral-400">Teams</span>
-                                                <span className="font-semibold text-neutral-800 dark:text-neutral-200">{tournament.teams}</span>
-                                            </div>
-                                            <div className="flex items-center justify-between text-sm">
-                                                <span className="text-neutral-600 dark:text-neutral-400">Matches</span>
-                                                <span className="font-semibold text-neutral-800 dark:text-neutral-200">
-                                                    {tournament.matchesCompleted}/{tournament.totalMatches}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <div className="flex items-center justify-between text-sm mb-1">
-                                                    <span className="text-neutral-600 dark:text-neutral-400">Progress</span>
-                                                    <span className="font-semibold text-neutral-800 dark:text-neutral-200">{tournament.progress}%</span>
+                                            <div className="p-6 flex-1 flex flex-col">
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${getStatusColor(tournament.status)}`}>
+                                                        {tournament.status}
+                                                    </span>
+                                                    <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-2 py-1 rounded text-xs font-medium uppercase">
+                                                        {tournament.format}
+                                                    </span>
                                                 </div>
-                                                <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
-                                                    <div
-                                                        className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300"
-                                                        style={{ width: `${tournament.progress}%` }}
-                                                    ></div>
+
+                                                <h3 className="font-bold text-lg mb-2 text-neutral-800 dark:text-neutral-200 line-clamp-1" title={tournament.title}>
+                                                    {tournament.title}
+                                                </h3>
+                                                
+                                                <div className="text-sm text-neutral-500 dark:text-neutral-400 mb-4 flex items-center gap-1 line-clamp-1">
+                                                     <MapPin className="w-3 h-3" />
+                                                     {tournament.location ? tournament.location.split(',')[0] : 'Location TBA'}
+                                                </div>
+
+                                                <div className="space-y-4 mb-4 mt-auto">
+                                                    {/* Teams Progress */}
+                                                    <div>
+                                                        <div className="flex items-center justify-between text-sm mb-1">
+                                                            <span className="text-neutral-600 dark:text-neutral-400">Teams Registered</span>
+                                                            <span className="font-semibold text-neutral-800 dark:text-neutral-200">
+                                                                {tournament.currTeams} <span className="text-neutral-400 font-normal">/ {tournament.maxTeams}</span>
+                                                            </span>
+                                                        </div>
+                                                        <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
+                                                            <div
+                                                                className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300"
+                                                                style={{ width: `${progressPercentage}%` }}
+                                                            ></div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Prize Pool Row */}
+                                                    <div className="flex items-center justify-between text-sm bg-neutral-50 dark:bg-neutral-900 p-2 rounded-lg">
+                                                        <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
+                                                            <Trophy className="w-4 h-4 text-yellow-500" />
+                                                            <span>Prize Pool</span>
+                                                        </div>
+                                                        <span className="font-bold text-neutral-800 dark:text-neutral-200">₹{tournament.prizePool}</span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700">
+                                                    <div className="flex items-center justify-between text-sm text-neutral-600 dark:text-neutral-400 mb-3">
+                                                        <div className="flex items-center space-x-2">
+                                                            <Calendar className="w-4 h-4" />
+                                                            <span>
+                                                                {formatDate(tournament.startDate)} - {formatDate(tournament.endDate)}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-semibold transition-colors duration-200">
+                                                        View Details
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700">
-                                            <div className="flex items-center space-x-2 text-sm text-neutral-600 dark:text-neutral-400 mb-3">
-                                                <Calendar className="w-4 h-4" />
-                                                <span>{tournament.upcomingMatch}</span>
-                                            </div>
-                                            <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-semibold transition-colors duration-200">
-                                                Manage Tournament
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div className="text-center py-12 bg-white dark:bg-neutral-800 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700">
+                                <p className="text-neutral-500 dark:text-neutral-400">No active tournaments found.</p>
+                                <button className="mt-4 text-blue-600 hover:text-blue-700 font-medium text-sm">Create your first tournament</button>
+                            </div>
+                        )}
                     </div>
                 </section>
 
-                {/* CTA Section */}
-                <section className="py-16 bg-white dark:bg-neutral-900">
-                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-                            Ready to Transform Your Tournament Management?
-                        </h2>
-                        <p className="text-xl text-blue-100 mb-8">
-                            <span className="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-                                Join thousands of managers who trust our platform for seamless cricket operations.
-
-                            </span>
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-neutral-100 transition-colors duration-200 shadow-lg">
-                                Start Free Trial
-                            </button>
-                            <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors duration-200">
-                                Schedule Demo
-                            </button>
-                        </div>
-                    </div>
-                </section>
             </div>
 
             <Footer />

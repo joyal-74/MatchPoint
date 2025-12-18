@@ -16,6 +16,12 @@ const matchesSchema = new Schema({
     tossWinner: { type: Schema.Types.ObjectId, ref: "Team" },
     tossDecision: { type: String, enum: ["bat", "bowl"] },
     oversLimit: { type: Number, default: 20 },
+
+    streamTitle: { type: String, default: "" },
+    streamDescription: { type: String, default: "" },
+    isStreamLive: { type: Boolean, default: false },
+    streamStartedAt: { type: Date },
+    streamerId: { type: Schema.Types.ObjectId, ref: "User" }
 });
 
 export default model("Matches", matchesSchema);

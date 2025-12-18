@@ -125,7 +125,7 @@ export interface Match {
     status: MatchStatus;
     venue?: string;
     date?: Date;
-    winner: string;
+    winner: string | null;
     stats: Record<string, any>;
 }
 

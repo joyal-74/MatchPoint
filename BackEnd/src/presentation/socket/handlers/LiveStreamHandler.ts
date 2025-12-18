@@ -53,6 +53,38 @@ export class LiveStreamHandler {
         }
         );
 
+        this.socket.on("live:start", async (data: { matchId: string; title: string; description: string, userId : string }, cb) => {
+            console.log("🎬 [SERVER] Stream starting:", data.matchId);
+            try {
+                await this.liveStreamService.startStream(
+                    data.matchId,
+                    data.title,
+                    data.description,
+                    data.userId
+                );
+
+                this.socket.to(data.matchId).emit("stream-metadata-updated", {
+                    title: data.title,
+                    description: data.description
+                });
+
+                if (typeof cb === "function") cb({ success: true });
+            } catch (err) {
+                console.error("Start stream error:", err);
+                if (typeof cb === "function") cb({ error: (err as Error).message });
+            }
+        });
+
+        this.socket.on("live:get-metadata", async ({ matchId }, cb) => {
+            try {
+                const metadata = await this.liveStreamService.getStreamMetadata(matchId);
+                cb(metadata);
+            } catch (err) {
+                console.error("Get metadata error:", err);
+                cb({ error: "Failed to fetch metadata" });
+            }
+        });
+
         this.socket.on("live:produce", async (data: ProduceData, cb) => {
 
             console.log("📤 [SERVER] live:produce", {
@@ -123,13 +155,13 @@ export class LiveStreamHandler {
                 cb({ success: true });
             }
 
-            // const producers = await this.liveStreamService.getProducers(matchId);
+            const producers = await this.liveStreamService.getProducers(matchId);
 
-            // console.log("👀 [SERVER] existing producers:", producers);
+            console.log("👀 [SERVER] existing producers:", producers);
 
-            // producers.forEach((producerId) => {
-            //     this.socket.emit("new-producer", { producerId });
-            // });
+            producers.forEach((producerId) => {
+                this.socket.emit("new-producer", { producerId });
+            });
         });
 
 

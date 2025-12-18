@@ -130,11 +130,13 @@ export const managerEndpoints = {
 
     createTournamentFixtures: async ({ tournamentId, matchIds, format }: { tournamentId: string, matchIds: { matchId?: string; round: number }[], format: string }): Promise<Fixture[]> => {
         const { data } = await axiosClient.post(MANAGER_ROUTES.CREATE_FIXTURE(tournamentId), { matchIds, format });
+        console.log(data.data)
         return data.data
     },
 
     getTournamentFixtures: async (tournamentId: string): Promise<Fixture> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_FIXTURES(tournamentId));
+        console.log(data.data, "---")
         return data.data
     },
 

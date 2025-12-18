@@ -15,12 +15,19 @@ export class FixturesRepositoryMongo implements IFixturesRepository {
             matches
         });
 
-        const populatedMatches = FixtureModel.populate(created, [
-            { path: "teamA", select: "name logo" },
-            { path: "teamB", select: "name logo" },
-        ]);
+        const populatedFixture = await FixtureModel.findById(created._id)
+            .populate({
+                path: "matches.matchId",
+                populate: [
+                    { path: "teamA", select: "name logo" },
+                    { path: "teamB", select: "name logo" },
+                ],
+            })
+            .exec();
 
-        return FixtureMongoMapper.toFixtureResponse(populatedMatches);
+        const result = FixtureMongoMapper.toFixtureResponse(populatedFixture);
+
+        return result;
     }
 
     async getFixtureByTournament(tournamentId: string): Promise<Fixture | null> {

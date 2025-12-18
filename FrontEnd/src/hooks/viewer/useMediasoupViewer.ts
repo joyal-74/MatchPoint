@@ -43,6 +43,13 @@ interface SetQualityReq {
     temporalLayer: number;
 }
 
+interface StreamMetadata {
+    title: string;
+    description: string;
+    streamerName: string;
+    viewers: number;
+}
+
 export function useMediasoupViewer(matchId: string | undefined) {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const socketRef = useRef<Socket | null>(null);
@@ -64,6 +71,13 @@ export function useMediasoupViewer(matchId: string | undefined) {
     const [error, setError] = useState<string | null>(null);
     const [quality, setQuality] = useState<Quality>("auto");
     const [muted, setMuted] = useState(true);
+
+    const [metadata, setMetadata] = useState<StreamMetadata>({
+        title: "Loading...",
+        description: "",
+        streamerName: "",
+        viewers: 0
+    });
 
     /* ================= SOCKET HELPER ================= */
     // 2. Fixed: Generic emit wrapper
@@ -89,6 +103,10 @@ export function useMediasoupViewer(matchId: string | undefined) {
         // 1. Connection Event
         socket.on("connect", () => {
             if (!initializedRef.current) initViewer();
+        });
+
+        socket.on("stream-metadata-updated", (data: Partial<StreamMetadata>) => {
+            setMetadata(prev => ({ ...prev, ...data }));
         });
 
         // 2. New Producer Event
@@ -131,7 +149,13 @@ export function useMediasoupViewer(matchId: string | undefined) {
         try {
             setState("connecting");
 
+            const metaPromise = emitAsync<StreamMetadata>("live:get-metadata", { matchId });
+
             await socketRef.current?.emit("viewer:join", { matchId });
+
+            metaPromise.then(data => {
+                setMetadata(prev => ({ ...prev, ...data }));
+            }).catch(err => console.error("Failed to fetch metadata", err));
 
             deviceRef.current = new mediasoupClient.Device();
 
@@ -147,6 +171,7 @@ export function useMediasoupViewer(matchId: string | undefined) {
             await createRecvTransport(transportParams);
 
             const producers = await emitAsync<string[]>("live:get-producers", { matchId });
+            console.log("🎯 [VIEWER] producers list:", producers);
 
             if (producers.length > 0) {
                 for (const producerId of producers) {
@@ -168,10 +193,19 @@ export function useMediasoupViewer(matchId: string | undefined) {
     const createRecvTransport = async (params: TransportOptions) => {
         if (!deviceRef.current) return;
 
+        console.log("🚛 [VIEWER] creating recv transport", {
+            id: params.id,
+            ice: params.iceCandidates?.length,
+        });
+
         const transport = deviceRef.current.createRecvTransport(params);
         recvTransportRef.current = transport;
 
+        console.log("✅ [VIEWER] recv transport ready:", transport.id);
+
         transport.on("connect", async ({ dtlsParameters }, cb, eb) => {
+            console.log("🔐 [VIEWER] transport connect (DTLS)", dtlsParameters);
+
             try {
                 await emitAsync<void, ConnectTransportReq>("transport:connect", {
                     matchId: matchId!,
@@ -179,6 +213,9 @@ export function useMediasoupViewer(matchId: string | undefined) {
                     dtlsParameters,
                 });
                 cb();
+
+                console.log("✅ [VIEWER] transport DTLS connected");
+
 
                 for (const producerId of pendingProducersRef.current) {
                     consume(producerId);
@@ -201,6 +238,11 @@ export function useMediasoupViewer(matchId: string | undefined) {
                 return;
             }
 
+            console.log("📥 [VIEWER] requesting consume", {
+                producerId,
+                transportId: recvTransportRef.current?.id,
+            });
+
             const data = await emitAsync<ConsumerOptions, ConsumeReq>("live:consume", {
                 matchId: matchId!,
                 transportId: recvTransportRef.current.id,
@@ -208,11 +250,24 @@ export function useMediasoupViewer(matchId: string | undefined) {
                 rtpCapabilities: deviceRef.current!.rtpCapabilities,
             });
 
+            console.log("📦 [VIEWER] consume response", data);
+
+
             const consumer = await recvTransportRef.current.consume(data);
             consumersRef.current.set(producerId, consumer);
 
+            console.log("🎥 [VIEWER] consumer created", {
+                id: consumer.id,
+                kind: consumer.kind,
+                paused: consumer.paused,
+                trackReady: !!consumer.track,
+                trackState: consumer.track?.readyState,
+            });
+
             mediaStreamRef.current.addTrack(consumer.track);
             attachStream();
+
+
 
             if (consumer.paused) {
                 await emitAsync("live:resume-consumer", {
@@ -322,5 +377,5 @@ export function useMediasoupViewer(matchId: string | undefined) {
         consumersRef.current.forEach((c) => applyQuality(c));
     }, [applyQuality]);
 
-    return { videoRef, state, error, muted, setMuted, quality, setQuality };
+    return { videoRef, state, error, muted, setMuted, quality, setQuality, metadata };
 }

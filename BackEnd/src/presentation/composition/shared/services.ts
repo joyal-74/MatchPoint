@@ -1,5 +1,5 @@
 import { PlayerService } from "infra/services/PlayerService";
-import { adminRepository, playerRepository, registrationRepository, teamRepository, userRepository } from "./repositories";
+import { adminRepository, matchRepository, playerRepository, registrationRepository, teamRepository, userRepository } from "./repositories";
 import { LogoutService } from "infra/services/LogoutService";
 import { PlayerTeamServices } from "infra/services/PlayerTeamServices";
 import { TournamentRegistrationValidator } from "infra/services/TournamentRegistrationValidator";
@@ -21,4 +21,4 @@ export const configProvider = new EnvConfigProvider();
 export const googleAuthService = new GoogleAuthService(configProvider);
 export const userAuthService = new UserAuthServices(userRepository, jwtService);
 export const facebookServices = new FacebookServices();
-export const livestreamServices = new LiveStreamService(roomRegistry);
+export const livestreamServices = new LiveStreamService(roomRegistry, matchRepository);

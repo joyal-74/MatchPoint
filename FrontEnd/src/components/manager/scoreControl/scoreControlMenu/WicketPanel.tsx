@@ -1,7 +1,7 @@
 import React from 'react';
 import { AlertCircle, X } from 'lucide-react';
 import { SelectInput } from './SharedComponents';
-import type { InningsState, Player } from '../../../../features/manager/Matches/matchTypes';
+import type { InningsState, Player } from '../../../features/manager/Matches/matchTypes';
 
 interface WicketPanelProps {
     onClose: () => void;

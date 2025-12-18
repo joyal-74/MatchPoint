@@ -49,7 +49,7 @@ export default function FixturesTab({ type }: FixtureTabProp) {
             dispatch(getTournamentFixtures(id))
                 .unwrap()
                 .then(setFixtures)
-                .catch(() => setFixtures(null)); // Handle case where no fixtures exist
+                .catch(() => setFixtures(null)); 
         }
     }, [id, selectedTournament, dispatch, fixtures]);
 
@@ -73,10 +73,11 @@ export default function FixturesTab({ type }: FixtureTabProp) {
     };
 
     const handleGenerateFixtures = async (confirmedSettings: typeof matchSettings) => {
-        if (!selectedTournament) return;
+        if (!selectedTournament || !id) return;
 
         let matches;
         try {
+            // 1. Generate the local match structure (contains ObjectIds for teams)
             switch (selectedTournament.format) {
                 case "knockout":
                     matches = generateKnockoutFixtures(registeredTeams, confirmedSettings.location, confirmedSettings.startDate, confirmedSettings.matchesPerDay);
@@ -91,11 +92,13 @@ export default function FixturesTab({ type }: FixtureTabProp) {
                     return toast.error("Unknown tournament format");
             }
 
+            // 2. Save Matches to DB
             const createdMatches = await dispatch(createTournamentMatches({
                 tournamentId: selectedTournament._id,
                 matchesData: matches,
             })).unwrap();
 
+            // 3. Save Fixture structure to DB
             const fixtureMatches = createdMatches.map((m) => ({
                 matchId: m._id,
                 round: m.round,
@@ -105,11 +108,16 @@ export default function FixturesTab({ type }: FixtureTabProp) {
                 tournamentId: selectedTournament._id,
                 matchIds: fixtureMatches,
                 format: selectedTournament.format,
-            }));
+            })).unwrap(); // Ensure this completes before fetching
 
             toast.success("Fixtures generated successfully!");
-            setFixtures({ matches, format: selectedTournament.format, tournamentId: selectedTournament._id });
             setShowConfirmModal(false);
+
+            // 4. THE FIX: Refetch fresh data from server
+            // This ensures we get the populated team names/logos instead of raw ObjectIds
+            const freshFixtures = await dispatch(getTournamentFixtures(id)).unwrap();
+            setFixtures(freshFixtures);
+
         } catch (error) {
             console.error(error);
             toast.error("Failed to generate fixtures.");
@@ -118,9 +126,6 @@ export default function FixturesTab({ type }: FixtureTabProp) {
 
     if (loading) return <LoadingOverlay show />;
 
-    // ------------------------------------------------
-    // STATE: No Fixtures Generated Yet
-    // ------------------------------------------------
     if (!fixtures?.matches?.length) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[500px] animate-in fade-in zoom-in-95 duration-500">

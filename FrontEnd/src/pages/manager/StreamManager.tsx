@@ -1,494 +1,276 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import {
-    Play, Square, Wifi, Video, Mic, AlertCircle, Pause
+import React from 'react';
+import { 
+    X, Activity, Eye, Mic, MicOff, Video, VideoOff, 
+    Settings2, Play, Pause, Square, AlertCircle, Radio 
 } from 'lucide-react';
-import { Device } from "mediasoup-client";
-import type { DtlsParameters, MediaKind, Producer, RtpCapabilities, RtpParameters, Transport, TransportOptions } from 'mediasoup-client/types';
-import { useParams } from 'react-router-dom';
-import { getSocket } from '../../socket/socket';
-import { useSocketEmit } from '../../hooks/useSocketEmit';
 
 
-type StreamStatus = 'idle' | 'connecting' | 'live' | 'paused' | 'ending';
-
-// 3. Define specific Request/Response types for your events
-interface CreateTransportReq {
-    matchId: string;
-    direction: 'send' | 'recv';
+interface CompactStreamDrawerProps {
+    isOpen: boolean;
+    onClose: () => void;
+    streamData: any; 
 }
 
-interface ConnectTransportReq {
-    matchId: string;
-    transportId: string;
-    dtlsParameters: DtlsParameters;
-}
+const SignalStrength = ({ score }: { score: number }) => (
+    <div className="flex gap-0.5 items-end h-3">
+        {[...Array(5)].map((_, i) => (
+            <div
+                key={i}
+                className={`w-0.5 rounded-sm transition-all duration-300 ${
+                    i < (score / 2)
+                        ? (score > 8 ? 'bg-emerald-400 h-full' : score > 5 ? 'bg-yellow-400 h-3/4' : 'bg-red-500 h-1/2')
+                        : 'bg-neutral-700 h-1'
+                }`}
+            />
+        ))}
+    </div>
+);
 
-interface ProduceReq {
-    matchId: string;
-    transportId: string;
-    kind: MediaKind;
-    rtpParameters: RtpParameters;
-}
-
-interface ProduceRes {
-    id: string;
-}
-
-const StreamManager: React.FC = () => {
-    const { matchId } = useParams();
-
-    const [status, setStatus] = useState<StreamStatus>('idle');
-    const [viewerCount, setViewerCount] = useState(0);
-    const [startTime, setStartTime] = useState<Date | null>(null);
-    const [elapsedTime, setElapsedTime] = useState('00:00');
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
-    const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-    const [isAudioEnabled, setIsAudioEnabled] = useState(true);
-    const [isVideoEnabled, setIsVideoEnabled] = useState(true);
-    const [isPaused, setIsPaused] = useState(false);
-
-    const localVideoRef = useRef<HTMLVideoElement>(null);
-    const deviceRef = useRef<Device | null>(null);
-    const sendTransportRef = useRef<Transport | null>(null);
-    const videoProducerRef = useRef<Producer | null>(null);
-    const audioProducerRef = useRef<Producer | null>(null);
-
-    const statsRef = useRef({
-        videoBitrate: 0,
-        rtt: 0,
-        score: 100
-    });
-
-    const emitAsync = useSocketEmit();
-
-    const lastBytesSentRef = useRef(0);
-    const lastTimestampRef = useRef(0);
-
-    useEffect(() => {
-        const socket = getSocket();
-        if (!socket) return;
-
-        const join = () => setViewerCount(v => v + 1);
-        const leave = () => setViewerCount(v => Math.max(0, v - 1));
-
-        socket.on("consumer-joined", join);
-        socket.on("consumer-left", leave);
-
-        return () => {
-            socket.off("consumer-joined", join);
-            socket.off("consumer-left", leave);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (status !== 'live' || !startTime || !videoProducerRef.current) return;
-
-        const interval = setInterval(async () => {
-            if (!videoProducerRef.current || videoProducerRef.current.closed) return;
-
-            const diff = Date.now() - startTime.getTime();
-            const m = Math.floor(diff / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
-            setElapsedTime(`${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`);
-
-            try {
-                const stats = await videoProducerRef.current.getStats();
-                stats.forEach((r) => {
-                    if (r.type === 'outbound-rtp' && r.bytesSent) {
-                        const dt = r.timestamp - lastTimestampRef.current;
-                        if (dt > 0) {
-                            const db = r.bytesSent - lastBytesSentRef.current;
-                            statsRef.current.videoBitrate = Math.round((db * 8 / dt) * 1000);
-                        }
-                        lastTimestampRef.current = r.timestamp;
-                        lastBytesSentRef.current = r.bytesSent;
-                    }
-                    if (r.type === 'transport' && r.currentRoundTripTime) {
-                        statsRef.current.rtt = r.currentRoundTripTime * 1000;
-                        statsRef.current.score = Math.max(0, 100 - statsRef.current.rtt / 10);
-                    }
-                });
-            } catch {
-                /* ignore transient stats errors */
-            }
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [status, startTime]);
-
-    const handleStartStream = async () => {
-        if (!matchId) return setErrorMsg("Missing matchId");
-        const socket = getSocket();
-        if (!socket) return setErrorMsg("Socket unavailable");
-
-        try {
-            setStatus("connecting");
-            setErrorMsg(null);
-
-            handleEndStream();
-
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { width: 1280, height: 720, frameRate: 30 },
-                audio: true
-            });
-
-            setLocalStream(stream);
-            if (localVideoRef.current) {
-                localVideoRef.current.srcObject = stream;
-                localVideoRef.current.muted = true;
-                await localVideoRef.current.play();
-            }
-
-            const device = new Device();
-            deviceRef.current = device;
-
-            const routerCaps = await emitAsync<RtpCapabilities, { matchId: string }>(
-                socket,
-                "live:get-rtp-capabilities",
-                { matchId }
-            );
-            await device.load({ routerRtpCapabilities: routerCaps });
-
-            const transportParams = await emitAsync<TransportOptions, CreateTransportReq>(
-                socket,
-                "live:create-transport",
-                { matchId, direction: "send" }
-            );
-
-            const recvTransportParams = await emitAsync<TransportOptions, CreateTransportReq>(
-                socket,
-                "live:create-transport",
-                { matchId, direction: "recv" }
-            );
-
-            const recvTransport = device.createRecvTransport(recvTransportParams);
-
-            recvTransport.on("connect", async ({ dtlsParameters }, cb, eb) => {
-                try {
-                    await emitAsync<void, ConnectTransportReq>(
-                        socket,
-                        "transport:connect",
-                        {
-                            matchId,
-                            transportId: sendTransport.id,
-                            dtlsParameters
-                        }
-                    );
-                    cb();
-                } catch (e) {
-                    eb(e as Error);
-                }
-            });
-
-
-            const sendTransport = device.createSendTransport(transportParams);
-            sendTransportRef.current = sendTransport;
-
-            sendTransport.on("connect", async ({ dtlsParameters }, cb, eb) => {
-                try {
-                    await emitAsync<void, ConnectTransportReq>(
-                        socket,
-                        "transport:connect",
-                        {
-                            matchId,
-                            transportId: recvTransport.id,
-                            dtlsParameters
-                        }
-                    );
-                    cb();
-                } catch (e) {
-                    eb(e as Error);
-                }
-            });
-
-            sendTransport.on("produce", async ({ kind, rtpParameters }, cb, eb) => {
-                try {
-                    const { id } = await emitAsync<ProduceRes, ProduceReq>(
-                        socket,
-                        "live:produce",
-                        {
-                            matchId,
-                            transportId: sendTransport.id,
-                            kind,
-                            rtpParameters
-                        }
-                    );
-                    cb({ id });
-                } catch (e) {
-                    eb(e as Error);
-                }
-            });
-
-            const videoTrack = stream.getVideoTracks()[0];
-            const audioTrack = stream.getAudioTracks()[0];
-
-            if (videoTrack) {
-                videoProducerRef.current = await sendTransport.produce({ track: videoTrack });
-            }
-            if (audioTrack) {
-                audioProducerRef.current = await sendTransport.produce({ track: audioTrack });
-            }
-
-            setStartTime(new Date());
-            setStatus("live");
-
-        } catch (e: unknown) {
-            setErrorMsg((e as Error).message || "Failed to start");
-            handleEndStream();
-        }
-    };
-
-    const handleEndStream = useCallback(() => {
-        setStatus("ending");
-
-        const socket = getSocket();
-        if (socket && matchId) {
-            socket.emit("stream:end", { matchId });
-        }
-
-        try {
-            videoProducerRef.current?.close();
-            audioProducerRef.current?.close();
-            sendTransportRef.current?.close();
-        } catch (error) {
-            console.error("Error closing mediasoup entities:", error);
-        }
-
-        localStream?.getTracks().forEach(t => t.stop());
-
-        if (localVideoRef.current) localVideoRef.current.srcObject = null;
-
-        videoProducerRef.current = null;
-        audioProducerRef.current = null;
-        sendTransportRef.current = null;
-        deviceRef.current = null;
-
-        setLocalStream(null);
-        setElapsedTime("00:00");
-        setIsPaused(false);
-        setStatus("idle");
-
-        statsRef.current = { videoBitrate: 0, rtt: 0, score: 100 };
-    }, [localStream, matchId]);
-
-    /* ================= PAUSE / RESUME ================= */
-    const pauseStream = () => {
-        videoProducerRef.current?.pause();
-        audioProducerRef.current?.pause();
-
-        const socket = getSocket();
-        socket?.emit("producer:pause", {
-            matchId,
-            producerId: videoProducerRef.current?.id
-        });
-
-        setIsPaused(true);
-        setStatus("paused");
-    };
-
-
-    const resumeStream = () => {
-        videoProducerRef.current?.resume();
-        audioProducerRef.current?.resume();
-
-        const socket = getSocket();
-        socket?.emit("producer:resume", {
-            matchId,
-            producerId: videoProducerRef.current?.id
-        });
-        setIsPaused(false);
-        setStatus("live");
-    };
-
-    /* ================= TOGGLES ================= */
-    const toggleAudio = () => {
-        const t = localStream?.getAudioTracks()[0];
-        if (!t) return;
-        t.enabled = !t.enabled;
-        setIsAudioEnabled(t.enabled);
-        if (t.enabled) {
-            audioProducerRef.current?.resume()
-        } else {
-            audioProducerRef.current?.pause();
-        }
-    };
-
-    const toggleVideo = () => {
-        const t = localStream?.getVideoTracks()[0];
-        if (!t) return;
-        t.enabled = !t.enabled;
-        setIsVideoEnabled(t.enabled);
-        if (t.enabled) {
-            videoProducerRef.current?.resume()
-        } else {
-            videoProducerRef.current?.pause();
-        }
-    };
-
-
-    const getQualityIndicator = (score: number) => {
-        if (score >= 80) return 'bg-emerald-500';
-        if (score >= 60) return 'bg-amber-500';
-        return 'bg-red-500';
-    };
+const StreamManager: React.FC<CompactStreamDrawerProps> = ({ isOpen, onClose, streamData }) => {
+    const {
+        // UI State
+        streamTitle, setStreamTitle,
+        streamDesc, setStreamDesc,
+        // Logic State
+        status, viewerCount, elapsedTime, errorMsg,
+        localStream, isAudioEnabled, isVideoEnabled, isPaused,
+        stats, localVideoRef,
+        // Handlers
+        handleStartStream, handleEndStream, pauseStream, resumeStream,
+        toggleAudio, toggleVideo,
+    } = streamData;
 
     return (
-        <div className="h-screen bg-neutral-900 text-white flex flex-col overflow-hidden">
-            {/* Minimal Header */}
-            <header className="flex items-center justify-between px-6 py-3 border-b border-neutral-800">
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-neutral-800/50 rounded-full">
-                        <Video size={18} className="text-blue-400" />
-                    </div>
-                    <div className="min-w-0">
-                        <h1 className="text-sm font-semibold truncate">Live Stream</h1>
-                        <p className="text-xs text-neutral-500 truncate">ID: {matchId}</p>
-                    </div>
-                </div>
-                <div className={`px-3 py-1 rounded-full text-xs font-medium border ${status === 'live' ? 'bg-red-500/20 text-red-300 border-red-500/50' :
-                    status === 'connecting' ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/50' :
-                        'bg-neutral-800 text-neutral-400 border-neutral-700'
-                    }`}>
-                    {status.toUpperCase()}
-                </div>
-            </header>
+        <>
+            <div 
+                className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                onClick={onClose}
+            />
 
-            {/* Error Toast */}
-            {errorMsg && (
-                <div className="absolute top-4 right-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center gap-2 text-red-200 text-sm z-50 max-w-sm">
-                    <AlertCircle size={16} />
-                    <span className="truncate">{errorMsg}</span>
-                    <button onClick={() => setErrorMsg(null)} className="ml-auto">
-                        <Square size={16} className="text-red-300" />
+            {/* Slide-over Panel */}
+            <div 
+                className={`
+                    fixed inset-y-0 right-0 w-full md:w-[480px] bg-[#0a0a0a] border-l border-white/10 
+                    shadow-2xl transform transition-transform duration-300 ease-in-out z-50 flex flex-col
+                    ${isOpen ? 'translate-x-0' : 'translate-x-full'}
+                `}
+            >
+                {/* --- HEADER --- */}
+                <div className="px-6 py-4 border-b border-white/5 flex justify-between items-center bg-neutral-900/50 backdrop-blur-md">
+                    <div>
+                        <div className="flex items-center gap-2 mb-0.5">
+                            <Radio className={`w-4 h-4 ${status === 'live' ? 'text-red-500 animate-pulse' : 'text-indigo-400'}`} />
+                            <h2 className="font-bold text-white uppercase tracking-wider text-sm">Stream Control</h2>
+                        </div>
+                        <p className="text-[10px] text-neutral-500 font-mono">
+                            STATUS: <span className={status === 'live' ? 'text-red-500 font-bold' : 'text-neutral-400'}>{status.toUpperCase()}</span>
+                        </p>
+                    </div>
+                    <button 
+                        onClick={onClose} 
+                        className="p-2 -mr-2 hover:bg-white/5 rounded-lg text-neutral-400 hover:text-white transition-colors"
+                    >
+                        <X size={20} />
                     </button>
                 </div>
-            )}
 
-            {/* Main Video Area */}
-            <main className="flex-1 relative flex items-center justify-center p-4">
-                <div className="relative w-full max-w-4xl aspect-video bg-neutral-800 rounded-xl overflow-hidden shadow-2xl">
-                    <video
-                        ref={localVideoRef}
-                        autoPlay
-                        muted
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    {status === 'idle' && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-neutral-800/50">
-                            <Video size={48} className="text-neutral-500 mb-2" />
-                            <p className="text-neutral-400 text-sm">Ready to go live</p>
+                {/* --- SCROLLABLE CONTENT --- */}
+                <div className="flex-1 overflow-y-auto p-6 space-y-8 scrollbar-thin scrollbar-thumb-neutral-800">
+                    
+                    {/* 1. MONITOR SECTION */}
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xs font-bold text-neutral-500 uppercase tracking-wider flex items-center gap-2">
+                                <Activity className="w-3 h-3" /> Output Monitor
+                            </h3>
+                            {status === 'live' && <span className="text-[10px] font-mono text-emerald-500">connection: stable</span>}
                         </div>
-                    )}
-                    {status === 'live' && (
-                        <div className="absolute inset-0 pointer-events-none">
-                            <div className="absolute top-4 left-4 flex flex-col gap-2">
-                                <div className="flex items-center gap-2 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs">
-                                    <Wifi size={12} className="text-green-400" />
-                                    <span>{Math.round(statsRef.current.rtt)} ms</span>
-                                </div>
-                                <div className="bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs">
-                                    {viewerCount} viewers
-                                </div>
-                            </div>
-                            <div className="absolute bottom-4 right-4 bg-gradient-to-r from-red-500 to-pink-600 px-4 py-2 rounded-full text-xs font-bold shadow-lg">
-                                LIVE
-                            </div>
-                            <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs">
-                                <div className={`w-2 h-2 rounded-full ${getQualityIndicator(statsRef.current.score)}`}></div>
-                                <span>{statsRef.current.score}%</span>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </main>
 
-            {/* Bottom Controls - Unified responsive */}
-            <footer className="border-t border-neutral-800 p-4 bg-neutral-900/50">
-                <div className="max-w-md mx-auto">
-                    <div className="flex justify-center items-center gap-4 mb-4">
-                        <button
-                            onClick={toggleVideo}
-                            disabled={!localStream || status === 'idle'}
-                            className={`p-3 rounded-full transition-all ${!localStream || status === 'idle' ? 'opacity-50 cursor-not-allowed' :
-                                isVideoEnabled ? 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30' : 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
-                                }`}
-                            title={isVideoEnabled ? 'Disable Video' : 'Enable Video'}
-                        >
-                            <Video size={20} />
-                        </button>
-                        <button
-                            onClick={toggleAudio}
-                            disabled={!localStream || status === 'idle'}
-                            className={`p-3 rounded-full transition-all ${!localStream || status === 'idle' ? 'opacity-50 cursor-not-allowed' :
-                                isAudioEnabled ? 'bg-green-500/20 text-green-300 hover:bg-green-500/30' : 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
-                                }`}
-                            title={isAudioEnabled ? 'Mute Audio' : 'Unmute Audio'}
-                        >
-                            <Mic size={20} />
-                        </button>
-                        <div className="flex-1 max-w-32">
-                            {status === 'idle' || status === 'connecting' ? (
-                                <button
-                                    onClick={handleStartStream}
-                                    disabled={status === 'connecting'}
-                                    className={`w-full py-3 rounded-full font-medium text-sm transition-all ${status === 'connecting' ? 'bg-neutral-700 text-neutral-500 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg'
-                                        }`}
-                                >
-                                    {status === 'connecting' ? (
-                                        <>
-                                            <div className="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                                            Connecting...
-                                        </>
-                                    ) : (
-                                        <span className="flex items-center justify-center gap-2">
-                                            <Play size={18} />
-                                            Go Live
-                                        </span>
-                                    )}
-                                </button>
-                            ) : (
-                                <div className="flex gap-2">
-                                    <button
-                                        onClick={isPaused ? resumeStream : pauseStream}
-                                        className={`flex-1 py-3 rounded-full font-medium text-sm transition-all ${isPaused ? 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg' :
-                                            'bg-gradient-to-r from-yellow-600 to-yellow-700 text-white hover:from-yellow-700 hover:to-yellow-800 shadow-lg'
-                                            }`}
-                                    >
-                                        {isPaused ? (
-                                            <>
-                                                <Play size={18} className="inline-block mr-1" />
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Pause size={18} className="inline-block mr-1" />
-                                            </>
-                                        )}
-                                    </button>
-                                    <button
-                                        onClick={handleEndStream}
-                                        className="px-4 py-3 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 shadow-lg font-medium"
-                                    >
-                                        <Square size={18} />
-                                    </button>
+                        <div className="relative aspect-video bg-neutral-950 rounded-xl overflow-hidden border border-neutral-800 shadow-2xl group">
+                            {/* Glow Effect */}
+                            {status === 'live' && <div className="absolute inset-0 bg-indigo-500/10 blur-xl rounded-full opacity-50"></div>}
+                            
+                            <video 
+                                ref={localVideoRef} 
+                                autoPlay muted playsInline 
+                                className={`relative z-10 w-full h-full object-cover transition-opacity duration-700 ${localStream ? 'opacity-100' : 'opacity-0'}`} 
+                            />
+                            
+                            {/* Fallback Screen */}
+                            {!localStream && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center bg-neutral-900/50 backdrop-blur-sm z-20">
+                                    <div className="w-12 h-12 rounded-full bg-neutral-800 flex items-center justify-center mb-2 border border-neutral-700">
+                                        <VideoOff className="w-5 h-5 text-neutral-600" />
+                                    </div>
+                                    <p className="text-[10px] text-neutral-500 uppercase tracking-widest font-bold">No Signal</p>
+                                </div>
+                            )}
+
+                            {/* Live Overlays */}
+                            {status === 'live' && (
+                                <div className="absolute inset-0 z-30 pointer-events-none p-3 flex flex-col justify-between">
+                                    <div className="self-end flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs border border-white/5">
+                                        <Eye size={12} className="text-sky-400" /> 
+                                        <span className="font-bold text-white">{viewerCount}</span>
+                                    </div>
+                                    <div className="self-start flex items-center gap-2">
+                                        <div className="bg-red-600 text-white text-[10px] px-1.5 py-0.5 rounded font-bold shadow-lg animate-pulse">REC</div>
+                                        <span className="font-mono text-sm text-white drop-shadow-md font-medium">{elapsedTime}</span>
+                                    </div>
                                 </div>
                             )}
                         </div>
                     </div>
-                    {status !== 'idle' && (
-                        <div className="flex justify-between items-center text-xs text-neutral-500 text-center">
-                            <span>{elapsedTime}</span>
-                            <span className="mx-4 flex-1">•</span>
-                            <span>{viewerCount} watching</span>
-                            <span className="mx-4 flex-1">•</span>
-                            <span className="font-mono">
-                                {(statsRef.current.videoBitrate / 1000000).toFixed(1)} Mbps
-                            </span>
+
+                    {/* 2. SOURCE CONTROLS */}
+                    <div className="space-y-3">
+                        <h3 className="text-xs font-bold text-neutral-500 uppercase tracking-wider flex items-center gap-2">
+                            <Settings2 className="w-3 h-3" /> Sources
+                        </h3>
+                        <div className="grid grid-cols-2 gap-3">
+                            {/* Camera Toggle */}
+                            <button 
+                                onClick={toggleVideo} 
+                                disabled={status === 'idle'}
+                                className={`
+                                    p-3 rounded-xl border text-left transition-all relative overflow-hidden group
+                                    ${isVideoEnabled && status !== 'idle' ? 'bg-indigo-500/10 border-indigo-500/50' : 'bg-neutral-800/50 border-neutral-800'}
+                                    ${status === 'idle' ? 'opacity-50 cursor-not-allowed' : 'hover:border-neutral-600'}
+                                `}
+                            >
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${isVideoEnabled ? 'bg-indigo-500 text-white' : 'bg-neutral-700 text-neutral-400'}`}>
+                                    {isVideoEnabled ? <Video size={14} /> : <VideoOff size={14} />}
+                                </div>
+                                <div className="text-xs font-bold text-neutral-300">Camera</div>
+                                <div className="text-[10px] text-neutral-500">{isVideoEnabled ? 'Active' : 'Muted'}</div>
+                            </button>
+
+                            {/* Mic Toggle */}
+                            <button 
+                                onClick={toggleAudio} 
+                                disabled={status === 'idle'}
+                                className={`
+                                    p-3 rounded-xl border text-left transition-all relative overflow-hidden group
+                                    ${isAudioEnabled && status !== 'idle' ? 'bg-emerald-500/10 border-emerald-500/50' : 'bg-neutral-800/50 border-neutral-800'}
+                                    ${status === 'idle' ? 'opacity-50 cursor-not-allowed' : 'hover:border-neutral-600'}
+                                `}
+                            >
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${isAudioEnabled ? 'bg-emerald-500 text-white' : 'bg-neutral-700 text-neutral-400'}`}>
+                                    {isAudioEnabled ? <Mic size={14} /> : <MicOff size={14} />}
+                                </div>
+                                <div className="text-xs font-bold text-neutral-300">Microphone</div>
+                                <div className="text-[10px] text-neutral-500">{isAudioEnabled ? 'Active' : 'Muted'}</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* 3. METADATA INPUTS */}
+                    <div className="space-y-4 pt-2 border-t border-white/5">
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-neutral-500 uppercase">Broadcast Title</label>
+                            <input 
+                                type="text" 
+                                value={streamTitle}
+                                onChange={(e) => setStreamTitle(e.target.value)}
+                                disabled={status !== 'idle'}
+                                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2.5 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all disabled:opacity-50"
+                                placeholder="e.g. Finals: Team A vs Team B"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-neutral-500 uppercase">Description</label>
+                            <textarea 
+                                value={streamDesc}
+                                onChange={(e) => setStreamDesc(e.target.value)}
+                                disabled={status !== 'idle'}
+                                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2.5 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none h-20 disabled:opacity-50"
+                                placeholder="Describe the match..."
+                            />
+                        </div>
+                    </div>
+
+                    {/* 4. HEALTH STATS (Visible when Live) */}
+                    {(status === 'live' || status === 'paused') && (
+                        <div className="bg-neutral-900/80 rounded-xl p-4 border border-neutral-800 space-y-3">
+                            <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                                <span className="text-[10px] font-bold text-neutral-400 uppercase">Stream Health</span>
+                                <SignalStrength score={stats.score} />
+                            </div>
+                            
+                            {/* Bitrate */}
+                            <div className="space-y-1">
+                                <div className="flex justify-between text-[10px]">
+                                    <span className="text-neutral-500">Bitrate</span>
+                                    <span className="text-white font-mono">{(stats.videoBitrate / 1000).toFixed(0)} kbps</span>
+                                </div>
+                                <div className="w-full bg-neutral-800 h-1 rounded-full overflow-hidden">
+                                    <div className="bg-indigo-500 h-full transition-all duration-500" style={{ width: `${Math.min(100, (stats.videoBitrate / 3000000) * 100)}%` }} />
+                                </div>
+                            </div>
+
+                            {/* Latency */}
+                            <div className="space-y-1">
+                                <div className="flex justify-between text-[10px]">
+                                    <span className="text-neutral-500">Latency</span>
+                                    <span className="text-white font-mono">{Math.round(stats.rtt)} ms</span>
+                                </div>
+                                <div className="w-full bg-neutral-800 h-1 rounded-full overflow-hidden">
+                                    <div className={`h-full transition-all duration-500 ${stats.rtt < 100 ? 'bg-emerald-500' : 'bg-amber-500'}`} style={{ width: `${Math.min(100, (stats.rtt / 500) * 100)}%` }} />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ERROR MSG */}
+                    {errorMsg && (
+                        <div className="flex items-start gap-2 text-xs text-red-400 bg-red-900/10 p-3 rounded-lg border border-red-500/20">
+                            <AlertCircle size={14} className="shrink-0 mt-0.5" />
+                            <span>{errorMsg}</span>
                         </div>
                     )}
                 </div>
-            </footer>
-        </div>
+
+                {/* --- FOOTER ACTIONS --- */}
+                <div className="p-6 border-t border-white/5 bg-neutral-900">
+                    {status === 'idle' || status === 'connecting' ? (
+                        <button
+                            onClick={handleStartStream}
+                            disabled={status === 'connecting'}
+                            className="group relative w-full overflow-hidden rounded-xl bg-white p-[1px] focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-transform active:scale-[0.98]"
+                        >
+                            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2E8F0_0%,#312e81_50%,#E2E8F0_100%)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <span className={`relative flex h-full w-full items-center justify-center rounded-xl px-8 py-3.5 text-sm font-bold text-white transition-all ${status === 'connecting' ? 'bg-neutral-800' : 'bg-neutral-900 group-hover:bg-neutral-800'}`}>
+                                {status === 'connecting' ? (
+                                    <>
+                                        <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                                        Connecting...
+                                    </>
+                                ) : (
+                                    'START BROADCAST'
+                                )}
+                            </span>
+                        </button>
+                    ) : (
+                        <div className="flex gap-3">
+                            <button 
+                                onClick={isPaused ? resumeStream : pauseStream} 
+                                className="flex-1 py-3.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white font-bold text-sm border border-neutral-700 flex items-center justify-center gap-2 transition-all"
+                            >
+                                {isPaused ? <Play size={14} className="fill-current" /> : <Pause size={14} className="fill-current" />}
+                                {isPaused ? 'Resume' : 'Pause'}
+                            </button>
+                            <button 
+                                onClick={handleEndStream} 
+                                className="flex-1 py-3.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm shadow-lg shadow-red-900/20 flex items-center justify-center gap-2 transition-all"
+                            >
+                                <Square size={14} className="fill-current" />
+                                End
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </>
     );
 };
 

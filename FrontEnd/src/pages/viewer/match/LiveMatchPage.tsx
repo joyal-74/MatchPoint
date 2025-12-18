@@ -18,7 +18,8 @@ const LiveMatchPage = () => {
     const {
         connectionStatus,
         viewerCount,
-        commentary
+        commentary,
+        isStreamOnline
     } = useLiveMatchViewer(matchId);
 
     console.log(liveScore)
@@ -66,7 +67,7 @@ const LiveMatchPage = () => {
                     match={match}
                     teamA={teamA}
                     teamB={teamB}
-                    liveScore={liveScore}
+                    isStreamOnline={isStreamOnline}
                     connectionStatus={connectionStatus}
                     viewerCount={viewerCount}
                     onBack={() => navigate(-1)}
@@ -82,10 +83,10 @@ const LiveMatchPage = () => {
                 />
 
                 {/* 3. Main Content Area */}
-                <div className="max-w-7xl mx-auto px-4 py-6">
+                <div className="mx-auto px-20 py-6">
                     {/* Tabs Navigation */}
                     <div className="flex border-b border-neutral-700 mb-6">
-                        {['scorecard', 'commentary', 'stats', 'graph'].map((tab) => (
+                        {['scorecard', 'commentary'].map((tab) => (
                             <button
                                 key={tab}
                                 className={`px-6 py-3 font-medium capitalize ${activeTab === tab
@@ -113,14 +114,6 @@ const LiveMatchPage = () => {
 
                     {activeTab === 'commentary' && (
                         <CommentaryTab commentary={commentary} />
-                    )}
-
-                    {activeTab === 'stats' && (
-                        <div className="text-neutral-400 text-center py-10">Advanced Stats Component Here</div>
-                    )}
-
-                    {activeTab === 'graph' && (
-                        <div className="text-neutral-400 text-center py-10">Graph Component Here</div>
                     )}
                 </div>
             </div>
