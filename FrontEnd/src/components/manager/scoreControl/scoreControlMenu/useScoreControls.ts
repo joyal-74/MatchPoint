@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import type { Match, LiveScoreState, Team, InningsState } from '../../../../features/manager/Matches/matchTypes';
+import type { Match, LiveScoreState, Team, InningsState } from '../../../features/manager/Matches/matchTypes';
 
 export type ScoreUpdatePayload =
     | { type: 'RUNS'; matchId: string; runs: number }

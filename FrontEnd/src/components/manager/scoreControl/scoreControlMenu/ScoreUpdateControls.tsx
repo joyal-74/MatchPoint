@@ -3,7 +3,7 @@ import { Settings, Play, RotateCw, Undo, MoreHorizontal, CircleDot } from 'lucid
 import { useScoreControls, type ScoreUpdatePayload } from './useScoreControls';
 import { InitialSetupModal, BowlerChangeModal, ChangeStrikerModal, ChangeNonStrikerModal, SpecialModal } from './ScoringModals';
 import { WicketPanel } from './WicketPanel';
-import type { Match, LiveScoreState, Team } from '../../../../features/manager/Matches/matchTypes';
+import type { Match, LiveScoreState, Team } from '../../../features/manager/Matches/matchTypes';
 
 interface ScoreUpdateControlsProps {
     match: Match;

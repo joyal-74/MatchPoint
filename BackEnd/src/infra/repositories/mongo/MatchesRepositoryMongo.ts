@@ -1,8 +1,7 @@
-import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
+import { IMatchesRepository, MatchStreamData } from "app/repositories/interfaces/manager/IMatchesRepository";
 import { Extras } from "domain/entities/Extra";
 import { Innings } from "domain/entities/Innings";
 import type { Match } from "domain/entities/Match";
-import { MatchEntity } from "domain/entities/MatchEntity";
 import { NotFoundError } from "domain/errors";
 import MatchModel from "infra/databases/mongo/models/MatchesModel";
 import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentStatsModel";
@@ -19,7 +18,8 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
             { path: "teamB", select: "name logo" },
         ]);
 
-        return MatchMongoMapper.toMatchResponseArray(populatedMatches);
+        const result = MatchMongoMapper.toMatchResponseArray(populatedMatches);
+        return result;
     }
 
 
@@ -48,6 +48,36 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
     async getMatchById(matchId: string): Promise<Match | null> {
         const match = await MatchModel.findById(matchId).lean();
         return MatchMongoMapper.toMatchResponse(match);
+    }
+
+    async getStreamMetadata(matchId: string): Promise<MatchStreamData> {
+        const match = await MatchModel.findById(matchId).populate('streamerId');
+        console.log(match)
+        return MatchMongoMapper.toMetaDataResponse(match);
+    }
+
+    async updateStreamMetadata(matchId: string, data: MatchStreamData): Promise<void> {
+        console.log(matchId, data, '====')
+        await MatchModel.findByIdAndUpdate(matchId, {
+            $set: {
+                streamTitle: data.streamTitle,
+                streamDescription: data.streamDescription,
+                isStreamLive: data.isStreamLive,
+                streamStartedAt: data.streamStartedAt,
+                streamerId: data.streamerId
+            }
+        });
+    }
+
+    async updateStreamStatus(matchId: string, isLive: boolean): Promise<void> {
+        await MatchModel.findByIdAndUpdate(
+            matchId,
+            {
+                $set: {
+                    isStreamLive: isLive
+                }
+            }
+        );
     }
 
     async getMatchDetails(matchId: string): Promise<any | null> {
@@ -115,7 +145,7 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
             logs: []
         });
 
-        const innings1DTO = innings1.toDTO(); 
+        const innings1DTO = innings1.toDTO();
 
         const matchStatsData = {
             tournamentId: match.tournamentId.toString(),

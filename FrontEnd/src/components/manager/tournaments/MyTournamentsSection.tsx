@@ -1,6 +1,7 @@
 import TournamentCard from "./TournamentCard";
 import type { Tournament } from "../../../features/manager/managerTypes";
 import EmptyState from "./TournamentDetails/shared/EmptyState";
+import { useNavigate } from "react-router-dom";
 
 interface MyTournamentsSectionProps {
     tournaments: Tournament[];
@@ -12,11 +13,15 @@ interface MyTournamentsSectionProps {
 }
 
 export default function MyTournamentsSection({ tournaments, hasMore, onShowAll, onEdit, onCancel, onCreate }: MyTournamentsSectionProps) {
+    const navigate = useNavigate();
     return (
         <section className="mb-12">
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h2 className="text-xl font-semibold mb-2">My Tournaments</h2>
+                    <h2 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
+                        <span className="w-2 h-6 bg-green-500 rounded-full inline-block"></span>
+                        My Active Tournaments
+                    </h2>
                     <p className="text-neutral-400 text-sm">Tournaments you're currently managing</p>
                 </div>
                 {hasMore ? (
@@ -43,6 +48,7 @@ export default function MyTournamentsSection({ tournaments, hasMore, onShowAll, 
                                 tournament={tournament}
                                 type="manage"
                                 index={index}
+                                onAction={() => navigate(`/manager/tournaments/${tournament._id}/manage`)}
                                 onEdit={() => onEdit(tournament)}
                                 onCancel={onCancel}
                             />

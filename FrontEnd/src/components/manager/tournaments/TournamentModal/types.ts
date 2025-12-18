@@ -20,6 +20,7 @@ export interface TournamentFormData {
     playersPerTeam: number;
     rules: string[];
     banner: File | string | undefined;
+    overs?: number;
 }
 
 

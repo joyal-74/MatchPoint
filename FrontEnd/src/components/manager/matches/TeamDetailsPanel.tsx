@@ -81,7 +81,7 @@ export const TeamDetailsPanel: React.FC<TeamDetailsPanelProps> = React.memo(
 
         };
 
-        const handleStreamSettings = () => console.log("Opening stream settings...");
+        const handleStreamSettings = () => navigate(`/manager/match/${matchId}/control/stream`);
 
         return (
             <div className="lg:flex-1 p-5 bg-neutral-900/40 backdrop-blur-md rounded-xl border border-neutral-700/30 shadow-lg">

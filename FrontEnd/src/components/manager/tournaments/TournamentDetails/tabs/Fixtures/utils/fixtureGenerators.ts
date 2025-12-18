@@ -7,20 +7,13 @@ export interface Match {
     teamB: string;
     round: number;
     status: "ongoing" | "completed" | "upcoming" | "bye";
-    winner: string;
+    winner: string | null;
     venue?: string;
     date?: Date;
     stats: Record<string, unknown>;
 }
 
-/**
- * Utility function to generate date slots based on startDate and matchesPerDay.
- */
-function assignMatchDates<T extends Match>(
-    matches: T[],
-    startDate: string | Date,
-    matchesPerDay: number
-): T[] {
+function assignMatchDates<T extends Match>(matches: T[], startDate: string | Date, matchesPerDay: number): T[] {
     const start = new Date(startDate);
     let dayOffset = 0;
     let count = 0;
@@ -39,15 +32,8 @@ function assignMatchDates<T extends Match>(
     });
 }
 
-/**
- * Knockout fixtures with location and scheduled dates
- */
-export function generateKnockoutFixtures(
-    teams: RegisteredTeam[],
-    location: string,
-    startDate: string | Date,
-    matchesPerDay: number
-): Match[] {
+
+export function generateKnockoutFixtures(teams: RegisteredTeam[], location: string, startDate: string | Date, matchesPerDay: number): Match[] {
     const shuffled = shuffleTeams([...teams]);
     const matches: Match[] = [];
     let matchNumber = 1;
@@ -75,7 +61,7 @@ export function generateKnockoutFixtures(
                 round: 1,
                 venue: location,
                 status: "upcoming",
-                winner: "",
+                winner: null,
                 stats: {},
             });
         }
@@ -84,15 +70,8 @@ export function generateKnockoutFixtures(
     return assignMatchDates(matches, startDate, matchesPerDay);
 }
 
-/**
- * League fixtures with automatic date assignment
- */
-export function generateLeagueFixtures(
-    teams: RegisteredTeam[],
-    location: string,
-    startDate: string | Date,
-    matchesPerDay: number
-): Match[] {
+
+export function generateLeagueFixtures(teams: RegisteredTeam[], location: string, startDate: string | Date, matchesPerDay: number): Match[] {
     const matches: Match[] = [];
     let matchNumber = 1;
 
@@ -114,14 +93,8 @@ export function generateLeagueFixtures(
     return assignMatchDates(matches, startDate, matchesPerDay);
 }
 
-/**
- * Friendly fixture (single match)
- */
-export function generateFriendlyFixture(
-    teams: RegisteredTeam[],
-    location: string,
-    startDate: string | Date,
-): Match[] {
+
+export function generateFriendlyFixture(teams: RegisteredTeam[], location: string, startDate: string | Date,): Match[] {
     const shuffled = shuffleTeams([...teams]);
     return [
         {

@@ -1,8 +1,9 @@
+import { MatchStreamData } from "app/repositories/interfaces/manager/IMatchesRepository";
 import type { Match } from "domain/entities/Match";
 
 export class MatchMongoMapper {
     static toMatchResponse(matchDoc): Match {
-        console.log(matchDoc, "lhsdf")
+        // console.log(matchDoc, "lhsdf")
         return {
             _id: matchDoc._id.toString(),
             tournamentId: matchDoc.tournamentId.toString(),
@@ -14,7 +15,7 @@ export class MatchMongoMapper {
             date: matchDoc.date,
             venue: matchDoc.venue || "",
             status: matchDoc.status,
-            winner: matchDoc.winner || "",
+            winner: matchDoc.winner || null,
             stats: matchDoc.stats || {},
             matchNumber: matchDoc.matchNumber
         };
@@ -22,6 +23,17 @@ export class MatchMongoMapper {
 
     static toMatchResponseArray(matches): Match[] {
         return matches.map(this.toMatchResponse);
+    }
+
+    static toMetaDataResponse(matchDoc): MatchStreamData {
+        console.log(matchDoc, "metadata")
+        return {
+            streamTitle: matchDoc.streamTitle,
+            streamDescription: matchDoc.streamDescription,
+            isStreamLive: matchDoc.isStreamLive,
+            streamStartedAt: matchDoc.streamStartedAt,
+            streamerId: matchDoc.streamerId.firstName
+        };
     }
 }
 

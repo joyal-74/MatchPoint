@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { loadInitialLiveScore, loadMatchDashboard } from '../../../features/manager/Matches/matchThunks';
 import { setInitialInnings, updateLiveScore } from '../../../features/manager/Matches/matchSlice';
@@ -11,13 +11,18 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import type { LiveScoreState } from '../../../features/manager/Matches/matchTypes';
 import LoadingOverlay from '../../shared/LoadingOverlay';
 import Navbar from '../Navbar';
-import { Calendar, MapPin, Trophy, Activity } from 'lucide-react';
+import { Calendar, MapPin, Trophy, Activity, Radio} from 'lucide-react';
 import type { ScoreUpdatePayload } from './scoreControlMenu/useScoreControls';
+import { useStreamManager } from '../../../hooks/manager/useStreamManager'; 
+import StreamManager from '../../../pages/manager/StreamManager';
 
 const ScoreboardDashboard: React.FC = () => {
     const dispatch = useAppDispatch();
     const { matchId } = useParams<{ matchId: string }>();
     const { match, teamA, teamB, loading, error, liveScore } = useAppSelector((state: RootState) => state.match);
+
+    const streamManagerData = useStreamManager(matchId);
+    const [isStreamDrawerOpen, setIsStreamDrawerOpen] = useState(false);
 
     useEffect(() => {
         if (matchId) {
@@ -99,7 +104,7 @@ const ScoreboardDashboard: React.FC = () => {
 
                     <div className="relative px-6 py-5 flex flex-col md:flex-row md:items-center justify-between gap-6">
 
-                        {/* Match Info (Left) */}
+                        {/* Left Side: Live Badge & Metadata */}
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2.5">
                                 <span className="flex relative h-2.5 w-2.5">
@@ -127,17 +132,34 @@ const ScoreboardDashboard: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Teams (Right/Center) */}
-                        <div className="flex items-center gap-3 md:gap-5">
-                            <h1 className="text-2xl md:text-3xl font-medium tracking-tighter text-white">
-                                {teamA.name}
-                            </h1>
-                            <div className="flex flex-col items-center justify-center w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700/50 shadow-inner">
-                                <span className="text-[10px] font-bold text-neutral-500 italic">VS</span>
+                        {/* Right Side: Stream Button & Teams */}
+                        <div className="flex flex-row items-center gap-6">
+                            
+                            {/* STREAM TOGGLE BUTTON */}
+                            <button
+                                onClick={() => setIsStreamDrawerOpen(true)}
+                                className={`
+                                    flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border
+                                    ${streamManagerData.status === 'live' 
+                                        ? 'bg-red-500/10 text-red-500 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)]' 
+                                        : 'bg-neutral-800 text-neutral-400 border-neutral-700 hover:bg-neutral-700 hover:text-white'}
+                                `}
+                            >
+                                <Radio className={`w-4 h-4 ${streamManagerData.status === 'live' ? 'animate-pulse' : ''}`} />
+                                {streamManagerData.status === 'live' ? 'On Air' : 'Stream'}
+                            </button>
+
+                            <div className="flex items-center gap-3 md:gap-5">
+                                <h1 className="text-xl md:text-3xl font-medium tracking-tighter text-white">
+                                    {teamA.name}
+                                </h1>
+                                <div className="flex flex-col items-center justify-center w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700/50 shadow-inner">
+                                    <span className="text-[10px] font-bold text-neutral-500 italic">VS</span>
+                                </div>
+                                <h1 className="text-xl md:text-3xl font-medium tracking-tighter text-white">
+                                    {teamB.name}
+                                </h1>
                             </div>
-                            <h1 className="text-2xl md:text-3xl font-medium tracking-tighter text-white">
-                                {teamB.name}
-                            </h1>
                         </div>
                     </div>
                 </header>
@@ -189,6 +211,14 @@ const ScoreboardDashboard: React.FC = () => {
                     </div>
                 </div>
             </main>
+
+
+            <StreamManager 
+                isOpen={isStreamDrawerOpen} 
+                onClose={() => setIsStreamDrawerOpen(false)} 
+                streamData={streamManagerData}
+            />
+
         </div>
     );
 };

@@ -15,6 +15,7 @@ import { RiLiveLine } from "react-icons/ri";
 import { IoStatsChart } from "react-icons/io5";
 import Navbar from "../../components/viewer/Navbar";
 import { useLiveMatchViewer } from "../../hooks/viewer/useLiveMatchWebSocket";
+import LoadingOverlay from "../../components/shared/LoadingOverlay";
 
 interface BattingStat {
     playerId: string;
@@ -98,7 +99,6 @@ const LiveMatchPage = () => {
         lastUpdate,
         viewerCount,
         commentary,
-        reload
     } = useLiveMatchViewer(matchId);
 
     const [activeTab, setActiveTab] = useState("scorecard");
@@ -140,33 +140,9 @@ const LiveMatchPage = () => {
     const currentInnings = getCurrentInnings();
     const bowlers = currentInnings.bowlingStats || [];
 
-    if (loading && !match) {
+    if (error || loading || !match) {
         return (
-            <>
-                <Navbar />
-                <div className="min-h-screen bg-neutral-900 mt-8 flex items-center justify-center">
-                    <div className="text-white text-xl">Loading live match data...</div>
-                </div>
-            </>
-        );
-    }
-
-    if (error || !match) {
-        return (
-            <>
-                <Navbar />
-                <div className="min-h-screen bg-neutral-900 mt-8 flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="text-red-400 text-xl mb-4">Failed to load match</div>
-                        <button
-                            onClick={reload}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                        >
-                            Retry
-                        </button>
-                    </div>
-                </div>
-            </>
+            <LoadingOverlay show={match} />
         );
     }
 
@@ -255,7 +231,6 @@ const LiveMatchPage = () => {
 
     // Determine which team is batting/bowling
     const battingTeam = match.currentInnings === 1 ? teamA : teamB;
-    const bowlingTeam = match.currentInnings === 1 ? teamB : teamA;
 
     return (
         <>

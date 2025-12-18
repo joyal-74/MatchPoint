@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/manager/Navbar";
 import TournamentHeader from "../../components/manager/tournaments/TournamentDetails/TournamentHeader";
 import TournamentTabs from "../../components/manager/tournaments/TournamentDetails/TournamentTabs";
-import { ArrowLeft } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import type { RootState } from "../../app/store";
 import { fetchTournament, getRegisteredTeams } from "../../features/manager/Tournaments/tournamentThunks";
@@ -52,29 +51,27 @@ export default function TournamentDetailsPage() {
     }
 
     return (
-        <>
+        <div className="min-h-screen bg-neutral-950 text-white flex flex-col">
             <Navbar />
-            <div className="min-h-screen bg-neutral-900 text-white p-8 mt-12 mx-12">
-                <div className="flex items-center gap-4 mb-6">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-neutral-800/50 hover:bg-neutral-700/50 border border-neutral-700/50 transition-all duration-200 group"
-                    >
-                        <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-                    </button>
-                    <div className="h-6 w-px bg-neutral-700/50" />
-                    <h1 className="text-2xl font-bold">Tournament Details</h1>
-                </div>
-
+            
+            <main className="flex-1 flex flex-col w-full mt-15 px-10">
+                
                 <TournamentHeader
                     tournamentData={selectedTournament}
                     type={type!}
                     isRegistered={isAlreadyRegistered}
                     onClick={() => setShowModal(true)}
+                    onBack={() => navigate(-1)}
                 />
+
                 <TournamentTabs activeTab={activeTab} onTabChange={setActiveTab} />
-                <div className="animate-fade-in">{renderTabContent(selectedTournament, registeredTeams, activeTab, type!)}</div>
-            </div>
+                
+                <div className="flex-1 w-full bg-neutral-950">
+                    <div className="w-full px-4 md:px-8 py-6 animate-fade-in">
+                        {renderTabContent(selectedTournament, registeredTeams, activeTab, type!)}
+                    </div>
+                </div>
+            </main>
 
             <RegisterTeamModal
                 show={showModal}
@@ -84,6 +81,6 @@ export default function TournamentDetailsPage() {
                 teams={teams}
                 managerId={user._id}
             />
-        </>
+        </div>
     );
 }

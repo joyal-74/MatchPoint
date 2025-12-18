@@ -1,16 +1,14 @@
 interface InfoRowProps {
     icon: React.ReactNode;
     label: string;
-    completed?: boolean;
+    value: string;
 }
 
-export function InfoRow({ icon, label, completed }: InfoRowProps) {
-    return (
-        <div className="flex items-center gap-2 text-sm text-neutral-200">
-            <div className={` w-6 h-6 rounded-full flex items-center justify-center ${completed ? "bg-white/5" : "bg-white/10"}`}>
-                {icon}
-            </div>
-            <span className="truncate max-w-[250px] block">{label}</span>
-        </div>
-    );
-}
+export const InfoItem = ({ icon, label, value }: InfoRowProps) => (
+    <div className="flex flex-col gap-1">
+        <span className="text-[10px] uppercase text-neutral-500 font-medium flex items-center gap-1.5">
+            {icon} {label}
+        </span>
+        <span className="text-sm font-medium text-neutral-200 truncate">{value}</span>
+    </div>
+);

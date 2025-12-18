@@ -5,15 +5,20 @@ export interface Match {
     tournamentId: string;
     teamA: string;
     teamB: string;
-    teamLogoA : string,
-    teamLogoB : string,
+    teamLogoA: string,
+    teamLogoB: string,
     round: number;
     matchNumber: number;
     status: MatchStatus;
     venue?: string;
     date?: Date;
     winner: string | null;
-    stats: Record<string, string>
+    stats: Record<string, string>;
+    streamTitle: string;
+    streamDescription: string;
+    isStreamLive: boolean;
+    streamStartedAt: string;
+    streamerId: string;
 }
 
 export interface TeamEntity {
