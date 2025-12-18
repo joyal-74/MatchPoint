@@ -7,8 +7,8 @@ import PrizeInfoModal from "../../components/manager/tournaments/TournamentModal
 import TournamentsHeader from "../../components/manager/tournaments/TournamentsHeader";
 import MyTournamentsSection from "../../components/manager/tournaments/MyTournamentsSection";
 import ExploreTournamentsSection from "../../components/manager/tournaments/ExploreTournamentsSection";
-import TournamentsStats from "../../components/manager/tournaments/TournamentsStats";
-import { useTournaments,  } from "../../hooks/useTournaments";
+import DashboardStats from "../../components/manager/tournaments/DashboardStats";
+import { useTournaments } from "../../hooks/useTournaments";
 import { useAppDispatch } from "../../hooks/hooks";
 import { cancelTournament } from "../../features/manager/Tournaments/tournamentThunks";
 import { useTournamentModals } from "../../hooks/useTournamentModals";
@@ -59,34 +59,43 @@ export default function TournamentsPage() {
             <LoadingOverlay show={loading} />
             <Navbar />
 
-            <div className="min-h-screen bg-neutral-900 text-white p-8 mt-12 mx-10">
+            <div className="min-h-screen bg-neutral-900 text-white p-6 md:p-8 mt-12 lg:mx-10">
+                {/* 1. Rich Header Section */}
                 <TournamentsHeader onCreateClick={() => setIsCreateModalOpen(true)} />
 
-                <MyTournamentsSection
-                    tournaments={showMyTournaments}
-                    hasMore={hasMoreMyTournaments}
-                    onShowAll={handleShowAll}
-                    onEdit={handleEditClick}
-                    onCancel={handleCancelClick}
-                    onCreate={() => setIsCreateModalOpen(true)}
+                {/* 2. Key Metrics / Stats Dashboard */}
+                <DashboardStats 
+                    myTournamentsCount={showMyTournaments.length} 
+                    totalExploreCount={exploreTournaments.length}
                 />
 
-                <ExploreTournamentsSection
-                    tournaments={exploreTournaments}
-                    hasMore={hasMoreExplore}
-                    loading={exploreLoading}
-                    searchQuery={searchQuery}
-                    activeFilter={activeFilter}
-                    onLoadMore={handleLoadMore}
-                    onSearchChange={setSearchQuery}
-                    onFilterChange={setActiveFilter}
-                />
+                <div className="space-y-12">
+                    {/* 3. My Tournaments (Your Workspace) */}
+                    <MyTournamentsSection
+                        tournaments={showMyTournaments}
+                        hasMore={hasMoreMyTournaments}
+                        onShowAll={handleShowAll}
+                        onEdit={handleEditClick}
+                        onCancel={handleCancelClick}
+                        onCreate={() => setIsCreateModalOpen(true)}
+                    />
 
-                <TournamentsStats
-                    totalTournaments={exploreTournaments.length}
-                    onLearnMore={() => setIsInfoModalOpen(true)}
-                />
+                    <div className="border-t border-neutral-800 pt-8">
+                         {/* 4. Explore Section */}
+                        <ExploreTournamentsSection
+                            tournaments={exploreTournaments}
+                            hasMore={hasMoreExplore}
+                            loading={exploreLoading}
+                            searchQuery={searchQuery}
+                            activeFilter={activeFilter}
+                            onLoadMore={handleLoadMore}
+                            onSearchChange={setSearchQuery}
+                            onFilterChange={setActiveFilter}
+                        />
+                    </div>
+                </div>
 
+                {/* Modals */}
                 <CreateTournamentModal
                     isOpen={isCreateModalOpen}
                     managerId={managerId!}

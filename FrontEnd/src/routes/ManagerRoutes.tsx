@@ -4,6 +4,9 @@ import LoadingOverlay from "../components/shared/LoadingOverlay";
 import MatchDashboard from "../components/manager/matches/MatchDashboard";
 import ScoreboardDashboard from "../components/manager/scoreControl/ScoreboardDashboard";
 import StreamManager from "../pages/manager/StreamManager";
+import SettingsPage from "../components/shared/SettingsPage";
+import EarningsPage from "../components/manager/EarningsOverview";
+import FinancialsPage from "../components/manager/PaymentsPage";
 
 // Lazy load manager pages
 const Dashboard = lazy(() => import("../pages/manager/Dashboard"));
@@ -28,6 +31,9 @@ export const managerRoutes = [
     { path: "/manager/dashboard", element: withManagerProtection(<Dashboard />) },
     { path: "/manager/profile", element: withManagerProtection(<UserProfile />) },
     { path: "/manager/teams", element: withManagerProtection(<TeamsListPage />) },
+    { path: "/manager/settings", element: withManagerProtection(<SettingsPage />) },
+    { path: "/manager/payments", element: withManagerProtection(<FinancialsPage />) },
+    { path: "/manager/payments/earnings", element: withManagerProtection(<EarningsPage />) },
     { path: "/manager/team/:teamId", element: withManagerProtection(<ViewTeamManager />) },
     { path: "/manager/team/:teamId/manage", element: withManagerProtection(<ManageMembersPage />) },
     { path: "/manager/tournaments", element: withManagerProtection(<TournamentsPage />) },

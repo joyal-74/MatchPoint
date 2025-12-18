@@ -6,6 +6,7 @@ import type { Tournament } from "../../../features/manager/managerTypes";
 import EmptyState from "./TournamentDetails/shared/EmptyState";
 import LoadMoreButton from "../../ui/LoadMoreButton";
 import EndOfList from "../../shared/EndOfList";
+import { useNavigate } from "react-router-dom";
 
 interface ExploreTournamentsSectionProps {
     tournaments: Tournament[];
@@ -20,11 +21,16 @@ interface ExploreTournamentsSectionProps {
 
 export default function ExploreTournamentsSection({
     tournaments, hasMore, loading, searchQuery, activeFilter, onLoadMore, onSearchChange, onFilterChange }: ExploreTournamentsSectionProps) {
-    return (
+    const navigate = useNavigate();
+    
+        return (
         <section>
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h2 className="text-xl font-semibold mb-2">Explore Tournaments</h2>
+                    <h2 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
+                        <span className="w-2 h-6 bg-blue-500 rounded-full inline-block"></span>
+                        Explore Tournaments
+                    </h2>
                     <p className="text-neutral-400 text-sm">Discover and join exciting tournaments</p>
                 </div>
                 <SecondaryButton children={"View All →"} />
@@ -46,6 +52,7 @@ export default function ExploreTournamentsSection({
                             <TournamentCard
                                 key={tournament._id}
                                 tournament={tournament}
+                                onAction={() => navigate(`/manager/tournaments/${tournament._id}/explore`)}
                                 type="explore"
                                 index={index}
                             />
