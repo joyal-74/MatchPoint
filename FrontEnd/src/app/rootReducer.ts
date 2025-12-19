@@ -13,6 +13,7 @@ import subscriptionReducer from "../features/admin/subscription/subscriptionSlic
 import userSubscriptionReducer from "../features/shared/subscription/subscriptionSlice";
 import leaderboardReducer from "../features/shared/leaderboard/leaderboardSlice";
 import matchReducer from "../features/manager/Matches/matchSlice";
+import settingsReducer from "../features/shared/settings/settingsSlice";
 
 
 const appReducer = combineReducers({
@@ -30,6 +31,7 @@ const appReducer = combineReducers({
     userSubscription: userSubscriptionReducer,
     leaderboard: leaderboardReducer,
     match: matchReducer,
+    settings : settingsReducer,
 });
 
 export type RootState = ReturnType<typeof appReducer>;

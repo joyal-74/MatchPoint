@@ -14,6 +14,7 @@ import { PlanRepository } from 'infra/repositories/mongo/PlanRepository';
 import { SubscriptionRepository } from 'infra/repositories/mongo/SubscriptionRepository';
 import { LeaderboardRepository } from 'infra/repositories/mongo/LeaderboardRepository';
 import { MatchRepoMongo } from 'infra/repositories/mongo/MatchStatsRepo';
+import { SettingsRepository } from 'infra/repositories/mongo/SettingsRepository';
 
 export const userRepository = new UserRepositoryMongo();
 export const adminRepository = new AdminRepositoryMongo();
@@ -31,3 +32,4 @@ export const planRepository = new PlanRepository();
 export const subscriptionRepository = new SubscriptionRepository();
 export const leaderboardRepository = new LeaderboardRepository();
 export const matchRepo = new MatchRepoMongo();
+export const settingsRepo = new SettingsRepository();

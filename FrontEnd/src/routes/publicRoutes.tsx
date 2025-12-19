@@ -1,4 +1,5 @@
 import NavbarWrapper from '../components/shared/NavbarWrapper';
+import SettingsPage from '../components/shared/SettingsPage';
 import AdminLoginPage from '../pages/auth/AdminLogin';
 import EnterAccountOtpPage from '../pages/auth/EnterAccountOtpPage';
 import EnterForgotOtpPage from '../pages/auth/EnterForgotOtpPage';
@@ -39,6 +40,16 @@ export const publicRoutes = [
             <ProtectedRoute>
                 <RoleLayoutWrapper>
                     <UserSubscriptionPage />
+                </RoleLayoutWrapper>
+            </ProtectedRoute>
+        )
+    },
+    {
+        path: "/:role/settings",
+        element: (
+            <ProtectedRoute>
+                <RoleLayoutWrapper>
+                    <SettingsPage />
                 </RoleLayoutWrapper>
             </ProtectedRoute>
         )

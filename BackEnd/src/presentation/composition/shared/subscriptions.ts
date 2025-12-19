@@ -11,7 +11,7 @@ const getPlansAndUserSubscription = new GetPlansAndUserSubscription(planReposito
 
 const updateUserPlanUC = new UpdateUserPlan(subscriptionRepository, logger);
 const verifyPaymentUC = new VerifyPaymentUseCase(razorpayProvider);
-const createPaymentSessionUC = new CreatePaymentSession(razorpayProvider);
+const createPaymentSessionUC = new CreatePaymentSession(razorpayProvider, planRepository);
 
 export const subscriptionServices = new SubscriptionPaymentService(verifyPaymentUC, updateUserPlanUC, subscriptionRepository, logger);
 
