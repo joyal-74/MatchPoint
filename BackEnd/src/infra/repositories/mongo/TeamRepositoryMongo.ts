@@ -168,4 +168,27 @@ export class TeamRepositoryMongo implements ITeamRepository {
         return { success: true, playerId };
     }
 
+    async updateInviteStatus(teamId : string, userId : string, status : PlayerApprovalStatus) {
+        const team = await TeamModel.findOne({
+            _id: teamId,
+            "members.userId": userId,
+            "members.requestType": "invite"
+        });
+
+        console.log(team,"_-----_")
+
+        if (!team) return false;
+
+        const member = team.members.find(m =>
+            m.userId.toString() === userId
+        );
+
+        if (!member) return false;
+
+        member.approvalStatus = status;
+
+        await team.save();
+        return true;
+    }
+
 }

@@ -12,9 +12,9 @@ import { useSubscribePlan } from '../../hooks/useSubscribePlan';
 
 
 export default function UserSubscriptionPage() {
-    const user = useAppSelector((state: RootState) => state.auth.user);
-    const role = useAppSelector((state: RootState) => state.auth.user?.role);
-    const userId = useAppSelector((state: RootState) => state.auth.user?._id);
+    const user = useAppSelector((state) => state.auth.user);
+    const role = useAppSelector((state) => state.auth.user?.role);
+    const userId = useAppSelector((state) => state.auth.user?._id);
     const dispatch = useAppDispatch();
     const [selectedPlan, setSelectedPlan] = useState<AvailablePlan | null>(null);
     const [paymentModalOpen, setPaymentModalOpen] = useState(false);

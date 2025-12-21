@@ -4,7 +4,8 @@ import {
     IGetAllTeamsUseCase,
     IGetMyTeamDetailsUseCase,
     IGetMyTeamsUseCase,
-    IJoinTeamUseCase
+    IJoinTeamUseCase,
+    IUpdatePlayerInviteStatus
 } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 import { TeamMessages } from "domain/constants/TeamMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
@@ -21,6 +22,7 @@ export class TeamsController implements IPlayerTeamController {
         private _getmyTeamsUsecase: IGetMyTeamsUseCase,
         private _getAllMyTeamsUsecase: IGetAllMyTeamsUseCase,
         private _getmyTeamsDetailsUsecase: IGetMyTeamDetailsUseCase,
+        private _updateInviteStatusUseCase: IUpdatePlayerInviteStatus,
         private _logger: ILogger
     ) { }
 
@@ -109,5 +111,15 @@ export class TeamsController implements IPlayerTeamController {
             HttpStatusCode.OK,
             buildResponse(true, TeamMessages.TEAM_DETAILS_FETCHED, result)
         );
+    };
+
+
+    updateStatus = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { playerId } = httpRequest.params;
+        const { teamId, status } = httpRequest.body;
+
+        const result = await this._updateInviteStatusUseCase.execute({ playerId, teamId, status });
+
+        return new HttpResponse(HttpStatusCode.OK,buildResponse(true, TeamMessages.TEAM_INVITE_PLAYER, result));
     };
 }

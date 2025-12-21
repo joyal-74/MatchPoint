@@ -19,3 +19,7 @@ export interface IGetMyTeamDetailsUseCase {
 export interface IJoinTeamUseCase {
     execute(playerId: string, teamId: string): Promise<TeamData>;
 }
+
+export interface IUpdatePlayerInviteStatus {
+    execute(data: { playerId: string; teamId: string; status: "approved" | "rejected"; }): Promise<{ message: string }>;
+}

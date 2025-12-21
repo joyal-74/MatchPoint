@@ -12,4 +12,5 @@ export const TeamMessages = {
     PLAYER_SWAPPED: "Player swapped successfully",
     PLAYER_FETCHED: "Available Player feched successfully",
     NO_LOGO: "No logo provided",
+    TEAM_INVITE_PLAYER: "Player joined Team successfullt",
 };

@@ -1,15 +1,11 @@
 import { useState, useEffect } from "react";
 import { verifyCurrentPassword, updatePassword, updatePrivacySettings, } from "../../features/shared/settings/settingsThunk";
-import {
-    Save, Lock, Globe, Eye, EyeOff, ShieldCheck,
-    Settings, AlertCircle, CheckCircle2, ChevronDown, Loader2
-} from "lucide-react";
+import { Save, Lock, Globe, Eye, EyeOff, ShieldCheck, Settings, AlertCircle, CheckCircle2, ChevronDown, Loader2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { invalidatePasswordVerification, resetSettingsState } from "../../features/shared/settings/settingsSlice";
 
 
-
-const LANGUAGES = [{ code: "en", name: "English (US)" }, { code: "en-gb", name: "English (UK)" }, { code: "es", name: "Spanish" }, { code: "fr", name: "French" }, { code: "de", name: "German" }, { code: "hi", name: "Hindi" }];
+const LANGUAGES = [{ code: "en", name: "English (US)" }, { code: "en-gb", name: "English (UK)" }, { code: "hi", name: "Hindi" }];
 const COUNTRIES = [{ code: "US", name: "United States" }, { code: "IN", name: "India" }, { code: "UK", name: "United Kingdom" }, { code: "CA", name: "Canada" }, { code: "AU", name: "Australia" }, { code: "AE", name: "United Arab Emirates" }];
 const THEMES = [{ id: 'emerald', hex: '#10b981', label: 'Default' }, { id: 'violet', hex: '#8b5cf6', label: 'Violet' }, { id: 'blue', hex: '#3b82f6', label: 'Royal' }, { id: 'rose', hex: '#f43f5e', label: 'Crimson' }, { id: 'amber', hex: '#f59e0b', label: 'Gold' }];
 

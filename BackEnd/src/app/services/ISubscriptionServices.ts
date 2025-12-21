@@ -8,11 +8,10 @@ export type SubscriptionFinalizeResult =
   | { status: "failed"; reason?: string };
 
 
-
 export interface IGetPlansAndUserSubscription
-    extends IUseCase<{ role: string; userId: string }, { plans: Plan[]; userSubscription: UserSubscription | null }> { _tag?: "GET_PLANS_AND_USER_SUBSCRIPTION"; }
+  extends IUseCase<{ role: string; userId: string }, { plans: Plan[]; userSubscription: UserSubscription | null }> { _tag?: "GET_PLANS_AND_USER_SUBSCRIPTION"; }
 
 
 export interface ISubscriptionService {
-    finalize(sessionId: string): Promise<SubscriptionFinalizeResult>;
+  finalize(sessionId: string): Promise<SubscriptionFinalizeResult>;
 }

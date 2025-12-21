@@ -11,4 +11,7 @@ export const PLAYER_ROUTES = {
     JOIN_TEAM: (teamId: string) => `${API_PREFIX}/player/${teamId}/join`,
     GET_TOURNAMENTS: `${API_PREFIX}/player/tournaments`,
     GET_MY_TOURNAMENTS: (playerId: string) => `${API_PREFIX}/player/tournaments/${playerId}`,
+    GET_NOTIFICATIONS: (playerId: string) => `${API_PREFIX}/player/notifications/${playerId}`,
+    GET_UNREAD_COUNT: (playerId: string) => `${API_PREFIX}/player/notifications/${playerId}/unread`,
+    SET_PLAYER_STATUS: (playerId: string) => `${API_PREFIX}/player/team/${playerId}/invite/status`,
 } as const;

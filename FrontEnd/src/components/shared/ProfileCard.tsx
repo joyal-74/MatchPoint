@@ -2,7 +2,7 @@ import React from 'react'
 import { FiGlobe, FiLogOut, FiUser, FiUsers } from 'react-icons/fi';
 
 interface ProfileCardProps {
-    onAction: (action: "logout" | "teams" | "profile") => void;
+    onAction: (action: "logout" | "teams" | "profile" | "settings") => void;
     role: string;
 }
 
@@ -25,7 +25,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ onAction, role }) => {
             )}
 
 
-            <button className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--color-background-secondary)]  w-full text-left">
+            <button 
+            onClick={() => onAction('settings')}
+            className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--color-background-secondary)]  w-full text-left">
                 <FiGlobe className="text-[var(--color-primary)] text-lg" />
                 <span>Settings</span>
             </button>

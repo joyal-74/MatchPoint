@@ -10,15 +10,14 @@ const ProfilePage: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [profileImage, setProfileImage] = useState<string | null>(null);
     const [profileData, setProfileData] = useState<UserProfile>({
-        firstName: "Joyal",
-        lastName: "Kuriakose",
-        username: "joyal74",
-        phone: "+91 9745918046",
-        email: "joyalkuriakose7@gmail.com",
-        gender: "Male",
-        bio: "Sports Enthusiastic",
-        location: "Kochi, Kerala",
-        country: "India",
+        firstName: "",
+        lastName: "",
+        profileImage : '',
+        username: "",
+        phone: "",
+        email: "",
+        gender: "",
+        bio: "",
     });
 
     const [formData, setFormData] = useState<UserProfile>({ ...profileData });

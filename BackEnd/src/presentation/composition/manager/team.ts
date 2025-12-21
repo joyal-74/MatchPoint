@@ -7,7 +7,7 @@ import { TeamController } from "presentation/http/controllers/manager/TeamContro
 import { ImageKitFileStorage } from "infra/providers/ImageKitFileStorage";
 import { WinstonLogger } from "infra/providers/WinstonLogger";
 import { TeamIdGenerator } from "infra/providers/IdGenerator";
-import { chatRepository, managerRepository, playerRepository, teamRepository } from "presentation/composition/shared/repositories";
+import { chatRepository, managerRepository, notificationRepository, playerRepository, teamRepository } from "presentation/composition/shared/repositories";
 import { GetMyTeamDetails } from "app/usecases/manager/GetMyTeamDetails";
 import { ApprovePlayerUseCase } from "app/usecases/manager/teams/ApprovePlayer";
 import { RejectPlayerUseCase } from "app/usecases/manager/teams/RejectPlayer";
@@ -36,7 +36,7 @@ const approveToTeam = new ApprovePlayerUseCase(teamRepository);
 const removeFromTeam = new RemovePlayerUseCase(teamRepository);
 const rejectFromTeam = new RejectPlayerUseCase(teamRepository);
 const swapPlayersUC = new SwapPlayers(teamRepository, logger);
-const addPlayerUC = new AddPlayerToTeamUseCase(teamRepository);
+const addPlayerUC = new AddPlayerToTeamUseCase(teamRepository, notificationRepository);
 const getAvailablePlayerService = new GetAvailablePlayersService(teamRepository, playerRepository);
 
 export const teamManagementController = new TeamController(

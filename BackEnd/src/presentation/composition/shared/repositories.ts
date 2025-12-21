@@ -15,6 +15,7 @@ import { SubscriptionRepository } from 'infra/repositories/mongo/SubscriptionRep
 import { LeaderboardRepository } from 'infra/repositories/mongo/LeaderboardRepository';
 import { MatchRepoMongo } from 'infra/repositories/mongo/MatchStatsRepo';
 import { SettingsRepository } from 'infra/repositories/mongo/SettingsRepository';
+import { NotificationRepository } from 'infra/repositories/mongo/NotificationRepository';
 
 export const userRepository = new UserRepositoryMongo();
 export const adminRepository = new AdminRepositoryMongo();
@@ -22,6 +23,7 @@ export const playerRepository = new PlayerRepositoryMongo();
 export const managerRepository = new ManagerRepositoryMongo();
 export const otpRepository = new OtpRepositoryMongo();
 export const teamRepository = new TeamRepositoryMongo();
+export const notificationRepository = new NotificationRepository();
 export const tournamentRepository = new TournamentRepositoryMongo();
 export const registrationRepository = new RegistrationRepository();
 export const fixturesRepository = new FixturesRepositoryMongo();
