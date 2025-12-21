@@ -11,7 +11,7 @@ import { UpdatePlayerInviteStatus } from 'app/usecases/player/UpdatePlayerInvite
 
 // Use cases
 const fetchAllTeamsUC = new FetchAllTeams(teamRepository, logger);
-const joinTeamUC = new JoinTeamUseCase(teamRepository, playerRepository, logger);
+const joinTeamUC = new JoinTeamUseCase(teamRepository, playerRepository, notificationRepository, logger);
 const getMyTeamsUC = new GetMyTeamsUseCase(teamRepository, logger);
 const getAllMyTeamsUC = new GetAllMyTeamsUseCase(teamServices, logger);
 const getMyTeamDetailsUC = new GetMyTeamDetails(teamRepository, logger);

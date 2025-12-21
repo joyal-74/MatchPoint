@@ -13,6 +13,7 @@ import chatRoutes from "presentation/express/routes/chatRoutes";
 import leaderboardRoutes from "presentation/express/routes/leaderboardRoutes";
 import matchRoutes from "presentation/express/routes/matchRoutes";
 import settingsRoutes from "presentation/express/routes/settingsRoutes";
+import notificationsRoutes from "presentation/express/routes/notificationsRoute";
 import { errorHandler } from "presentation/express/middlewares/errorHandler";
 import cookieParser from 'cookie-parser';
 
@@ -46,6 +47,7 @@ app.use(`${API_V1}/subscriptions`, subscriptionsRoutes);
 app.use(`${API_V1}/leaderboard`, leaderboardRoutes);
 app.use(`${API_V1}/match`, matchRoutes);
 app.use(`${API_V1}/settings`, settingsRoutes);
+app.use(`${API_V1}/notifications`, notificationsRoutes);
 
 app.use(errorHandler);
 

@@ -3,7 +3,6 @@ import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
 import MatchDashboard from "../components/manager/matches/MatchDashboard";
 import ScoreboardDashboard from "../components/manager/scoreControl/ScoreboardDashboard";
-import SettingsPage from "../components/shared/SettingsPage";
 import EarningsPage from "../components/manager/EarningsOverview";
 import FinancialsPage from "../components/manager/PaymentsPage";
 
@@ -30,7 +29,6 @@ export const managerRoutes = [
     { path: "/manager/dashboard", element: withManagerProtection(<Dashboard />) },
     { path: "/manager/profile", element: withManagerProtection(<UserProfile />) },
     { path: "/manager/teams", element: withManagerProtection(<TeamsListPage />) },
-    { path: "/manager/settings", element: withManagerProtection(<SettingsPage />) },
     { path: "/manager/payments", element: withManagerProtection(<FinancialsPage />) },
     { path: "/manager/payments/earnings", element: withManagerProtection(<EarningsPage />) },
     { path: "/manager/team/:teamId", element: withManagerProtection(<ViewTeamManager />) },

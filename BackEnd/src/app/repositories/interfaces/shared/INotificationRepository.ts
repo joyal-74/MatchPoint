@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 export interface CreateNotificationDTO {
     userId: Types.ObjectId | string;
-    type: "TEAM_INVITE" | "MATCH_ALERT" | "ANNOUNCEMENT";
+    type: "TEAM_INVITE" | "MATCH_ALERT" | "ANNOUNCEMENT" | "TEAM_JOIN_REQUEST";
     title: string;
     message: string;
     meta?: Record<string, string | number>;

@@ -18,7 +18,7 @@ const Sidebar: React.FC = () => {
     const menuItems: MenuItem[] = [
         { name: "Profile", path: "/profile", icon: <User size={20} /> },
         { name: "Settings", path: "/settings", icon: <Settings size={20} /> },
-        { name: "Subscriptions", path: "/subscriptions", icon: <DollarSign size={20} /> },
+        { name: "Subscriptions", path: "/subscription", icon: <DollarSign size={20} /> },
     ];
 
     return (

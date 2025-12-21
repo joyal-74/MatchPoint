@@ -7,6 +7,8 @@ import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
 import LoginPage from '../pages/auth/LoginPage';
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 import SignupPage from '../pages/auth/SignupPage';
+import ViewerProfileLayout from '../pages/layout/ViewerProfileLayout';
+import NotificationsPage from '../pages/player/NotificationsPage';
 import Blocked from '../pages/shared/Blocked';
 import AllTimeLeaderboard from '../pages/shared/LeaderBoard/AllTimeLeaderboard';
 import RoleLayoutWrapper from '../pages/shared/RoleLayoutWrapper';
@@ -18,7 +20,7 @@ import RoleRedirect from './RoleDirect';
 
 
 export const publicRoutes = [
-    // Public routes (only accessible when not logged in)
+    // Public routes 
     { path: "/admin/login", element: <PublicRoute><AdminLoginPage /></PublicRoute> },
     { path: "/login", element: <PublicRoute ><LoginPage /></PublicRoute> },
     { path: "/signup", element: <PublicRoute><SignupPage /></PublicRoute> },
@@ -29,6 +31,8 @@ export const publicRoutes = [
 
     // Role-based redirect
     { path: "/dashboard", element: <ProtectedRoute><RoleRedirect /></ProtectedRoute> },
+    { path: "/:role/notifications", element: <ProtectedRoute><RoleLayoutWrapper><NotificationsPage /></RoleLayoutWrapper></ProtectedRoute> },
+    { path: "/notifications", element: <ViewerProfileLayout><NotificationsPage /></ViewerProfileLayout> },
 
     // Shared pages
     { path: "/unauthorized", element: <Unauthorized /> },
@@ -45,14 +49,22 @@ export const publicRoutes = [
         )
     },
     {
+        path: "/subscription",
+        element: (<ViewerProfileLayout><UserSubscriptionPage /></ViewerProfileLayout>)
+    },
+    {
         path: "/:role/settings",
         element: (
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["player", "manager"]}>
                 <RoleLayoutWrapper>
                     <SettingsPage />
                 </RoleLayoutWrapper>
             </ProtectedRoute>
         )
+    },
+    {
+        path: "/settings",
+        element: (<ViewerProfileLayout><SettingsPage /></ViewerProfileLayout>)
     },
     {
         path: "/:role/leaderboard",

@@ -11,12 +11,7 @@ interface ProtectedRouteProps {
     redirectTo?: string;
 }
 
-const ProtectedRoute = ({
-    children,
-    allowedRoles = [],
-    requireAuth = true,
-    redirectTo = "/login"
-}: ProtectedRouteProps) => {
+const ProtectedRoute = ({ children, allowedRoles = [], requireAuth = true, redirectTo = "/login" }: ProtectedRouteProps) => {
     const { loading, isInitialized, user } = useAppSelector((state) => state.auth);
     const location = useLocation();
 
@@ -58,7 +53,3 @@ const getDefaultRoute = (role: UserRole): string => {
 };
 
 export default ProtectedRoute;
-
-
-
-

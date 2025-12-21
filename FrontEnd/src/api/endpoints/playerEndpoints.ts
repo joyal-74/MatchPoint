@@ -3,7 +3,6 @@ import axiosClient from "../http/axiosClient";
 import type { Filters, Team, totalTeamResponse } from "../../components/player/Teams/Types";
 import type { UpdatePlayerProfilePayload, UpdateUserDataPayload } from "../../features/manager/managerTypes";
 import type { Player } from "../../types/Player";
-import type { Notification } from "../../features/player/notifications/notificationTypes";
 
 export const playerEndpoints = {
 
@@ -50,16 +49,6 @@ export const playerEndpoints = {
     getMyTeamDetails: async (teamId: string): Promise<Team> => {
         const { data } = await axiosClient.get(PLAYER_ROUTES.GET_MY_TEAM(teamId))
         console.log(data.data)
-        return data.data;
-    },
-
-    fetchNotifications: async (playerId: string): Promise<Notification[]> => {
-        const { data } = await axiosClient.get(PLAYER_ROUTES.GET_NOTIFICATIONS(playerId))
-        return data.data;
-    },
-
-    setUnreadCount: async (playerId: string): Promise<number> => {
-        const { data } = await axiosClient.get(PLAYER_ROUTES.GET_UNREAD_COUNT(playerId))
         return data.data;
     },
 

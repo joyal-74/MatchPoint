@@ -2,17 +2,18 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import NotificationItem from "./NotificationItem";
 import { useNavigate } from "react-router-dom";
 import { Bell, CheckCheck, ChevronRight } from "lucide-react";
-import { markAllAsRead } from "../../../features/player/notifications/notificationSlice"; 
+import { markAllAsRead } from "../../../features/player/notifications/notificationSlice";
 
 interface NotificationDropdownProps {
+    role: string;
     onClose?: () => void;
 }
 
-export default function NotificationDropdown({ onClose }: NotificationDropdownProps) {
+export default function NotificationDropdown({ onClose, role }: NotificationDropdownProps) {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const notifications = useAppSelector(s => s.notifications.items);
-    
+
     const unreadCount = notifications.filter(n => !n.isRead).length;
     const recentNotifications = notifications.slice(0, 5);
 
@@ -22,13 +23,18 @@ export default function NotificationDropdown({ onClose }: NotificationDropdownPr
     };
 
     const handleViewAll = () => {
-        navigate("/player/notifications");
+        if (role === 'viewer') {
+            navigate(`/notifications`);
+        } else {
+            navigate(`/${role}/notifications`);
+
+        }
         if (onClose) onClose();
     };
 
     return (
         <div className="w-80 sm:w-96 bg-[#0a0a0a] border border-neutral-800 rounded-xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200 ring-1 ring-white/5">
-            
+
             {/* Header */}
             <div className="px-4 py-3 border-b border-neutral-800 flex justify-between items-center bg-[#0a0a0a]">
                 <div className="flex items-center gap-2">
@@ -39,13 +45,13 @@ export default function NotificationDropdown({ onClose }: NotificationDropdownPr
                         </span>
                     )}
                 </div>
-                
+
                 {unreadCount > 0 && (
-                    <button 
+                    <button
                         onClick={handleMarkRead}
                         className="text-[11px] font-medium text-neutral-400 hover:text-white transition-colors flex items-center gap-1.5 px-2 py-1 rounded hover:bg-neutral-800"
                     >
-                        <CheckCheck size={12} /> 
+                        <CheckCheck size={12} />
                         Mark read
                     </button>
                 )}

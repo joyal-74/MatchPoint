@@ -3,7 +3,6 @@ import { useAppSelector, useAppDispatch } from "../../hooks/hooks";
 import NotificationItem from "../../components/player/notifications/NotificationItem";
 import { CheckCheck, Trash2, Inbox } from "lucide-react";
 import { markAllAsRead, clearAllNotifications } from "../../features/player/notifications/notificationSlice";
-import PlayerLayout from "../layout/PlayerLayout";
 
 export default function NotificationsPage() {
     const dispatch = useAppDispatch();
@@ -19,7 +18,6 @@ export default function NotificationsPage() {
     const unreadCount = notifications.filter(n => !n.isRead).length;
 
     return (
-        <PlayerLayout>
             <div className="pt-10 px-4 pb-12">
                 <div className="max-w-7xl mx-auto space-y-8">
 
@@ -115,6 +113,5 @@ export default function NotificationsPage() {
                     </div>
                 </div>
             </div>
-        </PlayerLayout>
     );
 }
