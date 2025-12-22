@@ -16,6 +16,7 @@ export interface TournamentTeamData {
     paymentStatus: paymentStatus;
     createdAt: Date;
 }
+
 export interface TourTeamMemberData {
     _id: string;
     teamId: string;

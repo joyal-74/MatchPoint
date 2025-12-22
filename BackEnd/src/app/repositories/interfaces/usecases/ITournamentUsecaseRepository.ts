@@ -39,7 +39,7 @@ export interface PaymentUrls {
 }
 
 export interface IInitiateTournamentPayment {
-    execute(tournamentId: string, teamId: string, captainId: string, managerId: string, paymentMethod: string): Promise<{ tournament: Tournament; paymentUrl: string; paymentSessionId: string; registrationId: string, orderId?: string, keyId?: string }>;
+    execute(tournamentId: string, teamId: string, captainId: string, managerId: string, paymentMethod: string);
 }
 
 export interface IUpdateTournamentTeam {

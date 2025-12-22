@@ -9,7 +9,6 @@ export interface PaymentSession {
 }
 
 export interface IPaymentProvider {
-
     createPaymentSession(amount: number, currency: string, title: string, metadata: PaymentMetadata): Promise<PaymentSession>;
     verifyPayment(sessionId: string): Promise<{ status: "pending" | "completed" | "failed"; paymentId: string; metadata: PaymentMetadata; }>;
 }

@@ -15,6 +15,7 @@ export interface SubscriptionPaymentMetadata extends BasePaymentMetadata {
     userId: string;
     planLevel: string;
     billingCycle: string;
+    amount: number;
 }
 
 

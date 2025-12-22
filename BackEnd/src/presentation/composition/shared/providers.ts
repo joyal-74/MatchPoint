@@ -6,12 +6,13 @@ import { WinstonLogger } from 'infra/providers/WinstonLogger';
 import { ImageKitFileStorage } from 'infra/providers/ImageKitFileStorage';
 import { WalletProvider } from 'infra/providers/WalletProvider';
 import { RazorpayProvider } from 'infra/providers/RazorpayProvider';
-import { WalletRepository } from 'infra/services/WalletRepository';
+import { WalletRepository } from 'infra/repositories/mongo/WalletRepository'; 
 import { registrationRepository } from './repositories';
 import { ManagerIdGenerator, PlayerIdGenerator, UserIdGenerator } from 'infra/providers/IdGenerator';
 import { RoleIdGenerator } from 'infra/providers/RoleIdGenerator';
 import { EnvConfigProvider } from 'infra/providers/EnvConfigProvider';
 import { RoomRegistry } from 'infra/livestream/mediasoup/RoomRegistry';
+import { MongoUnitOfWork } from 'infra/repositories/mongo/MongoUnitOfWork';
 
 export const jwtService = new JWTService();
 export const mailService = new NodeMailerService();
@@ -30,3 +31,4 @@ export const walletProvider = new WalletProvider(walletRepository, registrationR
 export const razorpayProvider = new RazorpayProvider(process.env.RAZOR_API_KEY!, process.env.RAZOR_API_SECRET!);
 
 export const roomRegistry = new RoomRegistry()
+export const unitOfWork = new MongoUnitOfWork()

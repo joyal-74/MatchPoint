@@ -74,6 +74,16 @@ export class TeamRepositoryMongo implements ITeamRepository {
         return TeamMongoMapper.toDomainFull(team as unknown as TeamPopulatedDocument);
     }
 
+    async findTeamWithPlayers(teamIds: string[], playerIds: string[]) {
+        const teams = TeamModel.findOne({
+            _id: { $in: teamIds },
+            "members.userId": { $in: playerIds }
+        });
+
+        return TeamMongoMapper.toDomainFull(teams as unknown as TeamPopulatedDocument);
+
+    }
+
 
     async togglePlayerStatus(teamId: string, playerId: string): Promise<TeamDataFull | null> {
         const team = await TeamModel.findById(teamId);
@@ -168,14 +178,14 @@ export class TeamRepositoryMongo implements ITeamRepository {
         return { success: true, playerId };
     }
 
-    async updateInviteStatus(teamId : string, userId : string, status : PlayerApprovalStatus) {
+    async updateInviteStatus(teamId: string, userId: string, status: PlayerApprovalStatus) {
         const team = await TeamModel.findOne({
             _id: teamId,
             "members.userId": userId,
             "members.requestType": "invite"
         });
 
-        console.log(team,"_-----_")
+        console.log(team, "_-----_")
 
         if (!team) return false;
 

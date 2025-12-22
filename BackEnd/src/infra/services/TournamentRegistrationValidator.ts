@@ -8,22 +8,29 @@ export class TournamentRegistrationValidator {
         private _teamRepo: ITeamRepository
     ) { }
 
-    async execute(tournamentId: string, teamId: string): Promise<void> {
+    async execute(tournamentId: string, attemptingTeamId: string): Promise<void> {
+        const newTeam = await this._teamRepo.findById(attemptingTeamId);
+        if (!newTeam) throw new BadRequestError("Team not found");
+
+        const newPlayerIds = new Set(newTeam.members.map(m => String(m.userId)));
+
+
         const existingRegistrations = await this._registrationRepo.getTeamsByTournament(tournamentId);
         const registeredTeamIds = existingRegistrations.map(r => r.teamId);
 
-        const registeredPlayers = new Set<string>();
-        for (const tId of registeredTeamIds) {
-            const team = await this._teamRepo.findById(tId);
-            team?.members.forEach(p => registeredPlayers.add(String(p.userId)));
-        }
+        if (registeredTeamIds.length === 0) return;
 
-        const newTeam = await this._teamRepo.findById(teamId);
-        const duplicatePlayers = newTeam?.members.filter(p => registeredPlayers.has(String(p.userId)));
 
-        if (duplicatePlayers && duplicatePlayers.length > 0) {
-            const names = duplicatePlayers.map(p => p.userId).join(", ");
-            throw new BadRequestError(`Players already registered in another team for this tournament: ${names}`);
+        const conflictingTeam = await this._teamRepo.findTeamWithPlayers(
+            registeredTeamIds,
+            Array.from(newPlayerIds)
+        );
+
+        if (conflictingTeam) {
+            const duplicate = conflictingTeam.members.find(m => newPlayerIds.has(String(m.userId)));
+            throw new BadRequestError(
+                `Player ${duplicate?.userId} is already registered in team '${conflictingTeam.name}'`
+            );
         }
     }
 }

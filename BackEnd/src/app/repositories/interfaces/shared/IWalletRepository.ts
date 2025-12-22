@@ -1,4 +1,19 @@
+import { Wallet } from "domain/entities/Wallet";
+
+export interface WalletCreateData {
+    ownerId: string;
+    ownerType: 'USER' | 'TOURNAMENT' | 'ADMIN';
+    balance: number;
+    currency: string;
+    isFrozen: boolean;
+}
+
 export interface IWalletRepository {
-    getBalance(userId: string): Promise<number>;
-    deductBalance(userId: string, amount: number): Promise<void>;
+    create(wallet: WalletCreateData, ctx?: unknown): Promise<Wallet>;
+
+    getByOwner(ownerId: string, ownerType: 'USER' | 'TOURNAMENT' | 'ADMIN', ctx?: unknown): Promise<Wallet>;
+
+    credit(walletId: string, amount: number, ctx?: unknown): Promise<void>;
+
+    debit(walletId: string, amount: number, ctx?: unknown): Promise<void>;
 }

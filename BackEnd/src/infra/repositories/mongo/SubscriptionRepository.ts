@@ -8,17 +8,31 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
     async updateUserPlan(userId: string, level: PlanLevel, billingCycle?: BillingCycle): Promise<UserSubscription> {
 
+        const currentSub = await UserSubscriptionModel.findOne({ userId });
+
         let expiryDate: Date | undefined;
+        const now = new Date();
 
         if (level !== "Free") {
             if (!billingCycle) throw new BadRequestError("Billing cycle required");
-            const now = new Date();
-            expiryDate = new Date(now);
+
+            let startDate = now;
+
+            if (
+                currentSub &&
+                currentSub.level === level &&
+                currentSub.expiryDate &&
+                currentSub.expiryDate > now
+            ) {
+                startDate = new Date(currentSub.expiryDate);
+            }
+
+            expiryDate = new Date(startDate);
 
             if (billingCycle === "Monthly") {
-                expiryDate.setMonth(now.getMonth() + 1);
+                expiryDate.setMonth(startDate.getMonth() + 1);
             } else {
-                expiryDate.setFullYear(now.getFullYear() + 1);
+                expiryDate.setFullYear(startDate.getFullYear() + 1);
             }
         }
 
@@ -49,10 +63,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         return doc ? SubscriptionMapper.toDomain(doc) : null;
     }
 
-    async updateSubscriptionStatus(
-        transactionId: string,
-        status: "active" | "pending" | "expired"
-    ): Promise<UserSubscription | null> {
+    async updateSubscriptionStatus(transactionId: string, status: "active" | "pending" | "expired"): Promise<UserSubscription | null> {
         const doc = await UserSubscriptionModel.findOneAndUpdate(
             { transactionId },
             { status },

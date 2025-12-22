@@ -3,14 +3,20 @@ import { ISubscriptionRepository } from "app/repositories/interfaces/shared/ISub
 import { IUpdateUserPlan, IVerifyPaymentUseCase } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
 import { ISubscriptionService, SubscriptionFinalizeResult } from "app/services/ISubscriptionServices";
 import { BillingCycle, PlanLevel } from "domain/entities/Plan";
+import { ITransactionRepository } from "app/repositories/interfaces/shared/ITransactionRepository";
+import { IWalletRepository } from "app/repositories/interfaces/shared/IWalletRepository";
+import { Wallet } from "domain/entities/Wallet";
+import { InternalServerError } from "domain/errors";
 
 export class SubscriptionPaymentService implements ISubscriptionService {
     constructor(
         private verifyPayment: IVerifyPaymentUseCase,
         private updateUserPlan: IUpdateUserPlan,
-        private repo: ISubscriptionRepository,
+        private subplanRepo: ISubscriptionRepository,
+        private transactionRepo: ITransactionRepository,
+        private walletRepo: IWalletRepository,
         private logger: ILogger
-    ) {}
+    ) { }
 
     async finalize(sessionId: string): Promise<SubscriptionFinalizeResult> {
         const verification = await this.verifyPayment.execute(sessionId);
@@ -18,7 +24,7 @@ export class SubscriptionPaymentService implements ISubscriptionService {
         switch (verification.status) {
             case "completed": {
                 if (verification.metadata.type === "subscription") {
-                    const { userId, planLevel, billingCycle } = verification.metadata;
+                    const { userId, planLevel, billingCycle, amount } = verification.metadata;
 
                     this.logger.info(`Payment verified for user ${userId}`);
 
@@ -28,10 +34,19 @@ export class SubscriptionPaymentService implements ISubscriptionService {
                         billingCycle as BillingCycle
                     );
 
-                    await this.repo.updateSubscriptionStatus(
+                    await this.subplanRepo.updateSubscriptionStatus(
                         verification.paymentId,
                         "active"
                     );
+
+                    const tran = await this.recordSubscriptionTransaction(
+                        userId,
+                        Number(amount),
+                        verification.paymentId,
+                        planLevel as string
+                    );
+
+                    console.log(tran, 'kskjdfgsldgh')
 
                     return { status: "completed", subscription: updated };
                 }
@@ -46,5 +61,47 @@ export class SubscriptionPaymentService implements ISubscriptionService {
             default:
                 return { status: "failed", reason: "Payment verification failed" };
         }
+    }
+
+    // --- Helper to Record Revenue ---
+    private async recordSubscriptionTransaction(userId: string, amount: number, paymentRefId: string, planLevel: string) {
+        if (!amount || amount <= 0) return;
+
+        let adminWallet: Wallet;
+        const adminId = process.env.PLATFORM_ADMIN_ID;
+        if (!adminId) {
+            this.logger.error("CRITICAL: PLATFORM_ADMIN_ID is not set in .env. Revenue not recorded!");
+            throw new InternalServerError("Internal Server Configuration Error");
+        }
+        try {
+            adminWallet = await this.walletRepo.getByOwner(adminId, 'ADMIN');
+        } catch {
+            adminWallet = await this.walletRepo.create({
+                ownerId: adminId,
+                ownerType: 'ADMIN',
+                balance: 0,
+                currency: 'INR',
+                isFrozen: false
+            });
+        }
+
+        await this.transactionRepo.create({
+            type: 'SUBSCRIPTION',
+            fromWalletId: null,
+            toWalletId: adminWallet.id,
+            amount: amount,
+            status: 'SUCCESS',
+            paymentProvider: 'RAZORPAY',
+            paymentRefId: paymentRefId,
+            metadata: {
+                userId,
+                planLevel,
+                description: `Subscription Payment: ${planLevel}`
+            }
+        });
+
+        await this.walletRepo.credit(adminWallet.id, amount);
+
+        this.logger.info(`Revenue of ${amount} recorded for Admin ${adminId}`);
     }
 }

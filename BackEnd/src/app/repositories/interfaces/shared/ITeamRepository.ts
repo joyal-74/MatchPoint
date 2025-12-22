@@ -14,6 +14,7 @@ export interface ITeamRepository {
     update(teamId: string, updates: Partial<TeamRegister>): Promise<TeamData>;
     removePlayer(teamId: string, playerId: string): Promise<TeamDataFull | null>;
     findTeamsByIds(teamIds: string[]);
+    findTeamWithPlayers(teamIds: string[], playerIds: string[]) : Promise<TeamData | null>;
     existOrAddMember(teamId: string, userId: string, playerId: string): Promise<{ success: boolean; playerId: string }>;
     updateInviteStatus(teamId: string, playerId: string, status: "approved" | "rejected"): Promise<boolean>;
 }
