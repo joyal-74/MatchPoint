@@ -23,18 +23,16 @@ export class FinancialRepository implements IFinancialRepository {
         }
 
         // 2. Get Transactions 
-        // Logic: Find transactions where this wallet is EITHER the sender OR the receiver
         const rawTransactions = await TransactionModel.find({
             $or: [
                 { fromWalletId: wallet._id },
                 { toWalletId: wallet._id }
             ]
         })
-        .populate('metadata.tournamentId', 'title') // Populate tournament title
-        .sort({ createdAt: -1 }) // Newest first
+        .populate('metadata.tournamentId', 'title')
+        .sort({ createdAt: -1 })
         .limit(100);
 
-        // Map Mongoose Documents to Domain Interface
         const transactions: DomainTransaction[] = rawTransactions.map(tx => {
             const isCredit = tx.toWalletId?.toString() === wallet._id.toString();
             
@@ -53,24 +51,22 @@ export class FinancialRepository implements IFinancialRepository {
                 id: tx._id.toString(),
                 date: tx.createdAt,
                 description: tx.metadata?.description || formatTxType(tx.type),
-                // Safe navigation for populated field
-                tournament: (tx.metadata?.tournamentId as any)?.title || 'General', 
+                tournament: (tx.metadata?.tournamentId)?.title || 'General', 
                 type: type,
-                amount: isCredit ? tx.amount : -tx.amount, // Negative for UI expenses
+                amount: isCredit ? tx.amount : -tx.amount,
                 status: tx.status.toLowerCase(),
                 method: tx.paymentProvider
             };
         });
 
-        // 3. Get Tournament Earnings Stats
-        // Find all tournaments created by this manager
+
         const rawTournaments = await TournamentModel.find({ managerId: userId })
             .select('title plan entryFee minTeams currTeams status');
 
         const tournaments = rawTournaments.map(t => ({
             id: t._id.toString(),
             name: t.title,
-            plan: t.plan || 'Basic', // Default to Basic if undefined
+            plan: 'Basic', 
             entryFee: Number(t.entryFee),
             minTeams: t.minTeams,
             currentTeams: t.currTeams,
