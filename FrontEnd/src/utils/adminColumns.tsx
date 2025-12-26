@@ -3,6 +3,8 @@ import ViewButton from "../components/ui/ViewButton";
 import StatusButton from "../components/ui/StatusButton";
 import type { SignupRole } from "../types/UserRoles";
 import type { User } from "../types/User";
+import type { Team } from "../features/admin/tournament/tournamentTypes";
+import type { Tournament } from "../features/admin/tournament/tournamentTypes"; 
 
 export const viewerColumns = (
     handleStatusChange: (role: SignupRole, id: string, newStatus: boolean) => void,
@@ -128,3 +130,62 @@ export const playerColumns = (
             ),
         },
     ];
+
+
+export const teamColumns = (handleStatusChange: (id: string, newStatus: boolean) => void) => [
+    { id: "id", label: "Team ID", accessor: "teamId" as keyof Team }, 
+    { id: "name", label: "Team Name", accessor: "name" as keyof Team },
+    { id: "members", label: "Members", accessor: "membersCount" as keyof Team },
+    { id: "sport", label: "Sport", accessor: "sport" as keyof Team },
+    {
+        id: "memberSince", label: "Joined", render: (row: Team) => new Date(row.createdAt).toLocaleDateString()
+    },
+    {
+        id: "status",
+        label: "Status",
+        render: (row: Team) => <StatusBadge isActive={row.status === 'active'} />
+    },
+    {
+        id: "actions",
+        label: "Actions",
+        render: (row: Team) => (
+            <div className="flex gap-2 items-center justify-center">
+                <StatusButton
+                    isActive={row.status === 'active'}
+                    onBlock={() => handleStatusChange(row._id, false)}
+                    onActivate={() => handleStatusChange(row._id, true)}
+                    showText={true}
+                />
+            </div>
+        ),
+    },
+];
+
+export const tournamentColumns = (handleStatusChange: (id: string, newStatus: boolean) => void) => [
+    { id: "id", label: "Team ID", accessor: "_id" as keyof Tournament }, 
+    { id: "name", label: "Team Name", accessor: "name" as keyof Tournament },
+    { id: "members", label: "Members", accessor: "membersCount" as keyof Tournament },
+    { id: "sport", label: "Sport", accessor: "sport" as keyof Tournament },
+    {
+        id: "Joined", label: "Joined", render: (row: Tournament) => new Date(row.createdAt).toLocaleDateString()
+    },
+    {
+        id: "status",
+        label: "Status",
+        render: (row: Tournament) => <StatusBadge isActive={row.isBlocked} />
+    },
+    {
+        id: "actions",
+        label: "Actions",
+        render: (row: Tournament) => (
+            <div className="flex gap-2 items-center justify-center">
+                <StatusButton
+                    isActive={row.isBlocked}
+                    onBlock={() => handleStatusChange(row._id, false)}
+                    onActivate={() => handleStatusChange(row._id, true)}
+                    showText={true}
+                />
+            </div>
+        ),
+    },
+];

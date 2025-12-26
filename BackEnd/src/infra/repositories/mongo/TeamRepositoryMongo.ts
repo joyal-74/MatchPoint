@@ -1,5 +1,5 @@
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "domain/dtos/Team.dto";
+import { AdminFilters, Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "domain/dtos/Team.dto";
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { TeamModel } from "infra/databases/mongo/models/TeamModel";
 import { TeamMongoMapper, TeamPopulatedDocument } from "infra/utils/mappers/TeamMongoMapper";
@@ -35,6 +35,38 @@ export class TeamRepositoryMongo implements ITeamRepository {
         const totalTeams = await TeamModel.countDocuments(filters);
         const teams = TeamMongoMapper.toDomainSummaryArray(result);
         return { teams, totalTeams }
+    }
+
+    async findAllTeams(filters: AdminFilters): Promise<{ teams: TeamDataSummary[]; totalCount: number; }> {
+        const { page, limit, filter, search } = filters;
+
+        const skip = (page - 1) * limit;
+
+        const query : any = {};
+
+        if (filter && filter !== 'All') {
+            query.status = filter.toLowerCase();
+        }
+
+        if (search) {
+            const searchRegex = new RegExp(search, 'i');
+
+            query.$or = [
+                { name: searchRegex },
+                { sport: searchRegex },
+            ];
+        }
+
+        const result = await TeamModel.find(query)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        const totalCount = await TeamModel.countDocuments(query);
+
+        const teams = TeamMongoMapper.toDomainSummaryArray(result);
+
+        return { teams, totalCount };
     }
 
     async findAllWithUserId(userId: string, status: string): Promise<{ teams: TeamDataSummary[]; totalTeams: number }> {

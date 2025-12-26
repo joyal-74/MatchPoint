@@ -1,6 +1,6 @@
 import { UsersManagementController } from 'presentation/http/controllers/admin/UsersManagementController';
 import { logger } from '../shared/providers';
-import { managerRepository, planRepository, playerRepository, userRepository } from 'presentation/composition/shared/repositories';
+import { dashboardRepo, managerRepository, planRepository, playerRepository, teamRepository, tournamentRepository, userRepository } from 'presentation/composition/shared/repositories';
 import { GetAllViewers } from 'app/usecases/admin/GetAllViewers';
 import { GetAllManagers } from 'app/usecases/admin/GetAllManagers';
 import { GetAllPlayers } from 'app/usecases/admin/GetAllPlayers';
@@ -15,6 +15,11 @@ import { PlanController } from 'presentation/http/controllers/admin/PlanControll
 import { GetPlansUseCase } from 'app/usecases/admin/GetPlansUseCase';
 import { CreatePlanUseCase } from 'app/usecases/admin/CreatePlanUseCase';
 import { DeletePlanUseCase } from 'app/usecases/admin/DeletePlanUseCase';
+import { TournamentManagementController } from 'presentation/http/controllers/admin/TournamnetManagementController';
+import { GetAllTeams } from 'app/usecases/admin/GetAllTeams';
+import { GetAllTournaments } from 'app/usecases/admin/GetAllTournaments';
+import { DashboardController } from 'presentation/http/controllers/admin/DashBoardController';
+import { GetDashboardStatsUseCase } from 'app/usecases/admin/GetDashboardStatsUseCase';
 
 const getAllViewersUC = new GetAllViewers(userRepository, logger);
 const getAllManagersUC = new GetAllManagers(userRepository, logger);
@@ -38,6 +43,11 @@ export const usersManagementController = new UsersManagementController(
     getViewerDetailsUC
 );
 
+const getTeamsUseCase = new GetAllTeams(teamRepository, logger);
+const getTournamentsUseCase = new GetAllTournaments(tournamentRepository, logger);
+
+export const tournamentController = new TournamentManagementController(getTeamsUseCase, getTournamentsUseCase);
+
 const getPlansUC = new GetPlansUseCase(planRepository);
 const createPlansUC = new CreatePlanUseCase(planRepository);
 const deletePlansUC = new DeletePlanUseCase(planRepository);
@@ -46,4 +56,10 @@ export const planController = new PlanController(
     getPlansUC,
     createPlansUC,
     deletePlansUC
+);
+
+const getDashboard = new GetDashboardStatsUseCase(dashboardRepo, logger)
+
+export const dashboardController = new DashboardController(
+    getDashboard
 );

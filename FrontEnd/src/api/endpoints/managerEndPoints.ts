@@ -150,6 +150,11 @@ export const managerEndpoints = {
         return data.data
     },
 
+    fetchPayments: async (managerId: string): Promise<{ balance: any, transactions: any, tournaments: any }> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.GET_PAYMENTS(managerId));
+        return data.data
+    },
+
 
     getAvailablePlayers: async (teamId: string): Promise<TeamPlayer[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_AVAILABLE_PLAYERS(teamId));

@@ -1,6 +1,8 @@
 import { lazy, Suspense, type JSX } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
+import TeamManagement from "../pages/admin/Team/TeamManagement";
+import TournamentManagement from "../pages/admin/Tournament/TournamentManagement";
 
 
 
@@ -26,6 +28,8 @@ export const adminRoutes = [
     { path: "/admin/viewers", element: withAdminProtection(<ViewersManagement />) },
     { path: "/admin/players", element: withAdminProtection(<PlayersManagement />) },
     { path: "/admin/managers", element: withAdminProtection(<ManagersManagement />) },
+    { path: "/admin/teams", element: withAdminProtection(<TeamManagement />) },
+    { path: "/admin/tournaments", element: withAdminProtection(<TournamentManagement />) },
     { path: "/admin/managers/:id/details", element: withAdminProtection(<ManagerDetails />) },
     { path: "/admin/players/:id/details", element: withAdminProtection(<PlayerDetails />) },
     { path: "/admin/viewers/:id/details", element: withAdminProtection(<ViewerDetails />) },

@@ -1,3 +1,4 @@
+import { MatchStatus } from "domain/entities/Fixture";
 import { Document } from "mongoose";
 
 export interface BatsmanStat {
@@ -114,6 +115,7 @@ export interface TournamentMatchStatsDocument extends Document {
     hasSuperOver: boolean;
     currentInnings: number;
     isLive: boolean;
+    status: MatchStatus;
     venue?: string;
 }
 

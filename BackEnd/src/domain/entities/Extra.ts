@@ -32,4 +32,10 @@ export class Extras {
     get total() {
         return this.wides + this.noBalls + this.byes + this.legByes + this.penalty;
     }
+
+    static fromDTO(dto): Extras {
+        const e = new Extras();
+        Object.assign(e, dto);
+        return e;
+    }
 }

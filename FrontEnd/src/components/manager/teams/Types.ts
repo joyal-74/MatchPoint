@@ -1,4 +1,4 @@
-export type TeamStatus = 'active' | 'blocked' | 'deleted'
+export type TeamStatus = 'active' | 'blocked' | 'deleted';
 export type playerStatus = "playing" | "substitute";
 
 

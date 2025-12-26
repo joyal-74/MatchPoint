@@ -17,6 +17,8 @@ import { MatchRepoMongo } from 'infra/repositories/mongo/MatchStatsRepo';
 import { SettingsRepository } from 'infra/repositories/mongo/SettingsRepository';
 import { NotificationRepository } from 'infra/repositories/mongo/NotificationRepository';
 import { TransactionRepository } from 'infra/repositories/mongo/TransactionRepository';
+import { DashboardRepository } from 'infra/repositories/mongo/DashboardRepository';
+import { FinancialRepository } from 'infra/repositories/mongo/FinancialRepository';
 
 export const userRepository = new UserRepositoryMongo();
 export const adminRepository = new AdminRepositoryMongo();
@@ -37,3 +39,5 @@ export const leaderboardRepository = new LeaderboardRepository();
 export const matchRepo = new MatchRepoMongo();
 export const settingsRepo = new SettingsRepository();
 export const transactionRepo = new TransactionRepository();
+export const dashboardRepo = new DashboardRepository();
+export const finacialRepo = new FinancialRepository();

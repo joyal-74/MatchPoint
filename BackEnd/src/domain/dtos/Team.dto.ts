@@ -101,6 +101,13 @@ export interface Filters {
     maxPlayers?: number;
 }
 
+export interface AdminFilters {
+    page: number;
+    limit: number;
+    filter?: string;
+    search?: string;
+}
+
 export interface PlayerTeamResponseDTO {
     approvedTeams: TeamDataSummary[];
     pendingTeams: TeamDataSummary[];

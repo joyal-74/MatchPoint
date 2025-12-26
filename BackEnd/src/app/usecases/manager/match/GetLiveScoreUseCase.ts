@@ -1,12 +1,12 @@
+import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { mapToLiveScoreDto } from "app/mappers/LiveScoreMapper";
 import { NotFoundError } from "domain/errors";
 import { IGetLiveScoreUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
-import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { LiveScoreDto } from "domain/dtos/LiveScoreDto";
 
 export class GetLiveScoreUseCase implements IGetLiveScoreUseCase {
     constructor(
-        private _matchRepo: IMatchRepo
+        private _matchRepo: IMatchStatsRepo
     ) { }
 
     async execute(matchId: string) : Promise<LiveScoreDto> {

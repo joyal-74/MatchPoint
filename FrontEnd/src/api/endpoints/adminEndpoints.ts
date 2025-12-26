@@ -4,6 +4,11 @@ import { axiosClient } from '../http/axiosClient';
 import { ADMIN_ROUTES } from '../../constants/routes/adminRoutes';
 
 export const adminEndpoints = {
+    getDashboardStats: async () => {
+        const response = await axiosClient.get(ADMIN_ROUTES.DASHBOARD);
+        return response.data.data;
+    },
+
     fetchViewers: async (page = 1, limit = 10, filter?: string, search?: string) => {
         const response = await axiosClient.get(ADMIN_ROUTES.VIEWERS, {
             params: { page, limit, filter, search },
@@ -20,6 +25,20 @@ export const adminEndpoints = {
 
     fetchManagers: async (page = 1, limit = 10, filter?: string, search?: string) => {
         const response = await axiosClient.get(ADMIN_ROUTES.MANAGERS, {
+            params: { page, limit, filter, search },
+        });
+        return response.data.data;
+    },
+
+    fetchTeams: async (page = 1, limit = 10, filter?: string, search?: string) => {
+        const response = await axiosClient.get(ADMIN_ROUTES.TEAMS, {
+            params: { page, limit, filter, search },
+        });
+        return response.data.data;
+    },
+
+    fetchTournaments: async (page = 1, limit = 10, filter?: string, search?: string) => {
+        const response = await axiosClient.get(ADMIN_ROUTES.TOURNAMENTS, {
             params: { page, limit, filter, search },
         });
         return response.data.data;
@@ -45,6 +64,20 @@ export const adminEndpoints = {
         const users = response.data.data.users;
         const totalCount = response.data.data.totalCount;
         return { users, role, totalCount };
+    },
+
+    teamStatusChange: async (teamId: string, isActive: boolean, params: GetAllUsersParams) => {
+        const response = await axiosClient.patch(ADMIN_ROUTES.TEAM_STATUS_CHANGE(teamId), { isActive, params });
+        const teams = response.data.data.teams;
+        const totalCount = response.data.data.totalCount;
+        return { teams, totalCount };
+    },
+
+    tournamentStatusChange: async (tourId: string, isActive: boolean, params: GetAllUsersParams) => {
+        const response = await axiosClient.patch(ADMIN_ROUTES.TOURNAMENT_STATUS_CHANGE(tourId), { isActive, params });
+        const tournaments = response.data.data.tournamnets;
+        const totalCount = response.data.data.totalCount;
+        return { tournaments, totalCount };
     },
 
     userBlockStatus: async (userId: string, isActive: boolean,) => {

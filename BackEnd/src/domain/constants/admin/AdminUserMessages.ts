@@ -3,6 +3,8 @@ export const AdminUserMessages = {
     MANAGERS_FETCHED: "Managers fetched successfully",
     PLAYERS_FETCHED: "Players fetched successfully",
     VIEWERS_FETCHED: "Viewers fetched successfully",
+    TEAMS_FETCHED: "Teams fetched successfully",
+    TOURNAMENTS_FETCHED: "Tournaments fetched successfully",
 
     // Status updates
     STATUS_CHANGED: "Status changed successfully",

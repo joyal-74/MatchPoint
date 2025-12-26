@@ -7,7 +7,6 @@ import {
     UserCog,
     DollarSign,
     Layers,
-    Shield,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
@@ -24,10 +23,9 @@ const Sidebar: React.FC = () => {
         { name: "Viewers", path: "/admin/viewers", icon: <Users size={20} /> },
         { name: "Players", path: "/admin/players", icon: <User size={20} /> },
         { name: "Managers", path: "/admin/managers", icon: <UserCog size={20} /> },
-        { name: "Subscriptions", path: "/admin/subscriptions", icon: <DollarSign size={20} /> },
-        { name: "Sports", path: "/admin/sports", icon: <Shield size={20} /> },
         { name: "Teams", path: "/admin/teams", icon: <Layers size={20} /> },
         { name: "Tournaments", path: "/admin/tournaments", icon: <Trophy size={20} /> },
+        { name: "Subscriptions", path: "/admin/subscriptions", icon: <DollarSign size={20} /> },
     ];
 
     return (

@@ -1,11 +1,14 @@
-import { IMatchesRepository, MatchStreamData } from "app/repositories/interfaces/manager/IMatchesRepository";
+import { EndMatchData, IMatchesRepository, MatchStreamData } from "app/repositories/interfaces/manager/IMatchesRepository";
+import { MatchResponseDTO } from "domain/dtos/MatchDTO";
 import { Extras } from "domain/entities/Extra";
 import { Innings } from "domain/entities/Innings";
 import type { Match } from "domain/entities/Match";
-import { NotFoundError } from "domain/errors";
+import { MatchEntity } from "domain/entities/MatchEntity";
+import { BadRequestError, NotFoundError } from "domain/errors";
 import MatchModel from "infra/databases/mongo/models/MatchesModel";
 import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentStatsModel";
 import { MatchMongoMapper } from "infra/utils/mappers/MatchMongoMapper";
+import { Types } from "mongoose";
 
 export class MatchesRepositoryMongo implements IMatchesRepository {
     async createMatches(tournamentId: string, matches: Match[]): Promise<Match[]> {
@@ -20,6 +23,13 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
 
         const result = MatchMongoMapper.toMatchResponseArray(populatedMatches);
         return result;
+    }
+
+    async updateStatus(matchId: string, status: string): Promise<void> {
+        await MatchModel.findByIdAndUpdate(matchId,
+            { $set: { status : status } },
+            { new: true }
+        );
     }
 
 
@@ -57,7 +67,6 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
     }
 
     async updateStreamMetadata(matchId: string, data: MatchStreamData): Promise<void> {
-        console.log(matchId, data, '====')
         await MatchModel.findByIdAndUpdate(matchId, {
             $set: {
                 streamTitle: data.streamTitle,
@@ -80,7 +89,7 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
         );
     }
 
-    async getMatchDetails(matchId: string): Promise<any | null> {
+    async getMatchDetails(matchId: string): Promise<MatchResponseDTO | null> {
         return await MatchModel.findById(matchId)
             .populate("teamA")
             .populate("teamB")
@@ -127,9 +136,6 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
             battingTeamId = tossWinnerId === teamA ? teamB : teamA;
         }
 
-        console.log(battingTeamId, " batting")
-        console.log(bowlingTeamId, " bowling")
-
         const innings1 = new Innings({
             battingTeam: battingTeamId,
             bowlingTeam: bowlingTeamId,
@@ -152,7 +158,7 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
             matchId: matchId,
             oversLimit: match.oversLimit || 20,
             venue: match.venue || "",
-            isLive: true,
+            status: 'upcoming',
             innings1: innings1DTO,
             innings2: null,
             currentInnings: 1,
@@ -170,5 +176,35 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
         );
 
         return match;
+    }
+
+    async endMatch(matchId: string, data: EndMatchData): Promise<MatchEntity> {
+        const match = await MatchModel.findOne({ _id: matchId });
+
+        if (!match) {
+            throw new NotFoundError("Match not found");
+        }
+
+        if (match.status === "completed") {
+            throw new BadRequestError("Match already ended");
+        }
+
+        
+        match.endInfo = {
+            type: data.type,
+            reason: data.reason ?? null,
+            notes: data.notes ?? "",
+            endedBy: data.endedBy ? new Types.ObjectId(data.endedBy) : null,
+            endedAt: new Date()
+        };
+        
+        if (data.type !== "NORMAL") {
+            match.winner = null;
+        }
+        
+        match.status = "completed";
+        await match.save();
+
+        return MatchMongoMapper.toEntity(match);
     }
 }

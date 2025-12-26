@@ -1,4 +1,4 @@
-import { IGetLiveScoreUseCase, ISaveMatchData } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { IEndMatchUseCase, IGetLiveScoreUseCase, ISaveMatchData } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { IMatchPlayerServices } from "app/services/manager/IMatchPlayerService";
 import { IMatchScoreService } from "app/services/manager/IMatchScoreService";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
@@ -13,6 +13,7 @@ export class MatchController {
         private _matchScoreService: IMatchScoreService,
         private _saveMatchData: ISaveMatchData,
         private _getLiveScoreUseCase: IGetLiveScoreUseCase,
+        private _endMatchUseCase: IEndMatchUseCase,
     ) { }
 
     /**
@@ -308,5 +309,14 @@ export class MatchController {
             HttpStatusCode.OK,
             buildResponse(true, "Batsman retired", result)
         );
+    };
+
+
+    endMatch = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { input } = httpRequest.body;
+
+        const result = await this._endMatchUseCase.execute(input);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Match ended", result));
     };
 }

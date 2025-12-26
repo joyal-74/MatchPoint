@@ -426,12 +426,10 @@ export class Innings {
 
     undoLastBall() {
         if (this.logs.length === 0) {
-            console.log('No balls to undo');
             return;
         }
 
         const lastBall = this.logs[this.logs.length - 1];
-        console.log('Undoing last ball:', lastBall);
 
         this.logs.pop();
 
@@ -444,12 +442,10 @@ export class Innings {
 
         // ALWAYS decrement deliveries count
         this.deliveries = Math.max(0, this.deliveries - 1);
-        console.log(`Deliveries reduced by 1, now ${this.deliveries}`);
 
         // Only decrement legalBalls for legal deliveries
         if (isLegalBall) {
             this.legalBalls = Math.max(0, this.legalBalls - 1);
-            console.log(`Legal balls reduced by 1, now ${this.legalBalls}`);
         }
 
         // Revert extras
@@ -465,7 +461,6 @@ export class Innings {
             const dismissalType = this.normalizeDismissalType(lastBall.dismissal.type || "");
             if (dismissalType !== 'retired-hurt') {
                 this.wickets = Math.max(0, this.wickets - 1);
-                console.log(`Wickets reduced by 1, now ${this.wickets}`);
             }
         }
 
@@ -477,8 +472,6 @@ export class Innings {
 
         // Handle over completion revert
         this.handleOverCompletionRevert(lastBall, isLegalBall);
-
-        console.log('Undo completed successfully');
     }
 
     private revertPlayerStats(lastBall: BallLog, isLegalBall: boolean, isWide: boolean) {
@@ -489,8 +482,6 @@ export class Innings {
         if (strikerId && this.batsmen.has(strikerId)) {
             const striker = this.batsmen.get(strikerId)!;
             const runsToSubtract = lastBall.runs || 0;
-
-            console.log(`Before reduction - batsman ${strikerId}: runs=${striker.runs}, balls=${striker.balls}`);
 
             // Subtract runs
             striker.runs = Math.max(0, striker.runs - runsToSubtract);
@@ -515,16 +506,12 @@ export class Innings {
                 striker.fielderId = undefined;
                 striker.retiredHurt = false;
             }
-
-            console.log(`After reduction - batsman ${strikerId}: runs=${striker.runs}, balls=${striker.balls}`);
         }
 
         // REVERT BOWLER STATS
         if (bowlerId && this.bowlers.has(bowlerId)) {
             const bowler = this.bowlers.get(bowlerId)!;
             const totalRunsToSubtract = (lastBall.runs || 0) + (lastBall.extrasRuns || 0);
-
-            console.log(`Before reduction - bowler ${bowlerId}: runsConceded=${bowler.runsConceded}, balls=${bowler.totalBalls}`);
 
             // Subtract runs conceded (including extras)
             bowler.runsConceded = Math.max(0, bowler.runsConceded - totalRunsToSubtract);
@@ -539,8 +526,6 @@ export class Innings {
             if (lastBall.dismissal && bowlerCreditedDismissals.includes(lastBall.dismissal.type)) {
                 bowler.wickets = Math.max(0, bowler.wickets - 1);
             }
-
-            console.log(`After reduction - bowler ${bowlerId}: runsConceded=${bowler.runsConceded}, balls=${bowler.totalBalls}`);
         }
     }
 
@@ -604,12 +589,47 @@ export class Innings {
         }
     }
 
+    static fromDTO(dto): Innings {
+        const innings = new Innings({
+            runs: dto.runs,
+            wickets: dto.wickets,
+            battingTeam: dto.battingTeam,
+            bowlingTeam: dto.bowlingTeam,
+            legalBalls: dto.legalBalls,
+            deliveries: dto.deliveries,
+            isCompleted: dto.isCompleted,
+            currentStriker: dto.currentStriker,
+            currentNonStriker: dto.currentNonStriker,
+            currentBowler: dto.currentBowler
+        });
+
+        // Rebuild batsmen
+        if (Array.isArray(dto.battingStats)) {
+            for (const b of dto.battingStats) {
+                innings.batsmen.set(b.playerId, Batsman.fromDTO(b));
+            }
+        }
+
+        // Rebuild bowlers
+        if (Array.isArray(dto.bowlingStats)) {
+            for (const b of dto.bowlingStats) {
+                innings.bowlers.set(b.playerId, Bowler.fromDTO(b));
+            }
+        }
+
+        // Restore extras
+        innings.extras = Extras.fromDTO(dto.extras);
+
+        return innings;
+    }
+
+
     toDTO() {
         return {
             runs: this.runs,
             wickets: this.wickets,
-            battingTeam : this.battingTeam,
-            bowlingTeam : this.bowlingTeam,
+            battingTeam: this.battingTeam,
+            bowlingTeam: this.bowlingTeam,
             overs: this.oversFormatted,
             legalBalls: this.legalBalls,
             deliveries: this.deliveries,

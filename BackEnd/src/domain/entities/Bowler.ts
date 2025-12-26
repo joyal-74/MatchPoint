@@ -1,11 +1,11 @@
 export class Bowler {
-    public totalBalls = 0; 
-    
+    public totalBalls = 0;
+
     constructor(
         public playerId: string,
         public runsConceded = 0,
         public wickets = 0,
-        public maidens = 0 
+        public maidens = 0
     ) { }
 
     addRunsConceded(n: number) {
@@ -28,6 +28,13 @@ export class Bowler {
         this.maidens = 0;
     }
 
+    static fromDTO(dto): Bowler {
+        const b = new Bowler(dto.playerId);
+        Object.assign(b, dto);
+        return b;
+    }
+
+
     toDTO() {
         const completedOvers = Math.floor(this.totalBalls / 6);
         const ballsInOver = this.totalBalls % 6;
@@ -36,7 +43,7 @@ export class Bowler {
             playerId: this.playerId,
             runsConceded: this.runsConceded,
             wickets: this.wickets,
-            balls : this.totalBalls,
+            balls: this.totalBalls,
             overs: `${completedOvers}.${ballsInOver}`,
             economy: this.totalBalls > 0 ? (this.runsConceded / (this.totalBalls / 6)).toFixed(2) : "0.00"
         };

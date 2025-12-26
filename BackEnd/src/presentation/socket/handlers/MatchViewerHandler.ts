@@ -1,12 +1,12 @@
 import { Server } from "socket.io";
 import { AuthenticatedSocket } from "../SocketServer";
-import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 
 export class MatchViewerHandler {
     constructor(
         private io: Server,
         private socket: AuthenticatedSocket,
-        private matchRepo: IMatchRepo
+        private matchRepo: IMatchStatsRepo
     ) {
         this.setupEvents();
     }

@@ -4,8 +4,10 @@ import { PlayerDetails } from "app/usecases/admin/GetPlayerDetails";
 import { ViewerDetails } from "app/usecases/admin/GetViewerDetails";
 import { ManagerResponseDTO } from "domain/dtos/Manager.dto";
 import { PlayerResponseDTO } from "domain/dtos/Player.dto";
+import { TeamDataSummary } from "domain/dtos/Team.dto";
 import { UserResponseDTO } from "domain/dtos/User.dto";
 import { Plan } from "domain/entities/Plan";
+import { Tournament } from "domain/entities/Tournaments";
 
 export interface IGetUsersUsecase<TUser> {
     execute(params: GetAllUsersParams): Promise<{ users: TUser[], totalCount: number }>;
@@ -50,4 +52,16 @@ export interface IGetPlans {
 
 export interface IDeletePlan {
     execute(id: string): Promise<boolean>
+}
+
+export interface IGetTeamsUsecase {
+    execute(params: GetAllUsersParams): Promise<{ teams: TeamDataSummary[], totalCount: number }>
+}
+
+export interface IGetTournamentUsecase {
+    execute(params: GetAllUsersParams): Promise<{ tournaments: Tournament[], total: number }>
+}
+
+export interface IGetDashboardStatsUseCase {
+    execute()
 }

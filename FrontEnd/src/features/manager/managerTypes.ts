@@ -48,7 +48,7 @@ export type TeamData = Omit<Team, "_id">;
 
 export type Formats = 'knockout' | 'league' | 'friendly';
 
-export type Status = "upcoming" | "ongoing" | "ended"
+export type Status = "upcoming" | "ongoing" | "completed"
 
 export type Contact = { email: string; phone: string; }
 

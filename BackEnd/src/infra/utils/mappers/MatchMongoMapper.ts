@@ -1,9 +1,10 @@
 import { MatchStreamData } from "app/repositories/interfaces/manager/IMatchesRepository";
+import { Innings } from "domain/entities/Innings";
 import type { Match } from "domain/entities/Match";
+import { MatchEntity } from "domain/entities/MatchEntity";
 
 export class MatchMongoMapper {
     static toMatchResponse(matchDoc): Match {
-        // console.log(matchDoc, "lhsdf")
         return {
             _id: matchDoc._id.toString(),
             tournamentId: matchDoc.tournamentId.toString(),
@@ -17,7 +18,12 @@ export class MatchMongoMapper {
             status: matchDoc.status,
             winner: matchDoc.winner || null,
             stats: matchDoc.stats || {},
-            matchNumber: matchDoc.matchNumber
+            matchNumber: matchDoc.matchNumber,
+            isStreamLive : matchDoc.isStreamLive,
+            streamDescription : matchDoc.streamDescription,
+            streamerId : matchDoc.streamerId,
+            streamStartedAt : matchDoc.streamStartedAt,
+            streamTitle : matchDoc.streamTitle
         };
     }
 
@@ -26,7 +32,6 @@ export class MatchMongoMapper {
     }
 
     static toMetaDataResponse(matchDoc): MatchStreamData {
-        console.log(matchDoc, "metadata")
         return {
             streamTitle: matchDoc.streamTitle,
             streamDescription: matchDoc.streamDescription,
@@ -35,5 +40,26 @@ export class MatchMongoMapper {
             streamerId: matchDoc.streamerId.firstName
         };
     }
-}
 
+    static toEntity(matchDoc): MatchEntity {
+        return new MatchEntity({
+            tournamentId: matchDoc.tournamentId.toString(),
+            matchId: matchDoc._id.toString(),
+            oversLimit: matchDoc.oversLimit,
+            venue: matchDoc.venue ?? "",
+            isLive: matchDoc.status === "ongoing",
+            winner: matchDoc.winner ? matchDoc.winner.toString() : null,
+
+            innings1: matchDoc.stats?.innings1
+                ? Innings.fromDTO(matchDoc.stats.innings1)
+                : undefined,
+
+            innings2: matchDoc.stats?.innings2
+                ? Innings.fromDTO(matchDoc.stats.innings2)
+                : null,
+
+            currentInnings: matchDoc.stats?.currentInnings ?? 1,
+            hasSuperOver: matchDoc.stats?.hasSuperOver ?? false
+        });
+    }
+}

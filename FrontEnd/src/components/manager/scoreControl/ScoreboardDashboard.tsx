@@ -11,9 +11,9 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import type { LiveScoreState } from '../../../features/manager/Matches/matchTypes';
 import LoadingOverlay from '../../shared/LoadingOverlay';
 import Navbar from '../Navbar';
-import { Calendar, MapPin, Trophy, Activity, Radio} from 'lucide-react';
+import { Calendar, MapPin, Trophy, Activity, Radio } from 'lucide-react';
 import type { ScoreUpdatePayload } from './scoreControlMenu/useScoreControls';
-import { useStreamManager } from '../../../hooks/manager/useStreamManager'; 
+import { useStreamManager } from '../../../hooks/manager/useStreamManager';
 import StreamManager from '../../../pages/manager/StreamManager';
 
 const ScoreboardDashboard: React.FC = () => {
@@ -23,6 +23,9 @@ const ScoreboardDashboard: React.FC = () => {
 
     const streamManagerData = useStreamManager(matchId);
     const [isStreamDrawerOpen, setIsStreamDrawerOpen] = useState(false);
+    const [showEndMatchConfirm, setShowEndMatchConfirm] = useState(false);
+    const [endReason, setEndReason] = useState<"RAIN" | "BAD_LIGHT" | "RAIN" | "OTHER">("RAIN");
+
 
     useEffect(() => {
         if (matchId) {
@@ -134,14 +137,14 @@ const ScoreboardDashboard: React.FC = () => {
 
                         {/* Right Side: Stream Button & Teams */}
                         <div className="flex flex-row items-center gap-6">
-                            
+
                             {/* STREAM TOGGLE BUTTON */}
                             <button
                                 onClick={() => setIsStreamDrawerOpen(true)}
                                 className={`
                                     flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border
-                                    ${streamManagerData.status === 'live' 
-                                        ? 'bg-red-500/10 text-red-500 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)]' 
+                                    ${streamManagerData.status === 'live'
+                                        ? 'bg-red-500/10 text-red-500 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)]'
                                         : 'bg-neutral-800 text-neutral-400 border-neutral-700 hover:bg-neutral-700 hover:text-white'}
                                 `}
                             >
@@ -185,37 +188,120 @@ const ScoreboardDashboard: React.FC = () => {
                         </section>
                     </div>
 
-                    {/* Right Column: Scoring Controls (Sticky) */}
                     <div className="xl:sticky xl:top-18 space-y-6">
-                        <div className="bg-neutral-900/50 rounded-2xl border border-neutral-800 p-1">
-                            <ScoreUpdateControls
-                                match={match}
-                                teamA={teamA}
-                                teamB={teamB}
-                                liveScore={liveScore}
-                                emitScoreUpdate={emitScoreUpdate}
-                            />
-                        </div>
 
-                        <div className="bg-blue-900/10 border border-blue-900/30 p-4 rounded-xl flex gap-3 items-start">
-                            <div className="bg-blue-500/20 p-2 rounded-lg text-blue-400 mt-0.5">
-                                <Activity size={16} />
-                            </div>
-                            <div>
-                                <h4 className="text-sm font-bold text-blue-200">Scorer Tip</h4>
-                                <p className="text-xs text-blue-300/70 mt-1 leading-relaxed">
-                                    Use the "Special" menu for penalty runs or retirements. Wicket mode will lock other controls to prevent errors.
+                        {/* CONDITION: ONLY SHOW CONTROLS IF MATCH IS LIVE */}
+                        {liveScore.status === "ongoing" ? (
+                            <>
+                                <div className="bg-neutral-900/50 rounded-2xl border border-neutral-800 p-1">
+                                    <ScoreUpdateControls
+                                        match={match}
+                                        teamA={teamA}
+                                        teamB={teamB}
+                                        liveScore={liveScore}
+                                        emitScoreUpdate={emitScoreUpdate}
+                                    />
+                                </div>
+
+                                <button
+                                    onClick={() => setShowEndMatchConfirm(true)}
+                                    className="flex w-full justify-center items-center gap-2 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider
+                                        bg-red-600/10 text-red-500 border border-red-600/30
+                                        hover:bg-red-600/20 transition-all"
+                                >
+                                    End Match
+                                </button>
+                            </>
+                        ) : (
+                            /* FALLBACK: MATCH ENDED CARD */
+                            <div className="bg-neutral-900 rounded-2xl border border-neutral-800 p-8 flex flex-col items-center text-center shadow-lg">
+                                <div className="w-16 h-16 rounded-full bg-yellow-500/10 flex items-center justify-center mb-4 border border-yellow-500/20">
+                                    <Trophy className="w-8 h-8 text-yellow-500" />
+                                </div>
+                                <h3 className="text-xl font-bold text-white mb-2">Match Concluded</h3>
+                                <p className="text-neutral-400 text-sm mb-6 leading-relaxed">
+                                    The match has officially ended. Scoring controls have been disabled to prevent further changes.
                                 </p>
+
+                                <div className="w-full bg-neutral-800/50 rounded-lg p-3 border border-neutral-700/50">
+                                    <span className="text-xs text-neutral-500 font-mono uppercase tracking-wider">
+                                        Final Result
+                                    </span>
+                                    <p className="text-white font-medium mt-1">
+                                        {liveScore?.result || `Match ${liveScore.status}`}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
+                        )}
+
+                        {liveScore.status === "LIVE" && (
+                            <div className="bg-blue-900/10 border border-blue-900/30 p-4 rounded-xl flex gap-3 items-start">
+                                <div className="bg-blue-500/20 p-2 rounded-lg text-blue-400 mt-0.5">
+                                    <Activity size={16} />
+                                </div>
+                                <div>
+                                    <h4 className="text-sm font-bold text-blue-200">Scorer Tip</h4>
+                                    <p className="text-xs text-blue-300/70 mt-1 leading-relaxed">
+                                        Use the "Special" menu for penalty runs or retirements.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* KEEP MODAL OUTSIDE OR CONDITIONALLY RENDER IT */}
+                        {showEndMatchConfirm && (
+                            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+                                <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 w-full max-w-md shadow-2xl relative animate-in fade-in zoom-in duration-200">
+                                    <h3 className="text-lg font-bold text-white mb-2">End Match</h3>
+                                    <p className="text-sm text-neutral-400 mb-4">
+                                        Select the reason for ending the match. This action cannot be undone.
+                                    </p>
+
+                                    <label className="block text-xs text-neutral-400 mb-1">Reason</label>
+                                    <select
+                                        value={endReason}
+                                        onChange={(e) => setEndReason(e.target.value as any)}
+                                        className="w-full mb-5 px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                                    >
+                                        <option value="RAIN">Rain</option>
+                                        <option value="BAD_LIGHT">Bad Light</option>
+                                        <option value="FORCE_END">Force End</option>
+                                        <option value="COMPLETED">Completed</option>
+                                        <option value="OTHER">Other</option>
+                                    </select>
+
+                                    <div className="flex justify-end gap-3">
+                                        <button
+                                            onClick={() => setShowEndMatchConfirm(false)}
+                                            className="px-4 py-2 rounded-lg text-sm bg-neutral-800 text-neutral-300 hover:bg-neutral-700 transition-colors"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                const socket = getSocket();
+                                                socket?.emit("match:end", { matchId, reason: endReason });
+                                                setShowEndMatchConfirm(false);
+                                            }}
+                                            className="px-4 py-2 rounded-lg text-sm font-bold bg-red-600 text-white hover:bg-red-700 transition-colors"
+                                        >
+                                            Confirm End
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
+
+
+
                 </div>
             </main>
 
 
-            <StreamManager 
-                isOpen={isStreamDrawerOpen} 
-                onClose={() => setIsStreamDrawerOpen(false)} 
+            <StreamManager
+                isOpen={isStreamDrawerOpen}
+                onClose={() => setIsStreamDrawerOpen(false)}
                 streamData={streamManagerData}
             />
 

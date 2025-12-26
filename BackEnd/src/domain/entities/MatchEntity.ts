@@ -1,5 +1,14 @@
 import { ExtraType } from "./Extra";
+import { MatchStatus } from "./Fixture";
 import { AddWicketPayload, Innings } from "./Innings";
+
+export type MatchEndInfo = {
+    type: "NORMAL" | "ABANDONED" | "NO_RESULT" | null;
+    reason: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER" | null;
+    notes?: string;
+    endedBy?: string | null;
+    endedAt?: Date | null;
+};
 
 export interface AddRunsPayload {
     runs: number;
@@ -32,6 +41,10 @@ export class MatchEntity {
     oversLimit: number;
     venue: string;
     isLive: boolean;
+    winner: string | null;
+    status: MatchStatus;
+    endInfo?: MatchEndInfo;
+
 
     currentInningsNumber = 1;
 
@@ -47,6 +60,9 @@ export class MatchEntity {
         oversLimit: number;
         venue: string;
         isLive: boolean;
+        endInfo?: MatchEndInfo;
+        status?: MatchStatus;
+        winner?: string | null;
         innings1?: Innings;
         innings2?: Innings | null;
         currentInnings?: number;
@@ -57,6 +73,9 @@ export class MatchEntity {
         this.oversLimit = init.oversLimit;
         this.venue = init.venue ?? "";
         this.isLive = init.isLive;
+        this.winner = init.winner ?? null;
+        this.endInfo = init.endInfo ?? undefined;
+        this.status = init.status
 
         this.innings1 = init.innings1 ?? new Innings({
             oversLimit: this.oversLimit,
@@ -113,6 +132,7 @@ export class MatchEntity {
             battingTeamId: payload.battingTeamId,
             bowlingTeamId: payload.bowlingTeamId
         });
+        this.status = 'ongoing';
     }
 
     addRunsToCurrentInnings(payload: AddRunsPayload) {
@@ -152,7 +172,6 @@ export class MatchEntity {
     }
 
     addExtras(type: string, runs: number) {
-        console.log(type, runs, '//////')
         this.activeInnings.addExtras({
             type: type as ExtraType,
             runs: runs
@@ -222,15 +241,37 @@ export class MatchEntity {
         return null;
     }
 
+    endMatch(params: {
+        winnerId?: string | null;
+        type: "NORMAL" | "ABANDONED" | "NO_RESULT";
+        reason?: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER";
+        endedBy?: string;
+    }) {
+        this.isMatchComplete = true;
+        this.isLive = false;
+        this.status = "completed";
+        this.winner = params.winnerId ?? null;
+
+        this.endInfo = {
+            type: params.type,
+            reason: params.reason ?? null,
+            endedBy: params.endedBy ?? null,
+            endedAt: new Date()
+        };
+    }
+
+
     toDTO() {
         return {
             matchId: this.matchId,
             tournamentId: this.tournamentId,
             isLive: this.isLive,
+            status : this.status,
             currentInnings: this.currentInningsNumber,
             oversLimit: this.oversLimit,
             hasSuperOver: this.hasSuperOver,
             isMatchComplete: this.isMatchComplete,
+            endInfo: this.endInfo ?? null,
             innings1: this.innings1.toDTO(),
             innings2: this.innings2 ? this.innings2.toDTO() : null,
             currentContext: {
