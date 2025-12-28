@@ -8,7 +8,7 @@ import { useDebounce } from "../../../hooks/useDebounce";
 import type { GetAllUsersParams } from "../../../types/api/Params";
 import { fetchTournaments, tournamentStatusChange } from "../../../features/admin/tournament/tournamentThunks";
 import type { Tournament } from "../../../features/admin/tournament/tournamentTypes";
-import { tournamentColumns } from "../../../utils/adminColumns";
+import { getTournamentColumns } from "../../../utils/adminColumns";
 
 
 const TournamentManagement = () => {
@@ -57,7 +57,7 @@ const TournamentManagement = () => {
                 currentFilter={currentFilter}
                 onFilterChange={handleFilterChange}
                 onSearch={handleSearch}
-                columns={tournamentColumns(handleStatusChange)}
+                columns={getTournamentColumns(handleStatusChange)}
             />
         </AdminLayout>
     );

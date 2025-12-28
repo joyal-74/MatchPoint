@@ -14,7 +14,7 @@ export interface IGetExploreTournaments {
 }
 
 export interface IAddTournament {
-    execute(data: Tournament, file? : File): Promise<Tournament>;
+    execute(data: Tournament, file?: File): Promise<Tournament>;
 }
 
 export interface IEditTournament {
@@ -43,7 +43,7 @@ export interface IInitiateTournamentPayment {
 }
 
 export interface IUpdateTournamentTeam {
-    execute(registrationId: string, paymentStatus: 'completed' | 'failed', paymentId: string): Promise<Tournament>;
+    execute(userId: string, registrationId: string, paymentStatus: 'completed' | 'failed', paymentId: string): Promise<Tournament>;
 }
 
 export interface IGetRegisteredTeams {

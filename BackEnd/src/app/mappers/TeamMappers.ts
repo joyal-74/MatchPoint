@@ -6,6 +6,7 @@ export class TeamMapper {
             _id: team._id,
             teamId: team.teamId,
             managerId: team.managerId,
+            managerName : team.managerName,
             name: team.name,
             logo: team.logo,
             sport: team.sport,

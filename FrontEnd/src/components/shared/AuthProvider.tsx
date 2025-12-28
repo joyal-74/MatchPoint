@@ -15,7 +15,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         const initializeAuth = async () => {
             if (!user) {
                 try {
-                    await dispatch(refreshToken()).unwrap();
+                    await dispatch(refreshToken('-')).unwrap();
                 } catch (error) {
                     console.log("Refresh token failed:", error);
                 }

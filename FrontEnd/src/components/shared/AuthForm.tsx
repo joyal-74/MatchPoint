@@ -3,7 +3,6 @@ import { FaFacebookF, FaGoogle, FaUser } from "react-icons/fa";
 import { useGoogleLogin } from "@react-oauth/google";
 import FacebookLogin from "@greatsumini/react-facebook-login";
 
-
 interface AuthFormProps {
     title?: string;
     subtitle?: string;
@@ -32,7 +31,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
     subfooter,
     showSocialButtons = true,
     agreementText,
-    width = "w-1/2",
+    width = "w-full md:w-1/2",
     onGoogleSuccess,
     onFacebookSuccess,
 }) => {
@@ -51,50 +50,66 @@ const AuthForm: React.FC<AuthFormProps> = ({
     });
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-900 via-neutral-950 to-black text-white relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center bg-background text-foreground relative overflow-hidden transition-colors duration-300">
 
-            {/* Background gradients */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neutral-700/20 via-neutral-900 to-neutral-900"></div>
-            <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-emerald-500/10 to-cyan-600/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-500/10 to-purple-600/10 rounded-full blur-3xl"></div>
+            {/* Background Ambient Glow (Theme Aware) */}
+            <div className="absolute top-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2"></div>
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary/30 rounded-full blur-[100px] translate-x-1/2 translate-y-1/2"></div>
 
-            <div className="relative flex w-[80%] max-w-5xl rounded-3xl shadow-2xl overflow-hidden border border-white/10 bg-gradient-to-b backdrop-blur-2xl h-160">
-                {/* Left section */}
-                <div className="w-1/2 px-12 py-16 flex flex-col justify-between">
+            {/* Main Card */}
+            <div className="relative flex flex-col md:flex-row w-[90%] max-w-5xl rounded-3xl shadow-2xl overflow-hidden border border-border bg-card/50 backdrop-blur-md min-h-[600px]">
+                
+                {/* Left Section (Branding & Socials) */}
+                <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-between bg-muted/30 border-b md:border-b-0 md:border-r border-border">
                     <div className="mb-5">
-                        <h1 className="text-[var(--color-text-primary)] text-3xl font-bold tracking-tight">
-                            <span className="text-[var(--color-primary)]">M</span>atch
-                            <span className="text-[var(--color-primary)]">P</span>oint
+                        <h1 className="text-3xl font-bold font-rowdies tracking-wide text-foreground">
+                            <span className="text-primary">M</span>atch
+                            <span className="text-primary">P</span>oint
                         </h1>
                     </div>
 
-                    <div className="space-y-9">
-                        {subtitle && <h2 className="text-lg text-gray-300 mb-3">{subtitle}</h2>}
+                    <div className="space-y-6 my-auto">
+                        {subtitle && (
+                            <h2 className="text-lg font-medium text-muted-foreground">
+                                {subtitle}
+                            </h2>
+                        )}
                         <div>
                             {mainHeading && (
-                                <h1 className="text-5xl font-extrabold text-primary">{mainHeading}</h1>
+                                <h1 className="text-4xl md:text-5xl font-extrabold text-primary tracking-tight leading-tight">
+                                    {mainHeading}
+                                </h1>
                             )}
                             {subHeading && (
-                                <h2 className="text-2xl font-semibold mt-2 text-white">{subHeading}</h2>
+                                <h2 className="text-xl md:text-2xl font-semibold mt-3 text-foreground">
+                                    {subHeading}
+                                </h2>
                             )}
                         </div>
                     </div>
 
-                    {/* Social buttons */}
-                    <div>
-                        {footer && <div className="text-sm mb-4">{footer}{subfooter}</div>}
+                    {/* Social Buttons */}
+                    <div className="mt-8">
+                        {footer && <div className="text-sm mb-6 text-muted-foreground">{footer}{subfooter}</div>}
 
                         {showSocialButtons && (
-                            <>
-                                <p className="text-gray-400 text-sm mb-3">Or continue with</p>
-                                <div className="flex space-x-4 text-lg">
+                            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+                                <p className="text-muted-foreground text-sm mb-4">Or continue with</p>
+                                <div className="flex gap-4">
 
                                     {onGoogleSuccess && (
                                         <button
+                                            type="button"
                                             onClick={() => googleLogin()}
-                                            className="p-2 rounded-full bg-green-500/10 hover:bg-green-500/30 transition flex items-center justify-center cursor-pointer"
+                                            className="
+                                                flex items-center justify-center w-12 h-12 rounded-full 
+                                                bg-background border border-border shadow-sm
+                                                hover:border-primary hover:text-primary hover:bg-primary/5 
+                                                transition-all duration-200 cursor-pointer
+                                            "
+                                            title="Sign in with Google"
                                         >
-                                            <FaGoogle className="text-white" />
+                                            <FaGoogle className="text-lg" />
                                         </button>
                                     )}
 
@@ -102,48 +117,69 @@ const AuthForm: React.FC<AuthFormProps> = ({
                                         appId={import.meta.env.VITE_FACEBOOK_APP_ID}
                                         onSuccess={(response) => {
                                             const accessToken = response?.accessToken;
-
                                             if (onFacebookSuccess && accessToken) {
                                                 onFacebookSuccess(accessToken);
-                                            } else {
-                                                console.error("Facebook login failed or no access token found");
                                             }
                                         }}
-                                        onFail={(error) => console.error("Facebook login error:", error)}
+                                        onFail={(error) => console.error("Facebook error:", error)}
                                         render={({ onClick }) => (
                                             <button
+                                                type="button"
                                                 onClick={onClick}
-                                                className="p-2 rounded-full bg-blue-600/10 hover:bg-blue-600/30 transition flex items-center justify-center cursor-pointer"
+                                                className="
+                                                    flex items-center justify-center w-12 h-12 rounded-full 
+                                                    bg-background border border-border shadow-sm
+                                                    hover:border-blue-600 hover:text-blue-600 hover:bg-blue-600/5
+                                                    transition-all duration-200 cursor-pointer
+                                                "
+                                                title="Sign in with Facebook"
                                             >
-                                                <FaFacebookF className="text-white text-lg" />
+                                                <FaFacebookF className="text-lg" />
                                             </button>
                                         )}
                                     />
 
-
-                                    <button className="p-2 rounded-full bg-white/10 hover:bg-gray-500/10 transition flex items-center justify-center cursor-pointer">
-                                        <FaUser className="text-white" />
+                                    {/* Guest/Demo User Button */}
+                                    <button 
+                                        type="button"
+                                        className="
+                                            flex items-center justify-center w-12 h-12 rounded-full 
+                                            bg-background border border-border shadow-sm
+                                            hover:border-foreground hover:text-foreground hover:bg-muted
+                                            transition-all duration-200 cursor-pointer text-muted-foreground
+                                        "
+                                        title="Continue as Guest"
+                                    >
+                                        <FaUser className="text-lg" />
                                     </button>
                                 </div>
-                            </>
+                            </div>
                         )}
                     </div>
                 </div>
 
-                {/* Right section (form) */}
-                <div className={`${width} pr-12 py-12 flex items-center justify-center`}>
+                {/* Right Section (Form) */}
+                <div className={`${width} p-8 md:p-12 flex items-center justify-center bg-card`}>
                     <form onSubmit={onSubmit} className="w-full space-y-6">
-                        <div className="space-y-5">{children}</div>
+                        <div className="space-y-5">
+                            {children}
+                        </div>
 
                         <button
                             type="submit"
-                            className="w-full btn-primary text-white font-semibold py-3 rounded-lg transition shadow-lg hover:shadow-blue-800/50"
+                            className="
+                                w-full py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-200
+                                bg-primary text-primary-foreground shadow-lg shadow-primary/20
+                                hover:bg-primary/90 hover:shadow-primary/30 active:scale-[0.99]
+                            "
                         >
                             {buttonText}
                         </button>
 
                         {agreementText && (
-                            <p className="text-gray-500 text-xs text-center">{agreementText}</p>
+                            <p className="text-muted-foreground text-xs text-center leading-relaxed px-4">
+                                {agreementText}
+                            </p>
                         )}
                     </form>
                 </div>

@@ -11,6 +11,8 @@ const Navbar: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.auth.user);
+    
+    const notificationCount = 0; 
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -29,11 +31,13 @@ const Navbar: React.FC = () => {
     }, [showProfileCard]);
 
     const handleLogout = async () => {
-        await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
-        navigate("/admin/login");
+        if (user?._id) {
+            await dispatch(logoutUser({ userId: user._id, role: user.role })).unwrap();
+            navigate("/admin/login");
+        }
     };
 
-    const handleProfileAction = (action: "logout" | "teams" | "profile") => {
+    const handleProfileAction = (action: "logout" | "teams" | "profile" | 'settings') => {
         switch (action) {
             case "logout":
                 handleLogout();
@@ -42,37 +46,63 @@ const Navbar: React.FC = () => {
     };
 
     return (
-        <div>
-            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-20 py-3 bg-[var(--color-surface)] border-b border-[var(--color-border)] shadow-[var(--shadow-sm)]">
-                <h1 className="text-[var(--color-text-primary)] text-2xl font-rowdies">
-                    <span className="text-[var(--color-primary)]">M</span>
-                    atch
-                    <span className="text-[var(--color-primary)]">P</span>
-                    oint
-                </h1>
+        <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 bg-card border-b border-border shadow-sm transition-colors duration-300">
 
-                <div className="flex items-center gap-3 md:gap-4 relative">
-                    <button className="relative p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-secondary)] rounded-full transition-all duration-200">
-                        <Bell className="w-5 h-5" />
-                    </button>
+            {/* Logo Section */}
+            <h1 className="text-foreground text-2xl font-rowdies font-bold tracking-wide select-none">
+                <span className="text-primary">M</span>
+                atch
+                <span className="text-primary">P</span>
+                oint
+            </h1>
 
-                    <div ref={profileRef}>
+            {/* Actions Section */}
+            <div className="flex items-center gap-4 relative">
+
+                {/* Notification Bell */}
+                <button
+                    className="relative p-2.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    aria-label="Notifications"
+                >
+                    <Bell className="w-5 h-5" />
+                    
+                    {/* FIXED: Only show if count > 0 */}
+                    {notificationCount > 0 && (
+                        <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-white ring-2 ring-card">
+                            {notificationCount > 9 ? '9+' : notificationCount}
+                        </span>
+                    )}
+                </button>
+
+                {/* Profile Section */}
+                <div ref={profileRef} className="relative">
+                    <div
+                        className="relative cursor-pointer group"
+                        onClick={() => setShowProfileCard((prev) => !prev)}
+                    >
                         <img
                             src="/placeholder.png"
                             alt="Profile"
-                            className="w-8 h-8 rounded-full border-2 border-[var(--color-border)] hover:border-[var(--color-primary)] transition-colors duration-200 cursor-pointer"
-                            onClick={() => setShowProfileCard((prev) => !prev)}
+                            className={`
+                                w-9 h-9 rounded-full object-cover 
+                                border-2 transition-all duration-200
+                                ${showProfileCard
+                                    ? "border-primary ring-2 ring-primary/20"
+                                    : "border-border group-hover:border-primary"
+                                }
+                            `}
                         />
-
-                        {showProfileCard && (
-                            <div className="absolute right-0 mt-2">
-                                <ProfileCard role={'admin'} onAction={handleProfileAction} />
-                            </div>
-                        )}
                     </div>
+
+                    {/* Dropdown Card */}
+                    {showProfileCard && (
+                        <div className="absolute right-0 mt-3 origin-top-right z-50 animate-in fade-in zoom-in-95 duration-200">
+                            <ProfileCard role={'admin'} onAction={handleProfileAction} />
+                        </div>
+                    )}
                 </div>
-            </nav>
-        </div>
+            </div>
+        </nav>
     );
 };
 

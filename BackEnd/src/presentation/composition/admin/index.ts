@@ -20,6 +20,10 @@ import { GetAllTeams } from 'app/usecases/admin/GetAllTeams';
 import { GetAllTournaments } from 'app/usecases/admin/GetAllTournaments';
 import { DashboardController } from 'presentation/http/controllers/admin/DashBoardController';
 import { GetDashboardStatsUseCase } from 'app/usecases/admin/GetDashboardStatsUseCase';
+import { UpdatePlanUseCase } from 'app/usecases/admin/UpdatePlanUseCase';
+import { GetTeamDetails } from 'app/usecases/admin/GetTeamDetails';
+import { ChangeTeamStatus } from 'app/usecases/admin/ChangeTeamStatus';
+import { ChangeTeamDetailStatus } from 'app/usecases/admin/BlockTeamUsecase';
 
 const getAllViewersUC = new GetAllViewers(userRepository, logger);
 const getAllManagersUC = new GetAllManagers(userRepository, logger);
@@ -44,18 +48,29 @@ export const usersManagementController = new UsersManagementController(
 );
 
 const getTeamsUseCase = new GetAllTeams(teamRepository, logger);
+const getTeamsDetailsUseCase = new GetTeamDetails(teamRepository, logger);
 const getTournamentsUseCase = new GetAllTournaments(tournamentRepository, logger);
+const changeTeamStatusUC = new ChangeTeamStatus(teamRepository, logger);
+const changeTeamDetailStatusUC = new ChangeTeamDetailStatus(teamRepository, logger);
 
-export const tournamentController = new TournamentManagementController(getTeamsUseCase, getTournamentsUseCase);
+export const tournamentController = new TournamentManagementController(
+    getTeamsUseCase,
+    getTeamsDetailsUseCase,
+    getTournamentsUseCase,
+    changeTeamStatusUC,
+    changeTeamDetailStatusUC
+);
 
 const getPlansUC = new GetPlansUseCase(planRepository);
-const createPlansUC = new CreatePlanUseCase(planRepository);
+const createPlansUC = new CreatePlanUseCase(planRepository, logger);
 const deletePlansUC = new DeletePlanUseCase(planRepository);
+const updatePlansUC = new UpdatePlanUseCase(planRepository, logger);
 
 export const planController = new PlanController(
     getPlansUC,
     createPlansUC,
-    deletePlansUC
+    deletePlansUC,
+    updatePlansUC
 );
 
 const getDashboard = new GetDashboardStatsUseCase(dashboardRepo, logger)

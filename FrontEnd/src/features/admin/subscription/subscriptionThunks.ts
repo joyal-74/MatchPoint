@@ -19,3 +19,9 @@ export const deletePlan = createAsyncThunk(
     "subscription/deletePlan",
     createApiThunk(subscriptionEndpoints.deletePlan)
 );
+
+
+export const updatePlan = createAsyncThunk(
+    "subscription/updatePlan",
+    createApiThunk(subscriptionEndpoints.updatePlan)
+);

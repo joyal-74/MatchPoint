@@ -92,8 +92,8 @@ export const managerEndpoints = {
         return data.data;
     },
 
-    verifyTournamentPayment: async ({ registrationId, paymentId, paymentStatus }: { registrationId: string, paymentId: string, paymentStatus: string }): Promise<boolean> => {
-        const { data } = await axiosClient.post(MANAGER_ROUTES.PAYMENT_STATUS(registrationId), { paymentId, paymentStatus });
+    verifyTournamentPayment: async ({ managerId, registrationId, paymentId, paymentStatus }: { managerId: string, registrationId: string, paymentId: string, paymentStatus: string }): Promise<boolean> => {
+        const { data } = await axiosClient.post(MANAGER_ROUTES.PAYMENT_STATUS(registrationId), { paymentId, paymentStatus, managerId });
         return data.data;
     },
 

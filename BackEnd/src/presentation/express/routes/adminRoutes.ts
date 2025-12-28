@@ -16,6 +16,9 @@ router.get("/players", adminOnly, expressAdapter(usersManagementController.getAl
 router.get("/players/:id", adminOnly, expressAdapter(usersManagementController.fetchPlayerDetails));
 
 router.get("/teams", adminOnly, expressAdapter(tournamentController.getAllTeams));
+router.get("/team/:id", adminOnly, expressAdapter(tournamentController.getTeamDetails));
+router.patch("/team/:teamId/status", adminOnly, expressAdapter(tournamentController.changeTeamStatus));
+router.patch("/team/:teamId/toggle", adminOnly, expressAdapter(tournamentController.ChangeTeamDetailStatus));
 router.get("/tournaments", adminOnly, expressAdapter(tournamentController.getAllTournaments));
 
 router.patch( "/:role/:userId/status", adminOnly, expressAdapter(usersManagementController.changeUserStatus));

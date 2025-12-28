@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchTeams, fetchTournaments, teamStatusChange, tournamentStatusChange } from "./tournamentThunks";
-import type { Team, Tournament } from "./tournamentTypes";
+import { fetchTeamDetails, fetchTeams, fetchTournaments, teamStatusChange, tournamentStatusChange, updateTeamStatus } from "./tournamentThunks";
+import type { Team, TeamDetails, Tournament } from "./tournamentTypes";
 
 interface AdminTournamentState {
     teams: Team[];
+    selectedTeam: TeamDetails | null;
     tournaments: Tournament[];
     loading: boolean;
     error: string | null;
@@ -12,6 +13,7 @@ interface AdminTournamentState {
 
 const initialState: AdminTournamentState = {
     teams: [],
+    selectedTeam: null,
     tournaments: [],
     loading: false,
     error: null,
@@ -75,6 +77,20 @@ const adminTournamentSlice = createSlice({
                 state.error = action.error.message || "Failed to update status";
             })
 
+            // --- Team Status Change ---
+            .addCase(updateTeamStatus.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(updateTeamStatus.fulfilled, (state, action) => {
+                state.loading = false;
+                state.selectedTeam = action.payload;
+                
+            })
+            .addCase(updateTeamStatus.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "Failed to update status";
+            })
+
             // --- Tournament Status Change ---
             .addCase(tournamentStatusChange.pending, (state) => {
                 state.loading = true;
@@ -87,6 +103,19 @@ const adminTournamentSlice = createSlice({
                 }
             })
             .addCase(tournamentStatusChange.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "Failed to update status";
+            })
+
+
+            .addCase(fetchTeamDetails.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchTeamDetails.fulfilled, (state, action) => {
+                state.loading = false;
+                state.selectedTeam = action.payload;
+            })
+            .addCase(fetchTeamDetails.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || "Failed to update status";
             });

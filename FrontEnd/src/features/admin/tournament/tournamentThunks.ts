@@ -10,6 +10,16 @@ export const fetchTeams = createAsyncThunk<{ teams: Team[], totalCount: number }
     createApiThunk(({ page, limit, filter, search }) => adminEndpoints.fetchTeams(page, limit, filter, search))
 );
 
+export const fetchTeamDetails = createAsyncThunk(
+    "/admin/teams/details",
+    createApiThunk(adminEndpoints.fetchTeamDetails)
+);
+
+export const updateTeamStatus = createAsyncThunk(
+    "/admin/teams/update/status",
+    createApiThunk(adminEndpoints.updateTeamStatus)
+);
+
 export const fetchTournaments = createAsyncThunk<{ tournaments: Tournament[], totalCount: number }, { page: number; limit: number; filter?: string; search?: string }>(
     "/admin/tournamnets",
     createApiThunk(({ page, limit, filter, search }) => adminEndpoints.fetchTournaments(page, limit, filter, search))
@@ -18,8 +28,8 @@ export const fetchTournaments = createAsyncThunk<{ tournaments: Tournament[], to
 
 export const teamStatusChange = createAsyncThunk(
     "/admin/team/status",
-    createApiThunk(({ teamId, isActive, params }: { teamId: string; isActive: boolean, params: GetAllUsersParams }) =>
-        adminEndpoints.teamStatusChange(teamId, isActive, params)
+    createApiThunk(({ teamId, status, params }: { teamId: string; status: 'active' | 'blocked', params: GetAllUsersParams }) =>
+        adminEndpoints.teamStatusChange(teamId, status, params)
     )
 );
 

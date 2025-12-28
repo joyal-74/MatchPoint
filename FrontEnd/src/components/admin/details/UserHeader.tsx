@@ -1,4 +1,7 @@
 import type { UserDetails } from "../../../features/admin/users/userTypes";
+import { Calendar, Shield } from "lucide-react";
+import StatusBadge from "../../ui/StatusBadge";
+import StatusButton from "../../ui/StatusButton";
 
 interface UserHeaderProps {
     user: UserDetails;
@@ -6,53 +9,61 @@ interface UserHeaderProps {
 }
 
 const UserHeader = ({ user, onToggleBlock }: UserHeaderProps) => {
+    // Determine active state based on blocked status
+    const isActive = !user.isBlocked;
+
     return (
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-6">
-            <div className="relative">
-                <img
-                    src={user.profileImage || '/office-worker.png'}
-                    alt="user Profile"
-                    className="w-25 h-25 rounded-full shadow-lg"
-                />
+        <div className="flex flex-col sm:flex-row items-center gap-6">
+            
+            {/* 1. Avatar Section */}
+            <div className="relative shrink-0">
+                <div className="p-1 rounded-full border-2 border-border bg-card">
+                    <img
+                        src={user.profileImage || '/office-worker.png'}
+                        alt={`${user.fullName} profile`}
+                        className="w-24 h-24 rounded-full object-cover bg-muted"
+                    />
+                </div>
             </div>
 
-            <div className="text-center sm:text-left flex-1">
-                <h1 className="text-2xl font-bold text-emerald-400 mb-1">{user.fullName}</h1>
-                <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
-                    <span className="px-2 py-1 bg-neutral-700 rounded-full text-xs font-medium text-neutral-300">
+            {/* 2. Info Section */}
+            <div className="flex-1 text-center sm:text-left space-y-2">
+                
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+                    {user.fullName}
+                </h1>
+
+                {/* Metadata Row */}
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+                    
+                    {/* Role Badge (Custom style for role) */}
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground border border-border capitalize">
+                        <Shield size={12} className="text-primary" />
                         {user.role}
                     </span>
-                    <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium border ${user.isBlocked
-                            ? "bg-red-500/20 text-red-400 border-red-500/30"
-                            : "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
-                            }`}
-                    >
-                        {user.isBlocked ? "Blocked" : "Active"}
-                    </span>
+
+                    {/* Status Badge (Reusable Component) */}
+                    <StatusBadge isActive={isActive} />
                 </div>
-                <p className="text-neutral-400 text-sm flex items-center justify-center sm:justify-start gap-1">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                    </svg>
-                    Joined: {user.joinedAt}
-                </p>
+
+                {/* Date Row */}
+                <div className="flex items-center justify-center sm:justify-start gap-2 text-sm text-muted-foreground">
+                    <Calendar size={14} />
+                    <span>Joined: {new Date(user.joinedAt).toLocaleDateString()}</span>
+                </div>
             </div>
 
-            <button
-                onClick={onToggleBlock}
-                className={`px-4 py-2 rounded-lg text-white font-medium transition-colors duration-200 text-sm ${user.isBlocked
-                    ? "bg-emerald-500 hover:bg-emerald-600"
-                    : "bg-red-500 hover:bg-red-600"
-                    }`}
-            >
-                {user.isBlocked ? "Unblock" : "Block"}
-            </button>
+            {/* 3. Action Section */}
+            <div className="shrink-0 mt-4 sm:mt-0">
+                <StatusButton
+                    isActive={isActive}
+                    onBlock={onToggleBlock}
+                    onActivate={onToggleBlock}
+                    showText={true}
+                    className="w-full sm:w-auto px-6 py-2.5 shadow-sm" 
+                    size={18}
+                />
+            </div>
         </div>
     );
 };

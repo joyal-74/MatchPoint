@@ -4,10 +4,18 @@ import { PlayerDetails } from "app/usecases/admin/GetPlayerDetails";
 import { ViewerDetails } from "app/usecases/admin/GetViewerDetails";
 import { ManagerResponseDTO } from "domain/dtos/Manager.dto";
 import { PlayerResponseDTO } from "domain/dtos/Player.dto";
-import { TeamDataSummary } from "domain/dtos/Team.dto";
+import { TeamDataFull, TeamDataSummary, TeamStatus } from "domain/dtos/Team.dto";
 import { UserResponseDTO } from "domain/dtos/User.dto";
 import { Plan } from "domain/entities/Plan";
 import { Tournament } from "domain/entities/Tournaments";
+
+export interface AdminTableParams {
+    page: number;
+    limit: number;
+    filter?: string;
+    search?: string;
+}
+
 
 export interface IGetUsersUsecase<TUser> {
     execute(params: GetAllUsersParams): Promise<{ users: TUser[], totalCount: number }>;
@@ -17,6 +25,13 @@ export type RoleResponseDTO = PlayerResponseDTO | UserResponseDTO | ManagerRespo
 
 export interface IChangeUserStatus {
     execute(role: string, userId: string, isActive: boolean, params: GetAllUsersParams): Promise<{ users: RoleResponseDTO[], totalCount: number }>;
+}
+
+export interface IChangeTeamStatus {
+    execute(teamId: string, isBlocked: TeamStatus, params: AdminTableParams): Promise<{ teams: TeamDataFull[], totalCount: number }>;
+}
+export interface IChangeTeamDetailStatus {
+    execute(teamId: string, status: TeamStatus ): Promise<TeamDataFull>;
 }
 
 export interface IChangeUserBlockStatus {
@@ -39,6 +54,10 @@ export interface IGetPlayerDetails {
     execute(id: string): Promise<PlayerDetails>;
 }
 
+export interface IGetTeamDetails {
+    execute(id: string): Promise<TeamDataFull>;
+}
+
 export interface IGetViewerDetails {
     execute(id: string): Promise<ViewerDetails>;
 }
@@ -46,6 +65,11 @@ export interface IGetViewerDetails {
 export interface ICreatePlan {
     execute(planData: Plan): Promise<Plan>
 }
+
+export interface IUpdatePlan {
+    execute(id: string, planData: Plan): Promise<Plan>
+}
+
 export interface IGetPlans {
     execute(): Promise<Plan[]>
 }

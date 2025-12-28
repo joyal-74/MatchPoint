@@ -44,6 +44,7 @@ export interface TeamDataSummary {
     _id: string;
     teamId: string;
     managerId: string;
+    managerName: string;
     name: string;
     logo: string;
     sport: string;
@@ -56,19 +57,16 @@ export interface TeamDataSummary {
     phase: TeamPhase;
     stats: statsType;
     createdAt: Date;
+    isBlocked: boolean;
 }
 
 // For full team details
 export interface TeamDataFull extends TeamDataSummary {
-    managerId: string;
     logo: string;
-    sport: string;
     state: string;
     city: string;
     description: string;
-    maxPlayers: number;
     members: TeamMember[];
-    stats: statsType;
 }
 
 
@@ -79,6 +77,7 @@ export interface TeamRegister {
     logo: string;
     sport: string;
     state: string;
+    isBlocked: boolean;
     city: string;
     description: string;
     maxPlayers: number;

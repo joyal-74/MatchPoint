@@ -49,6 +49,17 @@ export const adminEndpoints = {
         return response.data.data;
     },
 
+    fetchTeamDetails: async (id: string) => {
+        const response = await axiosClient.get(ADMIN_ROUTES.TEAM_DETAILS(id));
+        console.log(response.data)
+        return response.data.data;
+    },
+
+    updateTeamStatus: async ({ id, status }: { id: string, status: string }) => {
+        const response = await axiosClient.patch(ADMIN_ROUTES.TEAM_STATUS_TOGGLE(id), { status });
+        return response.data.data;
+    },
+
     fetchPlayerDetails: async (id: string) => {
         const response = await axiosClient.get(ADMIN_ROUTES.PLAYER_DETAILS(id));
         return response.data.data;
@@ -66,8 +77,8 @@ export const adminEndpoints = {
         return { users, role, totalCount };
     },
 
-    teamStatusChange: async (teamId: string, isActive: boolean, params: GetAllUsersParams) => {
-        const response = await axiosClient.patch(ADMIN_ROUTES.TEAM_STATUS_CHANGE(teamId), { isActive, params });
+    teamStatusChange: async (teamId: string, status: 'active' | 'blocked', params: GetAllUsersParams) => {
+        const response = await axiosClient.patch(ADMIN_ROUTES.TEAM_STATUS_CHANGE(teamId), { status, params });
         const teams = response.data.data.teams;
         const totalCount = response.data.data.totalCount;
         return { teams, totalCount };

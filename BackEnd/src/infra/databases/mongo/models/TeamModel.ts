@@ -6,6 +6,7 @@ export interface TeamDocument extends Document {
     _id: Types.ObjectId;
     teamId: string;
     managerId: Types.ObjectId;
+    managerName: string;
     name: string;
     logo: string;
     sport: string;

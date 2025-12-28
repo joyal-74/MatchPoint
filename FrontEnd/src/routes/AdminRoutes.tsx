@@ -3,6 +3,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
 import TeamManagement from "../pages/admin/Team/TeamManagement";
 import TournamentManagement from "../pages/admin/Tournament/TournamentManagement";
+import TeamDetailsPage from "../pages/admin/Team/TeamDetailsPage";
 
 
 
@@ -33,5 +34,6 @@ export const adminRoutes = [
     { path: "/admin/managers/:id/details", element: withAdminProtection(<ManagerDetails />) },
     { path: "/admin/players/:id/details", element: withAdminProtection(<PlayerDetails />) },
     { path: "/admin/viewers/:id/details", element: withAdminProtection(<ViewerDetails />) },
+    { path: "/admin/teams/:id/details", element: withAdminProtection(<TeamDetailsPage />) },
     { path: "/admin/subscriptions", element: withAdminProtection(<SubscriptionManagement />) },
 ];

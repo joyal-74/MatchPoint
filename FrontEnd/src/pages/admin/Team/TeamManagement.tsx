@@ -1,50 +1,86 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 import AdminLayout from "../../layout/AdminLayout";
 import DataTable from "../../../components/admin/DataTable";
-import type { RootState, AppDispatch } from "../../../app/store";
 import LoadingOverlay from "../../../components/shared/LoadingOverlay";
-import { useDebounce } from "../../../hooks/useDebounce";
-import type { GetAllUsersParams } from "../../../types/api/Params";
-import { teamColumns } from "../../../utils/adminColumns";
+
 import { fetchTeams, teamStatusChange } from "../../../features/admin/tournament/tournamentThunks";
+import type { RootState, AppDispatch } from "../../../app/store";
+
+import { useDebounce } from "../../../hooks/useDebounce";
+import { getTeamColumns } from "../../../utils/adminColumns";
+
+import type { GetAllUsersParams } from "../../../types/api/Params";
 import type { Team } from "../../../features/admin/tournament/tournamentTypes";
 
+const ITEMS_PER_PAGE = 8;
 
 const TeamManagement = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { teams, loading, totalCount } = useSelector((state: RootState) => state.adminTournaments);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [currentFilter, setCurrentFilter] = useState("All");
-    const [searchTerm, setSearchTerm] = useState("");
+    const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const { teams, loading, totalCount } = useSelector(
+        (state: RootState) => state.adminTournaments
+    );
+
+    console.log(teams, " lll")
+
+    /* ---------------- URL → STATE ---------------- */
+
+    const currentPage = Number(searchParams.get("page")) || 1;
+    const currentFilter = searchParams.get("filter") || "All";
+    const searchTerm = searchParams.get("search") || "";
+
     const debouncedSearch = useDebounce(searchTerm, 1000);
 
-    console.log(teams)
+    /* ---------------- API PARAMS ---------------- */
 
     const params: GetAllUsersParams = useMemo(() => ({
         page: currentPage,
-        limit : 10,
+        limit: ITEMS_PER_PAGE,
         filter: currentFilter === "All" ? undefined : currentFilter,
         search: debouncedSearch || undefined
     }), [currentPage, currentFilter, debouncedSearch]);
+
+    /* ---------------- FETCH ---------------- */
 
     useEffect(() => {
         dispatch(fetchTeams(params));
     }, [dispatch, params]);
 
-    const handleStatusChange = (teamId: string, newStatus: boolean) => {
-        dispatch(teamStatusChange({ teamId, isActive: newStatus, params }))
+    /* ---------------- HANDLERS ---------------- */
+
+    const handlePageChange = (page: number) => {
+        setSearchParams(prev => {
+            prev.set("page", String(page));
+            return prev;
+        });
     };
 
     const handleFilterChange = (filter: string) => {
-        setCurrentFilter(filter);
-        setCurrentPage(1);
+        setSearchParams({
+            page: "1",
+            filter,
+            search: searchTerm,
+        });
     };
 
     const handleSearch = (search: string) => {
-        setSearchTerm(search);
-        setCurrentPage(1);
+        setSearchParams({
+            page: "1",
+            filter: currentFilter,
+            search,
+        });
     };
+
+    const handleStatusChange = (teamId: string, newStatus: 'active' | 'blocked') => {
+        dispatch(teamStatusChange({ teamId, status: newStatus, params }));
+    };
+
+    /* ---------------- RENDER ---------------- */
 
     return (
         <AdminLayout>
@@ -54,12 +90,13 @@ const TeamManagement = () => {
                 data={teams}
                 totalCount={totalCount}
                 currentPage={currentPage}
-                onPageChange={setCurrentPage}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={handlePageChange}
                 filters={["All", "Active", "Blocked"]}
                 currentFilter={currentFilter}
                 onFilterChange={handleFilterChange}
                 onSearch={handleSearch}
-                columns={teamColumns(handleStatusChange)}
+                columns={getTeamColumns(handleStatusChange, navigate)}
             />
         </AdminLayout>
     );

@@ -1,4 +1,4 @@
-import { IGetTournamentUsecase, IGetTeamsUsecase } from "app/repositories/interfaces/admin/IAdminUsecases";
+import { IGetTournamentUsecase, IGetTeamsUsecase, IGetTeamDetails, IChangeTeamStatus, IChangeTeamDetailStatus } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
@@ -10,7 +10,10 @@ import { AdminUserMessages } from "domain/constants/admin/AdminUserMessages";
 export class TournamentManagementController {
     constructor(
         private _getAllTeamsUseCase: IGetTeamsUsecase,
+        private _getTeamDetailsUseCase: IGetTeamDetails,
         private _getAllTournamnetsUseCase: IGetTournamentUsecase,
+        private _changeTeamStatusUseCase: IChangeTeamStatus,
+        private _changeTeamDetailStatus: IChangeTeamDetailStatus,
     ) { }
 
     /**
@@ -36,6 +39,14 @@ export class TournamentManagementController {
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.TEAMS_FETCHED, teams));
     }
 
+    getTeamDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { id } = httpRequest.params;
+
+        const team = await this._getTeamDetailsUseCase.execute(id);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.TEAMS_FETCHED, team));
+    }
+
     /**
      * Fetch all tournaments with pagination, optional filtering, and search.
      *
@@ -57,5 +68,23 @@ export class TournamentManagementController {
         });
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.TOURNAMENTS_FETCHED, tournaments));
+    }
+
+    changeTeamStatus = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { teamId } = httpRequest.params;
+        const { status, params } = httpRequest.body;
+
+        const teams = await this._changeTeamStatusUseCase.execute(teamId, status, params);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.TEAMS_FETCHED, teams));
+    }
+
+    ChangeTeamDetailStatus = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { teamId } = httpRequest.params;
+        const { status } = httpRequest.body;
+
+        const teams = await this._changeTeamDetailStatus.execute(teamId, status);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.TEAMS_FETCHED, teams));
     }
 }

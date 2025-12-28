@@ -1,15 +1,21 @@
 import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks/hooks"; 
-import { fetchDashboardStats } from "../../features/admin/dashboard/dashboardSlice"; 
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { fetchDashboardStats } from "../../features/admin/dashboard/dashboardSlice";
 import AdminLayout from "../layout/AdminLayout";
-import LoadingOverlay from "../../components/shared/LoadingOverlay"; 
+import LoadingOverlay from "../../components/shared/LoadingOverlay";
 import {
     LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
     XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from "recharts";
 import { TrendingUp, Users, Trophy, Calendar } from "lucide-react";
 
-const COLORS = ["#94a3b8", "#60a5fa", "#4ade80", "#fbbf24"];
+// Using CSS variables for Pie Chart so it adapts to the theme
+const PIE_COLORS = [
+    "hsl(var(--primary))",           // Main Theme Color
+    "hsl(var(--secondary))",         // Secondary Theme Color
+    "hsl(var(--muted-foreground))",  // Grey
+    "hsl(var(--border))"             // Light Grey
+];
 
 const Dashboard: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -19,7 +25,6 @@ const Dashboard: React.FC = () => {
         dispatch(fetchDashboardStats());
     }, [dispatch]);
 
-    // Use default empty structures if data is null to prevent crashes
     const stats = data?.counts || { revenue: 0, players: 0, tournaments: 0, teams: 0 };
     const revenueData = data?.revenueData || [];
     const registrationData = data?.registrationData || [];
@@ -29,77 +34,127 @@ const Dashboard: React.FC = () => {
     return (
         <AdminLayout>
             <LoadingOverlay show={loading} />
-            
-            <div className="p-6 space-y-6 min-h-screen text-gray-100">
+
+            <div className="p-4 sm:p-6 space-y-6">
                 {/* Header */}
-                <div className="flex justify-between items-center">
-                    <div>
-                        <h1 className="text-2xl font-bold text-white">Dashboard Overview</h1>
-                        <p className="text-gray-400">Real-time data from your platform.</p>
-                    </div>
+                <div className="flex flex-col gap-1">
+                    <h1 className="text-2xl font-bold tracking-tight text-foreground">Dashboard Overview</h1>
+                    <p className="text-muted-foreground">Real-time data from your platform.</p>
                 </div>
 
                 {/* 1. Key Metrics */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                     <StatCard
                         title="Total Revenue"
                         value={`₹ ${stats.revenue.toLocaleString()}`}
-                        icon={<TrendingUp className="text-green-400" />}
+                        icon={<TrendingUp className="text-primary" />}
                         trend="Lifetime"
-                        trendColor="text-green-400"
+                        // Using explicit colors for positive/negative trends is usually better than theme colors
+                        trendColor="text-green-500" 
                     />
                     <StatCard
                         title="Active Players"
                         value={stats.players.toString()}
-                        icon={<Users className="text-blue-400" />}
+                        icon={<Users className="text-blue-500" />}
                         trend="Registered Users"
-                        trendColor="text-blue-400"
+                        trendColor="text-blue-500"
                     />
                     <StatCard
                         title="Live Tournaments"
                         value={stats.tournaments.toString()}
-                        icon={<Trophy className="text-yellow-400" />}
+                        icon={<Trophy className="text-yellow-500" />}
                         trend="Currently Ongoing"
-                        trendColor="text-yellow-400"
+                        trendColor="text-yellow-500"
                     />
                     <StatCard
                         title="Total Teams"
                         value={stats.teams.toString()}
-                        icon={<Calendar className="text-purple-400" />}
+                        icon={<Calendar className="text-purple-500" />}
                         trend="Overall Teams"
-                        trendColor="text-purple-400"
+                        trendColor="text-purple-500"
                     />
                 </div>
 
                 {/* 2. Charts */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Revenue */}
-                    <div className="bg-neutral-800 p-6 rounded-xl shadow-lg border border-gray-700">
-                        <h3 className="text-lg font-semibold mb-4 text-gray-200">Revenue Trends</h3>
+                    {/* Revenue Chart */}
+                    <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
+                        <h3 className="text-lg font-semibold mb-4 text-foreground">Revenue Trends</h3>
                         <div className="h-[300px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={revenueData}>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#374151" />
-                                    <XAxis dataKey="name" tick={{ fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                                    <YAxis tick={{ fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                                    <Tooltip contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", color: "#fff" }} />
-                                    <Line type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, fill: "#3b82f6" }} />
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                                    <XAxis 
+                                        dataKey="name" 
+                                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} 
+                                        axisLine={false} 
+                                        tickLine={false} 
+                                        dy={10}
+                                    />
+                                    <YAxis 
+                                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} 
+                                        axisLine={false} 
+                                        tickLine={false} 
+                                    />
+                                    <Tooltip 
+                                        contentStyle={{ 
+                                            backgroundColor: "hsl(var(--card))", 
+                                            borderColor: "hsl(var(--border))", 
+                                            color: "hsl(var(--foreground))",
+                                            borderRadius: "8px"
+                                        }}
+                                        cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1, strokeDasharray: '4 4' }}
+                                    />
+                                    {/* The Line stroke now uses the Dynamic Primary Variable */}
+                                    <Line 
+                                        type="monotone" 
+                                        dataKey="revenue" 
+                                        stroke="hsl(var(--primary))" 
+                                        strokeWidth={3} 
+                                        dot={{ r: 4, fill: "hsl(var(--primary))" }} 
+                                        activeDot={{ r: 6, strokeWidth: 0 }}
+                                    />
                                 </LineChart>
                             </ResponsiveContainer>
                         </div>
                     </div>
 
-                    {/* Registrations */}
-                    <div className="bg-neutral-800 p-6 rounded-xl shadow-lg border border-gray-700">
-                        <h3 className="text-lg font-semibold mb-4 text-gray-200">New Registrations (Last 7 Days)</h3>
+                    {/* Registrations Chart */}
+                    <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
+                        <h3 className="text-lg font-semibold mb-4 text-foreground">New Registrations <span className="text-xs font-normal text-muted-foreground ml-2">(Last 7 Days)</span></h3>
                         <div className="h-[300px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={registrationData}>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#374151" />
-                                    <XAxis dataKey="date" tick={{ fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                                    <YAxis tick={{ fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                                    <Tooltip cursor={{ fill: '#374151', opacity: 0.4 }} contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", color: "#fff" }} />
-                                    <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} barSize={30} />
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                                    <XAxis 
+                                        dataKey="date" 
+                                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} 
+                                        axisLine={false} 
+                                        tickLine={false}
+                                        dy={10}
+                                    />
+                                    <YAxis 
+                                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} 
+                                        axisLine={false} 
+                                        tickLine={false} 
+                                    />
+                                    <Tooltip 
+                                        cursor={{ fill: 'hsl(var(--muted))', opacity: 0.4 }} 
+                                        contentStyle={{ 
+                                            backgroundColor: "hsl(var(--card))", 
+                                            borderColor: "hsl(var(--border))", 
+                                            color: "hsl(var(--foreground))",
+                                            borderRadius: "8px"
+                                        }} 
+                                    />
+                                    {/* The Bar fill uses Secondary or Primary color */}
+                                    <Bar 
+                                        dataKey="count" 
+                                        fill="hsl(var(--primary))" 
+                                        radius={[4, 4, 0, 0]} 
+                                        barSize={40} 
+                                        fillOpacity={0.8}
+                                    />
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
@@ -108,50 +163,77 @@ const Dashboard: React.FC = () => {
 
                 {/* 3. Bottom Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    
+
                     {/* Pie Chart */}
-                    <div className="bg-neutral-800 p-6 rounded-xl shadow-lg border border-gray-700 lg:col-span-1">
-                        <h3 className="text-lg font-semibold mb-4 text-gray-200">User Distribution</h3>
+                    <div className="bg-card p-6 rounded-xl shadow-sm border border-border lg:col-span-1">
+                        <h3 className="text-lg font-semibold mb-4 text-foreground">User Distribution</h3>
                         <div className="h-[300px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
-                                    <Pie data={userDistributionData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value" stroke="none">
+                                    <Pie 
+                                        data={userDistributionData} 
+                                        cx="50%" 
+                                        cy="50%" 
+                                        innerRadius={60} 
+                                        outerRadius={80} 
+                                        paddingAngle={5} 
+                                        dataKey="value" 
+                                        stroke="none"
+                                    >
                                         {userDistributionData.map((_, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                                         ))}
                                     </Pie>
-                                    <Tooltip contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", color: "#fff" }} />
-                                    <Legend verticalAlign="bottom" wrapperStyle={{ color: "#9ca3af" }} />
+                                    <Tooltip 
+                                        contentStyle={{ 
+                                            backgroundColor: "hsl(var(--card))", 
+                                            borderColor: "hsl(var(--border))", 
+                                            color: "hsl(var(--foreground))",
+                                            borderRadius: "8px"
+                                        }} 
+                                    />
+                                    <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: "20px" }} />
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>
                     </div>
 
                     {/* Table */}
-                    <div className="bg-neutral-800 p-6 rounded-xl shadow-lg border border-gray-700 lg:col-span-2">
-                        <h3 className="text-lg font-semibold mb-4 text-gray-200">Recent Tournaments</h3>
+                    <div className="bg-card p-0 sm:p-6 rounded-xl shadow-sm border border-border lg:col-span-2 overflow-hidden">
+                        <div className="p-4 sm:p-0 border-b sm:border-none border-border">
+                            <h3 className="text-lg font-semibold text-foreground">Recent Tournaments</h3>
+                        </div>
+                        
                         <div className="overflow-x-auto">
-                            <table className="w-full text-left border-collapse">
-                                <thead>
-                                    <tr className="text-gray-400 text-sm border-b border-gray-700">
-                                        <th className="pb-3 font-medium">Tournament</th>
-                                        <th className="pb-3 font-medium">Status</th>
-                                        <th className="pb-3 font-medium">Teams</th>
+                            <table className="w-full text-left text-sm">
+                                <thead className="bg-muted/50 border-b border-border">
+                                    <tr>
+                                        <th className="px-4 py-3 font-semibold text-muted-foreground">Tournament</th>
+                                        <th className="px-4 py-3 font-semibold text-muted-foreground">Status</th>
+                                        <th className="px-4 py-3 font-semibold text-muted-foreground">Teams</th>
                                     </tr>
                                 </thead>
-                                <tbody className="text-sm text-gray-300">
+                                <tbody className="divide-y divide-border">
                                     {recentTournaments.length > 0 ? recentTournaments.map((t) => (
-                                        <tr key={t._id} className="border-b border-gray-700 hover:bg-neutral-700/50">
-                                            <td className="py-4 font-medium text-white">{t.title}</td>
-                                            <td className="py-4">
-                                                <span className={`px-2 py-1 rounded text-xs ${t.status === 'ongoing' ? 'bg-green-900 text-green-300' : 'bg-gray-700 text-gray-300'}`}>
+                                        <tr key={t._id} className="hover:bg-muted/50 transition-colors">
+                                            <td className="px-4 py-3 font-medium text-foreground">{t.title}</td>
+                                            <td className="px-4 py-3">
+                                                <span 
+                                                    className={`
+                                                        px-2.5 py-0.5 rounded-full text-xs font-medium border
+                                                        ${t.status === 'ongoing' 
+                                                            ? 'bg-green-500/10 text-green-600 border-green-500/20 dark:text-green-400' 
+                                                            : 'bg-muted text-muted-foreground border-border'
+                                                        }
+                                                    `}
+                                                >
                                                     {t.status}
                                                 </span>
                                             </td>
-                                            <td className="py-4 text-gray-400">{t.currTeams} Teams</td>
+                                            <td className="px-4 py-3 text-muted-foreground">{t.currTeams} Teams</td>
                                         </tr>
                                     )) : (
-                                        <tr><td colSpan={3} className="py-4 text-center text-gray-500">No recent tournaments</td></tr>
+                                        <tr><td colSpan={3} className="py-8 text-center text-muted-foreground">No recent tournaments</td></tr>
                                     )}
                                 </tbody>
                             </table>
@@ -174,13 +256,13 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, trendColor }) => (
-    <div className="bg-neutral-800 p-6 rounded-xl shadow-lg border border-gray-700 flex flex-col justify-between">
+    <div className="bg-card p-6 rounded-xl shadow-sm border border-border flex flex-col justify-between hover:shadow-md transition-shadow duration-200">
         <div className="flex justify-between items-start mb-4">
             <div>
-                <p className="text-sm font-medium text-gray-400">{title}</p>
-                <h3 className="text-2xl font-bold text-white mt-1">{value}</h3>
+                <p className="text-sm font-medium text-muted-foreground">{title}</p>
+                <h3 className="text-2xl font-bold text-foreground mt-1 tracking-tight">{value}</h3>
             </div>
-            <div className="p-2 bg-neutral-700/50 rounded-lg">{icon}</div>
+            <div className="p-2.5 bg-muted rounded-lg border border-border">{icon}</div>
         </div>
         <p className={`text-xs font-medium ${trendColor}`}>{trend}</p>
     </div>

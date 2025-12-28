@@ -1,40 +1,21 @@
-import { useEffect } from "react";
 import AppRoutes from "./routes/AppRoutes";
 import AuthProvider from "./components/shared/AuthProvider";
-import { Toaster } from 'react-hot-toast';
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import { ThemeProvider } from "./context/ThemeContext";
+import { ToastConfig } from "./components/ui/ToastConfig";
 
 function App() {
-
-    useEffect(() => {
-        document.documentElement.setAttribute("data-theme", "dark");
-    }, []);
-
     const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
     return (
-        <>
-            <GoogleOAuthProvider clientId={CLIENT_ID}>
+        <GoogleOAuthProvider clientId={CLIENT_ID}>
+            <ThemeProvider defaultTheme="dark" defaultColor="violet" storageKey="matchpoint-theme">
                 <AuthProvider>
                     <AppRoutes />
+                    <ToastConfig />
                 </AuthProvider>
-            </GoogleOAuthProvider>
-
-            <Toaster
-                position="top-right"
-                reverseOrder={false}
-                gutter={8}
-                toastOptions={{
-                    duration: 3000,
-                    style: {
-                        background: '#363636',
-                        color: '#fff',
-                        borderRadius: '10px',
-                        padding: '16px',
-                    },
-                }}
-            />
-        </>
+            </ThemeProvider>
+        </GoogleOAuthProvider>
     )
 }
 

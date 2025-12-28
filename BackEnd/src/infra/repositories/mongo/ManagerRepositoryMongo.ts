@@ -3,6 +3,7 @@ import { UserRole } from "domain/enums/Roles";
 import { ManagerModel } from "infra/databases/mongo/models/ManagerModel";
 import { Manager, ManagerRegister, ManagerResponse } from "domain/entities/Manager";
 import { NotFoundError } from "domain/errors";
+import { Types } from "mongoose";
 
 
 export class ManagerRepositoryMongo implements IManagerRepository {
@@ -49,16 +50,37 @@ export class ManagerRepositoryMongo implements IManagerRepository {
         return updated;
     }
 
-    async addTournamentToManager(managerId: string, tournamentId: string): Promise<void> {
-        await ManagerModel.findByIdAndUpdate(managerId, {
-            $push: { tournamentsCreated: tournamentId },
-        });
+    async addTournamentToManager(userId: string, tournamentId: string): Promise<void> {
+        await ManagerModel.updateOne(
+            { userId: new Types.ObjectId(userId) },
+            {
+                $addToSet: {
+                    tournamentsCreated: new Types.ObjectId(tournamentId),
+                },
+            }
+        );
     }
 
-    async addTeamToManager(managerId: string, teamId: string): Promise<void> {
-        await ManagerModel.findByIdAndUpdate(managerId, {
-            $push: { teams: teamId },
-        });
+    async joinTournamentUpdate(userId: string, tournamentId: string): Promise<void> {
+        await ManagerModel.updateOne(
+            { userId: new Types.ObjectId(userId) },
+            {
+                $addToSet: {
+                    tournamentsParticipated: new Types.ObjectId(tournamentId),
+                },
+            }
+        );
+    }
+
+    async addTeamToManager(userId: string, teamId: string): Promise<void> {
+        await ManagerModel.updateOne(
+            { userId: new Types.ObjectId(userId) },
+            {
+                $addToSet: {
+                    teams: new Types.ObjectId(teamId),
+                },
+            }
+        );
     }
 
     async deleteByUserId(userId: string): Promise<void> {
