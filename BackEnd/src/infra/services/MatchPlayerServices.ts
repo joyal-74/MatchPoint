@@ -15,6 +15,7 @@ export class MatchPlayerServices implements IMatchPlayerServices {
 
     async getMatchDashboard(matchId: string): Promise<MatchResponseDTO> {
         const match = await this._matchRepo.getMatchDetails(matchId);
+
         if (!match) throw new NotFoundError("Match not found");
 
         const teamAStatusMap = new Map(

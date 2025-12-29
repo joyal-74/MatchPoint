@@ -7,19 +7,15 @@ interface RolePickerProps {
     roles?: SignupRole[];
 }
 
-const RolePicker: React.FC<RolePickerProps> = ({
-    selectedRole,
-    onChange,
-    roles = ["player", "manager", "viewer"],
-}) => {
+const RolePicker: React.FC<RolePickerProps> = ({ selectedRole, onChange, roles = ["player", "manager", "viewer"], }) => {
     return (
         <div className="mb-8 flex justify-center">
-            <div className="flex bg-gradient-to-br from-neutral-800/60 to-neutral-900/60 backdrop-blur-md rounded-xl p-1 shadow-inner border border-white/10">
+            <div className="flex bg-muted/50 p-1 rounded-xl border border-border/50 backdrop-blur-sm relative">
+
                 {roles.map((role) => {
-                    const label =
-                        Object.keys(UserRole).find(
-                            (key) => UserRole[key as keyof typeof UserRole] === role
-                        ) ?? role;
+                    const label = Object.keys(UserRole).find(
+                        (key) => UserRole[key as keyof typeof UserRole] === role
+                    ) ?? role;
 
                     const isActive = selectedRole === role;
 
@@ -28,15 +24,18 @@ const RolePicker: React.FC<RolePickerProps> = ({
                             key={role}
                             type="button"
                             onClick={() => onChange(role)}
-                            className={`relative px-5 py-2 rounded-lg text-sm font-medium uppercase tracking-wide transition-all duration-300 
-                ${isActive
-                                    ? "bg-primary text-neutral-800 shadow-green-300"
-                                    : "text-gray-400 hover:text-white hover:bg-white/10"
-                                }`}
+                            className={`
+                                relative px-6 py-2 rounded-lg text-sm font-semibold uppercase tracking-wide transition-all duration-300
+                                ${isActive
+                                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-105"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-background/40"
+                                }
+                            `}
                         >
                             {label}
+
                             {isActive && (
-                                <span className="absolute inset-0 rounded-lg ring-2 ring-emerald-500/60 animate-pulse"></span>
+                                <span className="absolute inset-0 rounded-lg ring-2 ring-primary/30 animate-pulse"></span>
                             )}
                         </button>
                     );

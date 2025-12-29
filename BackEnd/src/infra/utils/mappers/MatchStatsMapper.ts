@@ -92,6 +92,7 @@ export class MatchStatsMapper {
             tournamentId: String(doc.tournamentId),
             matchId: String(doc.matchId),
             oversLimit: doc.oversLimit,
+            status : doc.status,
             innings1,
             innings2,
             currentInnings: doc.currentInnings,
@@ -104,8 +105,6 @@ export class MatchStatsMapper {
     static toPersistence(match: MatchEntity) {
         const mapInningsToPersistence = (inn: Innings | null) => {
             if (!inn) return null;
-
-            console.log(inn, 'inn')
 
             return {
                 battingTeam: inn.battingTeam,
@@ -153,6 +152,7 @@ export class MatchStatsMapper {
         return {
             tournamentId: match.tournamentId,
             matchId: match.matchId,
+            status: match.status,
             innings1: mapInningsToPersistence(match.innings1),
             innings2: mapInningsToPersistence(match.innings2 ?? null),
             oversLimit: match.oversLimit,

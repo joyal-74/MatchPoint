@@ -1,6 +1,7 @@
 import { IPaymentProvider } from "app/providers/IPaymentProvider";
 import { PaymentMetadata } from "app/repositories/interfaces/IBasePaymentMetaData";
 import { IVerifyPaymentUseCase } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
+import { NotFoundError } from "domain/errors";
 
 export interface VerifyPaymentResponse {
     status: "pending" | "completed" | "failed";
@@ -15,10 +16,12 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
     async execute(sessionId: string): Promise<VerifyPaymentResponse> {
         if (!sessionId) {
-            throw new Error("Session ID is required");
+            throw new NotFoundError("Session ID is required");
         }
 
         const verification = await this._paymentProvider.verifyPayment(sessionId);
+
+        console.log(verification, "verification")
 
         return {
             status: verification.status,

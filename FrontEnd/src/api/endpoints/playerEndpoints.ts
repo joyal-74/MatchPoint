@@ -52,6 +52,12 @@ export const playerEndpoints = {
         return data.data;
     },
 
+    teamInviteReponse: async ({ playerId, teamId, status }: { playerId: string, teamId: string, status: string }): Promise<string> => {
+        const { data } = await axiosClient.post(PLAYER_ROUTES.SET_PLAYER_STATUS(playerId), { teamId, status })
+        console.log(data.data)
+        return data.data;
+    },
+
     fetchTournaments: async (filters?: { status?: string; page?: number; limit?: number; playerId?: string }) => {
         const { status, page = 1, limit = 10, playerId } = filters || {};
         const { data } = await axiosClient.get(PLAYER_ROUTES.GET_TOURNAMENTS, {

@@ -1,4 +1,4 @@
-import { initiInningsUC, addRunsUC, addWicketUC, setBowlerUC, setNonStrikerUC, setStrikerUC, addExtrasUC, undoLastBallUC, startSuperOverUC, addPenaltyUC, endInningsUC, endOverUC, retireBatsmanUC } from "./manager/matches";
+import { initiInningsUC, addRunsUC, addWicketUC, setBowlerUC, setNonStrikerUC, setStrikerUC, addExtrasUC, undoLastBallUC, startSuperOverUC, addPenaltyUC, endInningsUC, endOverUC, retireBatsmanUC, endMatchUC } from "./manager/matches";
 import http from "http";
 import { SocketServer } from "presentation/socket/SocketServer";
 import { matchRepo, playerRepository } from "./shared/repositories";
@@ -8,6 +8,7 @@ import { livestreamServices } from "./shared/services";
 export const socketServer = new SocketServer(
     matchRepo,
     playerRepository,
+    livestreamServices,
     setStrikerUC,
     setNonStrikerUC,
     setBowlerUC,
@@ -21,7 +22,7 @@ export const socketServer = new SocketServer(
     endInningsUC,
     endOverUC,
     retireBatsmanUC,
-    livestreamServices
+    endMatchUC,
 );
 
 export const initSocket = (server: http.Server) => socketServer.init(server);

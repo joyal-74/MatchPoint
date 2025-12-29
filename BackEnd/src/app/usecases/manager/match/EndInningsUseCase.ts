@@ -1,10 +1,10 @@
-import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { IEndInningsUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { MatchEntity } from "domain/entities/MatchEntity";
 import { NotFoundError } from "domain/errors";
 
 export class EndInningsUseCase implements IEndInningsUseCase {
-    constructor(private matchRepo: IMatchRepo) { }
+    constructor(private matchRepo: IMatchStatsRepo) { }
 
     async execute(matchId: string): Promise<MatchEntity | null> {
         const match = await this.matchRepo.findByMatchId(matchId);

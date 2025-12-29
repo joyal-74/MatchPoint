@@ -11,7 +11,8 @@ import {
     IEndOverUseCase,
     IEndInningsUseCase,
     IAddPenaltyUseCase,
-    IRetireBatsmanUseCase
+    IRetireBatsmanUseCase,
+    IEndMatchUseCase
 } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 
 import { IMatchScoreService } from "app/services/manager/IMatchScoreService";
@@ -32,7 +33,8 @@ export class MatchScoreService implements IMatchScoreService {
         private _endOverUseCase: IEndOverUseCase,
         private _endInningsUseCase: IEndInningsUseCase,
         private _addPenaltyUseCase: IAddPenaltyUseCase,
-        private _retireBatsmanUseCase: IRetireBatsmanUseCase
+        private _retireBatsmanUseCase: IRetireBatsmanUseCase,
+        private _endMatchUseCase: IEndMatchUseCase
     ) { }
 
     async initInnings(payload: InitInningsPayload) {
@@ -104,5 +106,9 @@ export class MatchScoreService implements IMatchScoreService {
     async retireBatsman(matchId: string, outBatsmanId: string, newBatsmanId: string, isRetiredHurt: boolean) {
         await this._retireBatsmanUseCase.execute(matchId, outBatsmanId, newBatsmanId, isRetiredHurt);
         return null;
+    }
+
+    async endMatch(matchId: string, type: "NORMAL" | "ABANDONED" | "NO_RESULT", reason?: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER", notes?: string, endedBy?: string) {
+        return await this._endMatchUseCase.execute({ matchId, type, reason, notes, endedBy });
     }
 }

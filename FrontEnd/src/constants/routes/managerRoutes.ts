@@ -4,6 +4,7 @@ export const MANAGER_ROUTES = {
     GET_DETAILS: (managerId: string) => `${API_PREFIX}/manager/${managerId}`,
     EDIT_DETAILS: (managerId: string) => `${API_PREFIX}/manager/${managerId}`,
     GET_TEAMS: (managerId: string) => `${API_PREFIX}/manager/teams/${managerId}`,
+    GET_PAYMENTS: (managerId: string) => `${API_PREFIX}/manager/financials/${managerId}`,
     GET_TEAM: (teamId: string) => `${API_PREFIX}/manager/team/${teamId}/details`,
     CREATE_TEAM: `${API_PREFIX}/manager/team`,
     DELETE_TEAM: (teamId: string) => `${API_PREFIX}/manager/team/${teamId}`,

@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 import { AuthenticatedSocket } from "../SocketServer";
 
 import { IncomingScoreUpdatePayload, ScoreUpdateType } from "domain/types/match.types";
-import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 
 import {
     IAddExtrasUseCase,
@@ -11,6 +11,7 @@ import {
     IAddRunsUseCase,
     IAddWicketUseCase,
     IEndInningsUseCase,
+    IEndMatchUseCase,
     IEndOverUseCase,
     IInitInningsUseCase,
     IRetireBatsmanUseCase,
@@ -39,6 +40,7 @@ export interface MatchUseCases {
     endInnings: IEndInningsUseCase;
     addPenalty: IAddPenaltyUseCase;
     retireBatsman: IRetireBatsmanUseCase;
+    endMatch: IEndMatchUseCase
 }
 
 export class MatchHandler {
@@ -49,7 +51,7 @@ export class MatchHandler {
         private io: Server,
         private socket: AuthenticatedSocket,
         private useCases: MatchUseCases,
-        private matchRepo: IMatchRepo,
+        private matchRepo: IMatchStatsRepo,
         private playerRepo: IPlayerRepository
     ) {
         this.setupEvents();
@@ -59,6 +61,7 @@ export class MatchHandler {
         this.socket.on("join-match", this.joinMatch.bind(this));
         this.socket.on("leave-match", this.leaveMatch.bind(this));
         this.socket.on("score:update", this.handleScoreUpdate.bind(this));
+        this.socket.on("match:end", this.handleMatchEnd.bind(this));
     }
 
     private joinMatch({ matchId }: { matchId: string }) {
@@ -423,6 +426,45 @@ export class MatchHandler {
             this.socket.emit("score-error", { error: errorMessage });
         }
     }
+
+    private async handleMatchEnd(payload: { matchId: string; type: "NORMAL" | "ABANDONED" | "NO_RESULT", reason: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER"; }) {
+
+        try {
+            const matchId = this.toIdString(payload.matchId);
+
+            if (!matchId) throw new Error("Match ID required");
+
+            const userId = this.socket.user?._id;
+            if (!userId) throw new Error("Unauthorized");
+
+
+            const updatedMatch = await this.useCases.endMatch.execute({
+                matchId,
+                type: payload.type,
+                reason: payload.reason,
+                endedBy: userId
+            });
+
+            console.log('hello')
+
+            console.log(updatedMatch, 'updated')
+
+
+            this.io.to(matchId).emit("match:ended", {
+                matchId,
+                status: "completed",
+                endInfo: updatedMatch.endInfo
+            });
+
+            console.log(`Match ${matchId} ended due to ${payload.reason}`);
+        } catch (err) {
+            console.error("MATCH END ERROR ❌", err);
+            const message = err instanceof Error ? err.message : "Failed to end match";
+            this.socket.emit("match-end-error", { error: message });
+
+        }
+    }
+
 
     private toIdString(v: unknown): string | null {
         if (!v && v !== 0) return null;

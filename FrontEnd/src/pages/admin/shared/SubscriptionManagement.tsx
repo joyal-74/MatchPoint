@@ -1,31 +1,39 @@
 import { useEffect, useMemo, useCallback, useState } from 'react';
 import { Plus } from 'lucide-react';
 import AdminLayout from '../../layout/AdminLayout';
-import { AdminButton } from './subscription/AdminButton';
 
+// Components
 import { PlanCard } from './subscription/PlanCard';
 import { AddPlanModal } from './subscription/AddPlanModal';
+import { EditPlanModal } from './subscription/EditPlanModal';
 import { PlanDetailModal } from './subscription/PlanDetailModal';
-
-import type { Plan, UserRole } from './subscription/SubscriptionTypes';
-
-
-import { fetchPlans, addPlan, deletePlan } from "../../../features/admin/subscription/subscriptionThunks";
-import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import LoadingOverlay from '../../../components/shared/LoadingOverlay';
+
+// Redux / Types
+import type { Plan, UserRole } from './subscription/SubscriptionTypes';
+import { fetchPlans, addPlan, deletePlan, updatePlan } from "../../../features/admin/subscription/subscriptionThunks";
+import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
+import toast from 'react-hot-toast';
+import { getApiErrorMessage } from '../../../utils/apiError';
 
 export default function SubscriptionManagement() {
     const dispatch = useAppDispatch();
-
-    // Redux state
     const { plans, loading } = useAppSelector(state => state.subscription);
 
-    // Local UI state
+    // --- State ---
     const [activeTab, setActiveTab] = useState<UserRole>('player');
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedPlanForView, setSelectedPlanForView] = useState<Plan | null>(null);
 
-    const tabs: UserRole[] = ['player', 'manager', 'viewer'];
+    // Modals State
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedPlanForView, setSelectedPlanForView] = useState<Plan | null>(null);
+    const [planToEdit, setPlanToEdit] = useState<Plan | null>(null);
+
+    const tabs: { id: UserRole; label: string }[] = [
+        { id: 'player', label: 'Player Plans' },
+        { id: 'manager', label: 'Manager Plans' },
+        { id: 'viewer', label: 'Viewer Plans' }
+    ];
 
     useEffect(() => {
         dispatch(fetchPlans({}));
@@ -35,84 +43,93 @@ export default function SubscriptionManagement() {
         return plans.filter(plan => plan.userType === activeTab);
     }, [plans, activeTab]);
 
-    const handleAddNewPlan = useCallback(
-        async (newPlanData: Omit<Plan, '_id'>) => {
-            await dispatch(addPlan(newPlanData));
-            setIsModalOpen(false);
-        },
-        [dispatch]
-    );
+    // --- Handlers ---
 
-    const handleDeletePlanById = useCallback(
-        async (id: string) => {
-            await dispatch(deletePlan(id));
-        },
-        [dispatch]
-    );
+    const handleAddNewPlan = useCallback(async (newPlanData: Omit<Plan, '_id'>) => {
+        try {
+            await dispatch(addPlan(newPlanData)).unwrap();
 
-    const handleViewPlan = useCallback((plan: Plan) => {
-        setSelectedPlanForView(plan);
+            toast.success("Plan created successfully!");
+            setIsAddModalOpen(false);
+        } catch (error: unknown) {
+            console.error("Failed to create plan:", error);
+            toast.error(getApiErrorMessage(error));
+        }
+    }, [dispatch]);
+
+    const handleDeletePlanById = useCallback(async (id: string) => {
+        await dispatch(deletePlan(id));
+        if (selectedPlanForView && selectedPlanForView._id === id) {
+            setSelectedPlanForView(null);
+        }
+    }, [dispatch, selectedPlanForView]);
+
+    const handleEditClick = useCallback((plan: Plan) => {
+        setPlanToEdit(plan);
+        setIsEditModalOpen(true);
+        setSelectedPlanForView(null);
     }, []);
 
-    const handleDeleteAndCloseModal = useCallback(
-        async (id: string) => {
-            await handleDeletePlanById(id);
-            setSelectedPlanForView(null);
-        },
-        [handleDeletePlanById]
-    );
+    const handleSaveEditedPlan = useCallback(async (id: string, updatedPlan: Omit<Plan, "_id">) => {
+        try {
+            await dispatch(updatePlan({ id, newData: updatedPlan })).unwrap();
 
-    const handleEditAndCloseModal = useCallback(
-        (plan: Plan) => {
-            console.log("Edit functionality coming soon", plan);
-            setSelectedPlanForView(null);
-        },
-        []
-    );
+            toast.success("Plan updated successfully!");
+            setIsEditModalOpen(false);
+            setPlanToEdit(null);
+        } catch (error: unknown) {
+            console.error("Failed to update plan:", error);
+            toast.error(getApiErrorMessage(error));
+        }
+    }, [dispatch]);
 
     return (
         <AdminLayout>
             <LoadingOverlay show={loading} />
-            <div className="text-neutral-100 pt-8 max-w-7xl mx-auto">
+
+            <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto min-h-[85vh]">
+
+                {/* Header */}
                 <header className="mb-8">
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-2">
+                    <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
                         Subscription Management
                     </h1>
-                    <p className="text-neutral-400">
+                    <p className="text-muted-foreground text-lg">
                         Define and manage subscription tiers for all user roles.
                     </p>
                 </header>
 
                 {/* Tabs */}
-                <div className="mb-6 border-b border-neutral-700">
-                    <nav className="-mb-px flex space-x-4 sm:space-x-8" aria-label="Tabs">
-                        {tabs.map(tab => (
+                <div className="mb-8 border-b border-border">
+                    <nav className="-mb-px flex space-x-6 overflow-x-auto scrollbar-hide">
+                        {tabs.map((tab) => (
                             <button
-                                key={tab}
-                                onClick={() => setActiveTab(tab)}
-                                className={`
-                                    whitespace-nowrap py-3 px-1 sm:px-4 border-b-2 font-medium text-md transition-colors duration-200
-                                    ${activeTab === tab
-                                        ? 'border-emerald-500 text-emerald-400'
-                                        : 'border-transparent text-neutral-500 hover:text-neutral-300 hover:border-neutral-600'
-                                    }
-                                `}
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm transition-all duration-200
+                                ${activeTab === tab.id ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'}`}
                             >
-                                {tab} Plans
+                                {tab.label}
                             </button>
                         ))}
                     </nav>
                 </div>
 
-                <section className="mb-8 flex justify-between items-center">
-                    <h2 className="text-xl font-semibold text-neutral-200">
+                {/* Action Bar */}
+                <section className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <h2 className="text-xl font-semibold text-foreground capitalize">
                         {activeTab} Subscription Tiers
                     </h2>
-                    <AdminButton icon={<Plus className="w-5 h-5" />} onClick={() => setIsModalOpen(true)}>
+                    <button
+                        onClick={() => setIsAddModalOpen(true)}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium text-sm"
+                    >
+                        <Plus size={18} />
                         Add New Plan
-                    </AdminButton>
+                    </button>
                 </section>
 
+                {/* Content Grid */}
                 {!loading && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {filteredPlans.length > 0 ? (
@@ -121,33 +138,50 @@ export default function SubscriptionManagement() {
                                     key={plan._id}
                                     plan={plan}
                                     onDelete={() => handleDeletePlanById(plan._id)}
-                                    onEdit={() => console.log("edit")}
-                                    onView={handleViewPlan}
+                                    onEdit={() => handleEditClick(plan)}
+                                    onView={(p) => setSelectedPlanForView(p)}
                                 />
                             ))
                         ) : (
-                            <div className="lg:col-span-4 text-center p-12 bg-neutral-800 rounded-xl border border-neutral-700">
-                                <p className="text-neutral-400 text-lg">
-                                    No plans defined for the {activeTab} role yet.
+                            <div className="col-span-full py-16 flex flex-col items-center justify-center text-center border-2 border-dashed border-border rounded-xl bg-card/50">
+                                <div className="p-3 rounded-full bg-muted/50 mb-3">
+                                    <Plus className="w-6 h-6 text-muted-foreground" />
+                                </div>
+                                <h3 className="text-lg font-medium text-foreground">No Plans Found</h3>
+                                <p className="text-muted-foreground max-w-sm mt-1 mb-4">
+                                    There are currently no active subscription plans for {activeTab}s.
                                 </p>
+                                <button
+                                    onClick={() => setIsAddModalOpen(true)}
+                                    className="text-primary hover:underline text-sm font-medium"
+                                >
+                                    Create one now
+                                </button>
                             </div>
                         )}
                     </div>
                 )}
 
+                {/* Modals */}
                 <AddPlanModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
+                    isOpen={isAddModalOpen}
+                    onClose={() => setIsAddModalOpen(false)}
                     onSave={handleAddNewPlan}
                     selectedUserType={activeTab}
                 />
 
-                {/* Plan Details Modal */}
+                <EditPlanModal
+                    isOpen={isEditModalOpen}
+                    onClose={() => setIsEditModalOpen(false)}
+                    onSave={handleSaveEditedPlan}
+                    planToEdit={planToEdit}
+                />
+
                 <PlanDetailModal
                     selectedPlan={selectedPlanForView}
                     onClose={() => setSelectedPlanForView(null)}
-                    onEdit={handleEditAndCloseModal}
-                    onDelete={handleDeleteAndCloseModal}
+                    onEdit={handleEditClick}
+                    onDelete={handleDeletePlanById}
                 />
             </div>
         </AdminLayout>

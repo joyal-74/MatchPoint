@@ -19,6 +19,8 @@ export class LiveScoreMapper {
     static toDto(matchEntity: MatchEntity) : LiveScoreDto {
         if (!matchEntity) throw new Error('');
 
+        console.log(matchEntity.status, " hhhhh")
+
         let target: number | null = null;
         let requiredRuns: number | null = null;
         let requiredRunRate: string | null = null;
@@ -114,14 +116,15 @@ export class LiveScoreMapper {
             };
         };
 
+
         return {
             matchId: safeId(matchEntity.matchId),
             tournamentId: safeId(matchEntity.tournamentId),
 
-            status: matchEntity.isMatchComplete ? 'COMPLETED' : 'LIVE',
-
             currentInnings: matchEntity.currentInningsNumber || 1,
             oversLimit: matchEntity.oversLimit,
+
+            status : matchEntity.status,
 
             target: target,
             requiredRuns: requiredRuns,

@@ -5,10 +5,12 @@ export type FieldConfig<FormType> = {
     label: string;
     type?: string;
     placeholder?: string;
-    as?: "input" | "select";
+    as?: "input" | "select" | "textarea";
     options?: string[];
     condition?: (formData: FormType) => boolean;
     className?: string | ((formData: FormType) => string);
+    required?: boolean;
+    disabled?: boolean;
 };
 
 interface FormFieldGroupProps<FormType> {
@@ -16,25 +18,30 @@ interface FormFieldGroupProps<FormType> {
     formData: FormType;
     errors: Partial<Record<keyof FormType, string>>;
     handleFieldChange: (field: keyof FormType, value: string) => void;
+    className?: string; // Allow overriding group layout
 }
 
-function FormFieldGroup<FormType extends { [K in keyof FormType]: unknown }>({
+function FormFieldGroup<FormType extends Record<string, string>>({
     fields,
     formData,
     errors,
     handleFieldChange,
+    className = "",
 }: FormFieldGroupProps<FormType>) {
     return (
-        <div className="flex space-x-3 text-sm w-full">
+        <div className={`flex w-full gap-4 ${className}`}>
             {fields.map((field) => {
+                // 1. Check Condition
                 if (field.condition && !field.condition(formData)) return null;
 
+                // 2. Safely cast value
                 const value = String(formData[field.id] ?? "");
 
-                const onChange = (val: string) => handleFieldChange(field.id, val);
-
-                const className =
-                    typeof field.className === "function" ? field.className(formData) : field.className;
+                // 3. Resolve dynamic class names
+                const fieldClassName =
+                    typeof field.className === "function" 
+                        ? field.className(formData) 
+                        : field.className;
 
                 return (
                     <FormField
@@ -46,9 +53,12 @@ function FormFieldGroup<FormType extends { [K in keyof FormType]: unknown }>({
                         options={field.options}
                         value={value}
                         placeholder={field.placeholder}
-                        onChange={(e) => onChange(e.target.value)}
-                        className={className}
+                        // Bridge the Event -> Value gap
+                        onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                        className={fieldClassName}
                         error={errors[field.id]}
+                        required={field.required}
+                        disabled={field.disabled}
                     />
                 );
             })}

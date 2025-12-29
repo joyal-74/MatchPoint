@@ -67,7 +67,7 @@ export class TournamentController implements ITournamentController {
         this._logger.info(`[TournamentController] getAllTournament → managerId=${managerId}`);
         const result = await this._getExploreTournamentsUsecase.execute(managerId, page, limit, search, filter);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true,TournamentMessages.TOURNAMENTS_FETCHED, result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TOURNAMENTS_FETCHED, result));
     };
 
     /**
@@ -98,7 +98,7 @@ export class TournamentController implements ITournamentController {
         this._logger.info(`[TournamentController] editTournament → managerId=${tournamentData.managerId}`);
         const result = await this._editTournamentsUsecase.execute(tournamentData, file);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true,TournamentMessages.TOURNAMENT_UPDATED, result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TOURNAMENT_UPDATED, result));
     };
 
     /**
@@ -142,7 +142,7 @@ export class TournamentController implements ITournamentController {
         this._logger.info(`[TournamentController] entryFee → tournamentId=${tournamentId}`);
         const result = await this._entryFeePaymentUsecase.execute(tournamentId, teamId, captainId, managerId, paymentMethod);
 
-        return new HttpResponse(HttpStatusCode.OK, buildResponse(true,TournamentMessages.ENTRY_FEE_PAID, result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.ENTRY_FEE_PAID, result));
     };
 
     /**
@@ -152,9 +152,9 @@ export class TournamentController implements ITournamentController {
      */
     updateTounamentTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { registrationId } = httpRequest.params;
-        const { paymentStatus, paymentId } = httpRequest.body;
+        const { paymentStatus, paymentId, managerId } = httpRequest.body;
 
-        const result = await this._updateTournamenTeamUsecase.execute(registrationId, paymentStatus, paymentId);
+        const result = await this._updateTournamenTeamUsecase.execute(managerId, registrationId, paymentStatus, paymentId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TEAM_REGISTRATION_UPDATED, result));
     };
@@ -229,9 +229,8 @@ export class TournamentController implements ITournamentController {
 
     getTournamentLeaderBoard = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentId = httpRequest.params.tournamentId;
-        
+
         const result = await this._getLeaderBoardUsecase.execute(tournamentId);
-        console.log(result)
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.LEADERBOARD_FETCHED, result));
     };

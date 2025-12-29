@@ -9,6 +9,14 @@ export type AddRunsPayload = {
     runs: number;
 };
 
+export interface EndMatchUseCaseInput {
+    matchId: string;
+    type: "NORMAL" | "ABANDONED" | "NO_RESULT";
+    reason?: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER";
+    notes?: string;
+    endedBy?: string;
+}
+
 export interface IGetMatchDetails {
     execute(matchId: string): Promise<MatchResponseDTO>
 }
@@ -70,4 +78,8 @@ export interface IRetireBatsmanUseCase {
 
 export interface IAddExtrasUseCase {
     execute({ matchId, type, runs }: { matchId: string, type: string, runs: number }): Promise<MatchEntity | null>;
+}
+
+export interface IEndMatchUseCase {
+    execute(input: EndMatchUseCaseInput): Promise<MatchEntity>;
 }

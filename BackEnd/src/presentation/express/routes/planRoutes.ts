@@ -6,6 +6,7 @@ const router = Router();
 
 router.get("/plans", expressAdapter(planController.getAll));
 router.post("/plan", expressAdapter(planController.create));
+router.put("/plan", expressAdapter(planController.update));
 router.delete("/plan/:id", expressAdapter(planController.delete));
 
 export default router;

@@ -4,11 +4,12 @@ import { authenticateSocket } from "presentation/express/middlewares/socketAuth"
 import { ChatHandler } from "./handlers/ChatHandler";
 import { MatchHandler } from "./handlers/MatchHandler";
 
-import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 
 import {
     IAddExtrasUseCase, IAddPenaltyUseCase, IAddRunsUseCase, IAddWicketUseCase,
     IEndInningsUseCase,
+    IEndMatchUseCase,
     IEndOverUseCase,
     IInitInningsUseCase, IRetireBatsmanUseCase, ISetBowlerUseCase, ISetNonStrikerUseCase,
     ISetStrikerUseCase, IStartSuperOverUseCase, IUndoLastBallUseCase
@@ -33,8 +34,9 @@ export class SocketServer {
     private io!: Server;
 
     constructor(
-        private matchRepo: IMatchRepo,
+        private matchRepo: IMatchStatsRepo,
         private playerRepo: IPlayerRepository,
+        private liveStreamService: ILiveStreamService,
 
         private setStrikerUseCase: ISetStrikerUseCase,
         private setNonStrikerUseCase: ISetNonStrikerUseCase,
@@ -49,7 +51,7 @@ export class SocketServer {
         private endInningsUseCase: IEndInningsUseCase,
         private endOverUseCase: IEndOverUseCase,
         private retireBatsmanUseCase: IRetireBatsmanUseCase,
-        private liveStreamService: ILiveStreamService,
+        private endMatchUseCase: IEndMatchUseCase,
     ) { }
 
     public init(server: http.Server) {
@@ -85,10 +87,11 @@ export class SocketServer {
                     addPenalty: this.addPenaltyUseCase,
                     endInnings: this.endInningsUseCase,
                     endOver: this.endOverUseCase,
-                    retireBatsman: this.retireBatsmanUseCase
+                    retireBatsman: this.retireBatsmanUseCase,
+                    endMatch : this.endMatchUseCase
                 },
                 this.matchRepo,
-                this.playerRepo,
+                this.playerRepo
             );
 
             new MatchViewerHandler(this.io, authSocket, this.matchRepo);

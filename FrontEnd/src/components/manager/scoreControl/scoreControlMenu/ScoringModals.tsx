@@ -1,6 +1,6 @@
 import { Play, RotateCw, Settings, MoreHorizontal, AlertCircle, MinusCircle, PlusCircle, LogOut } from 'lucide-react';
 import { Modal, SelectInput } from './SharedComponents';
-import type { InningsState, Player } from '../../../features/manager/Matches/matchTypes';
+import type { InningsState, Player } from '../../../../features/manager/Matches/matchTypes';
 
 
 type FormsState = {

@@ -11,9 +11,16 @@ export const subscriptionEndpoints = {
         return data.data;
     },
 
-
     addPlan: async (newPlan: Omit<Plan, "_id">): Promise<Plan> => {
         const { data } = await axiosClient.post(SUBSCRIPTION_ROUTES.ADD_PLAN, newPlan);
+        console.log(data.data)
+
+        return data.data;
+    },
+
+    updatePlan: async ({ id, newData }: { id: string, newData: Omit<Plan, "_id"> }): Promise<Plan> => {
+        const { data } = await axiosClient.put(SUBSCRIPTION_ROUTES.EDIT_PLAN, { id, newData });
+        console.log(data.data)
         return data.data;
     },
 
@@ -21,6 +28,7 @@ export const subscriptionEndpoints = {
         await axiosClient.delete(SUBSCRIPTION_ROUTES.DELETE_PLAN(id));
         return id;
     },
+
 
     // User side
     fetchAvailablePlans: async ({ userId, role }: { userId: string, role: string }): Promise<{ plans: AvailablePlan[], userSubscription: UserSubscription }> => {

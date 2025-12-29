@@ -1,79 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { type TournamentFinancials } from "../../features/manager/financials/financialSlice";
 import {
-    Search,
-
-    ArrowUpRight,
-    ArrowDownLeft,
-    RefreshCcw,
-    MoreHorizontal,
-    Wallet,
-    TrendingUp,
-    TrendingDown,
-    Calendar,
-
-    Briefcase,
-    Trophy,
-    Users,
-    Crown,
-    PieChart,
-    AlertCircle,
-    CheckCircle2,
-    DollarSign,
-    ChevronDown,
-    ChevronUp,
-    ListFilter
+    Search, ArrowUpRight, ArrowDownLeft, RefreshCcw, MoreHorizontal,
+    Wallet, TrendingUp, TrendingDown, Calendar, Briefcase, Trophy,
+    Users, Crown, PieChart, AlertCircle, CheckCircle2, DollarSign,
+    ChevronDown, ChevronUp, ListFilter
 } from "lucide-react";
 import ManagerLayout from "../../pages/layout/ManagerLayout";
-
-// --- MOCK DATA: TRANSACTIONS ---
-type TransactionType = 'income' | 'expense' | 'refund';
-type TransactionStatus = 'completed' | 'pending' | 'failed';
-
-interface Transaction {
-    id: string;
-    date: string; 
-    description: string;
-    tournament: string;
-    type: TransactionType;
-    amount: number;
-    status: TransactionStatus;
-    method: string;
-}
-
-const TRANSACTIONS: Transaction[] = [
-    { id: "TX-1001", date: "2024-03-10", description: "Entry Fee - Team Velocity", tournament: "Summer Cyber Cup", type: "income", amount: 50.00, status: "completed", method: "Stripe" },
-    { id: "TX-1002", date: "2024-03-09", description: "Registration Fee", tournament: "Global Pro League", type: "expense", amount: -120.00, status: "completed", method: "PayPal" },
-    { id: "TX-1003", date: "2024-03-08", description: "Entry Fee - Dark Horse", tournament: "Summer Cyber Cup", type: "income", amount: 50.00, status: "completed", method: "Stripe" },
-    { id: "TX-1004", date: "2024-03-05", description: "Cancellation Refund", tournament: "Weekly Scrims #42", type: "refund", amount: 25.00, status: "completed", method: "Credit Card" },
-    { id: "TX-1005", date: "2024-03-04", description: "Entry Fee - NoobMasters", tournament: "Summer Cyber Cup", type: "income", amount: 50.00, status: "pending", method: "Bank Transfer" },
-];
-
-// --- MOCK DATA: TOURNAMENT EARNINGS ---
-interface TournamentFinancials {
-    id: string;
-    name: string;
-    plan: 'Basic' | 'Pro' | 'Elite';
-    entryFee: number;
-    minTeams: number;
-    currentTeams: number;
-    status: 'Upcoming' | 'Live' | 'Completed';
-}
-
-const TOURNAMENTS: TournamentFinancials[] = [
-    { id: "T-101", name: "Summer Cyber Cup", plan: "Basic", entryFee: 100, minTeams: 10, currentTeams: 12, status: "Live" },
-    { id: "T-102", name: "Winter Skirmish", plan: "Basic", entryFee: 50, minTeams: 20, currentTeams: 8, status: "Upcoming" },
-    { id: "T-103", name: "Pro League Qualifier", plan: "Pro", entryFee: 200, minTeams: 8, currentTeams: 16, status: "Completed" }
-];
+import LoadingOverlay from "../../components/shared/LoadingOverlay";
+import { fetchFinancialReport } from "../../features/manager/financials/financialThunk";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 
 // --- HELPERS ---
-const formatCurrency = (amount: number) => 
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', signDisplay: 'never' }).format(Math.abs(amount));
+const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'INR', signDisplay: 'never' }).format(Math.abs(amount));
 
 const calculateSplits = (t: TournamentFinancials) => {
     const totalCollected = t.currentTeams * t.entryFee;
     const prizePool = totalCollected * 0.70; // 70% to Prize Pool
     const operationalRevenue = totalCollected - prizePool; // 30% Revenue
-    
+
     let managerSplitPct = 0.5; // Basic Default
     if (t.plan === 'Pro') managerSplitPct = 0.7;
     if (t.plan === 'Elite') managerSplitPct = 0.9;
@@ -90,18 +36,27 @@ const calculateSplits = (t: TournamentFinancials) => {
 };
 
 export default function FinancialsPage() {
-    // View State: This toggles between the two screens
+    const dispatch = useAppDispatch();
+    const { transactions, tournaments, balance, loading } = useAppSelector((state) => state.financials);
+    const managerId = useAppSelector((state) => state.auth.user?._id);
+
+    useEffect(() => {
+        if (managerId)
+            dispatch(fetchFinancialReport(managerId));
+    }, [dispatch, managerId]);
+
+    // View State
     const [activeView, setActiveView] = useState<'transactions' | 'earnings'>('transactions');
-    
+
     // Transaction States
     const [filter, setFilter] = useState<'all' | 'income' | 'expense' | 'refund'>('all');
     const [search, setSearch] = useState("");
-    
+
     // Earnings State
-    const [expandedTournamentId, setExpandedTournamentId] = useState<string | null>(TOURNAMENTS[0].id);
+    const [expandedTournamentId, setExpandedTournamentId] = useState<string | null>(null);
 
     // --- Transaction Logic ---
-    const filteredData = TRANSACTIONS.filter(t => {
+    const filteredData = transactions.filter(t => {
         const matchesSearch = t.description.toLowerCase().includes(search.toLowerCase());
         const matchesFilter = filter === 'all' ? true : t.type === filter;
         if (filter === 'income') return matchesSearch && t.amount > 0;
@@ -109,12 +64,13 @@ export default function FinancialsPage() {
         return matchesSearch && matchesFilter;
     });
 
-    const totalIncome = TRANSACTIONS.filter(t => t.amount > 0).reduce((acc, curr) => acc + curr.amount, 0);
-    const totalExpense = TRANSACTIONS.filter(t => t.amount < 0).reduce((acc, curr) => acc + Math.abs(curr.amount), 0);
-    const balance = totalIncome - totalExpense;
+    // Calculate totals from REAL data
+    const totalIncome = transactions.filter(t => t.amount > 0).reduce((acc, curr) => acc + curr.amount, 0);
+    const totalExpense = transactions.filter(t => t.amount < 0).reduce((acc, curr) => acc + Math.abs(curr.amount), 0);
 
     return (
         <ManagerLayout>
+            <LoadingOverlay show={loading} />
             <div className="min-h-screen text-neutral-200 py-4 lg:py-8">
                 <div className="max-w-6xl mx-auto space-y-8">
 
@@ -134,35 +90,25 @@ export default function FinancialsPage() {
 
                         {/* --- VIEW TOGGLE TABS --- */}
                         <div className="bg-neutral-900 p-1 rounded-xl border border-white/10 flex">
-                            <button 
+                            <button
                                 onClick={() => setActiveView('transactions')}
-                                className={`
-                                    flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all
-                                    ${activeView === 'transactions' ? 'bg-neutral-800 text-white shadow-lg' : 'text-neutral-500 hover:text-neutral-300'}
-                                `}
+                                className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'transactions' ? 'bg-neutral-800 text-white shadow-lg' : 'text-neutral-500 hover:text-neutral-300'}`}
                             >
-                                <ListFilter size={16} />
-                                Transactions
+                                <ListFilter size={16} /> Transactions
                             </button>
-                            <button 
+                            <button
                                 onClick={() => setActiveView('earnings')}
-                                className={`
-                                    flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all
-                                    ${activeView === 'earnings' ? 'bg-neutral-800 text-white shadow-lg' : 'text-neutral-500 hover:text-neutral-300'}
-                                `}
+                                className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'earnings' ? 'bg-neutral-800 text-white shadow-lg' : 'text-neutral-500 hover:text-neutral-300'}`}
                             >
-                                <Briefcase size={16} />
-                                Earnings Report
+                                <Briefcase size={16} /> Earnings Report
                             </button>
                         </div>
                     </div>
 
-                    {/* =====================================================================================
-                        VIEW 1: TRANSACTIONS LIST (Your existing UI)
-                       ===================================================================================== */}
+                    {/* ================= VIEW 1: TRANSACTIONS LIST ================= */}
                     {activeView === 'transactions' && (
                         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            
+
                             {/* Summary Cards */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="bg-neutral-900 border border-white/5 p-6 rounded-2xl relative overflow-hidden group">
@@ -211,7 +157,7 @@ export default function FinancialsPage() {
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-white/5">
-                                            {filteredData.map((t) => (
+                                            {filteredData.length > 0 ? filteredData.map((t) => (
                                                 <tr key={t.id} className="hover:bg-white/[0.02] transition-colors group">
                                                     <td className="p-4">
                                                         <div className="flex items-center gap-3">
@@ -226,15 +172,17 @@ export default function FinancialsPage() {
                                                     <td className="p-4"><div className="text-sm text-neutral-300 flex items-center gap-2"><Wallet size={14} className="text-neutral-600" />{t.tournament}</div></td>
                                                     <td className="p-4"><div className="text-sm text-neutral-400 flex items-center gap-2"><Calendar size={14} className="text-neutral-600" />{new Date(t.date).toLocaleDateString()}</div></td>
                                                     <td className="p-4">
-                                                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${t.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : t.status === 'pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
-                                                            <div className={`w-1.5 h-1.5 rounded-full ${t.status === 'completed' ? 'bg-emerald-400' : t.status === 'pending' ? 'bg-amber-400' : 'bg-red-400'}`} />
+                                                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${t.status === 'completed' || t.status === 'success' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : t.status === 'pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
+                                                            <div className={`w-1.5 h-1.5 rounded-full ${t.status === 'completed' || t.status === 'success' ? 'bg-emerald-400' : t.status === 'pending' ? 'bg-amber-400' : 'bg-red-400'}`} />
                                                             {t.status}
                                                         </span>
                                                     </td>
                                                     <td className="p-4 text-right"><div className={`text-sm font-bold ${t.amount > 0 ? 'text-emerald-400' : 'text-white'}`}>{t.amount > 0 ? '+' : ''}{formatCurrency(t.amount)}</div></td>
                                                     <td className="p-4"><button className="p-2 text-neutral-500 hover:text-white"><MoreHorizontal size={18} /></button></td>
                                                 </tr>
-                                            ))}
+                                            )) : (
+                                                <tr><td colSpan={6} className="p-8 text-center text-neutral-500">No transactions found</td></tr>
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>
@@ -242,18 +190,16 @@ export default function FinancialsPage() {
                         </div>
                     )}
 
-                    {/* =====================================================================================
-                        VIEW 2: EARNINGS BREAKDOWN (New Logic)
-                       ===================================================================================== */}
+                    {/* ================= VIEW 2: EARNINGS BREAKDOWN ================= */}
                     {activeView === 'earnings' && (
                         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                             <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 flex gap-3 text-blue-300 text-sm">
+                            <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 flex gap-3 text-blue-300 text-sm">
                                 <AlertCircle className="shrink-0" size={20} />
                                 <div><span className="font-bold">Split Logic:</span> 70% of entry fees go to the Prize Pool. The remaining 30% is revenue shared between you and the platform based on your plan.</div>
                             </div>
 
                             <div className="space-y-4">
-                                {TOURNAMENTS.map((t) => {
+                                {tournaments.map((t) => {
                                     const stats = calculateSplits(t);
                                     const isExpanded = expandedTournamentId === t.id;
 
@@ -272,7 +218,7 @@ export default function FinancialsPage() {
                                                         </div>
                                                         <div className="flex items-center gap-4 mt-1 text-sm text-neutral-400">
                                                             <span className="flex items-center gap-1"><Users size={14} /> {t.currentTeams}/{t.minTeams} Teams</span>
-                                                            <span className="flex items-center gap-1"><DollarSign size={14} /> {t.entryFee} Entry</span>
+                                                            <span className="flex items-center gap-1"><DollarSign size={14} /> {formatCurrency(t.entryFee)} Entry</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -294,7 +240,6 @@ export default function FinancialsPage() {
                                                         </div>
                                                     )}
                                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                                        {/* Col 1 */}
                                                         <div className="space-y-4">
                                                             <h4 className="text-sm font-semibold text-white flex items-center gap-2"><Users size={16} className="text-blue-500" /> Collection</h4>
                                                             <div className="p-4 bg-neutral-900 rounded-xl border border-white/5 space-y-3">
@@ -303,7 +248,6 @@ export default function FinancialsPage() {
                                                                 <div className="border-t border-white/10 pt-2 flex justify-between text-sm font-medium"><span className="text-neutral-300">Total</span><span className="text-blue-400">{formatCurrency(stats.totalCollected)}</span></div>
                                                             </div>
                                                         </div>
-                                                        {/* Col 2 */}
                                                         <div className="space-y-4">
                                                             <h4 className="text-sm font-semibold text-white flex items-center gap-2"><Crown size={16} className="text-amber-500" /> Prize Pool (70%)</h4>
                                                             <div className="p-4 bg-neutral-900 rounded-xl border border-white/5 space-y-3 relative overflow-hidden">
@@ -312,7 +256,6 @@ export default function FinancialsPage() {
                                                                 <div className="border-t border-white/10 pt-2 flex justify-between text-lg font-bold"><span className="text-white">Reserved</span><span className="text-amber-400">{formatCurrency(stats.prizePool)}</span></div>
                                                             </div>
                                                         </div>
-                                                        {/* Col 3 */}
                                                         <div className="space-y-4">
                                                             <h4 className="text-sm font-semibold text-white flex items-center gap-2"><PieChart size={16} className="text-emerald-500" /> Net Revenue (30%)</h4>
                                                             <div className="p-4 bg-neutral-900 rounded-xl border border-white/5 space-y-3">

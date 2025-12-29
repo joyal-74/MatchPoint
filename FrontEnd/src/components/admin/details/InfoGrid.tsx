@@ -3,7 +3,9 @@ import { getFieldIcon } from "../../../utils/getFieldIcon";
 interface InfoItem {
     label: string;
     value: string | number | null;
-    color: string;
+    // We keep 'color' in the interface to not break your existing data, 
+    // but we will prioritize the Theme System for styling.
+    color?: string; 
 }
 
 interface InfoGridProps {
@@ -12,24 +14,37 @@ interface InfoGridProps {
 
 const InfoGrid = ({ data }: InfoGridProps) => {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             {data.map((item, index) => (
                 <div
                     key={index}
-                    className="bg-neutral-700/30 rounded-lg p-3 border border-neutral-600/50 hover:border-emerald-500/30 transition-all duration-300"
+                    className="
+                        group flex items-start gap-4 p-4 rounded-xl border border-border bg-card shadow-sm
+                        transition-all duration-200 
+                        hover:shadow-md hover:border-primary/30
+                    "
                 >
-                    <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 bg-${item.color}-500/20 rounded-full flex items-center justify-center`}>
+                    {/* Icon Container: Uses Theme Primary Color */}
+                    <div className="
+                        shrink-0 flex items-center justify-center w-10 h-10 rounded-lg 
+                        bg-primary/10 text-primary 
+                        group-hover:bg-primary group-hover:text-primary-foreground
+                        transition-colors duration-200
+                    ">
+                        {/* We clone the icon to enforce size consistency if needed */}
+                        <span className="text-xl">
                             {getFieldIcon(item.label)}
-                        </div>
-                        <div>
-                            <h2 className="text-xs uppercase text-neutral-400 font-semibold">
-                                {item.label}
-                            </h2>
-                            <p className="text-base font-semibold text-neutral-100">
-                                {item.value}
-                            </p>
-                        </div>
+                        </span>
+                    </div>
+
+                    {/* Text Content */}
+                    <div className="flex flex-col gap-0.5 overflow-hidden">
+                        <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                            {item.label}
+                        </h2>
+                        <p className="text-sm font-medium text-foreground truncate" title={String(item.value)}>
+                            {item.value || <span className="text-muted-foreground/50 italic">N/A</span>}
+                        </p>
                     </div>
                 </div>
             ))}

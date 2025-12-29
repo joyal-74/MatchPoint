@@ -13,6 +13,8 @@ export interface IManagerRepository {
 
     addTournamentToManager(managerId: string, tournamentId: string): Promise<void>;
 
+    joinTournamentUpdate(managerId: string, tournamentId: string): Promise<void>;
+
     addTeamToManager(managerId: string, teamId: string): Promise<void>;
 
     deleteByUserId(userId: string): Promise<void>;

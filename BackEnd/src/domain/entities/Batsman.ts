@@ -38,6 +38,12 @@ export class Batsman {
         this.retiredHurt = false;
     }
 
+    static fromDTO(dto): Batsman {
+        const b = new Batsman(dto.playerId);
+        Object.assign(b, dto);
+        return b;
+    }
+
     toDTO() {
         return {
             playerId: this.playerId,

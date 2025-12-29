@@ -18,9 +18,11 @@ import { EndOverUseCase } from "app/usecases/manager/match/EndOverUseCase";
 import { EndInningsUseCase } from "app/usecases/manager/match/EndInningsUseCase";
 import { AddPenaltyUseCase } from "app/usecases/manager/match/AddPenaltyUseCase";
 import { RetireBatsmanUseCase } from "app/usecases/manager/match/RetireBatsmanUseCase";
+import { EndMatchUseCase } from "app/usecases/manager/match/EndMatchUseCase";
 
 export const getLiveScoreUC = new GetLiveScoreUseCase(matchRepo);
 export const saveMatchDataUC = new SaveMatchData(matchRepository, logger);
+export const endMatchUC = new EndMatchUseCase(matchRepository, matchRepo);
 export const initiInningsUC = new InitInningsUseCase(matchRepo);
 export const addRunsUC = new AddRunsUseCase(matchRepo);
 export const setStrikerUC = new SetStrikerUseCase(matchRepo);
@@ -38,6 +40,6 @@ export const retireBatsmanUC = new RetireBatsmanUseCase(matchRepo);
 
 const matchPlayerServices = new MatchPlayerServices(matchRepository, playerRepository);
 const matchScoreServices = new MatchScoreService(initiInningsUC, addRunsUC, setStrikerUC, setNonStrikerUC, setBowlerUC,
-    addWicketUC, addExtrasUC, undoLastBallUC, startSuperOverUC, endOverUC, endInningsUC, addPenaltyUC, retireBatsmanUC);
+    addWicketUC, addExtrasUC, undoLastBallUC, startSuperOverUC, endOverUC, endInningsUC, addPenaltyUC, retireBatsmanUC, endMatchUC);
 
-export const matchController = new MatchController(matchPlayerServices, matchScoreServices, saveMatchDataUC, getLiveScoreUC);
+export const matchController = new MatchController(matchPlayerServices, matchScoreServices, saveMatchDataUC, getLiveScoreUC, endMatchUC);

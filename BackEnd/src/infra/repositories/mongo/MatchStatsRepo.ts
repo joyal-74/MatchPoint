@@ -1,9 +1,9 @@
 import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentStatsModel";
 import { MatchEntity } from "domain/entities/MatchEntity";
-import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { MatchStatsMapper } from "infra/utils/mappers/MatchStatsMapper";
+import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 
-export class MatchRepoMongo implements IMatchRepo {
+export class MatchRepoMongo implements IMatchStatsRepo {
     async findByMatchId(matchId: string): Promise<MatchEntity | null> {
         const doc = await TournamentMatchStatsModel.findOne({ matchId }).lean();
         if (!doc) return null;
@@ -13,7 +13,7 @@ export class MatchRepoMongo implements IMatchRepo {
 
     async findLiveMatches(): Promise<MatchEntity[]> {
         const docs = await TournamentMatchStatsModel
-            .find({ isLive: true })
+            .find({ status: 'ongoing' })
             .lean();
 
         if (!docs || docs.length === 0) return [];
@@ -37,5 +37,15 @@ export class MatchRepoMongo implements IMatchRepo {
         }
 
         return MatchStatsMapper.toDomain(updatedDoc);
+    }
+
+    async updateStatus(matchId: string, status: string): Promise<boolean> {
+        const doc = await TournamentMatchStatsModel.findOneAndUpdate(
+            { matchId },
+            { $set: { status } },
+            { new: true }
+        );
+
+        return !!doc;
     }
 }

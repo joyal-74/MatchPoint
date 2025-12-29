@@ -1,11 +1,11 @@
-import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { IAddExtrasUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { MatchEntity } from "domain/entities/MatchEntity";
 import { NotFoundError } from "domain/errors";
 
 export class AddExtrasUseCase implements IAddExtrasUseCase {
     constructor(
-        private matchRepo: IMatchRepo
+        private matchRepo: IMatchStatsRepo
     ) { }
 
     async execute({ matchId, type, runs }: { matchId: string; type: string; runs: number }): Promise<MatchEntity> {

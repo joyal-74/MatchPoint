@@ -4,11 +4,28 @@ import { Registration } from "domain/entities/Registration";
 import { NotFoundError } from "domain/errors";
 import { RegistrationModel } from "infra/databases/mongo/models/RegistrationModel";
 import { TournamentTeamMongoMapper } from "infra/utils/mappers/TournamentTeamMongoMapper";
+import { ClientSession } from "mongoose";
 
 export class RegistrationRepository implements IRegistrationRepository {
-    async create(registration: Omit<Registration, '_id' | 'createdAt' | 'updatedAt'>): Promise<TournamentTeamData> {
-        const team = await RegistrationModel.create(registration);
-        return TournamentTeamMongoMapper.toDomain(team);
+    async create(registration: Omit<Registration, '_id' | 'createdAt' | 'updatedAt'>, ctx?: unknown): Promise<Registration> {
+        const session = ctx as ClientSession | undefined;
+
+        const [createdDoc] = await RegistrationModel.create(
+            [registration],
+            { session }
+        );
+
+        return new Registration(
+            createdDoc._id.toString(),
+            createdDoc.tournamentId.toString(),
+            createdDoc.teamId.toString(),
+            createdDoc.captainId.toString(),
+            createdDoc.managerId.toString(),
+            createdDoc.paymentStatus,
+            createdDoc.paymentId,
+            createdDoc.createdAt,
+            createdDoc.updatedAt
+        );
     }
 
     async findByTournamentAndTeam(tournamentId: string, teamId: string): Promise<Registration | null> {
@@ -24,14 +41,24 @@ export class RegistrationRepository implements IRegistrationRepository {
         return TournamentTeamMongoMapper.toDomainArray(teams);
     }
 
-    async updatePaymentStatus(registrationId: string, paymentStatus: 'completed' | 'failed', paymentId: string): Promise<TournamentTeamData> {
-        const registration = await RegistrationModel.findByIdAndUpdate(
+    async updatePaymentStatus(registrationId: string, paymentStatus: 'completed' | 'failed', paymentId: string): Promise<Registration> {
+        const doc = await RegistrationModel.findByIdAndUpdate(
             registrationId,
             { paymentStatus, paymentId, updatedAt: new Date() },
             { new: true }
         );
-        if (!registration) throw new NotFoundError('Registration not found');
-        return TournamentTeamMongoMapper.toDomain(registration);
+        if (!doc) throw new NotFoundError('Registration not found');
+        return new Registration(
+            doc._id.toString(),
+            doc.tournamentId.toString(),
+            doc.teamId.toString(),
+            doc.captainId.toString(),
+            doc.managerId.toString(),
+            doc.paymentStatus,
+            doc.paymentId,
+            doc.createdAt,
+            doc.updatedAt
+        );
     }
 
     async findByPaymentId(paymentId: string): Promise<Registration | null> {
@@ -55,14 +82,31 @@ export class RegistrationRepository implements IRegistrationRepository {
     }
 
     async findByTeamIds(teamIds: string[]): Promise<Registration[] | null> {
-        const registrations = await RegistrationModel.find({ teamId: { $in: teamIds } })
-            .lean();
+        const docs = await RegistrationModel.find({ teamId: { $in: teamIds } }).lean();
 
-        return registrations.length ? registrations : null;
+        if (!docs || docs.length === 0) {
+            return null;
+        }
+
+        return docs.map(doc => new Registration(
+            doc._id.toString(),
+            doc.tournamentId.toString(),
+            doc.teamId.toString(),
+            doc.captainId.toString(),
+            doc.managerId.toString(),
+            doc.paymentStatus,
+            doc.paymentId,
+            doc.createdAt,
+            doc.updatedAt
+        ));
     }
 
 
-    async findTeamIdsByTournament(tournamentId: string) {
-        return RegistrationModel.find({ tournamentId }).distinct("teamId");
+    async findTeamIdsByTournament(tournamentId: string): Promise<string[]> {
+        const ids = await RegistrationModel
+            .find({ tournamentId })
+            .distinct("teamId");
+
+        return ids.map(id => id.toString());
     }
 }

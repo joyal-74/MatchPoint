@@ -1,10 +1,10 @@
-import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { IAddPenaltyUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { MatchEntity } from "domain/entities/MatchEntity";
 import { NotFoundError } from "domain/errors";
 
 export class AddPenaltyUseCase implements IAddPenaltyUseCase {
-    constructor(private matchRepo: IMatchRepo) { }
+    constructor(private matchRepo: IMatchStatsRepo) { }
 
     async execute(matchId: string, runs: number): Promise<MatchEntity | null> {
         const match = await this.matchRepo.findByMatchId(matchId);

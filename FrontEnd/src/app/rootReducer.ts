@@ -13,6 +13,11 @@ import subscriptionReducer from "../features/admin/subscription/subscriptionSlic
 import userSubscriptionReducer from "../features/shared/subscription/subscriptionSlice";
 import leaderboardReducer from "../features/shared/leaderboard/leaderboardSlice";
 import matchReducer from "../features/manager/Matches/matchSlice";
+import settingsReducer from "../features/shared/settings/settingsSlice";
+import notificationsReducer from "../features/player/notifications/notificationSlice";
+import adminTournamnetReducer from "../features/admin/tournament/tournamentSlice";
+import dashboardStatsReducer from "../features/admin/dashboard/dashboardSlice";
+import financialReducer from "../features/manager/financials/financialSlice";
 
 
 const appReducer = combineReducers({
@@ -30,6 +35,11 @@ const appReducer = combineReducers({
     userSubscription: userSubscriptionReducer,
     leaderboard: leaderboardReducer,
     match: matchReducer,
+    settings : settingsReducer,
+    notifications : notificationsReducer,
+    adminTournaments : adminTournamnetReducer,
+    adminDashboard : dashboardStatsReducer,
+    financials : financialReducer
 });
 
 export type RootState = ReturnType<typeof appReducer>;

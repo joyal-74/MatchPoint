@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { AlertCircle, Clock } from "lucide-react";
 
 interface OtpInterface {
     otp: string;
@@ -10,15 +11,24 @@ interface OtpInterface {
 const OtpVerify: React.FC<OtpInterface> = ({ otp, setOtp, expiresAt, error }) => {
     const [remainingTime, setRemainingTime] = useState(0);
 
+    // Timer Logic
     useEffect(() => {
         if (!expiresAt) return;
         const expiry = new Date(expiresAt).getTime();
 
-        const interval = setInterval(() => {
+        const updateTimer = () => {
             const now = Date.now();
             const diff = Math.max(0, expiry - now);
             setRemainingTime(diff);
-            if (diff <= 0) clearInterval(interval);
+            if (diff <= 0) return false; // Stop
+            return true; // Continue
+        };
+
+        // Initial call
+        if (!updateTimer()) return;
+
+        const interval = setInterval(() => {
+            if (!updateTimer()) clearInterval(interval);
         }, 1000);
 
         return () => clearInterval(interval);
@@ -31,43 +41,62 @@ const OtpVerify: React.FC<OtpInterface> = ({ otp, setOtp, expiresAt, error }) =>
         return `${minutes}:${seconds.toString().padStart(2, "0")}`;
     };
 
-    const isExpired = remainingTime <= 1000;
+    const isExpired = remainingTime <= 0;
 
     return (
-        <div className="flex flex-col text-sm w-full mx-auto">
-            <div className="flex justify-between items-center mb-1">
-                <label htmlFor="otp" className="text-sm">
+        <div className="flex flex-col space-y-2 w-full mx-auto">
+            {/* Header: Label + Timer */}
+            <div className="flex justify-between items-center">
+                <label htmlFor="otp" className="text-sm font-medium text-foreground">
                     One-Time Password
                 </label>
-                <span
-                    className={`text-xs font-medium ${
-                        isExpired
-                            ? "text-[var(--color-error-text)]"
-                            : "text-[var(--color-primary-text)]"
-                    }`}
-                >
-                    {isExpired ? "Expired" : formatTime(remainingTime)}
-                </span>
+                
+                {expiresAt && (
+                    <div className={`flex items-center gap-1.5 text-xs font-medium transition-colors duration-200 ${
+                        isExpired ? "text-destructive" : "text-primary"
+                    }`}>
+                        <Clock size={12} />
+                        <span>{isExpired ? "Expired" : formatTime(remainingTime)}</span>
+                    </div>
+                )}
             </div>
 
-            <input
-                id="otp"
-                type="text"
-                name="otp"
-                placeholder="Enter OTP"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                className={`p-3 rounded-lg bg-[var(--color-surface-raised)]/20 
-                    placeholder-[var(--color-text-tertiary)] 
-                    border transition-all duration-200
-                    focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-opacity-50
-                    disabled:opacity-50 disabled:cursor-not-allowed 
-                    border-[var(--color-border)] hover:border-[var(--color-primary)] hover:border-opacity-50
-                    ${error ? "border border-red-500" : "border border-transparent"}`}
-            />
+            {/* Input Field */}
+            <div className="relative">
+                <input
+                    id="otp"
+                    type="text"
+                    name="otp"
+                    placeholder="Enter 6-digit code"
+                    value={otp}
+                    onChange={(e) => {
+                        // Optional: Limit to numbers only if desired
+                        const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+                        setOtp(val);
+                    }}
+                    disabled={isExpired}
+                    className={`
+                        flex h-10 w-full rounded-md px-3 py-2 text-sm text-center tracking-widest transition-all duration-200
+                        bg-background border font-mono
+                        placeholder:text-muted-foreground placeholder:tracking-normal
+                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1
+                        disabled:cursor-not-allowed disabled:opacity-50
+                        ${error 
+                            ? "border-destructive focus-visible:ring-destructive/50 text-destructive" 
+                            : "border-input text-foreground focus-visible:border-primary focus-visible:ring-primary/30 hover:border-primary/50"
+                        }
+                    `}
+                    maxLength={6}
+                    autoComplete="one-time-code"
+                />
+            </div>
 
+            {/* Error Message */}
             {error && (
-                <p className="text-red-500 text-xs mt-1 text-center">{error}</p>
+                <div className="flex items-center justify-center gap-1.5 text-xs font-medium text-destructive animate-in slide-in-from-top-1 fade-in duration-200">
+                    <AlertCircle size={12} />
+                    <span>{error}</span>
+                </div>
             )}
         </div>
     );

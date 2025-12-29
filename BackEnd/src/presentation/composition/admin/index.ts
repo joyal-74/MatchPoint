@@ -1,6 +1,6 @@
 import { UsersManagementController } from 'presentation/http/controllers/admin/UsersManagementController';
 import { logger } from '../shared/providers';
-import { managerRepository, planRepository, playerRepository, userRepository } from 'presentation/composition/shared/repositories';
+import { dashboardRepo, managerRepository, planRepository, playerRepository, teamRepository, tournamentRepository, userRepository } from 'presentation/composition/shared/repositories';
 import { GetAllViewers } from 'app/usecases/admin/GetAllViewers';
 import { GetAllManagers } from 'app/usecases/admin/GetAllManagers';
 import { GetAllPlayers } from 'app/usecases/admin/GetAllPlayers';
@@ -15,6 +15,15 @@ import { PlanController } from 'presentation/http/controllers/admin/PlanControll
 import { GetPlansUseCase } from 'app/usecases/admin/GetPlansUseCase';
 import { CreatePlanUseCase } from 'app/usecases/admin/CreatePlanUseCase';
 import { DeletePlanUseCase } from 'app/usecases/admin/DeletePlanUseCase';
+import { TournamentManagementController } from 'presentation/http/controllers/admin/TournamnetManagementController';
+import { GetAllTeams } from 'app/usecases/admin/GetAllTeams';
+import { GetAllTournaments } from 'app/usecases/admin/GetAllTournaments';
+import { DashboardController } from 'presentation/http/controllers/admin/DashBoardController';
+import { GetDashboardStatsUseCase } from 'app/usecases/admin/GetDashboardStatsUseCase';
+import { UpdatePlanUseCase } from 'app/usecases/admin/UpdatePlanUseCase';
+import { GetTeamDetails } from 'app/usecases/admin/GetTeamDetails';
+import { ChangeTeamStatus } from 'app/usecases/admin/ChangeTeamStatus';
+import { ChangeTeamDetailStatus } from 'app/usecases/admin/BlockTeamUsecase';
 
 const getAllViewersUC = new GetAllViewers(userRepository, logger);
 const getAllManagersUC = new GetAllManagers(userRepository, logger);
@@ -38,12 +47,34 @@ export const usersManagementController = new UsersManagementController(
     getViewerDetailsUC
 );
 
+const getTeamsUseCase = new GetAllTeams(teamRepository, logger);
+const getTeamsDetailsUseCase = new GetTeamDetails(teamRepository, logger);
+const getTournamentsUseCase = new GetAllTournaments(tournamentRepository, logger);
+const changeTeamStatusUC = new ChangeTeamStatus(teamRepository, logger);
+const changeTeamDetailStatusUC = new ChangeTeamDetailStatus(teamRepository, logger);
+
+export const tournamentController = new TournamentManagementController(
+    getTeamsUseCase,
+    getTeamsDetailsUseCase,
+    getTournamentsUseCase,
+    changeTeamStatusUC,
+    changeTeamDetailStatusUC
+);
+
 const getPlansUC = new GetPlansUseCase(planRepository);
-const createPlansUC = new CreatePlanUseCase(planRepository);
+const createPlansUC = new CreatePlanUseCase(planRepository, logger);
 const deletePlansUC = new DeletePlanUseCase(planRepository);
+const updatePlansUC = new UpdatePlanUseCase(planRepository, logger);
 
 export const planController = new PlanController(
     getPlansUC,
     createPlansUC,
-    deletePlansUC
+    deletePlansUC,
+    updatePlansUC
+);
+
+const getDashboard = new GetDashboardStatsUseCase(dashboardRepo, logger)
+
+export const dashboardController = new DashboardController(
+    getDashboard
 );

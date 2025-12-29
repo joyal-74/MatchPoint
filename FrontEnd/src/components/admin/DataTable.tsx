@@ -14,7 +14,7 @@ const DataTable = <T extends { _id: string; status?: string }>({
     currentFilter = "All",
     onFilterChange,
     onSearch,
-    itemsPerPage = 10,
+    itemsPerPage = 8,
 }: DataTableProps<T>) => {
     const [localSearchTerm, setLocalSearchTerm] = useState("");
 
@@ -23,127 +23,169 @@ const DataTable = <T extends { _id: string; status?: string }>({
         onSearch(search);
     };
 
-    return (
-        <div className="p-3 sm:p-6 text-[var(--color-text-primary)] w-full max-w-full">
-            <h1 className="text-xl sm:text-2xl font-bold mb-4">{title}</h1>
+    // Helper: Split columns for the mobile card view
+    const primaryColumn = columns[0];
+    const detailColumns = columns.slice(1);
 
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4 sm:gap-0">
-                <div className="w-full sm:w-auto">
+    return (
+        <div className="w-full space-y-4 sm:p-6 ">
+
+            {/* Header & Controls */}
+            <div className="space-y-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                        {title}
+                    </h1>
+
+                    {/* Filter Pills */}
+                    {filters.length > 0 && (
+                        <div className="flex flex-wrap gap-3">
+                            {filters.map((f) => {
+                                const isActive = currentFilter === f;
+                                return (
+                                    <button
+                                        key={f}
+                                        onClick={() => onFilterChange(f)}
+                                        className={`
+                                            px-3 py-1 text-sm font-medium rounded-full transition-all border
+                                            ${isActive
+                                                ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                                                : "bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground"
+                                            }
+                                        `}
+                                    >
+                                        {f}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+
+                <div className="w-full sm:max-w-xs">
                     <SearchBar
-                        placeholder={"Search for players"}
+                        placeholder="Search..."
                         value={localSearchTerm}
                         onChange={handleSearch}
                     />
                 </div>
-                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-                    {filters.map((f) => (
-                        <button
-                            key={f}
-                            onClick={() => onFilterChange(f)}
-                            className={`px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm transition-colors flex-shrink-0 ${currentFilter === f
-                                ? "bg-[var(--color-primary)] text-white"
-                                : "bg-[var(--color-background-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-primary-light)] hover:text-white"
-                                }`}
-                        >
-                            {f}
-                        </button>
-                    ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden lg:block w-full overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm">
+                        <thead className="bg-muted/40 border-b border-border">
+                            <tr>
+                                {columns.map((col) => (
+                                    <th
+                                        key={col.id}
+                                        // UPDATED: Allow passing text-center/right and widths
+                                        className={`px-3 py-3 font-semibold text-xs text-muted-foreground uppercase tracking-wider whitespace-nowrap ${col.className || ""}`}
+                                    >
+                                        {col.label}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+
+                        <tbody className="divide-y divide-border">
+                            {data.map((row) => (
+                                <tr key={row._id} className="hover:bg-muted/50 transition-colors">
+                                    {columns.map((col) => (
+                                        <td
+                                            key={col.id}
+                                            // UPDATED: Inherit text alignment from col.className logic
+                                            className={`px-3 py-3 text-foreground whitespace-nowrap ${col.className?.includes('text-right') ? 'text-right' : col.className?.includes('text-center') ? 'text-center' : 'text-left'}`}
+                                        >
+                                            {col.render
+                                                ? col.render(row)
+                                                : col.accessor
+                                                    ? (row[col.accessor] as React.ReactNode)
+                                                    : null
+                                            }
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            {/* Desktop Table View (xl screens and up) */}
-            <div className="hidden xl:block overflow-x-auto rounded-lg shadow border border-[var(--color-border)]">
-                <table className="w-full text-sm text-left">
-                    <thead className="bg-[var(--color-primary-muted)]">
-                        <tr>
-                            {columns.map((col) => (
-                                <th
-                                    key={col.id}
-                                    className={`px-4 py-2 last:text-center ${col.className || ""}`}
-                                >
-                                    {col.label}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    
-                    <tbody className="bg-[var(--color-background-secondary)] py-1">
-                        {data.map((row) => (
-                            <tr
-                                key={row._id}
-                                className="border-b border-[var(--color-border)] hover:bg-[var(--color-background-primary)] transition-colors"
-                            >
-                                {columns.map((col) => (
-                                    <td key={col.id} className="px-4 py-2 truncate">
-                                        {col.render
-                                            ? col.render(row)
-                                            : col.accessor
-                                                ? (row[col.accessor] as React.ReactNode)
-                                                : null
-                                        }
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+            {/* Mobile/Tablet Card View */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
+                {data.map((row) => {
+                    const primaryValue = primaryColumn.render
+                        ? primaryColumn.render(row)
+                        : (row[primaryColumn.accessor as keyof T] as React.ReactNode);
 
-            <div className="xl:hidden">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {data.map((row) => (
+                    return (
                         <div
                             key={row._id}
-                            className="bg-[var(--color-background-secondary)] border border-[var(--color-border)] rounded-lg p-4 shadow hover:shadow-md transition-shadow"
+                            className="flex flex-col bg-card rounded-xl border border-border shadow-sm overflow-hidden"
                         >
-                            <div className="space-y-3">
-                                {columns.map((col) => {
+                            {/* Card Header: Themed background with accent border */}
+                            <div className="relative px-5 py-3 border-b border-border bg-primary/10 flex justify-between items-center">
+                                {/* Theme Accent Line */}
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
+
+                                <div className="font-bold text-foreground text-base truncate pl-2">
+                                    {primaryValue}
+                                </div>
+
+                                {row.status && (
+                                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-background text-primary border border-primary/20">
+                                        {row.status}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Card Body */}
+                            <div className="p-5 grid grid-cols-2 gap-y-4 gap-x-2">
+                                {detailColumns.map((col) => {
                                     const value = col.render
                                         ? col.render(row)
                                         : col.accessor
-                                            ? (row[col.accessor] as React.ReactNode)
+                                            ? (row[col.accessor] as keyof T)
                                             : null;
 
-                                    // Skip empty values to save space
                                     if (!value && value !== 0) return null;
 
                                     return (
-                                        <div key={col.id} className="flex flex-col space-y-1">
-                                            <span className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wide">
+                                        <div key={col.id} className="flex flex-col col-span-1 overflow-hidden">
+                                            <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                                                 {col.label}
                                             </span>
-                                            <div className="text-sm text-[var(--color-text-primary)] break-words truncate">
-                                                {value}
-                                            </div>
+                                            <span className="text-sm font-medium text-foreground truncate">
+                                                {value as React.ReactNode}
+                                            </span>
                                         </div>
                                     );
                                 })}
                             </div>
                         </div>
-                    ))}
-                </div>
-
-                {data.length === 0 && (
-                    <div className="text-center py-8 text-[var(--color-text-secondary)]">
-                        <p>No data available</p>
-                    </div>
-                )}
+                    );
+                })}
             </div>
 
+            {/* Empty State */}
             {data.length === 0 && (
-                <div className="hidden xl:block text-center py-8 text-[var(--color-text-secondary)] border border-[var(--color-border)] rounded-b-lg">
-                    <p>No data available</p>
+                <div className="flex flex-col items-center justify-center py-10 px-4 text-center border border-dashed border-border rounded-xl bg-muted/20">
+                    <p className="text-sm font-medium text-foreground">No results found</p>
+                    <p className="text-xs text-muted-foreground mt-1">Try adjusting your filters</p>
                 </div>
             )}
 
-            <div className="mt-5">
+            {/* Pagination */}
+            {totalCount > 0 && data.length > 0 && (
                 <Pagination
                     totalItems={totalCount}
                     itemsPerPage={itemsPerPage}
                     currentPage={currentPage}
                     onPageChange={onPageChange}
                 />
-            </div>
+            )}
         </div>
     );
 };

@@ -8,7 +8,7 @@ interface FormFieldProps {
     placeholder?: string;
     name?: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-    as?: "input" | "select";
+    as?: "input" | "select" | 'textarea';
     options?: string[];
     className?: string;
     error?: string;
@@ -35,21 +35,23 @@ const FormField: React.FC<FormFieldProps> = ({
     autoComplete,
     helperText,
 }) => {
+    
+    // Kept original padding/rounding, updated colors only
     const baseInputClasses = `
-        p-3 rounded-lg bg-[var(--color-surface-raised)]/20 
-        placeholder-[var(--color-text-tertiary)] 
+        p-3 rounded-lg bg-background text-foreground
+        placeholder:text-muted-foreground
         border transition-all duration-200
-        focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-opacity-50
+        focus:outline-none focus:ring-2 focus:ring-primary/50
         disabled:opacity-50 disabled:cursor-not-allowed
     `;
 
     const normalStateClasses = `
-        border-[var(--color-border)] 
-        hover:border-[var(--color-primary)] hover:border-opacity-50
+        border-input
+        hover:border-primary/50
     `;
 
     const errorStateClasses = `
-        border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-50
+        border-destructive focus:border-destructive focus:ring-destructive/50
     `;
 
     const inputClasses = `
@@ -63,12 +65,11 @@ const FormField: React.FC<FormFieldProps> = ({
             <div className="flex items-center justify-between">
                 <label 
                     htmlFor={id} 
-                    className="text-sm font-medium text-[var(--color-text-primary)] flex items-center gap-1"
+                    className="text-sm font-medium text-foreground flex items-center gap-1"
                 >
                     {label}
-                    {required && <span className="text-red-500">*</span>}
+                    {required && <span className="text-destructive">*</span>}
                 </label>
-                
             </div>
 
             {as === "input" ? (
@@ -98,14 +99,14 @@ const FormField: React.FC<FormFieldProps> = ({
                     aria-invalid={!!error}
                     aria-describedby={error ? `${id}-error` : undefined}
                 >
-                    <option value="" disabled className="text-[var(--color-text-tertiary)]">
+                    <option value="" disabled className="text-muted-foreground">
                         Select {label.toLowerCase()}
                     </option>
                     {options.map((opt) => (
                         <option 
                             key={opt} 
                             value={opt}
-                            className="text-[var(--color-text-primary)]"
+                            className="text-foreground bg-background"
                         >
                             {opt}
                         </option>
@@ -117,7 +118,7 @@ const FormField: React.FC<FormFieldProps> = ({
             {helperText && !error && (
                 <p 
                     id={`${id}-helper`}
-                    className="text-xs text-[var(--color-text-secondary)]"
+                    className="text-xs text-muted-foreground"
                 >
                     {helperText}
                 </p>
@@ -126,7 +127,7 @@ const FormField: React.FC<FormFieldProps> = ({
             {error && (
                 <p 
                     id={`${id}-error`}
-                    className="text-red-500 text-xs flex items-center gap-1"
+                    className="text-destructive text-xs flex items-center gap-1"
                     role="alert"
                 >
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">

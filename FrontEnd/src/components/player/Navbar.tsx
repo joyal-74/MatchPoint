@@ -4,15 +4,26 @@ import ProfileCard from "../shared/ProfileCard";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { logoutUser } from "../../features/auth";
 import { useLocation, useNavigate } from "react-router-dom";
+import NotificationDropdown from "./notifications/NotificationDropdown";
+import { useNotifications } from "../../hooks/useNotifications";
 
 const Navbar: React.FC = () => {
     const [showProfileCard, setShowProfileCard] = useState(false);
+
     const profileRef = useRef<HTMLDivElement>(null);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const location = useLocation();
     const user = useAppSelector(s => s.auth.user);
+
     const role = user?.role ?? "guest";
+
+    const {
+        unreadCount,
+        isOpen: showNotifications,
+        toggle: toggleNotifications,
+        close: closeNotifications
+    } = useNotifications(user?._id);
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => profileRef.current && !profileRef.current.contains(e.target as Node) && setShowProfileCard(false);
@@ -25,7 +36,7 @@ const Navbar: React.FC = () => {
         navigate("/login");
     };
 
-    const handleProfileAction = (action: "logout" | "teams" | "profile") => {
+    const handleProfileAction = (action: "logout" | "teams" | "profile" | 'settings') => {
         switch (action) {
             case "logout":
                 handleLogout();
@@ -35,6 +46,9 @@ const Navbar: React.FC = () => {
                 break;
             case "profile":
                 navigate("/player/profile");
+                break;
+            case "settings":
+                navigate("/player/settings");
                 break;
         }
     };
@@ -65,8 +79,16 @@ const Navbar: React.FC = () => {
             </ul>
 
             <div className="flex items-center gap-3 md:gap-4 relative">
-                <button className="relative p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-secondary)] rounded-full transition-all duration-200">
+                <button
+                    onClick={toggleNotifications}
+                    className="relative p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-secondary)] rounded-full transition-all duration-200"
+                >
                     <Bell className="w-5 h-5" />
+                    {unreadCount > 0 && (
+                        <span className="absolute top-1 right-1 bg-red-600 text-xs px-1 rounded-full">
+                            {unreadCount}
+                        </span>
+                    )}
                 </button>
 
                 <button
@@ -85,6 +107,19 @@ const Navbar: React.FC = () => {
                     {showProfileCard && <div className="absolute right-0 mt-2">
                         <ProfileCard role={role} onAction={handleProfileAction} /></div>}
                 </div>
+
+                {showNotifications && (
+
+                    <>
+                        <div
+                            className="fixed inset-0 z-40 bg-black/0"
+                            onClick={closeNotifications}
+                        />
+                        <div className="absolute right-0 top-12 w-96 z-50">
+                            <NotificationDropdown onClose={closeNotifications} role={role} />
+                        </div>
+                    </>
+                )}
             </div>
         </nav>
     );

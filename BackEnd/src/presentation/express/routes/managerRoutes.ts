@@ -4,6 +4,7 @@ import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
 import { expressFileUpdateHandler } from "presentation/adaptors/ExpressFileAdaptor";
 import { managerProfileController, teamManagementController, tournamentManagementController } from "presentation/composition";
 import { matchController } from "presentation/composition/manager/matches";
+import { financialsController } from "presentation/composition/manager/profile";
 
 const router = Router();
 const upload = multer();
@@ -45,6 +46,9 @@ router.get("/tournament/:tournamentId/leaderboard", expressAdapter(tournamentMan
 router.get("/tournament/matches/:matchId/details", expressAdapter(matchController.getMatchDetails));
 router.get("/tournament/matches/:matchId/livescore", expressAdapter(matchController.getLiveScore));
 router.post("/tournament/matches/:matchId/save", expressAdapter(matchController.saveMatchData));
+
+router.get("/financials/:managerId", expressAdapter(financialsController.getReport));
+
 
 
 export default router;

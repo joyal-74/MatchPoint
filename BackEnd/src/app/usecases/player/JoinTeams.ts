@@ -4,11 +4,13 @@ import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRep
 import { IJoinTeamUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 import { TeamData } from "domain/dtos/Team.dto";
 import { BadRequestError, NotFoundError } from "domain/errors";
+import { INotificationRepository } from "app/repositories/interfaces/shared/INotificationRepository";
 
 export class JoinTeamUseCase implements IJoinTeamUseCase {
     constructor(
         private _teamRepo: ITeamRepository,
         private _playerRepo: IPlayerRepository,
+        private _notificationRepo: INotificationRepository,
         private _logger: ILogger
     ) { }
 
@@ -31,7 +33,21 @@ export class JoinTeamUseCase implements IJoinTeamUseCase {
             throw new BadRequestError("Team is full");
 
         const updatedTeam = await this._teamRepo.addMember(teamId, userId, player?._id);
-        this._logger.info(`Player ${userId} successfully joined team ${teamId}`);
+
+        await this._notificationRepo.create({
+            userId: team.managerId,
+            type: "TEAM_JOIN_REQUEST",
+            title: "New Join Request",
+            message: `${player.userId} requested to join your team`,
+            meta: {
+                teamId,
+                playerId: player._id,
+                requestType: "join",
+                inviteStatus: "pending"
+            }
+        });
+
+        this._logger.info(`Join request notification sent to manager`);
 
         return updatedTeam;
     }

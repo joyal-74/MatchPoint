@@ -1,11 +1,11 @@
-import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { IAddWicketUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { AddWicketPayload } from "domain/entities/Innings";
 import { MatchEntity } from "domain/entities/MatchEntity";
 import { NotFoundError } from "domain/errors";
 
 export class AddWicketUseCase implements IAddWicketUseCase {
-    constructor(private matchRepo: IMatchRepo) {}
+    constructor(private matchRepo: IMatchStatsRepo) {}
 
     async execute(payload: AddWicketPayload): Promise<MatchEntity> {
         const match = await this.matchRepo.findByMatchId(payload.matchId);

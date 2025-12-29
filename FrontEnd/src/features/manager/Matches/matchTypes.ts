@@ -6,7 +6,7 @@ export interface Player {
     profileImage?: string;
     battingStyle?: string;
     bowlingStyle?: string;
-    stats: Record<string, any>;
+    stats: Record<string, string | number | boolean>;
 }
 
 export interface Team {
@@ -16,7 +16,7 @@ export interface Team {
     logo?: string;
 }
 
-export type MatchStatus = "upcoming" | "live" | "completed";
+export type MatchStatus = "upcoming" | "ongoing" | "completed";
 
 export interface MatchExtras {
     wides: number;
@@ -40,7 +40,7 @@ export interface Match {
     winner: string;
     teamA: Team;
     teamB: Team;
-    stats?: Record<string, any>;
+    stats?: Record<string, string | number | boolean>;
     overs: number;
 }
 
@@ -96,6 +96,8 @@ export interface LiveScoreState {
     target: number;
     currentRunRate: number;
     requiredRunRate: number;
+    status : string;
+    result : string;
 }
 
 export interface BattingStats {

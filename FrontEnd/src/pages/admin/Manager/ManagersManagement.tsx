@@ -1,49 +1,95 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 import AdminLayout from "../../layout/AdminLayout";
 import DataTable from "../../../components/admin/DataTable";
+
 import { fetchManagers, userStatusChange } from "../../../features/admin/users/userThunks";
 import type { RootState, AppDispatch } from "../../../app/store";
+
 import { useDebounce } from "../../../hooks/useDebounce";
-import { managerColumns } from "../../../utils/adminColumns";
+import { getManagerColumns } from "../../../utils/adminColumns";
+
 import type { SignupRole } from "../../../types/UserRoles";
 import type { GetAllUsersParams } from "../../../types/api/Params";
 import type { User } from "../../../types/User";
-import { useNavigate } from "react-router-dom";
+
+const ITEMS_PER_PAGE = 8;
 
 const ManagersManagement = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { managers, totalCount } = useSelector((state: RootState) => state.users);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [currentFilter, setCurrentFilter] = useState("All");
-    const [searchTerm, setSearchTerm] = useState("");
-    const debouncedSearch = useDebounce(searchTerm, 1000);
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const { managers, totalCount } = useSelector(
+        (state: RootState) => state.users
+    );
+
+    /* ---------------- URL → STATE ---------------- */
+
+    const currentPage = Number(searchParams.get("page")) || 1;
+    const currentFilter = searchParams.get("filter") || "All";
+    const searchTerm = searchParams.get("search") || "";
+
+    const debouncedSearch = useDebounce(searchTerm, 1000);
+
+    /* ---------------- API PARAMS ---------------- */
 
     const params: GetAllUsersParams = useMemo(() => ({
         page: currentPage,
-        limit: 10,
+        limit: ITEMS_PER_PAGE,
         filter: currentFilter === "All" ? undefined : currentFilter,
-        search: debouncedSearch || undefined
+        search: debouncedSearch || undefined,
     }), [currentPage, currentFilter, debouncedSearch]);
+
+    /* ---------------- FETCH ---------------- */
 
     useEffect(() => {
         dispatch(fetchManagers(params));
     }, [dispatch, params]);
 
-    const handleStatusChange = (role: SignupRole, userId: string, newStatus: boolean) => {
-        dispatch(userStatusChange({ role, userId, isActive: newStatus, params }))
+    /* ---------------- HANDLERS ---------------- */
+
+    const handlePageChange = (page: number) => {
+        setSearchParams(prev => {
+            prev.set("page", String(page));
+            return prev;
+        });
     };
 
     const handleFilterChange = (filter: string) => {
-        setCurrentFilter(filter);
-        setCurrentPage(1);
+        setSearchParams({
+            page: "1",
+            filter,
+            search: searchTerm,
+        });
     };
 
     const handleSearch = (search: string) => {
-        setSearchTerm(search);
-        setCurrentPage(1);
+        setSearchParams({
+            page: "1",
+            filter: currentFilter,
+            search,
+        });
     };
+
+    const handleStatusChange = (
+        role: SignupRole,
+        userId: string,
+        newStatus: boolean
+    ) => {
+        dispatch(
+            userStatusChange({
+                role,
+                userId,
+                isActive: newStatus,
+                params,
+            })
+        );
+    };
+
+    /* ---------------- RENDER ---------------- */
 
     return (
         <AdminLayout>
@@ -52,12 +98,13 @@ const ManagersManagement = () => {
                 data={managers}
                 totalCount={totalCount}
                 currentPage={currentPage}
-                onPageChange={setCurrentPage}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={handlePageChange}
                 filters={["All", "Active", "Blocked"]}
                 currentFilter={currentFilter}
                 onFilterChange={handleFilterChange}
                 onSearch={handleSearch}
-                columns={managerColumns(handleStatusChange, navigate)}
+                columns={getManagerColumns(handleStatusChange, navigate)}
             />
         </AdminLayout>
     );

@@ -50,13 +50,15 @@ const initialState: MatchState = {
     loading: false,
     error: undefined,
     liveScore: {
+        status : '',
         innings1: initialInningsState,
         innings2: null,
         currentInnings: 1,
         requiredRuns: 0,
         target: 0,
         currentRunRate: 0,
-        requiredRunRate: 0
+        requiredRunRate: 0,
+        result : ''
     }
 };
 

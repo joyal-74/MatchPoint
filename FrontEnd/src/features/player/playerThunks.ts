@@ -28,6 +28,11 @@ export const fetchPlayerData = createAsyncThunk(
     createApiThunk(playerEndpoints.fetchPlayerData)
 );
 
+export const teamInviteReponse = createAsyncThunk(
+    "player/teamInviteReponse",
+    createApiThunk(playerEndpoints.teamInviteReponse)
+);
+
 
 export const updatePlayerData = createAsyncThunk(
     "player/updatePlayerData",

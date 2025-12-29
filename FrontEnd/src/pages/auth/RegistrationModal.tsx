@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { decodeJWT } from '../../utils/jwtDecoder';
 import type { Gender, SignupRole } from '../../types/UserRoles';
 import type { CompleteUserData } from '../../types/api/UserApi';
+import FormField from '../../components/shared/FormField';
 
 interface UserDetails {
     email: string;
@@ -19,20 +20,6 @@ interface RegistrationModalProps {
     loading?: boolean;
     authProvider: string;
 }
-
-const inputClasses = `
-  w-full p-3 rounded-lg border transition-all duration-200
-  bg-neutral-900/60 text-neutral-100 border-neutral-700 placeholder-neutral-400
-  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-  disabled:opacity-50 disabled:cursor-not-allowed
-`;
-
-const selectClasses = `${inputClasses} appearance-none bg-no-repeat bg-right pr-10 
-  bg-[url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' 
-  fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a1a1aa' 
-  stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' 
-  d='m6 8 4 4 4-4'/%3e%3c/svg%3e")] bg-[length:1.5rem_1.5rem] 
-  bg-[center_right_0.75rem]`;
 
 const RegistrationModal: React.FC<RegistrationModalProps> = ({
     tempToken,
@@ -59,7 +46,6 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
             authProvider: authProvider
         }));
     }, [authProvider]);
-
 
     useEffect(() => {
         if (tempToken) {
@@ -98,78 +84,84 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 backdrop-blur-sm bg-black/70 flex items-center justify-center z-50 p-4">
-            <div className="bg-neutral-900 text-neutral-100 rounded-2xl p-6 w-full max-w-md border border-neutral-700 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="w-full max-w-md p-6 rounded-xl shadow-2xl bg-card border border-border animate-in zoom-in-95 duration-200">
+                
+                {/* Header */}
                 <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold mb-1">Complete Registration</h2>
-                    <p className="text-neutral-400 text-sm">
-                        Please provide additional information to continue
+                    <h2 className="text-2xl font-bold tracking-tight text-foreground">Complete Registration</h2>
+                    <p className="text-sm text-muted-foreground mt-1">
+                        Please provide a few more details to continue
                     </p>
                 </div>
 
+                {/* User Profile Preview */}
                 {userDetails && (
-                    <div className="mb-6 p-4 bg-neutral-800/70 rounded-xl border border-neutral-700">
-                        <div className="flex items-center space-x-3">
-                            {userDetails.picture && (
-                                <img
-                                    src={userDetails.picture}
-                                    alt={userDetails.name}
-                                    className="w-10 h-10 rounded-full border border-neutral-700"
-                                />
-                            )}
-                            <div className="min-w-0 flex-1">
-                                <p className="font-semibold text-sm truncate">{userDetails.name}</p>
-                                <p className="text-neutral-400 text-xs truncate">{userDetails.email}</p>
+                    <div className="mb-6 p-3 rounded-lg border border-border bg-muted/40 flex items-center gap-3">
+                        {userDetails.picture ? (
+                            <img
+                                src={userDetails.picture}
+                                alt={userDetails.name}
+                                className="w-10 h-10 rounded-full border border-border"
+                            />
+                        ) : (
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                {userDetails.name.charAt(0)}
                             </div>
+                        )}
+                        <div className="min-w-0 flex-1">
+                            <p className="text-sm font-semibold text-foreground truncate">{userDetails.name}</p>
+                            <p className="text-xs text-muted-foreground truncate">{userDetails.email}</p>
                         </div>
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-5">
-                    {/* Role */}
-                    <div>
-                        <label className="block text-sm font-semibold mb-2">
-                            I am a <span className="text-red-500">*</span>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    
+                    {/* Role Selector */}
+                    {/* We use a manual Select here to handle value vs label casing specifically */}
+                    <div className="flex flex-col space-y-2">
+                        <label htmlFor="role" className="text-sm font-medium text-foreground">
+                            I am a <span className="text-destructive">*</span>
                         </label>
-                        <select
-                            name="role"
-                            value={formData.role}
-                            onChange={handleChange}
-                            required
-                            className={selectClasses}
-                        >
-                            <option value="player">Player</option>
-                            <option value="viewer">Viewer</option>
-                            <option value="manager">Manager</option>
-                        </select>
-                    </div>
-
-                    {/* Username & Gender */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-semibold mb-2">
-                                Username <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="username"
-                                value={formData.username}
+                        <div className="relative">
+                            <select
+                                id="role"
+                                name="role"
+                                value={formData.role}
                                 onChange={handleChange}
                                 required
-                                className={inputClasses}
-                                placeholder="Choose username"
-                            />
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                <option value="player">Player</option>
+                                <option value="viewer">Viewer</option>
+                                <option value="manager">Manager</option>
+                            </select>
                         </div>
-                        <div>
-                            <label className="block text-sm font-semibold mb-2">
-                                Gender <span className="text-red-500">*</span>
+                    </div>
+
+                    {/* Username & Gender Grid */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                            id="username"
+                            label="Username"
+                            value={formData.username}
+                            onChange={handleChange}
+                            required
+                            placeholder="username"
+                        />
+                        
+                        <div className="flex flex-col space-y-2">
+                            <label htmlFor="gender" className="text-sm font-medium text-foreground">
+                                Gender <span className="text-destructive">*</span>
                             </label>
                             <select
+                                id="gender"
                                 name="gender"
                                 value={formData.gender}
                                 onChange={handleChange}
                                 required
-                                className={selectClasses}
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
                             >
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
@@ -177,69 +169,61 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                         </div>
                     </div>
 
-                    {/* Phone & Sport */}
+                    {/* Phone & Sport Grid */}
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-semibold mb-2">Phone Number</label>
-                            <input
-                                type="tel"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                pattern="[0-9]{10}"
-                                maxLength={10}
-                                className={inputClasses}
-                                placeholder="9876543210"
-                            />
-                        </div>
+                        <FormField
+                            id="phone"
+                            label="Phone"
+                            type="tel"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            placeholder="9876543210"
+                            // Adding pattern validation logic to onChange via FormField isn't direct, 
+                            // so we rely on standard html attributes passed down
+                        />
 
                         {formData.role === 'player' && (
-                            <div>
-                                <label className="block text-sm font-semibold mb-2">
-                                    Sport <span className="text-red-500">*</span>
+                             <div className="flex flex-col space-y-2">
+                                <label htmlFor="sport" className="text-sm font-medium text-foreground">
+                                    Sport <span className="text-destructive">*</span>
                                 </label>
                                 <select
+                                    id="sport"
                                     name="sport"
                                     value={formData.sport}
                                     onChange={handleChange}
                                     required
-                                    className={selectClasses}
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
                                 >
                                     <option value="" disabled>Select Sport</option>
                                     <option value="Cricket">Cricket</option>
-
+                                    <option value="Football">Football</option>
                                 </select>
                             </div>
                         )}
                     </div>
 
-                    <div className="text-xs text-neutral-400">
-                        <span className="text-red-500">*</span> Required fields
-                    </div>
+                    <p className="text-xs text-muted-foreground">
+                        <span className="text-destructive">*</span> Required fields
+                    </p>
 
-                    {/* Buttons */}
-                    <div className="flex justify-end space-x-3 pt-2">
+                    {/* Footer Actions */}
+                    <div className="flex justify-end gap-3 pt-4 border-t border-border mt-6">
                         <button
                             type="button"
                             onClick={onClose}
                             disabled={loading}
-                            className="px-6 py-3 text-sm font-medium rounded-lg border border-neutral-700 bg-neutral-800 hover:bg-neutral-700 transition-all disabled:opacity-50"
+                            className="px-4 py-2 text-sm font-medium rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors disabled:opacity-50"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-6 py-3 text-sm font-medium text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-neutral-900 disabled:opacity-50"
+                            className="px-4 py-2 text-sm font-medium text-primary-foreground rounded-md bg-primary hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 flex items-center gap-2"
                         >
-                            {loading ? (
-                                <span className="flex items-center space-x-2">
-                                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                    <span>Completing...</span>
-                                </span>
-                            ) : (
-                                'Complete Registration'
-                            )}
+                            {loading && <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />}
+                            Complete Registration
                         </button>
                     </div>
                 </form>

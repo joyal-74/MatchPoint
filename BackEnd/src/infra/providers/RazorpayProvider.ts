@@ -63,6 +63,7 @@ export class RazorpayProvider implements IPaymentProvider {
 
             const notes = payment.notes ?? {};
             let metadata: PaymentMetadata;
+            const amountPaid = payment.amount ? (Number(payment.amount) / 100) : 0;
 
             if ('tournamentId' in notes) {
                 metadata = {
@@ -78,6 +79,7 @@ export class RazorpayProvider implements IPaymentProvider {
                     userId: notes.userId || '',
                     planLevel: notes.planLevel || '',
                     billingCycle: notes.billingCycle || '',
+                    amount : amountPaid
                 };
             } else {
                 throw new BadRequestError('Unknown payment metadata');

@@ -69,6 +69,7 @@ export function useRegisterTeam(
                 handler: async (response: { razorpay_payment_id: string }) => {
                     await dispatch(
                         verifyTournamentPayment({
+                            managerId,
                             registrationId: result.registrationId,
                             paymentId: response.razorpay_payment_id,
                             paymentStatus: "completed",
@@ -88,6 +89,7 @@ export function useRegisterTeam(
         } else if (selectedPayment === "wallet") {
             await dispatch(
                 verifyTournamentPayment({
+                    managerId,
                     registrationId: result.registrationId,
                     paymentId: result.paymentSessionId,
                     paymentStatus: "completed",

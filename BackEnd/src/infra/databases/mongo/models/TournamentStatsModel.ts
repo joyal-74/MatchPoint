@@ -109,7 +109,7 @@ const TournamentStatsSchema = new Schema<TournamentMatchStatsDocument>(
 
         currentInnings: { type: Number, default: 1 },
 
-        isLive: { type: Boolean, default: true },
+        status: { type: String, enum: ["upcoming", 'ongoing', "completed", "bye"], default: "upcoming" },
         venue: { type: String, default: "" }
     },
     { timestamps: true }

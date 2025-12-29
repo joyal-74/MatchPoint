@@ -37,3 +37,10 @@ export class InternalServerError extends AppError {
         super(message, HttpStatusCode.INTERNAL_SERVER_ERROR);
     }
 }
+
+export class ConcurrencyError extends AppError {
+    constructor(message = "Concurrency conflict detected. Please retry.") {
+        super(message, HttpStatusCode.CONFLICT);
+        this.name = "ConcurrencyError";
+    }
+}

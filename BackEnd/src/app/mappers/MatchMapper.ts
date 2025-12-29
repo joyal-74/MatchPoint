@@ -1,9 +1,8 @@
 import { MatchResponseDTO } from "domain/dtos/MatchDTO";
-import { MatchEntity } from "domain/entities/Match";
 import { MatchTeamMapper } from "./MatchTeamMapper";
 
 export class MatchMapper {
-    static toMatchEntity(raw: any): MatchEntity {
+    static toMatchEntity(raw: any): any {
         return {
             _id: raw._id.toString(),
             tournamentId: raw.tournamentId.toString(),

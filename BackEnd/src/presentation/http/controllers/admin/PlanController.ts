@@ -1,4 +1,4 @@
-import { IGetPlans, ICreatePlan, IDeletePlan } from "app/repositories/interfaces/admin/IAdminUsecases";
+import { IGetPlans, ICreatePlan, IDeletePlan, IUpdatePlan } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { SubscriptionMessages } from "domain/constants/admin/AdminSubscriptionMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -11,6 +11,7 @@ export class PlanController {
         private _getPlansUseCase: IGetPlans,
         private _createPlanUseCase: ICreatePlan,
         private _deletePlanUseCase: IDeletePlan,
+        private _updatePlanUseCase: IUpdatePlan,
     ) { }
 
     create = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
@@ -39,4 +40,14 @@ export class PlanController {
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, SubscriptionMessages.PLAN_DELETED));
     }
 
+    update = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { id, newData } = httpRequest.body;
+        const updated = await this._updatePlanUseCase.execute(id, newData);
+
+        if (!updated) {
+            return new HttpResponse(HttpStatusCode.NOT_FOUND, buildResponse(true, SubscriptionMessages.PLAN_NOT_FOUND));
+        }
+
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, SubscriptionMessages.PLAN_UPDATED, updated));
+    }
 }

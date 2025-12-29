@@ -1,16 +1,16 @@
-import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { IInitInningsUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { InitInningsPayload, MatchEntity } from "domain/entities/MatchEntity";
 import { NotFoundError } from "domain/errors";
 
 export class InitInningsUseCase implements IInitInningsUseCase {
-    constructor(private matchRepo: IMatchRepo) { }
+    constructor(
+        private _matchStatsRepo: IMatchStatsRepo,
+    ) { }
 
     async execute(payload: InitInningsPayload): Promise<MatchEntity | null> {
-        const match = await this.matchRepo.findByMatchId(payload.matchId);
+        const match = await this._matchStatsRepo.findByMatchId(payload.matchId);
         if (!match) throw new NotFoundError("Match not found");
-
-        console.log(payload, "payload")
 
         match.initInnings({
             oversLimit: payload.oversLimit,
@@ -21,7 +21,7 @@ export class InitInningsUseCase implements IInitInningsUseCase {
             bowlingTeamId: payload.bowlingTeamId
         });
 
-        const saved = await this.matchRepo.save(match);
+        const saved = await this._matchStatsRepo.save(match);
         return saved;
     }
 }

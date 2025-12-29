@@ -1,10 +1,10 @@
-import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { IRetireBatsmanUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { MatchEntity } from "domain/entities/MatchEntity";
 import { NotFoundError } from "domain/errors";
 
 export class RetireBatsmanUseCase implements IRetireBatsmanUseCase {
-    constructor(private matchRepo: IMatchRepo) { }
+    constructor(private matchRepo: IMatchStatsRepo) { }
 
     async execute(matchId: string, outBatsmanId: string, newBatsmanId: string, isRetiredHurt: boolean): Promise<MatchEntity | null> {
         const match = await this.matchRepo.findByMatchId(matchId);

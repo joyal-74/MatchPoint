@@ -5,4 +5,5 @@ export const SubscriptionMessages = {
     USER_PLAN_FETCHED  : "USer Subscription plan fetched successfully",
     USER_PLAN_UPDATED  : "USer Subscription plan updated successfully",
     PLAN_DELETED  : "Subscription plan deleted successfully",
+    PLAN_UPDATED  : "Subscription plan deleted successfully",
 }

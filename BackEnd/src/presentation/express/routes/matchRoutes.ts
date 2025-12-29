@@ -9,6 +9,7 @@ router.get("/:matchId", expressAdapter(matchController.getMatchDetails));
 router.get("/live/:matchId", expressAdapter(matchController.getLiveScore));
 
 router.patch("/:matchId/save", expressAdapter(matchController.saveMatchData));
+router.patch("/:matchId/end", expressAdapter(matchController.saveMatchData));
 
 router.post("/init-innings", expressAdapter(matchController.initInnings));
 
