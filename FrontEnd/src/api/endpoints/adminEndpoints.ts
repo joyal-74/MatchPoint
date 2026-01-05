@@ -51,12 +51,21 @@ export const adminEndpoints = {
 
     fetchTeamDetails: async (id: string) => {
         const response = await axiosClient.get(ADMIN_ROUTES.TEAM_DETAILS(id));
-        console.log(response.data)
+        return response.data.data;
+    },
+
+    fetchTournamentDetails: async (id: string) => {
+        const response = await axiosClient.get(ADMIN_ROUTES.TOURNAMNET_DETAILS(id));
         return response.data.data;
     },
 
     updateTeamStatus: async ({ id, status }: { id: string, status: string }) => {
         const response = await axiosClient.patch(ADMIN_ROUTES.TEAM_STATUS_TOGGLE(id), { status });
+        return response.data.data;
+    },
+
+    updateTournamentStatus: async ({ id, status }: { id: string, status: boolean }) => {
+        const response = await axiosClient.patch(ADMIN_ROUTES.TOURNAMENT_STATUS_TOGGLE(id), { status });
         return response.data.data;
     },
 
@@ -84,15 +93,27 @@ export const adminEndpoints = {
         return { teams, totalCount };
     },
 
-    tournamentStatusChange: async (tourId: string, isActive: boolean, params: GetAllUsersParams) => {
-        const response = await axiosClient.patch(ADMIN_ROUTES.TOURNAMENT_STATUS_CHANGE(tourId), { isActive, params });
-        const tournaments = response.data.data.tournamnets;
-        const totalCount = response.data.data.totalCount;
-        return { tournaments, totalCount };
+    tournamentStatusChange: async (tourId: string, status: boolean, params: GetAllUsersParams) => {
+        const response = await axiosClient.patch(ADMIN_ROUTES.TOURNAMENT_STATUS_CHANGE(tourId), { status, params });
+        return response.data.data;
     },
 
     userBlockStatus: async (userId: string, isActive: boolean,) => {
         const response = await axiosClient.patch(ADMIN_ROUTES.USER_BLOCK_STATUS(userId), { isActive });
+        return response.data.data;
+    },
+
+    fetchTransactions: async (page = 1, limit = 10, filter?: string, search?: string) => {
+        const response = await axiosClient.get(ADMIN_ROUTES.TRANSACTIONS, {
+            params: { page, limit, filter, search },
+        });
+
+        return response.data.data;
+    },
+
+    fetchTransactionDetails: async (id: string) => {
+        const response = await axiosClient.get(ADMIN_ROUTES.TRANSACTION_DETAILS(id));
+        console.log(response.data.data)
         return response.data.data;
     },
 };

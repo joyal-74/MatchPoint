@@ -8,6 +8,7 @@ import { TeamDataFull, TeamDataSummary, TeamStatus } from "domain/dtos/Team.dto"
 import { UserResponseDTO } from "domain/dtos/User.dto";
 import { Plan } from "domain/entities/Plan";
 import { Tournament } from "domain/entities/Tournaments";
+import { Transaction } from "domain/entities/Transaction";
 
 export interface AdminTableParams {
     page: number;
@@ -30,8 +31,16 @@ export interface IChangeUserStatus {
 export interface IChangeTeamStatus {
     execute(teamId: string, isBlocked: TeamStatus, params: AdminTableParams): Promise<{ teams: TeamDataFull[], totalCount: number }>;
 }
+
 export interface IChangeTeamDetailStatus {
     execute(teamId: string, status: TeamStatus ): Promise<TeamDataFull>;
+}
+
+export interface IChangeTournamentStatus {
+    execute(tourId: string, status: boolean, params: AdminTableParams): Promise<{tournaments : Tournament[], totalCount : number}>;
+}
+export interface IChangeTournamentDetailStatus {
+    execute(teamId: string, status: boolean ): Promise<Tournament>;
 }
 
 export interface IChangeUserBlockStatus {
@@ -55,6 +64,10 @@ export interface IGetPlayerDetails {
 }
 
 export interface IGetTeamDetails {
+    execute(id: string): Promise<TeamDataFull>;
+}
+
+export interface IGetTournamentDetails {
     execute(id: string): Promise<TeamDataFull>;
 }
 
@@ -84,6 +97,14 @@ export interface IGetTeamsUsecase {
 
 export interface IGetTournamentUsecase {
     execute(params: GetAllUsersParams): Promise<{ tournaments: Tournament[], total: number }>
+}
+
+export interface IGetAdminTransactions {
+    execute(params: GetAllUsersParams): Promise<{ data: Transaction[], total: number }>
+}
+
+export interface IGetTransactionDetails {
+    execute(id: string): Promise<Transaction | null>;
 }
 
 export interface IGetDashboardStatsUseCase {

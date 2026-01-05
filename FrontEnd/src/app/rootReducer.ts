@@ -18,6 +18,7 @@ import notificationsReducer from "../features/player/notifications/notificationS
 import adminTournamnetReducer from "../features/admin/tournament/tournamentSlice";
 import dashboardStatsReducer from "../features/admin/dashboard/dashboardSlice";
 import financialReducer from "../features/manager/financials/financialSlice";
+import adminTransactionReducer from "../features/admin/transaction/transactionSlice";
 
 
 const appReducer = combineReducers({
@@ -39,7 +40,8 @@ const appReducer = combineReducers({
     notifications : notificationsReducer,
     adminTournaments : adminTournamnetReducer,
     adminDashboard : dashboardStatsReducer,
-    financials : financialReducer
+    financials : financialReducer,
+    adminTransactions : adminTransactionReducer
 });
 
 export type RootState = ReturnType<typeof appReducer>;

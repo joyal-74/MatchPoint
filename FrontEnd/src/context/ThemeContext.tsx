@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 type Theme = "dark" | "light" | "system";
-type ColorPalette = "blue" | "green" | "violet" | "orange";
+type ColorPalette = "blue" | "green" | "violet" | "orange" | "teal";
 
 interface ThemeProviderProps {
     children: React.ReactNode;
@@ -46,10 +46,7 @@ export function ThemeProvider({
         root.classList.remove("light", "dark");
 
         if (theme === "system") {
-            const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-                .matches
-                ? "dark"
-                : "light";
+            const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 
             root.classList.add(systemTheme);
             return;
