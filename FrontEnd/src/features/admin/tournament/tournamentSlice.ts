@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchTeamDetails, fetchTeams, fetchTournaments, teamStatusChange, tournamentStatusChange, updateTeamStatus } from "./tournamentThunks";
-import type { Team, TeamDetails, Tournament } from "./tournamentTypes";
+import { fetchTeamDetails, fetchTeams, fetchTournamentDetails, fetchTournaments, teamStatusChange, tournamentStatusChange, updateTeamStatus, updateTournamentStatus } from "./tournamentThunks";
+import type { AdminTournamentDetail, Team, TeamDetails, Tournament } from "./tournamentTypes";
 
 interface AdminTournamentState {
     teams: Team[];
     selectedTeam: TeamDetails | null;
+    selectedTournament: AdminTournamentDetail | null;
     tournaments: Tournament[];
     loading: boolean;
     error: string | null;
@@ -14,6 +15,7 @@ interface AdminTournamentState {
 const initialState: AdminTournamentState = {
     teams: [],
     selectedTeam: null,
+    selectedTournament: null,
     tournaments: [],
     loading: false,
     error: null,
@@ -84,7 +86,7 @@ const adminTournamentSlice = createSlice({
             .addCase(updateTeamStatus.fulfilled, (state, action) => {
                 state.loading = false;
                 state.selectedTeam = action.payload;
-                
+
             })
             .addCase(updateTeamStatus.rejected, (state, action) => {
                 state.loading = false;
@@ -97,6 +99,7 @@ const adminTournamentSlice = createSlice({
             })
             .addCase(tournamentStatusChange.fulfilled, (state, action) => {
                 state.loading = false;
+                console.log(action.payload,'lll')
                 if (action.payload.tournaments) {
                     state.tournaments = action.payload.tournaments;
                     state.totalCount = action.payload.totalCount;
@@ -118,7 +121,34 @@ const adminTournamentSlice = createSlice({
             .addCase(fetchTeamDetails.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || "Failed to update status";
-            });
+            })
+
+            .addCase(fetchTournamentDetails.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchTournamentDetails.fulfilled, (state, action) => {
+                state.loading = false;
+                console.log(action.payload)
+                state.selectedTournament = action.payload;
+            })
+            .addCase(fetchTournamentDetails.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "Failed to update status";
+            })
+
+            .addCase(updateTournamentStatus.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(updateTournamentStatus.fulfilled, (state, action) => {
+                state.loading = false;
+                console.log(action.payload)
+                state.selectedTournament = action.payload;
+            })
+            .addCase(updateTournamentStatus.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "Failed to update status";
+            })
+
     },
 });
 

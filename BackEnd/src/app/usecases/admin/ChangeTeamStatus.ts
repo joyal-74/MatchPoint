@@ -19,7 +19,7 @@ export class ChangeTeamStatus implements IChangeTeamStatus {
         const result = await this._teamRepository.findAllTeams(params);
         const teams = result.teams;
         const totalCount = result.totalCount;
-        this._logger.info(`Viewers count: ${teams.length}`);
+        this._logger.info(`Team count: ${teams.length}`);
 
         return { teams, totalCount };
     }

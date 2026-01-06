@@ -9,7 +9,7 @@ function App() {
 
     return (
         <GoogleOAuthProvider clientId={CLIENT_ID}>
-            <ThemeProvider defaultTheme="dark" defaultColor="violet" storageKey="matchpoint-theme">
+            <ThemeProvider defaultTheme="dark" defaultColor="blue" storageKey="matchpoint-theme">
                 <AuthProvider>
                     <AppRoutes />
                     <ToastConfig />

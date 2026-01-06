@@ -1,5 +1,5 @@
 import type { Status } from "../../../../features/manager/managerTypes";
-import type { ColorScheme } from "../../teams/TeamCard/teamColors";
+import type { ColorScheme } from "../../teams/TeamCard/TeamColors";
 
 interface StatusBadgeProps {
     status: Status;

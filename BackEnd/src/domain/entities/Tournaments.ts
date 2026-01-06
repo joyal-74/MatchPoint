@@ -1,6 +1,6 @@
 import { paymentStatus } from "./Payment";
 
-export type Status = "upcoming" | "ongoing" | "ended" | "cancelled"
+export type TourStatus = "upcoming" | "ongoing" | "ended" | "cancelled";
 export type Format = 'knockout' | 'league' | 'friendly';
 
 export type Contact = {
@@ -38,7 +38,8 @@ export interface Tournament {
     entryFee: string;
     prizePool: number;
     playersPerTeam: number;
-    status: Status;
+    status: TourStatus;
+    isBlocked : boolean;
     format: Format;
     organizer: string;
     contact: Contact;

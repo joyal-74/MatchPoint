@@ -1,10 +1,11 @@
-import { IGetTournamentUsecase, IGetTeamsUsecase, IGetTeamDetails, IChangeTeamStatus, IChangeTeamDetailStatus } from "app/repositories/interfaces/admin/IAdminUsecases";
+import { IGetTournamentUsecase, IGetTeamsUsecase, IGetTeamDetails, IChangeTeamStatus, IChangeTeamDetailStatus, IChangeTournamentDetailStatus, IChangeTournamentStatus } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 import { AdminUserMessages } from "domain/constants/admin/AdminUserMessages";
+import { IGetTournamentDetails } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 
 
 export class TournamentManagementController {
@@ -12,8 +13,11 @@ export class TournamentManagementController {
         private _getAllTeamsUseCase: IGetTeamsUsecase,
         private _getTeamDetailsUseCase: IGetTeamDetails,
         private _getAllTournamnetsUseCase: IGetTournamentUsecase,
+        private _getTournamentDetailsUseCase: IGetTournamentDetails,
         private _changeTeamStatusUseCase: IChangeTeamStatus,
         private _changeTeamDetailStatus: IChangeTeamDetailStatus,
+        private _changeTournamentStatus: IChangeTournamentStatus,
+        private _changeTournamentDetailStatus: IChangeTournamentDetailStatus,
     ) { }
 
     /**
@@ -45,6 +49,14 @@ export class TournamentManagementController {
         const team = await this._getTeamDetailsUseCase.execute(id);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.TEAMS_FETCHED, team));
+    }
+
+    getTournamentDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { id } = httpRequest.params;
+
+        const tournament = await this._getTournamentDetailsUseCase.execute(id);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.TEAMS_FETCHED, tournament));
     }
 
     /**
@@ -79,6 +91,15 @@ export class TournamentManagementController {
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.TEAMS_FETCHED, teams));
     }
 
+    changeTournamentStatus = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { tourId } = httpRequest.params;
+        const { status, params } = httpRequest.body;
+
+        const tournaments = await this._changeTournamentStatus.execute(tourId, status, params);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.TEAMS_FETCHED, tournaments));
+    }
+
     ChangeTeamDetailStatus = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { teamId } = httpRequest.params;
         const { status } = httpRequest.body;
@@ -86,5 +107,14 @@ export class TournamentManagementController {
         const teams = await this._changeTeamDetailStatus.execute(teamId, status);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.TEAMS_FETCHED, teams));
+    }
+
+    ChangeTournamentDetailStatus = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { tourId } = httpRequest.params;
+        const { status } = httpRequest.body;
+
+        const tournamnets = await this._changeTournamentDetailStatus.execute(tourId, status);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, AdminUserMessages.TOURNAMENTS_FETCHED, tournamnets));
     }
 }

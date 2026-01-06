@@ -54,7 +54,7 @@ const DataTable = <T extends { _id: string; status?: string }>({
                                             }
                                         `}
                                     >
-                                        {f}
+                                        {f.split('_').join(' ')}
                                     </button>
                                 );
                             })}

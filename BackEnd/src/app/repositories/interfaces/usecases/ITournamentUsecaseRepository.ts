@@ -33,6 +33,7 @@ export interface IGetTournamentDetails {
     execute(tournamentId: string): Promise<Tournament>;
 }
 
+
 export interface PaymentUrls {
     success: string;
     cancel: string;

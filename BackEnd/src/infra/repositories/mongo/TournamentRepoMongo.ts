@@ -5,6 +5,11 @@ import { TournamentModel } from "infra/databases/mongo/models/TournamentModel";
 import { TournamentMongoMapper } from "infra/utils/mappers/TournamentMongoMapper";
 import { FilterQuery } from "mongoose";
 
+interface QueryType {
+    status?: string;
+    isBlocked?: boolean;
+}
+
 export class TournamentRepositoryMongo implements ITournamentRepository {
     async create(tournamentData: TournamentRegister): Promise<Tournament> {
         const created = new TournamentModel(tournamentData);
@@ -110,10 +115,14 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
         return true
     }
 
-    async findByFilters({ status, page, limit }: { status?: string; page: number; limit: number; }): Promise<{ tournaments: Tournament[]; total: number }> {
+    async findByFilters({ status, isBlocked, page, limit }: { status?: string; isBlocked?: boolean; page: number; limit: number; }): Promise<{ tournaments: Tournament[]; total: number }> {
 
-        const query = { status: 'ongoing' };
+        const query: QueryType = {};
         if (status) query.status = status;
+        if (typeof isBlocked === "boolean") {
+            query.isBlocked = isBlocked;
+        }
+        console.log(query)
 
         const tournaments = await TournamentModel.find(query)
             .skip((page - 1) * limit)

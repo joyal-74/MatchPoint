@@ -12,8 +12,17 @@ export class GetAllTournaments implements IGetTournamentUsecase {
 
     async execute(params: AdminFilters): Promise<{ tournaments: Tournament[], total: number }> {
         this._logger.info("Fetching all players");
+        let isBlocked : boolean | undefined;
 
-        const { total, tournaments } = await this._tournamnetRepository.findByFilters(params);
+        if(params.filter === 'Blocked') {
+            isBlocked = true
+        }else if (params.filter === 'Active') {
+            isBlocked = false
+        } 
+
+        console.log(params, 'llllllllllllll')
+
+        const { total, tournaments } = await this._tournamnetRepository.findByFilters({...params, isBlocked});
 
         this._logger.info(`Found ${total} teams`);
 

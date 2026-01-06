@@ -35,6 +35,7 @@ const TournamentSchema = new Schema<TournamentDocument>(
         playersPerTeam: { type: Number, required: true },
         format: { type: String, enum: ['knockout', 'friendly', 'league'], default: 'friendly' },
         status: { type: String, enum: ["upcoming", "ongoing", "ended", 'cancelled'], default: "upcoming" },
+        isBlocked : { type: Boolean, default: false },
         canceled: {
             isCanceled: { type: Boolean, default: false },
             reason: { type: String, default: null },

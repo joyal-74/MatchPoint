@@ -3,7 +3,7 @@ import { Tournament, TournamentRegister, TournamentTeam } from "domain/entities/
 export interface ITournamentRepository {
     getByManager(managerId: string): Promise<Tournament[] | null>;
     findById(id: string): Promise<Tournament | null>;
-    findByFilters(filters: { status?: string; page: number; limit: number }): Promise<{ tournaments: Tournament[]; total: number }>;
+    findByFilters(filters: { status?: string; isBlocked?: boolean; page: number; limit: number }): Promise<{ tournaments: Tournament[]; total: number }>;
     updateTeams(tournamentId: string, teams: TournamentTeam[]): Promise<Tournament>;
     incrementCurrTeams(tournamentId: string): Promise<boolean>;
     findAll(managerId: string): Promise<Tournament[]>;

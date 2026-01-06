@@ -1,5 +1,5 @@
 export type TeamStatus = 'active' | 'blocked' | 'deleted';
-export type Status = "upcoming" | "ongoing" | "ended"
+export type Status = "upcoming" | "ongoing" | "ended" | 'cancelled' | 'blocked';
 
 export interface Team {
     _id: string;
@@ -51,6 +51,10 @@ export interface Tournament {
     banner: File | string | undefined;
 }
 
+export interface TournamentDetails extends Tournament {
+    organizer : string
+}
+
 export interface AdminTeamMember {
     playerId: string;
     userId: string;
@@ -63,4 +67,46 @@ export interface AdminTeamMember {
     stats: any;
     status: "playing" | "substitute";
     approvalStatus: "approved" | "pending";
+}
+
+interface TournamentContact {
+    email: string;
+    phone: string;
+}
+
+interface CanceledStatus {
+    isCanceled: boolean;
+    reason: string | null;
+    canceledAt: string | null;
+}
+
+export interface AdminTournamentDetail {
+    _id: string;
+    tourId: string;
+    managerId: string;
+    title: string;
+    description: string;
+    sport: string;
+    startDate: string;
+    endDate: string;
+    regDeadline: string;
+    location: string;
+    banner: string;
+    latitude: number;
+    longitude: number;
+    maxTeams: number;
+    minTeams: number;
+    currTeams: number;
+    entryFee: string;
+    prizePool: number;
+    playersPerTeam: number;
+    format: string;
+    status: 'upcoming' | 'ongoing' | 'completed' | 'cancelled'; 
+    rules: string[];
+    createdAt: string;
+    updatedAt: string;
+    isBlocked : boolean;
+    organizer: string;
+    contact: TournamentContact;
+    canceled: CanceledStatus;
 }

@@ -12,8 +12,8 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import LoadingOverlay from '../../../components/shared/LoadingOverlay';
 import type { AdminTeamMember } from '../../../features/admin/tournament/tournamentTypes';
-import { DetailItem, StatusBadge } from './DetailItem';
-import { PlayerCard } from './PlayerCard';
+import { DetailItem, StatusBadge } from '../../../components/admin/shared/DetailItem';
+import { PlayerCard } from '../../../components/admin/shared/PlayerCard';
 
 const TeamDetailsPage = () => {
     const [activeTab, setActiveTab] = useState<'overview' | 'squad'>('overview');
