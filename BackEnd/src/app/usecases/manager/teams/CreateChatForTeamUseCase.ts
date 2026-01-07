@@ -2,9 +2,10 @@ import { inject, injectable } from "tsyringe";
 import { DI_TOKENS } from "domain/constants/Identifiers";
 
 import { IChatRepository } from "app/repositories/interfaces/player/IChatRepository";
+import { ICreateChatForTeamUseCase } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 
 @injectable()
-export class CreateChatForTeamUseCase {
+export class CreateChatForTeamUseCase implements ICreateChatForTeamUseCase{
     constructor(
         @inject(DI_TOKENS.ChatRepository) private _chatRepo: IChatRepository
     ) { }

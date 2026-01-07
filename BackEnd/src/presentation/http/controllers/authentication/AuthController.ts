@@ -30,7 +30,7 @@ export class AuthController implements IAuthController {
         @inject(DI_TOKENS.LoginFacebookUseCase) private _userFacebookAuthUseCase: ILoginFacebookUser,
         @inject(DI_TOKENS.CompleteSocialProfileUseCase) private _completeSocialProfileUC: ISocialUserAuthUseCase,
         @inject(DI_TOKENS.LoginAdminUseCase) private _adminAuthUseCase: IAdminAuthUseCase,
-        @inject(DI_TOKENS.LogoutService) private _logoutUserUseCase: ILogoutUseCase,
+        @inject(DI_TOKENS.LogoutUseCase) private _logoutUserUseCase: ILogoutUseCase,
         @inject(DI_TOKENS.SignupViewerUseCase) private _signupViewerUseCase: IViewerSignupUseCase,
         @inject(DI_TOKENS.SignupPlayerUseCase) private _signupPlayerUseCase: IPlayerSignupUseCase,
         @inject(DI_TOKENS.SignupManagerUseCase) private _signupManagerUseCase: IManagerSignupUseCase,

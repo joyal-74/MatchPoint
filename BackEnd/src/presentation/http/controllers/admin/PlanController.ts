@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IGetPlans, ICreatePlan, IDeletePlan, IUpdatePlan } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { SubscriptionMessages } from "domain/constants/admin/AdminSubscriptionMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
@@ -6,12 +9,13 @@ import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 
+@injectable()
 export class PlanController {
     constructor(
-        private _getPlansUseCase: IGetPlans,
-        private _createPlanUseCase: ICreatePlan,
-        private _deletePlanUseCase: IDeletePlan,
-        private _updatePlanUseCase: IUpdatePlan,
+        @inject(DI_TOKENS.GetPlansUseCase) private _getPlansUseCase: IGetPlans,
+        @inject(DI_TOKENS.CreatePlanUseCase) private _createPlanUseCase: ICreatePlan,
+        @inject(DI_TOKENS.DeletePlanUseCase) private _deletePlanUseCase: IDeletePlan,
+        @inject(DI_TOKENS.UpdatePlanUseCase) private _updatePlanUseCase: IUpdatePlan,
     ) { }
 
     create = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {

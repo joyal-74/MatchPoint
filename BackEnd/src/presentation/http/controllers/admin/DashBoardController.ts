@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IGetDashboardStatsUseCase } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -5,10 +8,10 @@ import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 import { AdminUserMessages } from "domain/constants/admin/AdminUserMessages";
 
-
+@injectable()
 export class DashboardController {
     constructor(
-        private _getDashboardStatsUseCase: IGetDashboardStatsUseCase,
+        @inject(DI_TOKENS.GetDashboardStatsUseCase) private _getDashboardStatsUseCase: IGetDashboardStatsUseCase,
     ) { }
 
     /**

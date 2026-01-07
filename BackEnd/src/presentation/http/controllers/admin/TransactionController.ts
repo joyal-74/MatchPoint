@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IGetAdminTransactions, IGetTransactionDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { AdminTransactionMessages } from "domain/constants/admin/AdminTransactionMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
@@ -6,10 +9,11 @@ import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 
+@injectable()
 export class AdminTransactionController {
     constructor(
-        private _getadminTransactionsUseCase: IGetAdminTransactions,
-        private _getTransactionDetailsUseCase: IGetTransactionDetails,
+        @inject(DI_TOKENS.GetAdminTransactionsUseCase) private _getadminTransactionsUseCase: IGetAdminTransactions,
+        @inject(DI_TOKENS.GetTransactionDetailsUseCase) private _getTransactionDetailsUseCase: IGetTransactionDetails,
     ) { }
 
     getTransactions = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {

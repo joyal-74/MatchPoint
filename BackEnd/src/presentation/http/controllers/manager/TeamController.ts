@@ -30,7 +30,7 @@ export class TeamController implements ITeamController {
     constructor(
         @inject(DI_TOKENS.TeamSetupService) private _teamSetupService: TeamSetupService,
         @inject(DI_TOKENS.EditTeamUsecase) private _editTeamUsecase: IEditTeamUseCase,
-        @inject(DI_TOKENS.DeleteTeamUsecase) private _deleteTeamUsecase: IChangeTeamStatusUseCase,
+        @inject(DI_TOKENS.ChangeTeamStatusUseCase) private _deleteTeamUsecase: IChangeTeamStatusUseCase,
         @inject(DI_TOKENS.GetTeamsUsecase) private _getTeamsUsecase: IGetAllTeamsUseCase,
         @inject(DI_TOKENS.GetTeamDetailsUseCase) private _getmyTeamsDetailsUsecase: IGetMyTeamDetailsUseCase,
         @inject(DI_TOKENS.ChangeStatusUsecase) private _changeStatusUsecase: IChangePlayerStatusUseCase,

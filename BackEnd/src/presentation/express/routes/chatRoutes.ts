@@ -1,9 +1,12 @@
 import { Router } from "express";
 import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
 import { playerChatController } from "presentation/composition/player/chats";
-import { messageController } from "presentation/composition/player/messages";
+import { MessageController } from "presentation/http/controllers/player/MessageController";
+import { container } from "tsyringe";
 
 const router = Router();
+
+const messageController = container.resolve(MessageController)
 
 router.get("/user/:userId", expressAdapter(playerChatController.getMyChats));
 router.post("/:chatId/messages", expressAdapter(messageController.sendMessage));
