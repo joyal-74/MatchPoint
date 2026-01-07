@@ -1,12 +1,16 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { IPlayerTeamServices } from "app/services/player/IPlayerTeamServices";
-import { IGetAllMyTeamsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
+import { IGetAllPlayerTeamsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 import { PlayerTeamResponseDTO } from "domain/dtos/Team.dto";
 
-export class GetAllMyTeamsUseCase implements IGetAllMyTeamsUseCase {
+@injectable()
+export class GetAllPlayerTeamsUseCase implements IGetAllPlayerTeamsUseCase {
     constructor(
-        private _teamServices: IPlayerTeamServices,
-        private _logger: ILogger
+        @inject(DI_TOKENS.PlayerTeamServices) private _teamServices: IPlayerTeamServices,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(userId: string): Promise<PlayerTeamResponseDTO> {

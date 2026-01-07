@@ -1,12 +1,16 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { mapToLiveScoreDto } from "app/mappers/LiveScoreMapper";
-import { IMatchRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { IGetMatchUpdates } from "app/repositories/interfaces/usecases/IViewerUsecaseRepository";
 import { LiveScoreDto } from "domain/dtos/LiveScoreDto";
 import { BadRequestError, NotFoundError } from "domain/errors";
 
+@injectable()
 export class GetMatchUpdates implements IGetMatchUpdates {
     constructor(
-        private _matchRepo: IMatchRepo
+        @inject(DI_TOKENS.MatchesRepository) private _matchRepo: IMatchStatsRepo
     ) { }
 
     async execute(matchId: string): Promise<LiveScoreDto> {

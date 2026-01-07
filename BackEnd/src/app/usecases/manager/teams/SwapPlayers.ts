@@ -1,13 +1,17 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { ISwapPlayers } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 import { playerStatus } from "domain/dtos/Team.dto";
 import { BadRequestError, NotFoundError } from "domain/errors";
 
+@injectable()
 export class SwapPlayers implements ISwapPlayers {
     constructor(
-        private _teamRepo: ITeamRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(teamId: string, playerId: string, status: playerStatus): Promise<void> {

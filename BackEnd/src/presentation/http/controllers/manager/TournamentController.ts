@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { IGetTourLeaderboard } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 import {
@@ -23,23 +26,24 @@ import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 import { ITournamentController } from "presentation/http/interfaces/ITournamentController";
 
+@injectable()
 export class TournamentController implements ITournamentController {
     constructor(
-        private _getMyTournamentsUsecase: IGetMyTournaments,
-        private _getExploreTournamentsUsecase: IGetExploreTournaments,
-        private _addTournamentsUsecase: IAddTournament,
-        private _editTournamentsUsecase: IEditTournament,
-        private _cancelTournamentsUsecase: ICancelTournament,
-        private _tournamentsDetailsUsecase: IGetTournamentDetails,
-        private _entryFeePaymentUsecase: IInitiateTournamentPayment,
-        private _updateTournamenTeamUsecase: IUpdateTournamentTeam,
-        private _tournamentTeamsUsecase: IGetRegisteredTeams,
-        private _getFixturesUsecase: IGetTournamentFixtures,
-        private _createFixturesUsecase: ICreateTournamentFixtures,
-        private _createMatchesUsecase: ICreateMatchesUseCase,
-        private _getMatchesUsecase: IGetTournamentMatches,
-        private _getLeaderBoardUsecase: IGetTourLeaderboard,
-        private _logger: ILogger
+        @inject(DI_TOKENS.GetMyTournamentsUsecase) private _getMyTournamentsUsecase: IGetMyTournaments,
+        @inject(DI_TOKENS.GetExploreTournamentsUsecase) private _getExploreTournamentsUsecase: IGetExploreTournaments,
+        @inject(DI_TOKENS.AddTournamentsUsecase) private _addTournamentsUsecase: IAddTournament,
+        @inject(DI_TOKENS.EditTournamentsUsecase) private _editTournamentsUsecase: IEditTournament,
+        @inject(DI_TOKENS.CancelTournamentsUsecase) private _cancelTournamentsUsecase: ICancelTournament,
+        @inject(DI_TOKENS.TournamentsDetailsUsecase) private _tournamentsDetailsUsecase: IGetTournamentDetails,
+        @inject(DI_TOKENS.EntryFeePaymentUsecase) private _entryFeePaymentUsecase: IInitiateTournamentPayment,
+        @inject(DI_TOKENS.UpdateTournamenTeamUsecase) private _updateTournamenTeamUsecase: IUpdateTournamentTeam,
+        @inject(DI_TOKENS.TournamentTeamsUsecase) private _tournamentTeamsUsecase: IGetRegisteredTeams,
+        @inject(DI_TOKENS.GetFixturesUsecase) private _getFixturesUsecase: IGetTournamentFixtures,
+        @inject(DI_TOKENS.CreateFixturesUsecase) private _createFixturesUsecase: ICreateTournamentFixtures,
+        @inject(DI_TOKENS.CreateMatchesUsecase) private _createMatchesUsecase: ICreateMatchesUseCase,
+        @inject(DI_TOKENS.GetMatchesUsecase) private _getMatchesUsecase: IGetTournamentMatches,
+        @inject(DI_TOKENS.GetLeaderBoardUsecase) private _getLeaderBoardUsecase: IGetTourLeaderboard,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     /**

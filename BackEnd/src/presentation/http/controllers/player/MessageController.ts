@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { GetMessagesUseCase } from "app/usecases/player/chat/GetMessagesUseCase";
 import { SendMessageUseCase } from "app/usecases/player/chat/SendMessageUseCase";
 import { UpdateMessageStatusUseCase } from "app/usecases/player/chat/UpdateMessageStatusUseCase";
@@ -7,18 +10,18 @@ import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 
-
+@injectable()
 export class MessageController {
     constructor(
-        private sendMessageUC: SendMessageUseCase,
-        private getMessagesUC: GetMessagesUseCase,
-        private updateStatusUC: UpdateMessageStatusUseCase
+        @inject(DI_TOKENS.SendMessageUseCase) private _sendMessageUC: SendMessageUseCase,
+        @inject(DI_TOKENS.GetMessagesUseCase) private _getMessagesUC: GetMessagesUseCase,
+        @inject(DI_TOKENS.UpdateMessageStatusUseCase) private _updateStatusUC: UpdateMessageStatusUseCase
     ) { }
 
     sendMessage = async (httpRequest: IHttpRequest) : Promise<IHttpResponse> => {
         const { chatId, senderId, text } = httpRequest.body;
 
-        const result = await this.sendMessageUC.execute({
+        const result = await this._sendMessageUC.execute({
             chatId,
             senderId,
             text,
@@ -30,7 +33,7 @@ export class MessageController {
     getMessages = async (httpRequest: IHttpRequest) : Promise<IHttpResponse> => {
         const { chatId } = httpRequest.params;
 
-        const data = await this.getMessagesUC.execute(chatId);
+        const data = await this._getMessagesUC.execute(chatId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "message send success", data));
     };
@@ -39,7 +42,7 @@ export class MessageController {
         const { messageId } = httpRequest.params;
         const { status } = httpRequest.body;
 
-        await this.updateStatusUC.execute(messageId, status);
+        await this._updateStatusUC.execute(messageId, status);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "message send success"));
     };

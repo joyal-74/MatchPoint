@@ -1,18 +1,22 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
 import { JwtPayload } from "domain/entities/JwtPayload";
 import { NotFoundError, UnauthorizedError } from "domain/errors";
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { ILogger } from "app/providers/ILogger";
-import { IUserAuthUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
+import { IUserLoginUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 import { UserMapper } from "app/mappers/UserMapper";
 
-export class LoginUser implements IUserAuthUseCase {
+@injectable()
+export class LoginUser implements IUserLoginUseCase {
     constructor(
-        private _userRepository: IUserRepository,
-        private _jwtService: IJWTRepository,
-        private _passwordHasher: IPasswordHasher,
-        private _logger: ILogger,
+        @inject(DI_TOKENS.UserRepository) private _userRepository: IUserRepository,
+        @inject(DI_TOKENS.JWTService) private _jwtService: IJWTRepository,
+        @inject(DI_TOKENS.PasswordHasher) private _passwordHasher: IPasswordHasher,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger,
     ) { }
 
     async execute(email: string, password: string) {

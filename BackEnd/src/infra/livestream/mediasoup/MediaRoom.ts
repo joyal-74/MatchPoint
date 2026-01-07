@@ -1,13 +1,4 @@
-import {
-    Router,
-    WebRtcTransport,
-    Producer,
-    Consumer,
-    RtpParameters,
-    RtpCapabilities,
-    MediaKind,
-    DtlsParameters
-} from "mediasoup/node/lib/types";
+import { Router, WebRtcTransport, Producer, Consumer, RtpParameters, RtpCapabilities, MediaKind, DtlsParameters } from "mediasoup/node/lib/types";
 
 type TransportDirection = "send" | "recv";
 

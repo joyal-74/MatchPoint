@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IAdminRepository } from "app/repositories/interfaces/admin/IAdminRepository";
 import { AdminToResponseDTO } from "domain/dtos/Admin.dto";
 import { JwtPayload } from "domain/entities/JwtPayload";
@@ -8,12 +11,13 @@ import { ILogger } from "app/providers/ILogger";
 import { IAdminAuthUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 import { AdminMapper } from "app/mappers/AdminMapper";
 
+@injectable()
 export class LoginAdmin implements IAdminAuthUseCase {
     constructor(
-        private _adminRepository: IAdminRepository,
-        private _jwtService: IJWTRepository,
-        private _passwordHasher: IPasswordHasher,
-        private _logger: ILogger,
+        @inject(DI_TOKENS.AdminRepository) private _adminRepository: IAdminRepository,
+        @inject(DI_TOKENS.JWTService) private _jwtService: IJWTRepository,
+        @inject(DI_TOKENS.PasswordHasher) private _passwordHasher: IPasswordHasher,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger,
     ) { }
 
     async execute(email: string, password: string) {

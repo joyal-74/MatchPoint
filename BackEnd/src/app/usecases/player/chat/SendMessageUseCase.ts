@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IChatRepository } from "app/repositories/interfaces/player/IChatRepository";
 import { IMessageRepository } from "app/repositories/interfaces/player/IMessageRepository";
 import { NotFoundError } from "domain/errors";
@@ -10,10 +13,11 @@ interface SendMessageDTO {
     text: string;
 }
 
+@injectable()
 export class SendMessageUseCase {
     constructor(
-        private messageRepo: IMessageRepository,
-        private _chatRepo: IChatRepository
+        @inject(DI_TOKENS.MessageRepository) private messageRepo: IMessageRepository,
+        @inject(DI_TOKENS.Logger) private _chatRepo: IChatRepository
     ) { }
 
     async execute(data: SendMessageDTO) {

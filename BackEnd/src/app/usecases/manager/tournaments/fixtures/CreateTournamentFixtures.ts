@@ -1,12 +1,16 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { IFixturesRepository } from "app/repositories/interfaces/manager/IFixturesRepository";
 import { ICreateTournamentFixtures } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { BadRequestError, NotFoundError } from "domain/errors";
 
+@injectable()
 export class CreateFixtureUseCase implements ICreateTournamentFixtures {
     constructor(
-        private _fixturesRepo: IFixturesRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.FixturesRepository) private _fixturesRepo: IFixturesRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(tournamentId: string, matchIds: { matchId: string; round: number }[], format: string) {

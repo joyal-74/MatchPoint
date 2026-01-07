@@ -1,12 +1,16 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { INotificationRepository } from "app/repositories/interfaces/shared/INotificationRepository";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { IAddPlayerToTeamUseCase } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 import { BadRequestError, NotFoundError } from "domain/errors";
 
+@injectable()
 export class AddPlayerToTeamUseCase implements IAddPlayerToTeamUseCase {
     constructor(
-        private _teamRepo: ITeamRepository,
-        private _notificationRepo: INotificationRepository,
+        @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository,
+        @inject(DI_TOKENS.NotificationRepository) private _notificationRepo: INotificationRepository,
     ) { }
 
     async execute(teamId: string, userId: string, playerId: string): Promise<{ success: boolean; message: string }> {

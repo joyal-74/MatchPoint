@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IGetPlayerNotificationsUseCase, IGetUnreadCountUseCase } from "app/repositories/interfaces/player/INotificationUseCase";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
@@ -5,10 +8,11 @@ import { buildResponse } from "infra/utils/responseBuilder";
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 
+@injectable()
 export class NotificationController {
     constructor(
-        private _getPlayerNotificationsUseCase: IGetPlayerNotificationsUseCase,
-        private _getUnreadCountUseCase: IGetUnreadCountUseCase
+        @inject(DI_TOKENS.GetPlayerNotificationsUseCase) private _getPlayerNotificationsUseCase: IGetPlayerNotificationsUseCase,
+        @inject(DI_TOKENS.GetUnreadCountUseCase) private _getUnreadCountUseCase: IGetUnreadCountUseCase
     ) {}
 
     getNotifications = async (httpRequest: IHttpRequest) : Promise<IHttpResponse> => {

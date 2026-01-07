@@ -1,3 +1,5 @@
+import "reflect-metadata";
+import "./infra/container";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";

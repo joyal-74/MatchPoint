@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { UserMapper } from "app/mappers/UserMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
 import { IUpdateViewerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
@@ -7,17 +10,19 @@ import { File } from "domain/entities/File";
 import { NotFoundError } from "domain/errors";
 import { validateViewerUpdate } from "domain/validators/ViewerUpdateValidators";
 
+
+@injectable()
 export class UpdateViewerProfile implements IUpdateViewerProfile {
     constructor(
-        private userRepo: IUserRepository,
-        private fileStorage: IFileStorage
+        @inject(DI_TOKENS.UserRepository) private _userRepo: IUserRepository,
+        @inject(DI_TOKENS.FileStorage) private _fileStorage: IFileStorage
     ) { }
 
     async execute(update: UserUpdateDTO, file?: File): Promise<UserResponseDTO> {
         const validData = validateViewerUpdate(update, file);
 
         if (file) {
-            const fileKey = await this.fileStorage.upload(file);
+            const fileKey = await this._fileStorage.upload(file);
             validData.profileImage = fileKey;
         }
 
@@ -25,7 +30,7 @@ export class UpdateViewerProfile implements IUpdateViewerProfile {
             throw new NotFoundError("UserId not found");
         }
 
-        const viewer = await this.userRepo.update(validData._id, validData);
+        const viewer = await this._userRepo.update(validData._id, validData);
         return UserMapper.toProfileResponseDTO(viewer)
     }
 }

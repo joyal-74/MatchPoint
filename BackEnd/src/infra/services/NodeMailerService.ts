@@ -19,11 +19,7 @@ export class NodeMailerService implements IMailRepository {
         });
     }
 
-    async sendVerificationEmail(
-        to: string,
-        otp: string,
-        context: OtpContext = OtpContext.VerifyEmail
-    ): Promise<void> {
+    async sendVerificationEmail(to: string, otp: string, context: OtpContext = OtpContext.VerifyEmail): Promise<void> {
         const appName = "MatchPoint";
         const supportEmail = process.env.SMTP_USER || "support@matchpoint.com";
 

@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
@@ -6,12 +9,13 @@ import { TeamData } from "domain/dtos/Team.dto";
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { INotificationRepository } from "app/repositories/interfaces/shared/INotificationRepository";
 
+@injectable()
 export class JoinTeamUseCase implements IJoinTeamUseCase {
     constructor(
-        private _teamRepo: ITeamRepository,
-        private _playerRepo: IPlayerRepository,
-        private _notificationRepo: INotificationRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository,
+        @inject(DI_TOKENS.PlayerRepository) private _playerRepo: IPlayerRepository,
+        @inject(DI_TOKENS.NotificationRepository) private _notificationRepo: INotificationRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(userId: string, teamId: string): Promise<TeamData> {

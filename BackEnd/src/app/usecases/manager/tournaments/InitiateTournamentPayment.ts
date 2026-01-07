@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { IPaymentProvider } from "app/providers/IPaymentProvider";
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
@@ -8,17 +11,18 @@ import { TransactionService } from "infra/services/TransactionService";
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { Tournament } from "domain/entities/Tournaments";
 
+@injectable()
 export class InitiateTournamentPayment implements IInitiateTournamentPayment {
     private providers: Record<string, IPaymentProvider>;
 
     constructor(
-        private _tournamentRepo: ITournamentRepository,
-        private _registrationRepo: IRegistrationRepository,
-        private _logger: ILogger,
-        private _razorpayProvider: IPaymentProvider,
-        private _validator: ITournamentRegistrationValidator,
-        private _transactionService: TransactionService,
-        private _uow: IUnitOfWork
+        @inject(DI_TOKENS.TournamentRepository) private _tournamentRepo: ITournamentRepository,
+        @inject(DI_TOKENS.RegistrationRepository) private _registrationRepo: IRegistrationRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger,
+        @inject(DI_TOKENS.RazorpayProvider) private _razorpayProvider: IPaymentProvider,
+        @inject(DI_TOKENS.TournamentRegistrationValidator) private _validator: ITournamentRegistrationValidator,
+        @inject(DI_TOKENS.TransactionService) private _transactionService: TransactionService,
+        @inject(DI_TOKENS.UnitOfWork) private _uow: IUnitOfWork
     ) {
         this.providers = {
             razorpay: _razorpayProvider,

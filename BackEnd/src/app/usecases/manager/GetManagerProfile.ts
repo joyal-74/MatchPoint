@@ -1,12 +1,16 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ManagerMapper } from "app/mappers/ManagerMapper";
 import { IGetManagerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { ManagerResponseDTO } from "domain/dtos/Manager.dto";
 import { NotFoundError } from "domain/errors";
 
+@injectable()
 export class GetManagerProfile implements IGetManagerProfile {
     constructor(
-        private _userRepo: IUserRepository,
+        @inject(DI_TOKENS.UserRepository) private _userRepo: IUserRepository,
     ) { }
 
     async execute(managerId: string): Promise< ManagerResponseDTO> {

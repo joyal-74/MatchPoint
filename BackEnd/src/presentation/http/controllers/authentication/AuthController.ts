@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IHttpRequest } from '../../interfaces/IHttpRequest';
 import { IHttpResponse } from '../../interfaces/IHttpResponse';
 import { HttpResponse } from '../../helpers/HttpResponse';
@@ -8,33 +11,34 @@ import { OtpContext } from 'domain/enums/OtpContext';
 import { IAuthController } from 'presentation/http/interfaces/IAuthController';
 import cookie from 'cookie';
 import {
-    IUserAuthUseCase, IAdminAuthUseCase, ILogoutUseCase, IRefreshTokenUseCase,
+    IAdminAuthUseCase, ILogoutUseCase, IRefreshTokenUseCase,
     IViewerSignupUseCase, IPlayerSignupUseCase, IManagerSignupUseCase,
     IForgotPasswordUseCase, IVerifyOtpUseCase,
     IResendOtpUseCase, IResetPasswordUseCase,
     ILoginGoogleUser,
     ILoginFacebookUser,
-    ISocialUserAuthUseCase
+    ISocialUserAuthUseCase,
+    IUserLoginUseCase
 } from 'app/repositories/interfaces/auth/IAuthenticationUseCase';
 import { AuthMessages } from 'domain/constants/AuthMessages';
 
-
+@injectable()
 export class AuthController implements IAuthController {
     constructor(
-        private _userAuthUseCase: IUserAuthUseCase,
-        private _userGoogleAuthUseCase: ILoginGoogleUser,
-        private _userFacebookAuthUseCase: ILoginFacebookUser,
-        private _completeSocialProfileUC: ISocialUserAuthUseCase,
-        private _adminAuthUseCase: IAdminAuthUseCase,
-        private _logoutUserUseCase: ILogoutUseCase,
-        private _signupViewerUseCase: IViewerSignupUseCase,
-        private _signupPlayerUseCase: IPlayerSignupUseCase,
-        private _signupManagerUseCase: IManagerSignupUseCase,
-        private _refreshTokenUserUseCase: IRefreshTokenUseCase,
-        private _forgotPasswordUseCase: IForgotPasswordUseCase,
-        private _verifyOtpUseCase: IVerifyOtpUseCase,
-        private _resendOtpUseCase: IResendOtpUseCase,
-        private _resetPasswordUseCase: IResetPasswordUseCase
+        @inject(DI_TOKENS.LoginUserUseCase) private _userLoginUseCase: IUserLoginUseCase,
+        @inject(DI_TOKENS.LoginGoogleUseCase) private _userGoogleAuthUseCase: ILoginGoogleUser,
+        @inject(DI_TOKENS.LoginFacebookUseCase) private _userFacebookAuthUseCase: ILoginFacebookUser,
+        @inject(DI_TOKENS.CompleteSocialProfileUseCase) private _completeSocialProfileUC: ISocialUserAuthUseCase,
+        @inject(DI_TOKENS.LoginAdminUseCase) private _adminAuthUseCase: IAdminAuthUseCase,
+        @inject(DI_TOKENS.LogoutService) private _logoutUserUseCase: ILogoutUseCase,
+        @inject(DI_TOKENS.SignupViewerUseCase) private _signupViewerUseCase: IViewerSignupUseCase,
+        @inject(DI_TOKENS.SignupPlayerUseCase) private _signupPlayerUseCase: IPlayerSignupUseCase,
+        @inject(DI_TOKENS.SignupManagerUseCase) private _signupManagerUseCase: IManagerSignupUseCase,
+        @inject(DI_TOKENS.RefreshTokenUseCase) private _refreshTokenUserUseCase: IRefreshTokenUseCase,
+        @inject(DI_TOKENS.ForgotPasswordUseCase) private _forgotPasswordUseCase: IForgotPasswordUseCase,
+        @inject(DI_TOKENS.VerifyOtpUseCase) private _verifyOtpUseCase: IVerifyOtpUseCase,
+        @inject(DI_TOKENS.ResendOtpUseCase) private _resendOtpUseCase: IResendOtpUseCase,
+        @inject(DI_TOKENS.ResetPasswordUseCase) private _resetPasswordUseCase: IResetPasswordUseCase
     ) { }
 
     /**
@@ -50,7 +54,7 @@ export class AuthController implements IAuthController {
             throw new BadRequestError('Missing required fields: email and password');
         }
         const { email, password } = httpRequest.body;
-        const result = await this._userAuthUseCase.execute(email, password);
+        const result = await this._userLoginUseCase.execute(email, password);
 
         return new HttpResponse(HttpStatusCode.OK, {
             ...buildResponse(true, AuthMessages.USER_LOGIN_SUCCESS, { user: result.account }),
@@ -99,7 +103,6 @@ export class AuthController implements IAuthController {
         const { code } = httpRequest.body;
 
         const result = await this._userFacebookAuthUseCase.execute(code);
-
 
         if (result.isNewUser) {
             return new HttpResponse(HttpStatusCode.OK, {
@@ -162,7 +165,6 @@ export class AuthController implements IAuthController {
      */
 
     signupViewer = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-
         const result = await this._signupViewerUseCase.execute(httpRequest.body);
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, AuthMessages.VIEWER_SIGNUP_SUCCESS, {
             user: result.user,
@@ -172,7 +174,6 @@ export class AuthController implements IAuthController {
 
 
     completeSocialAccount = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-
         const result = await this._completeSocialProfileUC.execute(httpRequest.body);
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, AuthMessages.SOCIAL_SIGNUP_SUCCESS, { user: result.user, }));
     }
@@ -227,7 +228,7 @@ export class AuthController implements IAuthController {
         const result = await this._refreshTokenUserUseCase.execute(refreshToken);
 
         return new HttpResponse(HttpStatusCode.OK, {
-            ...buildResponse(true,AuthMessages.TOKEN_REFRESHED, { user: result.user }),
+            ...buildResponse(true, AuthMessages.TOKEN_REFRESHED, { user: result.user }),
             accessToken: result.accessToken,
             refreshToken: result.refreshToken,
         });

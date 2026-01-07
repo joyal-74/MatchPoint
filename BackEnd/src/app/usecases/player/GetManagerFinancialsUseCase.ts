@@ -1,9 +1,13 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IFinancialRepository } from "app/repositories/interfaces/manager/IFinancialRepository";
 import { NotFoundError } from "domain/errors";
 
+@injectable()
 export class GetManagerFinancialsUseCase {
     constructor(
-        private _financialRepository: IFinancialRepository
+        @inject(DI_TOKENS.FinancialRepository) private _financialRepository: IFinancialRepository
     ) {}
 
     async execute(managerId: string) {

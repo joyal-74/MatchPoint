@@ -84,7 +84,7 @@ export interface IResetPasswordUseCase {
 
 // Auth (login) aliases
 export type IAdminAuthUseCase = IAuthUseCase<AdminToResponseDTO>;
-export type IUserAuthUseCase = IAuthUseCase<UserLoginResponseDTO>;
+export type IUserLoginUseCase = IAuthUseCase<UserLoginResponseDTO>;
 export type ISocialUserAuthUseCase = ICompleteSocialSignup<UserLoginResponseDTO>;
 
 

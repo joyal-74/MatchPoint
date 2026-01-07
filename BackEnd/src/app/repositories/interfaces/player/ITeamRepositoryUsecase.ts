@@ -8,7 +8,7 @@ export interface IGetMyTeamsUseCase {
     execute(playerId: string, status: string): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
 }
 
-export interface IGetAllMyTeamsUseCase {
+export interface IGetAllPlayerTeamsUseCase {
     execute(playerId: string): Promise<PlayerTeamResponseDTO>;
 }
 

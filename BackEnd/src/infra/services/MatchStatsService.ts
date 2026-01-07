@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import {
     IAddRunsUseCase,
     IAddWicketUseCase,
@@ -17,24 +20,27 @@ import {
 
 import { IMatchScoreService } from "app/services/manager/IMatchScoreService";
 import { InitInningsPayload } from "domain/entities/MatchEntity";
+import { DismissalType } from "domain/entities/Innings";
 
+
+@injectable()
 export class MatchScoreService implements IMatchScoreService {
 
     constructor(
-        private _initInningsUseCase: IInitInningsUseCase,
-        private _addRunsUseCase: IAddRunsUseCase,
-        private _setStrikerUseCase: ISetStrikerUseCase,
-        private _setNonStrikerUseCase: ISetNonStrikerUseCase,
-        private _setBowlerUseCase: ISetBowlerUseCase,
-        private _addWicketUseCase: IAddWicketUseCase,
-        private _addExtrasUseCase: IAddExtrasUseCase,
-        private _undoLastBallUseCase: IUndoLastBallUseCase,
-        private _startSuperOverUseCase: IStartSuperOverUseCase,
-        private _endOverUseCase: IEndOverUseCase,
-        private _endInningsUseCase: IEndInningsUseCase,
-        private _addPenaltyUseCase: IAddPenaltyUseCase,
-        private _retireBatsmanUseCase: IRetireBatsmanUseCase,
-        private _endMatchUseCase: IEndMatchUseCase
+        @inject(DI_TOKENS.InitInningsUseCase) private _initInningsUseCase: IInitInningsUseCase,
+        @inject(DI_TOKENS.AddRunsUseCase) private _addRunsUseCase: IAddRunsUseCase,
+        @inject(DI_TOKENS.SetStrikerUseCase) private _setStrikerUseCase: ISetStrikerUseCase,
+        @inject(DI_TOKENS.SetNonStrikerUseCase) private _setNonStrikerUseCase: ISetNonStrikerUseCase,
+        @inject(DI_TOKENS.SetBowlerUseCase) private _setBowlerUseCase: ISetBowlerUseCase,
+        @inject(DI_TOKENS.AddWicketUseCase) private _addWicketUseCase: IAddWicketUseCase,
+        @inject(DI_TOKENS.AddExtrasUseCase) private _addExtrasUseCase: IAddExtrasUseCase,
+        @inject(DI_TOKENS.UndoLastBallUseCase) private _undoLastBallUseCase: IUndoLastBallUseCase,
+        @inject(DI_TOKENS.StartSuperOverUseCase) private _startSuperOverUseCase: IStartSuperOverUseCase,
+        @inject(DI_TOKENS.EndOverUseCase) private _endOverUseCase: IEndOverUseCase,
+        @inject(DI_TOKENS.EndInningsUseCase) private _endInningsUseCase: IEndInningsUseCase,
+        @inject(DI_TOKENS.AddPenaltyUseCase) private _addPenaltyUseCase: IAddPenaltyUseCase,
+        @inject(DI_TOKENS.RetireBatsmanUseCase) private _retireBatsmanUseCase: IRetireBatsmanUseCase,
+        @inject(DI_TOKENS.EndMatchUseCase) private _endMatchUseCase: IEndMatchUseCase
     ) { }
 
     async initInnings(payload: InitInningsPayload) {
@@ -67,10 +73,12 @@ export class MatchScoreService implements IMatchScoreService {
         return null;
     }
 
-    async addWicket(matchId: string, dismissalType: string, outBatsmanId: string, nextBatsmanId: string, fielderId?: string) {
+    async addWicket(matchId: string, dismissalType: DismissalType, outBatsmanId: string, nextBatsmanId: string, bowlerId : string, isLegalBall : boolean, fielderId?: string) {
         await this._addWicketUseCase.execute({
             matchId,
             dismissalType,
+            bowlerId,
+            isLegalBall,
             outBatsmanId,
             nextBatsmanId,
             fielderId

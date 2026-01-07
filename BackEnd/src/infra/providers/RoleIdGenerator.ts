@@ -1,10 +1,14 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IManagerIdGenerator, IPlayerIdGenerator, IRoleIdGenerator, IUserIdGenerator } from "app/providers/IIdGenerator";
 
+@injectable()
 export class RoleIdGenerator implements IRoleIdGenerator {
     constructor(
-        private playerIdGen: IPlayerIdGenerator,
-        private viewerIdGen: IUserIdGenerator,
-        private managerIdGen: IManagerIdGenerator,
+        @inject(DI_TOKENS.PlayerIdGenerator) private playerIdGen: IPlayerIdGenerator,
+        @inject(DI_TOKENS.UserIdGenerator) private viewerIdGen: IUserIdGenerator,
+        @inject(DI_TOKENS.ManagerIdGenerator) private managerIdGen: IManagerIdGenerator,
     ) { }
 
     generate(role: string): string {

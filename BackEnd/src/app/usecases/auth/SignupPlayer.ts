@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
@@ -15,15 +18,16 @@ import { IPlayerIdGenerator } from "app/providers/IIdGenerator";
 import { UserMapper } from "app/mappers/UserMapper";
 
 
+@injectable()
 export class SignupPlayer implements IPlayerSignupUseCase {
     constructor(
-        private _userRepository: IUserRepository,
-        private _playerRepository: IPlayerRepository,
-        private _otpRepository: IOtpRepository,
-        private _mailRepository: IMailRepository,
-        private _passwordHasher: IPasswordHasher,
-        private _otpGenerator: IOtpGenerator,
-        private _idGenerator: IPlayerIdGenerator,
+        @inject(DI_TOKENS.UserRepository) private _userRepository: IUserRepository,
+        @inject(DI_TOKENS.PlayerRepository) private _playerRepository: IPlayerRepository,
+        @inject(DI_TOKENS.OtpRepository) private _otpRepository: IOtpRepository,
+        @inject(DI_TOKENS.Mailer) private _mailRepository: IMailRepository,
+        @inject(DI_TOKENS.PasswordHasher) private _passwordHasher: IPasswordHasher,
+        @inject(DI_TOKENS.OtpGenerator) private _otpGenerator: IOtpGenerator,
+        @inject(DI_TOKENS.PlayerIdGenerator) private _idGenerator: IPlayerIdGenerator,
     ) { }
 
     async execute(userData: PlayerRegister) {
@@ -45,7 +49,7 @@ export class SignupPlayer implements IPlayerSignupUseCase {
             role: UserRoles.Player,
             password: hashedPassword,
             username: `user-${Date.now()}`,
-            phone : validData.phone,
+            phone: validData.phone,
             wallet: 0,
             sport: validData.sport,
             isActive: true,
@@ -74,6 +78,6 @@ export class SignupPlayer implements IPlayerSignupUseCase {
 
         const userDTO = UserMapper.toUserLoginResponseDTO(newUser)
 
-        return { success : true, message : "Player registered successfully", user: userDTO, expiresAt };
+        return { success: true, message: "Player registered successfully", user: userDTO, expiresAt };
     }
 }

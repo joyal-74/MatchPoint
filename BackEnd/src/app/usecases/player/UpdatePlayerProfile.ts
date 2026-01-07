@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { PlayerMapper } from "app/mappers/PlayerMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
 import { ILogger } from "app/providers/ILogger";
@@ -8,11 +11,12 @@ import { File } from "domain/entities/File";
 import { NotFoundError } from "domain/errors";
 import { validateManagerUpdate } from "domain/validators/ManagerUpdateValidator";
 
+@injectable()
 export class UpdatePlayerProfile implements IUpdatePlayerProfile {
     constructor(
-        private _playerService : IPlayerService,
-        private _fileStorage: IFileStorage,
-        private _logger: ILogger,
+        @inject(DI_TOKENS.PlayerService) private _playerService : IPlayerService,
+        @inject(DI_TOKENS.FileStorage) private _fileStorage: IFileStorage,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger,
     ) { }
 
     async execute(updateData: PlayerUpdateDTO, file?: File): Promise<PlayerProfileResponse> {

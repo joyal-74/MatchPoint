@@ -1,11 +1,15 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { BadRequestError } from "domain/errors";
 
+@injectable()
 export class TournamentRegistrationValidator {
     constructor(
-        private _registrationRepo: IRegistrationRepository,
-        private _teamRepo: ITeamRepository
+        @inject(DI_TOKENS.RegistrationRepository) private _registrationRepo: IRegistrationRepository,
+        @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository
     ) { }
 
     async execute(tournamentId: string, attemptingTeamId: string): Promise<void> {

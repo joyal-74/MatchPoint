@@ -1,13 +1,17 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { IGetTournamentUsecase } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
 import { AdminFilters} from "domain/dtos/Team.dto";
 import { Tournament } from "domain/entities/Tournaments";
 
+@injectable()
 export class GetAllTournaments implements IGetTournamentUsecase {
     constructor(
-        private _tournamnetRepository: ITournamentRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.TournamentRepository) private _tournamnetRepository: ITournamentRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(params: AdminFilters): Promise<{ tournaments: Tournament[], total: number }> {

@@ -1,10 +1,18 @@
 import { Router } from "express";
 import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
-import { dashboardController, tournamentController, transactionController, usersManagementController } from "presentation/composition";
 import { adminOnly } from "presentation/composition/shared/middlewares";
+import { DashboardController } from "presentation/http/controllers/admin/DashBoardController";
+import { AdminTransactionController } from "presentation/http/controllers/admin/TransactionController";
+import { UsersManagementController } from "presentation/http/controllers/admin/UsersManagementController";
+import { TournamentManagementController } from "presentation/http/controllers/admin/TournamnetManagementController";
+import { container } from "tsyringe";
 
 const router = Router();
 
+const dashboardController = container.resolve(DashboardController)
+const tournamentController = container.resolve(TournamentManagementController)
+const transactionController = container.resolve(AdminTransactionController)
+const usersManagementController = container.resolve(UsersManagementController)
 
 router.get("/dashboard/stats", adminOnly, expressAdapter(dashboardController.getDashboard));
 

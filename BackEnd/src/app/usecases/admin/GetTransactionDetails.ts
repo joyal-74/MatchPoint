@@ -1,10 +1,14 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IGetTransactionDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { ITransactionRepository } from "app/repositories/interfaces/shared/ITransactionRepository";
 import { Transaction } from "domain/entities/Transaction";
 
+@injectable()
 export class GetTransactionDetails implements IGetTransactionDetails {
     constructor(
-        private transactionRepository: ITransactionRepository
+        @inject(DI_TOKENS.TransactionRepository) private transactionRepository: ITransactionRepository
     ) { }
 
     async execute(id: string): Promise<Transaction | null> {

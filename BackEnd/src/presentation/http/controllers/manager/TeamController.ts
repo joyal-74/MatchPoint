@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import {
     IAddPlayerToTeamUseCase,
     IApprovePlayerUseCase,
@@ -22,21 +25,22 @@ import { TeamMessages } from "domain/constants/TeamMessages";
 import { TeamSetupService } from "infra/services/TeamSetupServices";
 import { IGetAvailablePlayersService } from "app/services/manager/ITeamSetupService";
 
+@injectable()
 export class TeamController implements ITeamController {
     constructor(
-        private _teamSetupService: TeamSetupService,
-        private _editTeamUsecase: IEditTeamUseCase,
-        private _deleteTeamUsecase: IChangeTeamStatusUseCase,
-        private _getTeamsUsecase: IGetAllTeamsUseCase,
-        private _getmyTeamsDetailsUsecase: IGetMyTeamDetailsUseCase,
-        private _changeStatusUsecase: IChangePlayerStatusUseCase,
-        private _approvetoTeamUsecase: IApprovePlayerUseCase,
-        private _rejectfromTeamUsecase: IRejectPlayerUseCase,
-        private _swapPlayersUsecase: ISwapPlayers,
-        private _removePlayersUsecase: IRemovePlayerUseCase,
-        private _getAvilablePlayersService: IGetAvailablePlayersService,
-        private _addnewPlayerUsecase: IAddPlayerToTeamUseCase,
-        private _logger: ILogger,
+        @inject(DI_TOKENS.TeamSetupService) private _teamSetupService: TeamSetupService,
+        @inject(DI_TOKENS.EditTeamUsecase) private _editTeamUsecase: IEditTeamUseCase,
+        @inject(DI_TOKENS.DeleteTeamUsecase) private _deleteTeamUsecase: IChangeTeamStatusUseCase,
+        @inject(DI_TOKENS.GetTeamsUsecase) private _getTeamsUsecase: IGetAllTeamsUseCase,
+        @inject(DI_TOKENS.GetTeamDetailsUseCase) private _getmyTeamsDetailsUsecase: IGetMyTeamDetailsUseCase,
+        @inject(DI_TOKENS.ChangeStatusUsecase) private _changeStatusUsecase: IChangePlayerStatusUseCase,
+        @inject(DI_TOKENS.ApprovetoTeamUsecase) private _approvetoTeamUsecase: IApprovePlayerUseCase,
+        @inject(DI_TOKENS.RejectfromTeamUsecase) private _rejectfromTeamUsecase: IRejectPlayerUseCase,
+        @inject(DI_TOKENS.SwapPlayersUsecase) private _swapPlayersUsecase: ISwapPlayers,
+        @inject(DI_TOKENS.RemovePlayersUsecase) private _removePlayersUsecase: IRemovePlayerUseCase,
+        @inject(DI_TOKENS.GetAvailablePlayersService) private _getAvilablePlayersService: IGetAvailablePlayersService,
+        @inject(DI_TOKENS.AddnewPlayerUsecase) private _addnewPlayerUsecase: IAddPlayerToTeamUseCase,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger,
     ) { }
 
     /**

@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IGetPlayerProfile, IUpdatePlayerFields, IUpdatePlayerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -8,12 +11,13 @@ import { IProfileController } from "presentation/http/interfaces/IManagerControl
 import { ILogger } from "app/providers/ILogger";
 import { ProfileMessages } from "domain/constants/player/PlayerProfileMessages";
 
+@injectable()
 export class PlayerProfileController implements IProfileController {
     constructor(
-        private _getPlayerProfileUsecase: IGetPlayerProfile,
-        private _profileUpdateUsecase: IUpdatePlayerProfile,
-        private _sportsProfileUpdateUsecase: IUpdatePlayerFields,
-        private _logger: ILogger
+        @inject(DI_TOKENS.GetPlayerProfile) private _getPlayerProfileUsecase: IGetPlayerProfile,
+        @inject(DI_TOKENS.UpdatePlayerProfile) private _profileUpdateUsecase: IUpdatePlayerProfile,
+        @inject(DI_TOKENS.UpdatePlayerFields) private _sportsProfileUpdateUsecase: IUpdatePlayerFields,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     /**

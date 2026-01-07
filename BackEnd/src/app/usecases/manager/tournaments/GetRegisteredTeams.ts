@@ -1,13 +1,17 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
 import { IGetRegisteredTeams } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { TournamentTeamData } from "domain/dtos/Tournament";
 import { BadRequestError } from "domain/errors";
 
+@injectable()
 export class GetRegisteredTeams implements IGetRegisteredTeams {
     constructor(
-        private _registeredTeamRepo: IRegistrationRepository,
-        private _logger: ILogger,
+        @inject(DI_TOKENS.RegistrationRepository) private _registeredTeamRepo: IRegistrationRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger,
     ) { }
 
     async execute(tournamentId: string): Promise<TournamentTeamData[]> {

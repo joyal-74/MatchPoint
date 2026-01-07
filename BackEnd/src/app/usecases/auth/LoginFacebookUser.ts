@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { ILoginFacebookUser } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 import { UserMapper } from "app/mappers/UserMapper";
@@ -7,14 +10,14 @@ import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtReposi
 import { IUserAuthServices } from "app/services/auth/IUserAuthServices";
 import { IUserServices } from "app/services/user/IUserServices";
 
-
+@injectable()
 export class LoginFacebookUser implements ILoginFacebookUser {
     constructor(
-        private _facebookservices: IFacebookServices,
-        private _tokenService: IJWTRepository,
-        private _userServices: IUserServices,
-        private _userAuthService: IUserAuthServices,
-        private _logger: ILogger
+        @inject(DI_TOKENS.FacebookServices) private _facebookservices: IFacebookServices,
+        @inject(DI_TOKENS.JWTService) private _tokenService: IJWTRepository,
+        @inject(DI_TOKENS.UserServices) private _userServices: IUserServices,
+        @inject(DI_TOKENS.UserAuthServices) private _userAuthService: IUserAuthServices,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(accessToken: string) {

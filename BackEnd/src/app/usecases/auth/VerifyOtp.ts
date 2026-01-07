@@ -1,13 +1,17 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { OtpContext } from "domain/enums/OtpContext";
 import { IVerifyOtpUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 
+@injectable()
 export class VerifyOtp implements IVerifyOtpUseCase {
     constructor(
-        private _userRepository: IUserRepository,
-        private _otpRepository: IOtpRepository
+        @inject(DI_TOKENS.UserRepository) private _userRepository: IUserRepository,
+        @inject(DI_TOKENS.OtpRepository) private _otpRepository: IOtpRepository,
     ) { }
 
     async execute(email: string, otp: string, context: OtpContext) {

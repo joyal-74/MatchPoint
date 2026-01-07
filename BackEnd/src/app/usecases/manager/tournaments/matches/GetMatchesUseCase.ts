@@ -1,13 +1,17 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
 import { IGetTournamentMatches } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { Match } from "domain/entities/Match";
 import { BadRequestError, NotFoundError } from "domain/errors";
 
+@injectable()
 export class GetTournamentMatches implements IGetTournamentMatches {
     constructor(
-        private _matchesRepo: IMatchesRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.MatchesRepository) private _matchesRepo: IMatchesRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(tournamentId: string): Promise<Match[]> {

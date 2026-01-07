@@ -1,8 +1,12 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { OAuth2Client } from "google-auth-library";
 import { UnauthorizedError } from "domain/errors";
 import { IGoogleAuthServices, GoogleUserInfo } from "app/services/auth/IGoogleAuthService";
 import { IConfigProvider } from "app/providers/IConfigProvider";
 
+@injectable()
 export class GoogleAuthService implements IGoogleAuthServices {
     private client: OAuth2Client;
     private clientId: string;
@@ -10,7 +14,7 @@ export class GoogleAuthService implements IGoogleAuthServices {
     private clientSecret: string;
 
     constructor(
-        private _config: IConfigProvider
+        @inject(DI_TOKENS.ConfigProvider) private _config: IConfigProvider
     ) {
         this.clientId = this._config.getGoogleClientId();
         this.clientSecret = this._config.getGoogleClientSecret();

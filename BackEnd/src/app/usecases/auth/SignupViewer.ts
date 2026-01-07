@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
@@ -12,15 +15,15 @@ import { IViewerSignupUseCase } from "app/repositories/interfaces/auth/IAuthenti
 import { UserMapper } from "app/mappers/UserMapper";
 import { IUserIdGenerator } from "app/providers/IIdGenerator";
 
-
+@injectable()
 export class SignupViewer implements IViewerSignupUseCase {
     constructor(
-        private _userRepository: IUserRepository,
-        private _otpRepository: IOtpRepository,
-        private _mailRepository: IMailRepository,
-        private _passwordHasher: IPasswordHasher,
-        private _otpGenerator: IOtpGenerator,
-        private _idGenerator: IUserIdGenerator,
+        @inject(DI_TOKENS.UserRepository) private _userRepository: IUserRepository,
+        @inject(DI_TOKENS.OtpRepository) private _otpRepository: IOtpRepository,
+        @inject(DI_TOKENS.Mailer) private _mailRepository: IMailRepository,
+        @inject(DI_TOKENS.PasswordHasher) private _passwordHasher: IPasswordHasher,
+        @inject(DI_TOKENS.OtpGenerator) private _otpGenerator: IOtpGenerator,
+        @inject(DI_TOKENS.UserIdGenerator) private _idGenerator: IUserIdGenerator,
     ) { }
 
     async execute(userData: UserRegister) {

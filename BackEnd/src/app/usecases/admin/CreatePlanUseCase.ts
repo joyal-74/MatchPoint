@@ -1,13 +1,17 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger"; // Assuming you have this
 import { ICreatePlan } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { IPlanRepository } from "app/repositories/interfaces/admin/IPlanRepository";
 import { Plan } from "domain/entities/Plan";
 import { BadRequestError } from "domain/errors";
 
+@injectable()
 export class CreatePlanUseCase implements ICreatePlan {
     constructor(
-        private _planRepo: IPlanRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.PlanRepository) private _planRepo: IPlanRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) {}
 
     async execute(planData: Plan): Promise<Plan> {

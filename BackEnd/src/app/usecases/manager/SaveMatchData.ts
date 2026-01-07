@@ -1,17 +1,20 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
 import { ISaveMatchData } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
-import { MatchEntity } from "domain/entities/Match";
+import { MatchDetails } from "domain/entities/Match";
 import { BadRequestError, NotFoundError } from "domain/errors";
 
-
+@injectable()
 export class SaveMatchData implements ISaveMatchData {
     constructor(
-        private _matchRepo: IMatchesRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.MatchesRepository) private _matchRepo: IMatchesRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
-    async execute(matchId: string, tossWinnerId: string, tossDecision: string): Promise<MatchEntity> {
+    async execute(matchId: string, tossWinnerId: string, tossDecision: string): Promise<MatchDetails> {
         if (!matchId) throw new NotFoundError("Match ID is required");
         if (!tossWinnerId) throw new NotFoundError("Toss winner ID is required");
         if (!tossDecision) throw new NotFoundError("Toss decision is required");

@@ -1,11 +1,15 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { IChangeUserBlockStatus, RoleResponseDTO } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 
+@injectable()
 export class ChangeBlockUserStatus implements IChangeUserBlockStatus {
     constructor(
-        private _userRepository: IUserRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.UserRepository) private _userRepository: IUserRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(userId: string, isActive: boolean): Promise<RoleResponseDTO> {

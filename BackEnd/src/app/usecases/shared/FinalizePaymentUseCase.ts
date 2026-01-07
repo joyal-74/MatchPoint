@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IPaymentProvider } from "app/providers/IPaymentProvider";
 import { PaymentMetadata } from "app/repositories/interfaces/IBasePaymentMetaData";
 import { IVerifyPaymentUseCase } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
@@ -9,9 +12,10 @@ export interface VerifyPaymentResponse {
     metadata: PaymentMetadata;
 }
 
+@injectable()
 export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
     constructor(
-        private _paymentProvider: IPaymentProvider
+        @inject(DI_TOKENS.RazorpayProvider) private _paymentProvider: IPaymentProvider
     ) {}
 
     async execute(sessionId: string): Promise<VerifyPaymentResponse> {

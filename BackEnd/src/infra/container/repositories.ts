@@ -1,0 +1,51 @@
+// Repositories
+import { UserRepositoryMongo } from "../repositories/mongo/UserRepositoryMongo";
+import { AdminRepositoryMongo } from "../repositories/mongo/AdminRepositoryMongo";
+import { PlayerRepositoryMongo } from "../repositories/mongo/PlayerRepositoryMongo";
+import { ManagerRepositoryMongo } from "../repositories/mongo/ManagerRepositoryMongo";
+import { OtpRepositoryMongo } from "../repositories/mongo/OtpRepositoryMongo";
+import { TeamRepositoryMongo } from "../repositories/mongo/TeamRepositoryMongo";
+import { NotificationRepository } from "../repositories/mongo/NotificationRepository";
+import { TournamentRepositoryMongo } from "../repositories/mongo/TournamentRepoMongo";
+import { RegistrationRepository } from "../repositories/mongo/RegistrationRepository";
+import { FixturesRepositoryMongo } from "../repositories/mongo/FixturesRepositoryMongo";
+import { MatchesRepositoryMongo } from "../repositories/mongo/MatchesRepositoryMongo";
+import { ChatRepositoryMongo } from "../repositories/mongo/ChatRepositoryMongo";
+import { MessageRepositoryMongo } from "../repositories/mongo/MessageRepositoryMongo";
+import { PlanRepository } from "../repositories/mongo/PlanRepository";
+import { SubscriptionRepository } from "../repositories/mongo/SubscriptionRepository";
+import { LeaderboardRepository } from "../repositories/mongo/LeaderboardRepository";
+import { MatchRepoMongo } from "../repositories/mongo/MatchStatsRepo";
+import { SettingsRepository } from "../repositories/mongo/SettingsRepository";
+import { TransactionRepository } from "../repositories/mongo/TransactionRepository";
+import { DashboardRepository } from "../repositories/mongo/DashboardRepository";
+import { FinancialRepository } from "../repositories/mongo/FinancialRepository";
+import { WalletRepository } from "../repositories/mongo/WalletRepository";
+import { container } from ".";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
+
+
+// B. Repositories
+container.register(DI_TOKENS.UserRepository, { useClass: UserRepositoryMongo });
+container.register(DI_TOKENS.AdminRepository, { useClass: AdminRepositoryMongo });
+container.register(DI_TOKENS.PlayerRepository, { useClass: PlayerRepositoryMongo });
+container.register(DI_TOKENS.ManagerRepository, { useClass: ManagerRepositoryMongo });
+container.register(DI_TOKENS.OtpRepository, { useClass: OtpRepositoryMongo });
+container.register(DI_TOKENS.TeamRepository, { useClass: TeamRepositoryMongo });
+container.register(DI_TOKENS.NotificationRepository, { useClass: NotificationRepository });
+container.register(DI_TOKENS.TournamentRepository, { useClass: TournamentRepositoryMongo });
+container.register(DI_TOKENS.RegistrationRepository, { useClass: RegistrationRepository });
+container.register(DI_TOKENS.FixturesRepository, { useClass: FixturesRepositoryMongo });
+container.register(DI_TOKENS.MatchesRepository, { useClass: MatchesRepositoryMongo });
+container.register(DI_TOKENS.MatchStatsRepository, { useClass: MatchRepoMongo });
+container.register(DI_TOKENS.ChatRepository, { useClass: ChatRepositoryMongo });
+container.register(DI_TOKENS.MessageRepository, { useClass: MessageRepositoryMongo });
+container.register(DI_TOKENS.PlanRepository, { useClass: PlanRepository });
+container.register(DI_TOKENS.SubscriptionRepository, { useClass: SubscriptionRepository });
+container.register(DI_TOKENS.LeaderboardRepository, { useClass: LeaderboardRepository });
+container.register(DI_TOKENS.SettingsRepository, { useClass: SettingsRepository });
+container.register(DI_TOKENS.TransactionRepository, { useClass: TransactionRepository });
+container.register(DI_TOKENS.DashboardRepository, { useClass: DashboardRepository });
+container.register(DI_TOKENS.FinancialRepository, { useClass: FinancialRepository });
+container.register(DI_TOKENS.WalletRepository, { useClass: WalletRepository });

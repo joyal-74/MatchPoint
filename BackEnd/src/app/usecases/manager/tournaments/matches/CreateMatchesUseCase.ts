@@ -1,12 +1,16 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import type { Match } from "domain/entities/Match";
 import { ILogger } from "app/providers/ILogger";
 import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
 import { ICreateMatchesUseCase } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 
+@injectable()
 export class CreateMatchesUseCase implements ICreateMatchesUseCase {
     constructor(
-        private _matchesRepo: IMatchesRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.MatchesRepository) private _matchesRepo: IMatchesRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(tournamentId: string, matchesData: Match[]): Promise<Match[]> {

@@ -1,6 +1,9 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import {
-    IGetAllMyTeamsUseCase,
+    IGetAllPlayerTeamsUseCase,
     IGetAllTeamsUseCase,
     IGetMyTeamDetailsUseCase,
     IGetMyTeamsUseCase,
@@ -15,15 +18,16 @@ import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 import { IPlayerTeamController } from "presentation/http/interfaces/IPlayerTeamController";
 
+@injectable()
 export class TeamsController implements IPlayerTeamController {
     constructor(
-        private _getAllTeamsUsecase: IGetAllTeamsUseCase,
-        private _joinTeamsUsecase: IJoinTeamUseCase,
-        private _getmyTeamsUsecase: IGetMyTeamsUseCase,
-        private _getAllMyTeamsUsecase: IGetAllMyTeamsUseCase,
-        private _getmyTeamsDetailsUsecase: IGetMyTeamDetailsUseCase,
-        private _updateInviteStatusUseCase: IUpdatePlayerInviteStatus,
-        private _logger: ILogger
+        @inject(DI_TOKENS.GetAllTeamsPlayerUseCase) private _getAllTeamsUsecase: IGetAllTeamsUseCase,
+        @inject(DI_TOKENS.JoinTeamUseCase) private _joinTeamsUsecase: IJoinTeamUseCase,
+        @inject(DI_TOKENS.GetMyTeamsUseCase) private _getmyTeamsUsecase: IGetMyTeamsUseCase,
+        @inject(DI_TOKENS.GetAllTeamsPlayerUseCase) private _getAllMyTeamsUsecase: IGetAllPlayerTeamsUseCase,
+        @inject(DI_TOKENS.GetmyTeamsDetailsUsecase) private _getmyTeamsDetailsUsecase: IGetMyTeamDetailsUseCase,
+        @inject(DI_TOKENS.UpdatePlayerInviteStatus) private _updateInviteStatusUseCase: IUpdatePlayerInviteStatus,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     /**
@@ -120,6 +124,6 @@ export class TeamsController implements IPlayerTeamController {
 
         const result = await this._updateInviteStatusUseCase.execute({ playerId, teamId, status });
 
-        return new HttpResponse(HttpStatusCode.OK,buildResponse(true, TeamMessages.TEAM_INVITE_PLAYER, result));
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.TEAM_INVITE_PLAYER, result));
     };
 }

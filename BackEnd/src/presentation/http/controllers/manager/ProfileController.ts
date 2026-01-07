@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IGetManagerProfile, IUpdateManagerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
 import { ProfileMessages } from "domain/constants/manager/ManagerProfileMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
@@ -7,10 +10,11 @@ import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 import { IProfileController } from "presentation/http/interfaces/IManagerController";
 
+@injectable()
 export class ProfileController implements IProfileController {
     constructor(
-        private _getManagerProfileUsecase: IGetManagerProfile,
-        private _profileUpdateUsecase: IUpdateManagerProfile,
+        @inject(DI_TOKENS.GetManagerProfileUsecase) private _getManagerProfileUsecase: IGetManagerProfile,
+        @inject(DI_TOKENS.UpdateManagerProfile) private _profileUpdateUsecase: IUpdateManagerProfile,
     ) { }
 
     /**

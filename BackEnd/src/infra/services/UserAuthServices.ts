@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { UserMapper } from "app/mappers/UserMapper";
 import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
@@ -7,11 +10,13 @@ import { JwtPayload } from "domain/entities/JwtPayload";
 import { UserResponse } from "domain/entities/User";
 import { UnauthorizedError } from "domain/errors";
 
+
+@injectable()
 export class UserAuthServices implements IUserAuthServices {
 
     constructor(
-        private _userRepository: IUserRepository,
-        private _jwtService: IJWTRepository
+        @inject(DI_TOKENS.UserRepository) private _userRepository: IUserRepository,
+        @inject(DI_TOKENS.JWTService) private _jwtService: IJWTRepository
     ) { }
 
     ensureUserCanLogin(user: UserResponse) {
