@@ -171,14 +171,7 @@ container.register(DI_TOKENS.UpdatePlanUseCase, { useClass: UpdatePlanUseCase })
 // Dashboard
 container.register(DI_TOKENS.GetDashboardStatsUseCase, { useClass: GetDashboardStatsUseCase });
 
-// user (shared)
-container.register(DI_TOKENS.VerifyPaymentUseCase, { useClass: VerifyPaymentUseCase });
-container.register(DI_TOKENS.UpdateUserPlanUseCase, { useClass: UpdateUserPlan });
-
-container.register(DI_TOKENS.AddNewTeamUseCase, { useClass: AddNewTeamUseCase });
-container.register(DI_TOKENS.CreateChatForTeamUseCase, { useClass: CreateChatForTeamUseCase });
-
-
+// Match
 container.register(DI_TOKENS.InitInningsUseCase, { useClass: InitInningsUseCase });
 container.register(DI_TOKENS.AddRunsUseCase, { useClass: AddRunsUseCase });
 container.register(DI_TOKENS.SetStrikerUseCase, { useClass: SetStrikerUseCase });
@@ -201,6 +194,8 @@ container.register(DI_TOKENS.GetManagerProfileUsecase, { useClass: GetManagerPro
 container.register(DI_TOKENS.UpdateManagerProfile, { useClass: UpdateManagerProfile });
 
 // --- Manager Team Operations ---
+container.register(DI_TOKENS.AddNewTeamUseCase, { useClass: AddNewTeamUseCase });
+container.register(DI_TOKENS.CreateChatForTeamUseCase, { useClass: CreateChatForTeamUseCase });
 container.register(DI_TOKENS.EditTeamUsecase, { useClass: EditTeamUseCase });
 container.register(DI_TOKENS.GetTeamsUsecase, { useClass: GetAllTeamUseCase });
 container.register(DI_TOKENS.GetmyTeamsDetailsUsecase, { useClass: GetMyTeamDetails });
@@ -244,6 +239,8 @@ container.register(DI_TOKENS.GetMyTeamsUseCase, { useClass: GetAllPlayerTeamsUse
 container.register(DI_TOKENS.GetPlayerTournaments, { useClass: FetchTournamentsUseCase });
 
 // --- Shared Use Cases ---
+container.register(DI_TOKENS.VerifyPaymentUseCase, { useClass: VerifyPaymentUseCase });
+container.register(DI_TOKENS.UpdateUserPlanUseCase, { useClass: UpdateUserPlan });
 container.register(DI_TOKENS.VerifyPasswordUseCase, { useClass: VerifyPasswordUseCase });
 container.register(DI_TOKENS.UpdatePasswordUseCase, { useClass: UpdatePasswordUseCase });
 container.register(DI_TOKENS.UpdatePrivacyUseCase, { useClass: UpdatePrivacyUseCase });
