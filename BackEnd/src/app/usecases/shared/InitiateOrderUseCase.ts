@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IPaymentProvider, PaymentSession } from "app/providers/IPaymentProvider";
 import { IPlanRepository } from "app/repositories/interfaces/admin/IPlanRepository";
 import { PaymentMetadata } from "app/repositories/interfaces/IBasePaymentMetaData";
@@ -11,11 +14,12 @@ export interface CreatePaymentSessionDTO {
     metadata: PaymentMetadata;
 }
 
+@injectable()
 export class CreatePaymentSession implements ICreatePaymentSession {
 
     constructor(
-        private _paymentProvider: IPaymentProvider,
-        private _subscriptionPlanRepo: IPlanRepository,
+        @inject(DI_TOKENS.RazorpayProvider) private _paymentProvider: IPaymentProvider,
+        @inject(DI_TOKENS.SubscriptionRepository) private _subscriptionPlanRepo: IPlanRepository,
 
     ) { }
 

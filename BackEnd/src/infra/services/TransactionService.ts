@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ITransactionService } from "app/repositories/interfaces/player/ITransactionService";
 import { ITransactionRepository } from "app/repositories/interfaces/shared/ITransactionRepository";
 import { IUnitOfWork } from "app/repositories/interfaces/shared/IUnitOfWork";
@@ -5,11 +8,12 @@ import { IWalletRepository } from "app/repositories/interfaces/shared/IWalletRep
 import { ChargeEntryFeeDTO } from "domain/dtos/Transaction.dto";
 import { ConcurrencyError } from "domain/errors";
 
+@injectable()
 export class TransactionService implements ITransactionService {
     constructor(
-        private walletRepo: IWalletRepository,
-        private transactionRepo: ITransactionRepository,
-        private uow: IUnitOfWork
+        @inject(DI_TOKENS.WalletRepository) private walletRepo: IWalletRepository,
+        @inject(DI_TOKENS.TransactionRepository) private transactionRepo: ITransactionRepository,
+        @inject(DI_TOKENS.UnitOfWork) private uow: IUnitOfWork
     ) { }
 
     async chargeEntryFee(dto: ChargeEntryFeeDTO, ctx?: unknown): Promise<void> {

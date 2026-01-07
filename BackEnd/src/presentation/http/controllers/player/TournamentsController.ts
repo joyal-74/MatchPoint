@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { IGetPlayerTournaments } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 import { TournamentMessages } from "domain/constants/TournamentMessages";
@@ -7,10 +10,11 @@ import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 
+@injectable()
 export class TournamentsController {
     constructor(
-        private _getplayerTournaments: IGetPlayerTournaments,
-        private _logger: ILogger
+        @inject(DI_TOKENS.GetPlayerTournaments) private _getplayerTournaments: IGetPlayerTournaments,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     /**

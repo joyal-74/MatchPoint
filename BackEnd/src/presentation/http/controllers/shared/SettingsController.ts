@@ -1,20 +1,23 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IUpdatePasswordUseCase, IUpdatePrivacyUseCase, IVerifyPasswordUseCase } from "app/repositories/interfaces/usecases/ISettingsUseCaseRepo";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 
-
+@injectable()
 export class SettingsController {
     constructor(
-        private verifyPasswordUseCase: IVerifyPasswordUseCase,
-        private updatePasswordUseCase: IUpdatePasswordUseCase,
-        private updatePrivacyUseCase: IUpdatePrivacyUseCase
+        @inject(DI_TOKENS.VerifyPasswordUseCase) private _verifyPasswordUseCase: IVerifyPasswordUseCase,
+        @inject(DI_TOKENS.UpdatePasswordUseCase) private _updatePasswordUseCase: IUpdatePasswordUseCase,
+        @inject(DI_TOKENS.UpdatePrivacyUseCase) private _updatePrivacyUseCase: IUpdatePrivacyUseCase
     ) { }
 
     verifyPassword = async (httpRequest: IHttpRequest) => {
         const { userId, password } = httpRequest.body;
-        const isValid = await this.verifyPasswordUseCase.execute(userId, password);
+        const isValid = await this._verifyPasswordUseCase.execute(userId, password);
 
         if (!isValid) {
             return new HttpResponse(HttpStatusCode.UNAUTHORIZED, buildResponse(false, "Incorrect password"));
@@ -26,7 +29,7 @@ export class SettingsController {
     // PATCH /update-password
     updatePassword = async (httpRequest: IHttpRequest) => {
         const { userId, currentPassword, newPassword } = httpRequest.body;
-        const message = await this.updatePasswordUseCase.execute(userId, currentPassword, newPassword);
+        const message = await this._updatePasswordUseCase.execute(userId, currentPassword, newPassword);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Password verified", message));
     };
@@ -34,7 +37,7 @@ export class SettingsController {
     // PATCH /update-privacy
     updatePrivacy = async (httpRequest: IHttpRequest) => {
         const { userId, language, country } = httpRequest.body;
-        const message = await this.updatePrivacyUseCase.execute(userId, language, country);
+        const message = await this._updatePrivacyUseCase.execute(userId, language, country);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Settings updated", message));
     };

@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { GetManagerFinancialsUseCase } from "app/usecases/player/GetManagerFinancialsUseCase";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -5,9 +8,10 @@ import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 
+@injectable()
 export class FinancialsController {
     constructor(
-        private _getManagerFinancialsUseCase: GetManagerFinancialsUseCase,
+        @inject(DI_TOKENS.GetManagerFinancialsUseCase) private _getManagerFinancialsUseCase: GetManagerFinancialsUseCase,
     ) { }
 
 

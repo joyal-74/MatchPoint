@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { TeamMapper } from "app/mappers/TeamMappers";
 import { ILogger } from "app/providers/ILogger";
 import { File } from "domain/entities/File";
@@ -7,12 +10,12 @@ import { TeamData, TeamRegister } from "domain/dtos/Team.dto";
 import { BadRequestError } from "domain/errors";
 import { IFileStorage } from "app/providers/IFileStorage";
 
-
+@injectable()
 export class EditTeamUseCase implements IEditTeamUseCase {
     constructor(
-        private _teamRepo: ITeamRepository,
-        private _fileStorage: IFileStorage,
-        private _logger: ILogger,
+        @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository,
+        @inject(DI_TOKENS.FileStorage) private _fileStorage: IFileStorage,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger,
     ) { }
 
     async execute(teamData: TeamRegister, teamId: string, file: File): Promise<TeamData> {

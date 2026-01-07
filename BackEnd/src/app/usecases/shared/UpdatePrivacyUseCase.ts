@@ -1,13 +1,17 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ISettingsRepository } from "app/repositories/interfaces/shared/ISettingsRepo";
 import { BadRequestError } from "domain/errors";
 
+@injectable()
 export class UpdatePrivacyUseCase {
     constructor(
-        private settingsRepo: ISettingsRepository
+        @inject(DI_TOKENS.SettingsRepository) private _settingsRepo: ISettingsRepository
     ) { }
 
     async execute(userId: string, language: string, country: string): Promise<string> {
-        const success = await this.settingsRepo.updatePrivacySettings(userId, language, country);
+        const success = await this._settingsRepo.updatePrivacySettings(userId, language, country);
 
         if (!success) throw new BadRequestError("Failed to update privacy settings");
 

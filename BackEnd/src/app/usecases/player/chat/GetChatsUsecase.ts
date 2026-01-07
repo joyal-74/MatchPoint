@@ -1,9 +1,15 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IChatRepository } from "app/repositories/interfaces/player/IChatRepository";
 
+@injectable()
 export class GetChatsUseCase {
-    constructor(private chatRepo: IChatRepository) { }
+    constructor(
+        @inject(DI_TOKENS.ChatRepository) private _chatRepo: IChatRepository
+    ) { }
 
     async execute(userId: string) {
-        return this.chatRepo.findChatsForUser(userId);
+        return this._chatRepo.findChatsForUser(userId);
     }
 }

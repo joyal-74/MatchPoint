@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { PlayerMapper } from "app/mappers/PlayerMapper";
 import { ILogger } from "app/providers/ILogger";
 import { IPlayerService } from "app/services/player/IPlayerService";
@@ -6,10 +9,11 @@ import { PlayerProfileFieldDTO, PlayerProfileResponse } from "domain/dtos/Player
 import { NotFoundError } from "domain/errors";
 import { validatePlayerSportsFields } from "domain/validators/PlayerFieldValidators";
 
+@injectable()
 export class UpdatePlayerFields implements IUpdatePlayerFields {
     constructor(
-        private _playerService: IPlayerService,
-        private _logger: ILogger,
+        @inject(DI_TOKENS.PlayerService) private _playerService: IPlayerService,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger,
     ) { }
 
     async execute(updateData: PlayerProfileFieldDTO): Promise<PlayerProfileResponse> {

@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ManagerMapper } from "app/mappers/ManagerMapper";
 import { IFileStorage } from "app/providers/IFileStorage";
 import { IUpdateManagerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
@@ -7,10 +10,11 @@ import { File } from "domain/entities/File";
 import { NotFoundError } from "domain/errors";
 import { validateManagerUpdate } from "domain/validators/ManagerUpdateValidator";
 
+@injectable()
 export class UpdateManagerProfile implements IUpdateManagerProfile {
     constructor(
-        private userRepo: IUserRepository,
-        private fileStorage: IFileStorage
+        @inject(DI_TOKENS.UserRepository) private _userRepo: IUserRepository,
+        @inject(DI_TOKENS.FileStorage) private fileStorage: IFileStorage
     ) { }
 
     async execute(updateData: ManagerUpdateDTO, file?: File): Promise<ManagerResponseDTO> {
@@ -25,7 +29,7 @@ export class UpdateManagerProfile implements IUpdateManagerProfile {
             throw new NotFoundError("UserId not found");
         }
 
-        const manager = await this.userRepo.update(validData._id, validData);
+        const manager = await this._userRepo.update(validData._id, validData);
 
         return ManagerMapper.toProfileResponseDTO(manager);
     }

@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogoutService } from "app/services/user/ILogoutService";
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { IAdminRepository } from "app/repositories/interfaces/admin/IAdminRepository";
@@ -5,10 +8,11 @@ import { Admin } from "domain/entities/Admin";
 import { User } from "domain/entities/User";
 import { BadRequestError } from "domain/errors";
 
+@injectable()
 export class LogoutService implements ILogoutService {
     constructor(
-        private _userRepo: IUserRepository,
-        private _adminRepo: IAdminRepository
+        @inject(DI_TOKENS.UserRepository) private _userRepo: IUserRepository,
+        @inject(DI_TOKENS.AdminRepository) private _adminRepo: IAdminRepository
     ) { }
 
     async logout(userId: string, role: string): Promise<void> {

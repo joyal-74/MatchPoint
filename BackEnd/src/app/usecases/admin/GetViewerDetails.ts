@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { UserMapper } from "app/mappers/UserMapper";
 import { ILogger } from "app/providers/ILogger";
 import { IGetViewerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
@@ -18,11 +21,11 @@ export interface ViewerDetails {
     isBlocked?: boolean;
 }
 
-
+@injectable()
 export class GetViewerDetails implements IGetViewerDetails {
     constructor(
-        private _viewerRepo: IUserRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.UserRepository) private _viewerRepo: IUserRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(viewerId: string): Promise<ViewerDetails> {

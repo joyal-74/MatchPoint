@@ -1,10 +1,14 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IPlayerTeamServices } from "app/services/player/IPlayerTeamServices";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { PlayerTeamResponseDTO } from "domain/dtos/Team.dto";
 
+@injectable()
 export class PlayerTeamServices implements IPlayerTeamServices {
     constructor(
-        private _teamRepository: ITeamRepository,
+        @inject(DI_TOKENS.TeamRepository) private _teamRepository: ITeamRepository,
     ) {}
 
     async findPlayerTeams(playerId: string): Promise<PlayerTeamResponseDTO> {

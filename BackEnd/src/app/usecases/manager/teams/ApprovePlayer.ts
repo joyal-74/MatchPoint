@@ -1,12 +1,16 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { TeamMapper } from "app/mappers/TeamMappers";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { IApprovePlayerUseCase } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 import { TeamDataFull } from "domain/dtos/Team.dto";
 import { BadRequestError, NotFoundError } from "domain/errors";
 
+@injectable()
 export class ApprovePlayerUseCase implements IApprovePlayerUseCase {
     constructor(
-        private _teamRepo: ITeamRepository
+        @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository
     ) { }
 
     async execute(teamId: string, playerId: string): Promise<TeamDataFull> {

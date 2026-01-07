@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
@@ -13,16 +16,16 @@ import { IManagerSignupUseCase } from "app/repositories/interfaces/auth/IAuthent
 import { IManagerIdGenerator } from "app/providers/IIdGenerator";
 import { UserMapper } from "app/mappers/UserMapper";
 
-
+@injectable()
 export class SignupManager implements IManagerSignupUseCase {
     constructor(
-        private _userRepository: IUserRepository,
-        private _managerRepository: IManagerRepository,
-        private _otpRepository: IOtpRepository,
-        private _mailRepository: IMailRepository,
-        private _passwordHasher: IPasswordHasher,
-        private _otpGenerator: IOtpGenerator,
-        private _idGenerator: IManagerIdGenerator,
+        @inject(DI_TOKENS.UserRepository) private _userRepository: IUserRepository,
+        @inject(DI_TOKENS.ManagerRepository) private _managerRepository: IManagerRepository,
+        @inject(DI_TOKENS.OtpRepository) private _otpRepository: IOtpRepository,
+        @inject(DI_TOKENS.Mailer) private _mailRepository: IMailRepository,
+        @inject(DI_TOKENS.PasswordHasher) private _passwordHasher: IPasswordHasher,
+        @inject(DI_TOKENS.OtpGenerator) private _otpGenerator: IOtpGenerator,
+        @inject(DI_TOKENS.ManagerIdGenerator) private _idGenerator: IManagerIdGenerator,
     ) { }
 
     async execute(userData: ManagerRegister) {
@@ -58,7 +61,7 @@ export class SignupManager implements IManagerSignupUseCase {
 
         await this._managerRepository.create({
             userId: newUser._id,
-            tournaments: [],
+            tournamentsCreated: [],
             teams: [],
         });
 

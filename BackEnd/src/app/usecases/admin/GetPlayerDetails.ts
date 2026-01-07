@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { PlayerMapper } from "app/mappers/PlayerMapper";
 import { ILogger } from "app/providers/ILogger";
 import { IGetPlayerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
@@ -24,11 +27,11 @@ export interface PlayerDetails {
     isBlocked?: boolean;
 }
 
-
+@injectable()
 export class GetPlayerDetails implements IGetPlayerDetails {
     constructor(
-        private _playerRepo: IPlayerRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.PlayerRepository) private _playerRepo: IPlayerRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(playerId: string): Promise<PlayerDetails> {

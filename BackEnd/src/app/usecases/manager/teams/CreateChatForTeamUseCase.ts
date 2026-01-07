@@ -1,8 +1,12 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IChatRepository } from "app/repositories/interfaces/player/IChatRepository";
 
+@injectable()
 export class CreateChatForTeamUseCase {
     constructor(
-        private _chatRepo: IChatRepository
+        @inject(DI_TOKENS.ChatRepository) private _chatRepo: IChatRepository
     ) { }
 
     async execute(teamId: string) {

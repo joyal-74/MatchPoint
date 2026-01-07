@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { TeamMapper } from "app/mappers/TeamMappers";
 import { ILogger } from "app/providers/ILogger";
 import { IGetTeamDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
@@ -5,11 +8,11 @@ import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamReposit
 import { TeamDataFull } from "domain/dtos/Team.dto";
 import { NotFoundError } from "domain/errors";
 
-
+@injectable()
 export class GetTeamDetails implements IGetTeamDetails {
     constructor(
-        private _teamRepo: ITeamRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(playerId: string): Promise<TeamDataFull> {

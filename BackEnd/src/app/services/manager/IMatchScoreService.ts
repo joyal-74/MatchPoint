@@ -13,7 +13,7 @@ export interface IMatchScoreService {
 
     addExtras(matchId: string, type: string, runs: number): Promise<MatchEntity | null>;
 
-    addWicket(matchId: string, dismissalType: string, outBatsmanId: string, nextBatsmanId: string, fielderId?: string): Promise<MatchEntity | null>;
+    addWicket(matchId: string, dismissalType: string, outBatsmanId: string, nextBatsmanId: string, bowlerId: string, isLegalBall: boolean, fielderId?: string): Promise<MatchEntity | null>;
 
     undoLastBall(matchId: string): Promise<MatchEntity | null>;
 

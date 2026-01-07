@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ManagerMapper } from "app/mappers/ManagerMapper";
 import { ILogger } from "app/providers/ILogger";
 import { IGetManagerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
@@ -24,11 +27,11 @@ export interface ManagerDetails {
     isBlocked?: boolean;
 }
 
-
+@injectable()
 export class GetManagerDetails implements IGetManagerDetails {
     constructor(
-        private _managerRepo: IManagerRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.ManagerRepository) private _managerRepo: IManagerRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) {}
 
     async execute(managerId: string): Promise<ManagerDetails> {

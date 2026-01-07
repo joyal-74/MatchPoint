@@ -1,29 +1,28 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
 import { ILiveStreamService, StreamMetadata } from "app/repositories/interfaces/services/LiveStreamService";
 import { NotFoundError } from "domain/errors";
-import { RoomRegistry } from "infra/livestream/mediasoup/RoomRegistry";
+
 import {
     RtpParameters,
     RtpCapabilities,
     MediaKind,
     DtlsParameters
 } from "mediasoup/node/lib/types";
+import { IRoomRegistry } from "app/repositories/interfaces/shared/ISocketServices";
 
 type TransportDirection = "send" | "recv";
 
+@injectable()
 export class LiveStreamService implements ILiveStreamService {
     constructor(
-        private _roomRegistry: RoomRegistry,
-        private _matchRepository: IMatchesRepository
+        @inject(DI_TOKENS.RoomRegistry) private _roomRegistry: IRoomRegistry,
+        @inject(DI_TOKENS.MatchesRepository) private _matchRepository: IMatchesRepository
     ) { }
 
-    /* ================= TRANSPORT ================= */
-
-    async createTransport(
-        matchId: string,
-        socketId: string,
-        direction: TransportDirection
-    ) {
+    async createTransport(matchId: string, socketId: string, direction: TransportDirection) {
         const room = await this._roomRegistry.getOrCreateRoom(matchId);
 
         const transport = await room.createTransport(socketId, direction);
@@ -63,24 +62,14 @@ export class LiveStreamService implements ILiveStreamService {
         };
     }
 
-    async connectTransport(
-        matchId: string,
-        transportId: string,
-        dtlsParameters: DtlsParameters
-    ) {
+    async connectTransport(matchId: string, transportId: string, dtlsParameters: DtlsParameters) {
         const room = await this._roomRegistry.getOrCreateRoom(matchId);
         await room.connectTransport(transportId, dtlsParameters);
     }
 
     /* ================= PRODUCERS ================= */
 
-    async produce(
-        matchId: string,
-        socketId: string,
-        transportId: string,
-        kind: MediaKind,
-        rtpParameters: RtpParameters
-    ) {
+    async produce(matchId: string, socketId: string, transportId: string, kind: MediaKind, rtpParameters: RtpParameters) {
         const room = await this._roomRegistry.getOrCreateRoom(matchId);
         const producer = await room.createProducer(
             socketId,
@@ -120,13 +109,7 @@ export class LiveStreamService implements ILiveStreamService {
 
     /* ================= CONSUMERS ================= */
 
-    async consume(
-        matchId: string,
-        socketId: string,
-        transportId: string,
-        producerId: string,
-        rtpCapabilities: RtpCapabilities
-    ) {
+    async consume(matchId: string, socketId: string, transportId: string, producerId: string, rtpCapabilities: RtpCapabilities) {
         const room = await this._roomRegistry.getOrCreateRoom(matchId);
         const consumer = await room.createConsumer(
             socketId,

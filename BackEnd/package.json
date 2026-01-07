@@ -60,8 +60,10 @@
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.6",
     "razorpay": "^2.9.6",
+    "reflect-metadata": "^0.2.2",
     "socket.io": "^4.8.1",
     "stripe": "^19.1.0",
+    "tsyringe": "^4.10.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
     "zod": "^4.1.9"

@@ -1,17 +1,23 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { IRoleIdGenerator } from "app/providers/IIdGenerator";
 import { SocialUserRegisterData, UserResponse } from "domain/entities/User";
 import { IUserServices } from "app/services/user/IUserServices";
 import { NotFoundError } from "domain/errors";
 
+
+@injectable()
 export class UserServices implements IUserServices {
     constructor(
-        private userRepository: IUserRepository,
-        private idGenerator: IRoleIdGenerator
+        @inject(DI_TOKENS.UserRepository) private userRepository: IUserRepository,
+        @inject(DI_TOKENS.RoleIdGenerator) private idGenerator: IRoleIdGenerator
     ) { }
 
     async createUser(userData: SocialUserRegisterData, email: string, name: string, picture?: string) {
         const userId = this.idGenerator.generate(userData.role);
+        
         const [firstName, lastName] = name.split(" ");
         const newUser = await this.userRepository.create({
             userId,

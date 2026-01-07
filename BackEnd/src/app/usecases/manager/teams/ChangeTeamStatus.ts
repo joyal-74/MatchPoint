@@ -1,12 +1,17 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { IChangeTeamStatusUseCase, } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 import { BadRequestError } from "domain/errors";
 
-export class SoftDeleteTeam implements IChangeTeamStatusUseCase {
+
+@injectable()
+export class ChangeTeamStatusUsecase implements IChangeTeamStatusUseCase {
     constructor(
-        private _teamRepo: ITeamRepository,
-        private _logger: ILogger,
+        @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger,
     ) { }
 
     async execute(teamId: string): Promise<string> {

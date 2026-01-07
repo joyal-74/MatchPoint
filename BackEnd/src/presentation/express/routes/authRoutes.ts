@@ -1,26 +1,28 @@
 import { Router } from 'express';
 import { expressAdapter } from 'presentation/adaptors/ExpressAdaptor';
-import { authControllers } from 'presentation/composition';
-
+import { AuthController } from 'presentation/http/controllers/authentication/AuthController';
+import { container } from 'tsyringe';
 
 const router = Router();
 
-router.post('/admin/login', expressAdapter(authControllers.loginAdmin));
-router.post('/login', expressAdapter(authControllers.loginUser));
-router.post('/google-login', expressAdapter(authControllers.loginGoogleUser));
-router.post('/facebook-login', expressAdapter(authControllers.loginFacebookUser));
-router.post('/social-complete', expressAdapter(authControllers.completeSocialAccount));
-router.get('/refresh', expressAdapter(authControllers.refreshToken));
+const authController = container.resolve(AuthController);
 
-router.post('/signup/viewer', expressAdapter(authControllers.signupViewer));
-router.post('/signup/manager', expressAdapter(authControllers.signupManager));
-router.post('/signup/player', expressAdapter(authControllers.signupPlayer));
+router.post('/admin/login', expressAdapter(authController.loginAdmin));
+router.post('/login', expressAdapter(authController.loginUser));
+router.post('/google-login', expressAdapter(authController.loginGoogleUser));
+router.post('/facebook-login', expressAdapter(authController.loginFacebookUser));
+router.post('/social-complete', expressAdapter(authController.completeSocialAccount));
+router.get('/refresh', expressAdapter(authController.refreshToken));
 
-router.post('/logout', expressAdapter(authControllers.logout));
-router.post('/resend-otp', expressAdapter(authControllers.resendOtp));
-router.post('/verify-otp', expressAdapter(authControllers.verifyOtp));
+router.post('/signup/viewer', expressAdapter(authController.signupViewer));
+router.post('/signup/manager', expressAdapter(authController.signupManager));
+router.post('/signup/player', expressAdapter(authController.signupPlayer));
 
-router.post('/forgot-password', expressAdapter(authControllers.forgotPassword));
-router.post('/reset-password', expressAdapter(authControllers.resetPassword));
+router.post('/logout', expressAdapter(authController.logout));
+router.post('/resend-otp', expressAdapter(authController.resendOtp));
+router.post('/verify-otp', expressAdapter(authController.verifyOtp));
+
+router.post('/forgot-password', expressAdapter(authController.forgotPassword));
+router.post('/reset-password', expressAdapter(authController.resetPassword));
 
 export default router;

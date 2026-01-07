@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { UserResponseDTO } from "domain/dtos/User.dto";
 import { ILogger } from "app/providers/ILogger";
@@ -9,10 +12,11 @@ export interface GetAllUsersParams {
     search?: string;
 }
 
+@injectable()
 export class GetAllViewers {
     constructor(
-        private _userRepository: IUserRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.UserRepository) private _userRepository: IUserRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(params: GetAllUsersParams): Promise<{ users: UserResponseDTO[], totalCount: number }> {

@@ -1,6 +1,8 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILeaderboardRepository } from "app/repositories/interfaces/shared/ILeaderboardRepository";
 import { LeaderboardDTO } from "domain/dtos/LeaderboardDTO";
-
 
 interface GetLeaderboardParams {
     role: string;
@@ -10,9 +12,10 @@ interface GetLeaderboardParams {
     limit: number;
 }
 
+@injectable()
 export class GetLeaderboard {
     constructor(
-        private _leaderboardRepo: ILeaderboardRepository
+        @inject(DI_TOKENS.LeaderboardRepository) private _leaderboardRepo: ILeaderboardRepository
     ) { }
 
     async execute(params: GetLeaderboardParams): Promise<LeaderboardDTO> {

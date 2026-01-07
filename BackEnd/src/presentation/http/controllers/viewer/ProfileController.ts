@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IGetViewerProfile, IUpdateViewerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -8,11 +11,12 @@ import { IProfileController } from "presentation/http/interfaces/IManagerControl
 import { ILogger } from "app/providers/ILogger";
 import { ProfileMessages } from "domain/constants/viewer/ViewerProfileMessages";
 
+@injectable()
 export class ProfileController implements IProfileController {
     constructor(
-        private _getViewerProfileUsecase: IGetViewerProfile,
-        private _profileUpdateUsecase: IUpdateViewerProfile,
-        private _logger: ILogger
+        @inject(DI_TOKENS.GetViewerProfile) private _getViewerProfileUsecase: IGetViewerProfile,
+        @inject(DI_TOKENS.UpdateViewerProfile) private _profileUpdateUsecase: IUpdateViewerProfile,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     /**

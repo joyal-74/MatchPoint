@@ -1,14 +1,17 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { TeamMapper } from "app/mappers/TeamMappers";
 import { ILogger } from "app/providers/ILogger";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { TeamDataFull } from "domain/dtos/Team.dto";
 import { IGetAllTeamsUseCase } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 
-
+@injectable()
 export class GetAllTeamUseCase implements IGetAllTeamsUseCase {
     constructor(
-        private _teamRepo: ITeamRepository,
-        private _logger: ILogger,
+        @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger,
     ) { }
 
     async execute(managerId : string): Promise<TeamDataFull[]> {

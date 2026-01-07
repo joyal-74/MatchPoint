@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
@@ -5,13 +8,13 @@ import { ILogger } from "../../providers/ILogger";
 import { Tournament } from "domain/entities/Tournaments";
 import { IGetPlayerTournaments } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 
-
+@injectable()
 export class FetchTournamentsUseCase implements IGetPlayerTournaments {
     constructor(
-        private tournamentRepo: ITournamentRepository,
-        private registrationRepo: IRegistrationRepository,
-        private teamRepo: ITeamRepository,
-        private logger: ILogger
+        @inject(DI_TOKENS.TournamentRepository) private tournamentRepo: ITournamentRepository,
+        @inject(DI_TOKENS.RegistrationRepository) private registrationRepo: IRegistrationRepository,
+        @inject(DI_TOKENS.TeamRepository) private teamRepo: ITeamRepository,
+        @inject(DI_TOKENS.Logger) private logger: ILogger
     ) { }
 
     async execute(status: string, page: number, limit: number, playerId?: string,): Promise<{ tournaments: Tournament[]; total: number }> {

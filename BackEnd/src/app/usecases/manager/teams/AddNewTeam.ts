@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { TeamMapper } from "app/mappers/TeamMappers";
 import { ILogger } from "app/providers/ILogger";
 import { File } from "domain/entities/File";
@@ -9,14 +12,14 @@ import { BadRequestError } from "domain/errors";
 import { IFileStorage } from "app/providers/IFileStorage";
 import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
 
-
+@injectable()
 export class AddNewTeamUseCase implements IAddTeamUseCase {
     constructor(
-        private _teamRepo: ITeamRepository,
-        private _managerRepo: IManagerRepository,
-        private _idGenerator: ITeamIdGenerator,
-        private _fileStorage: IFileStorage,
-        private _logger: ILogger,
+        @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository,
+        @inject(DI_TOKENS.ManagerRepository) private _managerRepo: IManagerRepository,
+        @inject(DI_TOKENS.IdGenerator) private _idGenerator: ITeamIdGenerator,
+        @inject(DI_TOKENS.FileStorage) private _fileStorage: IFileStorage,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger,
     ) { }
 
     async execute(teamData: TeamRegister, file: File): Promise<TeamDataFull> {
@@ -46,6 +49,7 @@ export class AddNewTeamUseCase implements IAddTeamUseCase {
             maxPlayers : teamData.maxPlayers,
             members: teamData.members,
             status: teamData.status,
+            isBlocked : teamData.isBlocked,
             logo: teamData.logo,
             phase : teamData.phase,
             stats : teamData.stats

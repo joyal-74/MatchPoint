@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { MatchMapper } from "app/mappers/MatchMapper";
 import { MatchTeamMapper } from "app/mappers/MatchTeamMapper";
 import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
@@ -6,10 +9,11 @@ import { IMatchPlayerServices } from "app/services/manager/IMatchPlayerService";
 import { MatchResponseDTO } from "domain/dtos/MatchDTO";
 import { NotFoundError } from "domain/errors";
 
+@injectable()
 export class MatchPlayerServices implements IMatchPlayerServices {
     constructor(
-        private _matchRepo: IMatchesRepository,
-        private _playerRepo: IPlayerRepository,
+        @inject(DI_TOKENS.MatchesRepository) private _matchRepo: IMatchesRepository,
+        @inject(DI_TOKENS.PlayerRepository) private _playerRepo: IPlayerRepository,
 
     ) { }
 

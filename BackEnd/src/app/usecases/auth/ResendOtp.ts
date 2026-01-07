@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
 import { IMailRepository } from "app/providers/IMailRepository";
@@ -6,12 +9,13 @@ import { IOtpGenerator } from "app/providers/IOtpGenerator";
 import { OtpContext } from "domain/enums/OtpContext";
 import { IResendOtpUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 
+@injectable()
 export class ResendOtp implements IResendOtpUseCase {
     constructor(
-        private _userRepository: IUserRepository,
-        private _otpRepository: IOtpRepository,
-        private _mailRepository: IMailRepository,
-        private _otpGenerator: IOtpGenerator
+        @inject(DI_TOKENS.UserRepository) private _userRepository: IUserRepository,
+        @inject(DI_TOKENS.OtpRepository) private _otpRepository: IOtpRepository,
+        @inject(DI_TOKENS.Mailer) private _mailRepository: IMailRepository,
+        @inject(DI_TOKENS.OtpGenerator) private _otpGenerator: IOtpGenerator
     ) { }
 
     async execute(email: string, context: OtpContext) {

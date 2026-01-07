@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ICreatePaymentSession } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
 import { IGetPlansAndUserSubscription, ISubscriptionService } from "app/services/ISubscriptionServices";
 import { SubscriptionMessages } from "domain/constants/admin/AdminSubscriptionMessages";
@@ -7,11 +10,12 @@ import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 
+@injectable()
 export class SubscriptionController {
     constructor(
-        private _getPlansAndUserSubscription: IGetPlansAndUserSubscription,
-        private _createPaymentSessionUseCase: ICreatePaymentSession,
-        private _subscriptionPaymentService: ISubscriptionService,
+        @inject(DI_TOKENS.GetPlansAndUserSubscription) private _getPlansAndUserSubscription: IGetPlansAndUserSubscription,
+        @inject(DI_TOKENS.CreatePaymentSession) private _createPaymentSessionUseCase: ICreatePaymentSession,
+        @inject(DI_TOKENS.SubscriptionService) private _subscriptionPaymentService: ISubscriptionService,
     ) { }
 
     getUserPlan = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
@@ -24,18 +28,14 @@ export class SubscriptionController {
     initiateOrder = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { amount, currency, title, metadata } = httpRequest.body;
 
-
         const plans = await this._createPaymentSessionUseCase.execute({ amount, currency, title, metadata });
 
-        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true,"Subscription payment created successfully" , plans));
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Subscription payment created successfully", plans));
     }
 
 
     finalizeOrder = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { paymentId } = httpRequest.body;
-
-        console.log(httpRequest.body, "body_____---")
-
 
         const result = await this._subscriptionPaymentService.finalize(paymentId);
 

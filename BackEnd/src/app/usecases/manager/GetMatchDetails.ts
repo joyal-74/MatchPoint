@@ -1,12 +1,16 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
 import { IGetMatchDetails } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { MatchResponseDTO } from "domain/dtos/MatchDTO";
 import { NotFoundError } from "domain/errors";
 import { MatchMapper } from "app/mappers/MatchMapper";
 
+@injectable()
 export class GetMatchDetails implements IGetMatchDetails {
     constructor(
-        private matchRepo: IMatchesRepository
+        @inject(DI_TOKENS.MatchesRepository) private matchRepo: IMatchesRepository
     ) { }
 
     async execute(matchId: string): Promise<MatchResponseDTO> {

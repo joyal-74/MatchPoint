@@ -1,14 +1,20 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { IAddWicketUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { AddWicketPayload } from "domain/entities/Innings";
 import { MatchEntity } from "domain/entities/MatchEntity";
 import { NotFoundError } from "domain/errors";
 
+@injectable()
 export class AddWicketUseCase implements IAddWicketUseCase {
-    constructor(private matchRepo: IMatchStatsRepo) {}
+    constructor(
+        @inject(DI_TOKENS.MatchStatsRepository) private _matchStatsRepo: IMatchStatsRepo
+    ) {}
 
     async execute(payload: AddWicketPayload): Promise<MatchEntity> {
-        const match = await this.matchRepo.findByMatchId(payload.matchId);
+        const match = await this._matchStatsRepo.findByMatchId(payload.matchId);
         if (!match) throw new NotFoundError("Match not found");
 
         match.addWicketToCurrentInnings({
@@ -22,6 +28,6 @@ export class AddWicketUseCase implements IAddWicketUseCase {
             runsCompleted: payload.runsCompleted ?? 0
         });
 
-        return await this.matchRepo.save(match);
+        return await this._matchStatsRepo.save(match);
     }
 }

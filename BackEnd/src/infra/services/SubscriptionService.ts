@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { ISubscriptionRepository } from "app/repositories/interfaces/shared/ISubscriptionRepository";
 import { IUpdateUserPlan, IVerifyPaymentUseCase } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
@@ -8,14 +11,15 @@ import { IWalletRepository } from "app/repositories/interfaces/shared/IWalletRep
 import { Wallet } from "domain/entities/Wallet";
 import { InternalServerError } from "domain/errors";
 
+@injectable()
 export class SubscriptionPaymentService implements ISubscriptionService {
     constructor(
-        private verifyPayment: IVerifyPaymentUseCase,
-        private updateUserPlan: IUpdateUserPlan,
-        private subplanRepo: ISubscriptionRepository,
-        private transactionRepo: ITransactionRepository,
-        private walletRepo: IWalletRepository,
-        private logger: ILogger
+        @inject(DI_TOKENS.VerifyPaymentUseCase) private verifyPayment: IVerifyPaymentUseCase,
+        @inject(DI_TOKENS.UpdatePlanUseCase) private updateUserPlan: IUpdateUserPlan,
+        @inject(DI_TOKENS.SubscriptionRepository) private subplanRepo: ISubscriptionRepository,
+        @inject(DI_TOKENS.TransactionRepository) private transactionRepo: ITransactionRepository,
+        @inject(DI_TOKENS.WalletRepository) private walletRepo: IWalletRepository,
+        @inject(DI_TOKENS.Logger) private logger: ILogger
     ) { }
 
     async finalize(sessionId: string): Promise<SubscriptionFinalizeResult> {

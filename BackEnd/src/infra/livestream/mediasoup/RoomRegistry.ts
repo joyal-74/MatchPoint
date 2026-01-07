@@ -1,8 +1,9 @@
 import { createMediaWorker } from "./MediaWorker";
 import { createMediaRouter } from "./MediaRouter";
 import { MediaRoom } from "./MediaRoom";
+import { IRoomRegistry } from "app/repositories/interfaces/shared/ISocketServices";
 
-export class RoomRegistry {
+export class RoomRegistry implements IRoomRegistry {
     private rooms = new Map<string, MediaRoom>();
     private workerPromise = createMediaWorker();
     

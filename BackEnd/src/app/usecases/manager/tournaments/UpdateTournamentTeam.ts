@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { ILogger } from "app/providers/ILogger";
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
@@ -10,14 +13,15 @@ import { Registration } from "domain/entities/Registration";
 import { Wallet } from "domain/entities/Wallet";
 import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
 
+@injectable()
 export class UpdateTournamentTeam implements IUpdateTournamentTeam {
     constructor(
-        private _tournamentRepo: ITournamentRepository,
-        private _registrationRepo: IRegistrationRepository,
-        private _walletRepo: IWalletRepository,
-        private _transactionRepo: ITransactionRepository,
-        private _managerRepo: IManagerRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.TournamentRepository) private _tournamentRepo: ITournamentRepository,
+        @inject(DI_TOKENS.RegistrationRepository) private _registrationRepo: IRegistrationRepository,
+        @inject(DI_TOKENS.WalletRepository) private _walletRepo: IWalletRepository,
+        @inject(DI_TOKENS.TransactionRepository) private _transactionRepo: ITransactionRepository,
+        @inject(DI_TOKENS.ManagerRepository) private _managerRepo: IManagerRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(userId: string, registrationId: string, paymentStatus: 'completed' | 'failed', paymentId: string): Promise<Tournament> {

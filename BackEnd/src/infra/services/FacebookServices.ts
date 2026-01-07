@@ -2,8 +2,6 @@ import { FacebookCredentials, FacebookDebugTokenResponse, FacebookUserData, IFac
 import { NotFoundError, UnauthorizedError } from "domain/errors";
 
 export class FacebookServices implements IFacebookServices {
-
-
     validateCredentials(): FacebookCredentials {
         const appId = process.env.FACEBOOK_APP_ID;
         const appSecret = process.env.FACEBOOK_APP_SECRET;

@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { Tournament } from "domain/entities/Tournaments";
 import { ILogger } from "app/providers/ILogger";
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
@@ -7,14 +10,14 @@ import { IFileStorage } from "app/providers/IFileStorage";
 import type { File } from "domain/entities/File";
 import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
 
-
+@injectable()
 export class AddTournamentUseCase implements IAddTournament {
     constructor(
-        private _tournamentRepo: ITournamentRepository,
-        private _tournamentId: ITournamentIdGenerator,
-        private _managerRepo: IManagerRepository,
-        private _fileStorage: IFileStorage,
-        private _logger: ILogger
+        @inject(DI_TOKENS.TournamentRepository) private _tournamentRepo: ITournamentRepository,
+        @inject(DI_TOKENS.TournamentIdGenerator) private _tournamentId: ITournamentIdGenerator,
+        @inject(DI_TOKENS.ManagerRepository) private _managerRepo: IManagerRepository,
+        @inject(DI_TOKENS.FileStorage) private _fileStorage: IFileStorage,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(data: Tournament, file?: File): Promise<Tournament> {

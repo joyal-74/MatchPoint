@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { AdminMapper } from "app/mappers/AdminMapper";
 import { UserMapper } from "app/mappers/UserMapper";
 import { ILogger } from "app/providers/ILogger";
@@ -8,12 +11,13 @@ import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtReposi
 import { JwtPayload } from "domain/entities/JwtPayload";
 import { NotFoundError, UnauthorizedError } from "domain/errors";
 
+@injectable()
 export class RefreshToken implements IRefreshTokenUseCase {
     constructor(
-        private _userRepository: IUserRepository,
-        private _adminRepository: IAdminRepository,
-        private _jwtService: IJWTRepository,
-        private _logger: ILogger
+        @inject(DI_TOKENS.UserRepository) private _userRepository: IUserRepository,
+        @inject(DI_TOKENS.AdminRepository) private _adminRepository: IAdminRepository,
+        @inject(DI_TOKENS.JWTService) private _jwtService: IJWTRepository,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
     async execute(refreshToken: string) {
