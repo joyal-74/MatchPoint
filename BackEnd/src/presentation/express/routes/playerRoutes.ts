@@ -2,12 +2,18 @@ import { Router } from "express";
 import multer from "multer";
 import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
 import { expressFileUpdateHandler } from "presentation/adaptors/ExpressFileAdaptor";
-import { playerProfileController, playerTeamController } from "presentation/composition";
-import { playerTournamentController } from "presentation/composition/player/tournaments";
+import { PlayerProfileController } from 'presentation/http/controllers/player/ProfileController';
+import { TeamsController } from 'presentation/http/controllers/player/TeamsController';
+import { TournamentsController } from "presentation/http/controllers/player/TournamentsController";
 
+import { container } from "tsyringe";
 
 const router = Router();
 const upload = multer();
+
+const playerProfileController = container.resolve(PlayerProfileController)
+const playerTeamController = container.resolve(TeamsController)
+const playerTournamentController = container.resolve(TournamentsController)
 
 router.put("/:playerId/profile", upload.single("file"), expressFileUpdateHandler(playerProfileController.updateProfile));
 

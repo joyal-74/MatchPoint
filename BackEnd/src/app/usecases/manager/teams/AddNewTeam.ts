@@ -17,7 +17,7 @@ export class AddNewTeamUseCase implements IAddTeamUseCase {
     constructor(
         @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository,
         @inject(DI_TOKENS.ManagerRepository) private _managerRepo: IManagerRepository,
-        @inject(DI_TOKENS.IdGenerator) private _idGenerator: ITeamIdGenerator,
+        @inject(DI_TOKENS.TeamIdGenerator) private _idGenerator: ITeamIdGenerator,
         @inject(DI_TOKENS.FileStorage) private _fileStorage: IFileStorage,
         @inject(DI_TOKENS.Logger) private _logger: ILogger,
     ) { }

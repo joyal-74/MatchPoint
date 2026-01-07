@@ -1,8 +1,12 @@
 import { Router } from "express";
 import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
-import { planController } from "presentation/composition";
+import { PlanController } from 'presentation/http/controllers/admin/PlanController';
+
+import { container } from "tsyringe";
 
 const router = Router();
+
+const planController = container.resolve(PlanController)
 
 router.get("/plans", expressAdapter(planController.getAll));
 router.post("/plan", expressAdapter(planController.create));

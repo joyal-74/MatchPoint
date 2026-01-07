@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IGetManagersUsecase, IGetPlayersUsecase, IGetViewersUsecase, IGetManagerDetails, IGetPlayerDetails, IGetViewerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -8,16 +11,16 @@ import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 import { IUserManagementService } from "app/repositories/interfaces/services/AdminUserServices";
 import { AdminUserMessages } from "domain/constants/admin/AdminUserMessages";
 
-
+@injectable()
 export class UsersManagementController implements IUsersManagementController {
     constructor(
-        private _getAllManagersUseCase: IGetManagersUsecase,
-        private _getAllPlayersUseCase: IGetPlayersUsecase,
-        private _getAllViewersUseCase: IGetViewersUsecase,
-        private _changeUserStatus: IUserManagementService,
-        private _getManagerDetails: IGetManagerDetails,
-        private _getPlayerDetails: IGetPlayerDetails,
-        private _getViewerDetails: IGetViewerDetails,
+        @inject(DI_TOKENS.GetAllManagersUseCase) private _getAllManagersUseCase: IGetManagersUsecase,
+        @inject(DI_TOKENS.GetAllPlayersUseCase) private _getAllPlayersUseCase: IGetPlayersUsecase,
+        @inject(DI_TOKENS.GetAllViewersUseCase) private _getAllViewersUseCase: IGetViewersUsecase,
+        @inject(DI_TOKENS.ChangeUserStatusUseCase) private _changeUserStatus: IUserManagementService,
+        @inject(DI_TOKENS.GetManagerDetailsUseCase) private _getManagerDetails: IGetManagerDetails,
+        @inject(DI_TOKENS.GetPlayerDetailsUseCase) private _getPlayerDetails: IGetPlayerDetails,
+        @inject(DI_TOKENS.GetViewerDetailsUseCase) private _getViewerDetails: IGetViewerDetails,
     ) { }
 
     /**
