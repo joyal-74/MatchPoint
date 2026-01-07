@@ -113,6 +113,15 @@ import { UpdatePrivacyUseCase } from "app/usecases/shared/UpdatePrivacyUseCase";
 import { GetPlansAndUserSubscription } from "infra/services/GetPlansAndUserSubscription";
 import { CreatePaymentSession } from "app/usecases/shared/InitiateOrderUseCase";
 import { SubscriptionPaymentService } from "infra/services/SubscriptionService";
+import { AddPlayerToTeamUseCase } from "app/usecases/manager/teams/AddPlayerToTeamUseCase";
+import { SaveMatchData } from "app/usecases/manager/SaveMatchData";
+import { UpdatePlayerFields } from "app/usecases/player/UpdateProfileFields";
+import { UpdatePlayerInviteStatus } from "app/usecases/player/UpdatePlayerInviteStatus";
+import { GetLiveMatches } from "app/usecases/viewer/GetLiveMatches";
+import { GetMatchUpdates } from "app/usecases/viewer/GetMatchUpdateData";
+import { GetViewerProfile } from "app/usecases/viewer/GetViewerProfile";
+import { UpdateViewerProfile } from "app/usecases/viewer/UpdateViewerProfile";
+import { LogoutUser } from "app/usecases/auth/Logout"; 
 
 
 // Registrations
@@ -120,6 +129,7 @@ container.register(DI_TOKENS.LoginUserUseCase, { useClass: LoginUser });
 container.register(DI_TOKENS.LoginAdminUseCase, { useClass: LoginAdmin });
 container.register(DI_TOKENS.SignupViewerUseCase, { useClass: SignupViewer });
 container.register(DI_TOKENS.SignupPlayerUseCase, { useClass: SignupPlayer });
+container.register(DI_TOKENS.LogoutUseCase, { useClass: LogoutUser });
 
 // --- Added Registrations ---
 container.register(DI_TOKENS.SignupManagerUseCase, { useClass: SignupManager });
@@ -134,8 +144,6 @@ container.register(DI_TOKENS.VerifyOtpUseCase, { useClass: VerifyOtp });
 container.register(DI_TOKENS.ResendOtpUseCase, { useClass: ResendOtp });
 container.register(DI_TOKENS.ResetPasswordUseCase, { useClass: ResetPassword });
 
-
-// --- Register Admin Use Cases ---
 
 // Users
 container.register(DI_TOKENS.GetAllManagersUseCase, { useClass: GetAllManagers });
@@ -205,6 +213,7 @@ container.register(DI_TOKENS.RejectfromTeamUsecase, { useClass: RejectPlayerUseC
 container.register(DI_TOKENS.SwapPlayersUsecase, { useClass: SwapPlayers });
 container.register(DI_TOKENS.RemovePlayersUsecase, { useClass: RemovePlayerUseCase });
 container.register(DI_TOKENS.GetAvilablePlayersService, { useClass: GetAvailablePlayersService });
+container.register(DI_TOKENS.AddnewPlayerUsecase, { useClass: AddPlayerToTeamUseCase });
 
 // --- Manager Tournament Operations ---
 container.register(DI_TOKENS.GetMyTournamentsUsecase, { useClass: GetMyTournamentsUseCase });
@@ -216,6 +225,7 @@ container.register(DI_TOKENS.TournamentsDetailsUsecase, { useClass: GetTournamen
 container.register(DI_TOKENS.EntryFeePaymentUsecase, { useClass: InitiateTournamentPayment });
 container.register(DI_TOKENS.UpdateTournamenTeamUsecase, { useClass: UpdateTournamentTeam });
 container.register(DI_TOKENS.TournamentTeamsUsecase, { useClass: GetRegisteredTeams });
+container.register(DI_TOKENS.SaveMatchData, { useClass: SaveMatchData });
 
 // --- Manager Fixtures & Matches ---
 container.register(DI_TOKENS.GetFixturesUsecase, { useClass: GetTournamentFixtures });
@@ -234,6 +244,11 @@ container.register(DI_TOKENS.GetPlayerNotificationsUseCase, { useClass: GetPlaye
 container.register(DI_TOKENS.GetUnreadCountUseCase, { useClass: GetUnreadCountUseCase });
 container.register(DI_TOKENS.GetPlayerProfile, { useClass: GetPlayerProfile });
 container.register(DI_TOKENS.UpdatePlayerProfile, { useClass: UpdatePlayerProfile });
+container.register(DI_TOKENS.GetAllTeamsPlayerUseCase, { useClass: GetAllPlayerTeamsUseCase });
+container.register(DI_TOKENS.UpdatePlayerFields, { useClass: UpdatePlayerFields });
+container.register(DI_TOKENS.UpdatePlayerInviteStatus, { useClass: UpdatePlayerInviteStatus });
+container.register(DI_TOKENS.GetLiveMatches, { useClass: GetLiveMatches });
+container.register(DI_TOKENS.GetMatchUpdates, { useClass: GetMatchUpdates });
 container.register(DI_TOKENS.JoinTeamUseCase, { useClass: JoinTeamUseCase });
 container.register(DI_TOKENS.GetMyTeamsUseCase, { useClass: GetAllPlayerTeamsUseCase });
 container.register(DI_TOKENS.GetPlayerTournaments, { useClass: FetchTournamentsUseCase });
@@ -247,3 +262,7 @@ container.register(DI_TOKENS.UpdatePrivacyUseCase, { useClass: UpdatePrivacyUseC
 container.register(DI_TOKENS.GetPlansAndUserSubscription, { useClass: GetPlansAndUserSubscription });
 container.register(DI_TOKENS.CreatePaymentSession, { useClass: CreatePaymentSession });
 container.register(DI_TOKENS.SubscriptionService, { useClass: SubscriptionPaymentService });
+
+// --- Viewer ---
+container.register(DI_TOKENS.GetViewerProfile, { useClass: GetViewerProfile });
+container.register(DI_TOKENS.UpdateViewerProfile, { useClass: UpdateViewerProfile });

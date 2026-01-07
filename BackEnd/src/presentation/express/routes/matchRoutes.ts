@@ -1,8 +1,12 @@
 import { Router } from "express";
 import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
-import { matchController } from "presentation/composition/manager/matches";
+import { container } from "tsyringe";
+import { MatchController } from "presentation/http/controllers/manager/MatchController";
+
 
 const router = Router();
+
+const matchController = container.resolve(MatchController)
 
 router.get("/:matchId", expressAdapter(matchController.getMatchDetails));
 

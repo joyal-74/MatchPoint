@@ -1,9 +1,12 @@
+import { container } from "tsyringe";
 import { Router } from "express";
 import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
-import { subscriptionController } from "presentation/composition/shared/subscriptions";
+import { SubscriptionController } from "presentation/http/controllers/shared/SubscriptionPlanController";
+
 
 
 const router = Router();
+const subscriptionController = container.resolve(SubscriptionController)
 
 router.get("/roles/:role/:userId/plans", expressAdapter(subscriptionController.getUserPlan));
 

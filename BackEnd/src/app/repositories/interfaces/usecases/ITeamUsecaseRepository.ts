@@ -1,4 +1,5 @@
 import { TeamData, TeamDataFull, TeamRegister } from "domain/dtos/Team.dto";
+import { Chat } from "domain/entities/Chat";
 import { File } from "domain/entities/File";
 
 export interface IGetAllTeamsUseCase {
@@ -39,4 +40,8 @@ export interface IRemovePlayerUseCase {
 
 export interface IAddPlayerToTeamUseCase {
     execute(teamId: string, userId: string, playerId: string): Promise<{ success: boolean; message: string }>;
+}
+
+export interface ICreateChatForTeamUseCase {
+    execute(teamId: string): Promise<Chat>;
 }

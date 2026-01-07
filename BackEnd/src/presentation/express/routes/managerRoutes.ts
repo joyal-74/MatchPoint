@@ -2,12 +2,22 @@ import { Router } from "express";
 import multer from "multer";
 import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
 import { expressFileUpdateHandler } from "presentation/adaptors/ExpressFileAdaptor";
-import { managerProfileController, teamManagementController, tournamentManagementController } from "presentation/composition";
-import { matchController } from "presentation/composition/manager/matches";
-import { financialsController } from "presentation/composition/manager/profile";
+import { container } from "tsyringe";
+import { ProfileController } from "presentation/http/controllers/manager/ProfileController";
+import { TeamController } from "presentation/http/controllers/manager/TeamController";
+import { TournamentController } from "presentation/http/controllers/manager/TournamentController";
+import { MatchController } from "presentation/http/controllers/manager/MatchController";
+import { FinancialsController } from "presentation/http/controllers/manager/FinancialsController";
 
 const router = Router();
 const upload = multer();
+
+const managerProfileController = container.resolve(ProfileController)
+const teamManagementController = container.resolve(TeamController)
+const tournamentManagementController = container.resolve(TournamentController)
+const matchController = container.resolve(MatchController)
+const financialsController = container.resolve(FinancialsController)
+
 
 router.put("/:managerId", upload.single("file"), expressFileUpdateHandler(managerProfileController.updateProfile));
 router.get('/:managerId', expressAdapter(managerProfileController.getProfile));

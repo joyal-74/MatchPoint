@@ -12,6 +12,7 @@ const ProviderTokens = {
     ManagerIdGenerator: "ManagerIdGenerator",
     PlayerIdGenerator: "PlayerIdGenerator",
     UserIdGenerator: "UserIdGenerator",
+    TeamIdGenerator: "TeamIdGenerator",
     TournamentIdGenerator: "TournamentIdGenerator",
     RoleIdGenerator: "RoleIdGenerator",
     ConfigProvider: "ConfigProvider",

@@ -6,7 +6,7 @@ import { BcryptPasswordHasher } from "../providers/BcryptPasswordHasher";
 import { ImageKitFileStorage } from "../providers/ImageKitFileStorage";
 import { WalletProvider } from "../providers/WalletProvider";
 import { RazorpayProvider } from "../providers/RazorpayProvider";
-import { ManagerIdGenerator, PlayerIdGenerator, TournamentIdGenerator, UserIdGenerator } from "../providers/IdGenerator";
+import { ManagerIdGenerator, PlayerIdGenerator, TeamIdGenerator, TournamentIdGenerator, UserIdGenerator } from "../providers/IdGenerator";
 import { RoleIdGenerator } from "../providers/RoleIdGenerator";
 import { EnvConfigProvider } from "../providers/EnvConfigProvider";
 import { RoomRegistry } from "../livestream/mediasoup/RoomRegistry";
@@ -31,6 +31,7 @@ container.register(DI_TOKENS.UnitOfWork, { useClass: MongoUnitOfWork });
 container.register(DI_TOKENS.UserIdGenerator, { useClass: UserIdGenerator });
 container.register(DI_TOKENS.ManagerIdGenerator, { useClass: ManagerIdGenerator });
 container.register(DI_TOKENS.PlayerIdGenerator, { useClass: PlayerIdGenerator });
+container.register(DI_TOKENS.TeamIdGenerator, { useClass: TeamIdGenerator });
 container.register(DI_TOKENS.TournamentIdGenerator, { useClass: TournamentIdGenerator });
 container.register(DI_TOKENS.RoleIdGenerator, { useClass: RoleIdGenerator });
 

@@ -1,3 +1,6 @@
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+
 import { IGetTournamentUsecase, IGetTeamsUsecase, IGetTeamDetails, IChangeTeamStatus, IChangeTeamDetailStatus, IChangeTournamentDetailStatus, IChangeTournamentStatus } from "app/repositories/interfaces/admin/IAdminUsecases";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -7,17 +10,17 @@ import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
 import { AdminUserMessages } from "domain/constants/admin/AdminUserMessages";
 import { IGetTournamentDetails } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 
-
+@injectable()
 export class TournamentManagementController {
     constructor(
-        private _getAllTeamsUseCase: IGetTeamsUsecase,
-        private _getTeamDetailsUseCase: IGetTeamDetails,
-        private _getAllTournamnetsUseCase: IGetTournamentUsecase,
-        private _getTournamentDetailsUseCase: IGetTournamentDetails,
-        private _changeTeamStatusUseCase: IChangeTeamStatus,
-        private _changeTeamDetailStatus: IChangeTeamDetailStatus,
-        private _changeTournamentStatus: IChangeTournamentStatus,
-        private _changeTournamentDetailStatus: IChangeTournamentDetailStatus,
+        @inject(DI_TOKENS.GetAllTeamsUseCase) private _getAllTeamsUseCase: IGetTeamsUsecase,
+        @inject(DI_TOKENS.GetTeamDetailsUseCase) private _getTeamDetailsUseCase: IGetTeamDetails,
+        @inject(DI_TOKENS.GetAllTournamentsUseCase) private _getAllTournamnetsUseCase: IGetTournamentUsecase,
+        @inject(DI_TOKENS.GetTournamentDetailsUseCase) private _getTournamentDetailsUseCase: IGetTournamentDetails,
+        @inject(DI_TOKENS.ChangeTeamStatusUseCase) private _changeTeamStatusUseCase: IChangeTeamStatus,
+        @inject(DI_TOKENS.ChangeTeamDetailStatusUseCase) private _changeTeamDetailStatus: IChangeTeamDetailStatus,
+        @inject(DI_TOKENS.ChangeTeamDetailStatusUseCase) private _changeTournamentStatus: IChangeTournamentStatus,
+        @inject(DI_TOKENS.ChangeTournamentDetailStatusUseCase) private _changeTournamentDetailStatus: IChangeTournamentDetailStatus,
     ) { }
 
     /**
