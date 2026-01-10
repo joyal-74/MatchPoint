@@ -4,9 +4,10 @@ import { DI_TOKENS } from "domain/constants/Identifiers";
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { BadRequestError } from "domain/errors";
+import { ITournamentRegistrationValidator } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 
 @injectable()
-export class TournamentRegistrationValidator {
+export class TournamentRegistrationValidator implements ITournamentRegistrationValidator {
     constructor(
         @inject(DI_TOKENS.RegistrationRepository) private _registrationRepo: IRegistrationRepository,
         @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository
@@ -14,6 +15,7 @@ export class TournamentRegistrationValidator {
 
     async execute(tournamentId: string, attemptingTeamId: string): Promise<void> {
         const newTeam = await this._teamRepo.findById(attemptingTeamId);
+        console.log(newTeam, " jjsakjfhsdgf")
         if (!newTeam) throw new BadRequestError("Team not found");
 
         const newPlayerIds = new Set(newTeam.members.map(m => String(m.userId)));

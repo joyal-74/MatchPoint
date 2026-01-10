@@ -1,26 +1,56 @@
 import React from 'react';
 import { Trophy, Users, Activity, Calendar } from 'lucide-react';
 
+// Define variants to handle color logic cleanly
+type StatVariant = 'primary' | 'blue' | 'destructive' | 'purple';
+
+const VARIANT_STYLES = {
+    primary: {
+        iconBg: "bg-primary/10",
+        iconColor: "text-primary",
+        trendColor: "text-primary/80"
+    },
+    blue: {
+        iconBg: "bg-blue-500/10",
+        iconColor: "text-blue-600 dark:text-blue-400",
+        trendColor: "text-blue-600/80 dark:text-blue-400/80"
+    },
+    destructive: {
+        iconBg: "bg-red-500/10",
+        iconColor: "text-red-600 dark:text-red-400",
+        trendColor: "text-red-600/80 dark:text-red-400/80"
+    },
+    purple: {
+        iconBg: "bg-purple-500/10",
+        iconColor: "text-purple-600 dark:text-purple-400",
+        trendColor: "text-purple-600/80 dark:text-purple-400/80"
+    }
+};
+
 interface StatCardProps {
     label: string;
     value: number | string;
     icon: React.ReactNode;
     trend?: string;
-    color: string;
+    variant?: StatVariant;
 }
 
-const StatCard = ({ label, value, icon, trend, color }: StatCardProps) => (
-    <div className="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-5 flex items-start justify-between hover:bg-neutral-800 transition-colors duration-300">
-        <div>
-            <p className="text-neutral-400 text-sm font-medium mb-1">{label}</p>
-            <h3 className="text-2xl font-bold text-white">{value}</h3>
-            {trend && <p className="text-xs text-neutral-500 mt-2">{trend}</p>}
+const StatCard = ({ label, value, icon, trend, variant = 'primary' }: StatCardProps) => {
+    const styles = VARIANT_STYLES[variant];
+
+    return (
+        <div className="bg-card border border-border rounded-xl p-5 flex items-start justify-between hover:border-primary/50 transition-colors duration-300 shadow-sm">
+            <div>
+                <p className="text-muted-foreground text-sm font-medium mb-1">{label}</p>
+                <h3 className="text-2xl font-bold text-foreground">{value}</h3>
+                {trend && <p className="text-xs text-muted-foreground mt-2">{trend}</p>}
+            </div>
+            <div className={`p-3 rounded-lg ${styles.iconBg} ${styles.iconColor}`}>
+                {React.cloneElement(icon as React.ReactElement)}
+            </div>
         </div>
-        <div className={`p-3 rounded-lg ${color} bg-opacity-10 text-white`}>
-            {icon}
-        </div>
-    </div>
-);
+    );
+};
 
 interface DashboardStatsProps {
     myTournamentsCount: number;
@@ -33,29 +63,29 @@ export default function DashboardStats({ myTournamentsCount, totalExploreCount }
             <StatCard 
                 label="My Active Tournaments" 
                 value={myTournamentsCount} 
-                icon={<Trophy size={20} className="text-green-400" />}
-                color="bg-green-500/20"
+                icon={<Trophy />}
+                variant="primary" // Automatically matches your active theme (Green/Violet/etc)
                 trend="Currently managing"
             />
             <StatCard 
                 label="Total Participants" 
-                value="--" // You can plug real data here later
-                icon={<Users size={20} className="text-blue-400" />}
-                color="bg-blue-500/20"
+                value="--"
+                icon={<Users />}
+                variant="blue"
                 trend="Across all events"
             />
             <StatCard 
                 label="Live Matches" 
                 value="0" 
-                icon={<Activity size={20} className="text-red-400" />}
-                color="bg-red-500/20"
+                icon={<Activity />}
+                variant="destructive" // Semantic red for "Live/Alert" status
                 trend="Happening now"
             />
             <StatCard 
                 label="Available to Join" 
                 value={totalExploreCount} 
-                icon={<Calendar size={20} className="text-purple-400" />}
-                color="bg-purple-500/20"
+                icon={<Calendar />}
+                variant="purple"
                 trend="Explore new events"
             />
         </div>

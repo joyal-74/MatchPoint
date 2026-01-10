@@ -1,10 +1,6 @@
-import SecondaryButton from "../../../ui/SecondaryButton";
-import TeamDetailItem from "../../../manager/teams/TeamCard/TeamDetailItem";
-import TeamInfo from "../../../manager/teams/TeamCard/TeamInfo";
-import TeamLogo from "../../../manager/teams/TeamCard/TeamLogo";
-import { getColorScheme } from "../../../manager/teams/TeamCard/teamColors";
-import TeamMenu from "./TeamMenu";
 import { useNavigate } from "react-router-dom";
+import { Users, Calendar, Trophy, ArrowRight, Shield } from "lucide-react";
+import TeamMenu from "./TeamMenu"; // Assuming this handles the dropdown logic
 
 export interface TeamCardProps {
     _id: string;
@@ -17,83 +13,103 @@ export interface TeamCardProps {
     logo?: string;
     index: number;
     className?: string;
-    onLeaveRequest : (teamId: string) => void;
+    onLeaveRequest: (teamId: string) => void;
 }
 
-export default function TeamCard({ _id, name, sport, membersCount, created, logo, index, maxPlayers, onLeaveRequest, className = "" }: TeamCardProps) {
-
-    const colorScheme = getColorScheme(index);
+export default function TeamCard({
+    _id,
+    name,
+    sport,
+    membersCount,
+    created,
+    logo,
+    maxPlayers,
+    onLeaveRequest,
+    className = ""
+}: TeamCardProps) {
     const navigate = useNavigate();
+
     const handleView = () => {
         navigate(`/player/myteam/${_id}`);
-    }
+    };
 
     return (
-        <div className={`relative group ${className}`}>
-            <div className={`
-                relative bg-gradient-to-br ${colorScheme.bg} backdrop-blur-sm
-                rounded-xl border ${colorScheme.border} ${colorScheme.hoverBorder}
-                overflow-hidden transition-all duration-300 
-                hover:shadow-lg ${colorScheme.glow}
-            `}>
-                <div className={`h-1 ${colorScheme.accent}`} />
-
-                <div className="p-5">
-                    <div className="flex items-start gap-4 mb-4">
-                        <TeamLogo logo={logo} name={name} />
-                        <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between">
-                                <TeamInfo name={name} sport={sport} colorScheme={colorScheme} />
-
-                                <TeamMenu
-                                    teamId={_id}
-                                    colorScheme={colorScheme}
-                                    onLeaveRequest={onLeaveRequest}
-                                />
+        <div className={`group relative bg-card border border-border rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:border-primary/50 flex flex-col h-full ${className}`}>
+            
+            {/* Header: Logo, Name, Menu */}
+            <div className="flex justify-between items-start mb-4">
+                <div className="flex gap-4">
+                    {/* Logo Area */}
+                    <div className="relative shrink-0">
+                        <div className="w-14 h-14 rounded-xl bg-muted border border-border flex items-center justify-center overflow-hidden">
+                            {logo ? (
+                                <img src={logo} alt={name} className="w-full h-full object-cover" />
+                            ) : (
+                                <Shield className="w-7 h-7 text-muted-foreground/50" />
+                            )}
+                        </div>
+                        {/* Sport Badge (Overlapping) */}
+                        <div className="absolute -bottom-2 -right-2 bg-background border border-border rounded-full p-1 shadow-sm">
+                            <div className="bg-primary/10 text-primary w-5 h-5 rounded-full flex items-center justify-center">
+                                <Trophy size={10} fill="currentColor" />
                             </div>
                         </div>
                     </div>
 
-                    <div className="space-y-3 mt-4">
-                        <TeamDetailItem
-                            icon={
-                                <svg className={`w-5 h-5 ${colorScheme.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                        d="M5.121 17.804A9 9 0 1118.879 6.196M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                            }
-                        >
-                            {membersCount}/{maxPlayers} players
-                        </TeamDetailItem>
-
-                        <div className="flex justify-between items-center">
-                            <TeamDetailItem
-                                icon={
-                                    <svg className="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                }
-                            >
-                                Created: {new Date(created).toLocaleDateString()}
-                            </TeamDetailItem>
-
-                            <SecondaryButton
-                                className={`
-                                    py-1.5 px-4 text-[13px] ${colorScheme.text} ${colorScheme.hoverText} 
-                                    rounded-lg font-medium text-sm transition-all duration-300 
-                                    border ${colorScheme.buttonBorder} ${colorScheme.buttonHoverBorder} 
-                                    ${colorScheme.buttonBg} ${colorScheme.buttonHoverBg} 
-                                    disabled:opacity-50
-                                `}
-                                type="button"
-                                onClick={handleView}
-                            >
-                                View
-                            </SecondaryButton>
-                        </div>
+                    {/* Title Area */}
+                    <div className="pt-1">
+                        <h3 className="font-bold text-lg text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-1">
+                            {name}
+                        </h3>
+                        <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mt-1">
+                            {sport}
+                        </p>
                     </div>
                 </div>
+
+                {/* Actions Menu */}
+                <div className="relative z-10">
+                    <TeamMenu 
+                        teamId={_id} 
+                        onLeaveRequest={onLeaveRequest} 
+                    />
+                </div>
             </div>
+
+            {/* Divider */}
+            <div className="h-px bg-border/50 my-4" />
+
+            {/* Stats Grid */}
+            <div className="space-y-3 flex-1">
+                <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                        <Users size={16} className="text-primary/70" />
+                        <span>Roster</span>
+                    </div>
+                    <span className="font-semibold text-foreground">
+                        {membersCount} <span className="text-muted-foreground font-normal">/ {maxPlayers}</span>
+                    </span>
+                </div>
+
+                <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                        <Calendar size={16} className="text-primary/70" />
+                        <span>Created</span>
+                    </div>
+                    <span className="font-medium text-foreground">
+                        {new Date(created).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}
+                    </span>
+                </div>
+            </div>
+
+            {/* Footer Action */}
+            <button
+                onClick={handleView}
+                className="w-full mt-6 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold transition-all group-hover:bg-primary group-hover:text-primary-foreground"
+            >
+                View Team
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+            </button>
         </div>
     );
 }

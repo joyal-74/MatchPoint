@@ -157,7 +157,7 @@ const ManagerUsecaseTokens = {
     EditTournamentsUsecase : 'EditTournamentsUsecase',
     CancelTournamentsUsecase : 'CancelTournamentsUsecase',
     TournamentsDetailsUsecase : 'TournamentsDetailsUsecase',
-    EntryFeePaymentUsecase : 'TournamentsDetailsUsecase',
+    EntryFeePaymentUsecase : 'EntryFeePaymentUsecase',
     UpdateTournamenTeamUsecase : 'UpdateTournamenTeamUsecase',
     TournamentTeamsUsecase : 'TournamentTeamsUsecase',
     GetFixturesUsecase : 'GetFixturesUsecase',

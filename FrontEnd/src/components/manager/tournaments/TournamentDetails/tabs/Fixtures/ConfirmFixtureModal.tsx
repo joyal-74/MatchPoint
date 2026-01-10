@@ -38,11 +38,11 @@ export default function ConfirmFixtureModal({
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[999]">
-            <div className="bg-neutral-900 text-white rounded-xl p-6 w-full max-w-md relative shadow-lg border border-white/10">
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-[999]">
+            <div className="bg-card text-foreground rounded-xl p-6 w-full max-w-md relative shadow-lg border border-border animate-in fade-in zoom-in-95 duration-200">
                 <button
                     onClick={onClose}
-                    className="absolute right-3 top-3 text-neutral-400 hover:text-white"
+                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
                 >
                     <X size={18} />
                 </button>
@@ -53,17 +53,17 @@ export default function ConfirmFixtureModal({
 
                 <div className="space-y-3">
                     <div>
-                        <label className="text-sm block mb-1">Start Date</label>
+                        <label className="text-sm font-medium block mb-1 text-muted-foreground">Start Date</label>
                         <input
                             type="date"
                             value={dateValue}
                             onChange={handleDateChange}
-                            className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm"
+                            className="w-full bg-background border border-input rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-input"
                         />
                     </div>
 
                     <div>
-                        <label className="text-sm block mb-1">Matches per Day</label>
+                        <label className="text-sm font-medium block mb-1 text-muted-foreground">Matches per Day</label>
                         <input
                             type="number"
                             min={1}
@@ -75,19 +75,19 @@ export default function ConfirmFixtureModal({
                                     matchesPerDay: Number(e.target.value),
                                 }))
                             }
-                            className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm"
+                            className="w-full bg-background border border-input rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-input"
                         />
                     </div>
 
                     <div>
-                        <label className="text-sm block mb-1">Venue Location</label>
+                        <label className="text-sm font-medium block mb-1 text-muted-foreground">Venue Location</label>
                         <input
                             type="text"
                             value={settings.location}
                             onChange={(e) =>
                                 setSettings((prev) => ({ ...prev, location: e.target.value }))
                             }
-                            className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm"
+                            className="w-full bg-background border border-input rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-input"
                         />
                     </div>
                 </div>
@@ -95,7 +95,7 @@ export default function ConfirmFixtureModal({
                 <div className="mt-6 flex justify-end gap-2">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 text-sm bg-neutral-700 rounded hover:bg-neutral-600"
+                        className="px-4 py-2 text-sm bg-secondary text-secondary-foreground rounded hover:bg-secondary/80 transition-colors border border-border"
                     >
                         Cancel
                     </button>
@@ -109,7 +109,7 @@ export default function ConfirmFixtureModal({
                                         : settings.startDate,
                             })
                         }
-                        className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 rounded text-white"
+                        className="px-4 py-2 text-sm bg-primary text-primary-foreground hover:bg-primary/90 rounded font-medium shadow-md shadow-primary/20 transition-all active:scale-95"
                     >
                         Generate Fixtures
                     </button>

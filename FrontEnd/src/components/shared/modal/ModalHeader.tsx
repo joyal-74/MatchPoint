@@ -8,14 +8,15 @@ interface ModalHeaderProps {
 
 export default function ModalHeader({ title, onClose, disabled }: ModalHeaderProps) {
     return (
-        <div className="flex items-center justify-between p-4 px-6 border-b border-neutral-700">
-            <h2 className="text-xl font-bold text-white">{title}</h2>
+        <div className="flex items-center justify-between p-6 border-b border-border">
+            <h2 className="text-xl font-bold text-foreground">{title}</h2>
             <button 
                 onClick={onClose} 
                 disabled={disabled}
-                className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
+                className="p-2 -mr-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-50"
+                aria-label="Close modal"
             >
-                <X size={20} className="text-neutral-400" />
+                <X size={20} />
             </button>
         </div>
     );

@@ -13,39 +13,61 @@ export default function NotificationItem({ notification }: Props) {
         return <TeamInviteNotification notification={notification} />;
     }
 
-    // 2. Icon Logic
-    const getIcon = () => {
+    // 2. Icon & Style Logic
+    const getStyleConfig = () => {
         switch (notification.type) {
-            case "MATCH_ALERT": return <Calendar size={18} className="text-orange-400" />;
-            case "ANNOUNCEMENT": return <BellRing size={18} className="text-purple-400" />;
-            default: return <Info size={18} className="text-blue-400" />;
+            case "MATCH_ALERT": 
+                return { 
+                    icon: Calendar, 
+                    color: "text-orange-600 dark:text-orange-400", 
+                    bg: "bg-orange-100 dark:bg-orange-500/10" 
+                };
+            case "ANNOUNCEMENT": 
+                return { 
+                    icon: BellRing, 
+                    color: "text-purple-600 dark:text-purple-400", 
+                    bg: "bg-purple-100 dark:bg-purple-500/10" 
+                };
+            default: 
+                return { 
+                    icon: Info, 
+                    color: "text-blue-600 dark:text-blue-400", 
+                    bg: "bg-blue-100 dark:bg-blue-500/10" 
+                };
         }
     };
 
+    const { icon: Icon, color, bg } = getStyleConfig();
+
     return (
-        <div className={`p-4 hover:bg-neutral-800/50 transition-colors relative group ${!notification.isRead ? 'bg-neutral-800/20' : ''}`}>
+        <div className={`
+            relative p-4 transition-colors duration-200 group
+            hover:bg-muted/50
+            ${!notification.isRead ? 'bg-primary/5' : 'bg-background'}
+        `}>
             {/* Unread Indicator */}
             {!notification.isRead && (
-                <span className="absolute top-4 right-4 w-2 h-2 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                <span className="absolute top-4 right-4 w-2 h-2 bg-primary rounded-full shadow-sm animate-pulse" />
             )}
 
-            <div className="flex gap-3 items-start">
-                <div className="mt-0.5 p-2 rounded-full bg-neutral-800 border border-neutral-700">
-                    {getIcon()}
+            <div className="flex gap-4 items-start">
+                {/* Icon Container */}
+                <div className={`p-2.5 rounded-full shrink-0 ${bg} ${color}`}>
+                    <Icon size={18} />
                 </div>
                 
-                <div className="flex-1 space-y-1">
+                <div className="flex-1 min-w-0 space-y-1">
                     <div className="flex justify-between items-start pr-4">
-                        <p className={`text-sm ${!notification.isRead ? 'text-white font-medium' : 'text-neutral-300'}`}>
+                        <p className={`text-sm truncate ${!notification.isRead ? 'text-foreground font-semibold' : 'text-foreground/90 font-medium'}`}>
                             {notification.title || "Notification"}
                         </p>
                     </div>
                     
-                    <p className="text-xs text-neutral-400 leading-relaxed line-clamp-2">
+                    <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                         {notification.message}
                     </p>
                     
-                    <p className="text-[10px] text-neutral-500 font-medium pt-1">
+                    <p className="text-[10px] text-muted-foreground/70 font-medium pt-1">
                         {timeAgo(notification.createdAt)}
                     </p>
                 </div>

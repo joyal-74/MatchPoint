@@ -4,7 +4,10 @@ import { AuthenticatedSocket } from "../SocketServer";
 import { MessageModel } from "infra/databases/mongo/models/MessageModel";
 
 export class ChatHandler {
-    constructor(private io: Server, private socket: AuthenticatedSocket) {
+    constructor(
+        private io: Server, 
+        private socket: AuthenticatedSocket
+    ) {
         this.setupEvents();
     }
 

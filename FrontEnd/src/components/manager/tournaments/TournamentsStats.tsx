@@ -10,43 +10,55 @@ export default function TournamentsStats({ totalTournaments, onLearnMore }: Tour
                 <StatCard
                     value={`${totalTournaments}+`}
                     label="Available Tournaments"
-                    color="green"
+                    variant="primary" // Maps to your active theme (Green/Violet/etc.)
                 />
                 <StatCard
                     value="1,200+"
                     label="Teams Participating"
-                    color="blue"
+                    variant="blue"
                 />
                 <StatCard
                     value="15+"
                     label="Sports Categories"
-                    color="purple"
+                    variant="purple"
                 />
             </div>
 
-            <div className="flex justify-center mt-5">
+            <div className="flex justify-center mt-6">
                 <button
                     onClick={onLearnMore}
-                    className="text-blue-400 hover:text-blue-300 cursor-pointer font-semibold text-sm md:text-base transition-colors decoration-blue-400 hover:decoration-blue-300"
+                    className="group flex items-center gap-2 text-primary hover:text-primary/80 cursor-pointer font-medium text-sm md:text-base transition-colors"
                 >
-                    💡 Learn how the prize pool is calculated and distributed
+                    <span>💡 Learn how the prize pool is calculated and distributed</span>
                 </button>
             </div>
         </>
     );
 }
 
-function StatCard({ value, label, color }: { value: string; label: string; color: "green" | "blue" | "purple" }) {
-    const colorClasses = {
-        green: "text-green-400",
-        blue: "text-blue-400",
-        purple: "text-purple-400"
+// Internal StatCard component with Semantic mapping
+interface StatCardProps {
+    value: string;
+    label: string;
+    variant: "primary" | "blue" | "purple";
+}
+
+function StatCard({ value, label, variant }: StatCardProps) {
+    
+    const variantStyles = {
+        primary: "text-primary",
+        blue: "text-blue-600 dark:text-blue-400",
+        purple: "text-purple-600 dark:text-purple-400"
     };
 
     return (
-        <div className="p-6 rounded-2xl bg-neutral-800/30 border border-neutral-700/30 backdrop-blur-sm">
-            <div className={`text-2xl font-bold ${colorClasses[color]} mb-2`}>{value}</div>
-            <div className="text-neutral-400">{label}</div>
+        <div className="p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className={`text-3xl font-bold ${variantStyles[variant]} mb-2`}>
+                {value}
+            </div>
+            <div className="text-muted-foreground font-medium text-sm">
+                {label}
+            </div>
         </div>
     );
 }

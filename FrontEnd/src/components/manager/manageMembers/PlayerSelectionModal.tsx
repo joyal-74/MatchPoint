@@ -1,58 +1,59 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { X, Search, Users, UserPlus, Filter, Frown, Check } from 'lucide-react';
 import type { TeamPlayer } from '../../../types/Player';
-import { X, Search, Users, Loader2 } from 'lucide-react';
-
 
 interface PlayerSelectionModalProps {
     availablePlayers: TeamPlayer[] | undefined;
     onClose: () => void;
-    onAddPlayer: (playerId: string, usesId: string) => void;
+    onAddPlayer: (playerId: string, userId: string) => void;
 }
 
-const PlayerCard = ({ player, onSelect }: { player: TeamPlayer; onSelect: (id: string) => void }) => {
-    const initials = player.name.split(' ').map(n => n.charAt(0)).join('').toUpperCase().substring(0, 2);
-
+// --- Sub-Component: Player Row ---
+const PlayerListItem = ({ player, onAdd }: { player: TeamPlayer; onAdd: () => void }) => {
     return (
-        <div
-            key={player._id}
-            className="group flex items-center justify-between bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02] cursor-pointer"
-            onClick={() => onSelect(player._id)}
+        <button
+            onClick={onAdd}
+            className="
+                group w-full flex items-center justify-between p-3 rounded-lg
+                border border-transparent hover:border-border/50
+                hover:bg-accent hover:text-accent-foreground
+                transition-all duration-200 text-left outline-none focus:bg-accent
+            "
         >
             <div className="flex items-center gap-3">
-                {/* Initial Avatar */}
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-600/50 border border-emerald-500 flex items-center justify-center text-white font-semibold text-base shadow-md">
-                    {initials}
+                {/* Avatar */}
+                <div className="relative">
+                    <div className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center text-muted-foreground font-bold text-sm overflow-hidden">
+                        {player.name.charAt(0).toUpperCase()}
+                    </div>
+                    {/* Status Dot (Decoration) */}
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-background rounded-full"></div>
                 </div>
+
+                {/* Info */}
                 <div>
-                    {/* Player Name */}
-                    <h3 className="font-semibold text-white group-hover:text-emerald-300 transition-colors text-sm truncate">
+                    <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
                         {player.name}
                     </h3>
-                    {/* Player Role */}
-                    <span className="inline-block px-2 py-0.5 bg-neutral-900 text-emerald-400 text-xs font-medium rounded-full mt-0.5">
-                        {player.role}
-                    </span>
+                    <p className="text-xs text-muted-foreground font-medium group-hover:text-accent-foreground/70">
+                        {player.role || 'Player'}
+                    </p>
                 </div>
             </div>
 
-            {/* Add Icon Button */}
-            <button
-                className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 text-emerald-400 hover:text-emerald-300 rounded-full hover:bg-neutral-600"
-                aria-label={`Select ${player.name}`}
-            >
-                <PlusIcon className="w-5 h-5" /> {/* Using PlusIcon for a minimal add visual */}
-            </button>
-        </div>
+            {/* Action Icon - Visible on Hover */}
+            <div className="
+                p-2 rounded-md text-muted-foreground/50 
+                group-hover:text-primary group-hover:bg-primary/10 
+                transition-all opacity-0 group-hover:opacity-100 group-focus:opacity-100
+            ">
+                <UserPlus size={18} />
+            </div>
+        </button>
     );
 };
 
-const PlusIcon = ({ className }: { className: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-    </svg>
-);
-
-
+// --- Main Component ---
 export default function PlayerSelectionModal({
     availablePlayers,
     onClose,
@@ -60,17 +61,23 @@ export default function PlayerSelectionModal({
 }: PlayerSelectionModalProps) {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRole, setSelectedRole] = useState<string>('All');
+    const searchInputRef = useRef<HTMLInputElement>(null);
 
-    // Extract unique roles from players
+    // Auto-focus search on mount
+    useEffect(() => {
+        setTimeout(() => searchInputRef.current?.focus(), 100);
+    }, []);
+
+    // Extract unique roles
     const roles = useMemo(() => {
         if (!availablePlayers) return ['All'];
         const uniqueRoles = [...new Set(availablePlayers.map(p => p.role))];
         return ['All', ...uniqueRoles].sort();
     }, [availablePlayers]);
 
+    // Filter Logic
     const filteredPlayers = useMemo(() => {
         if (!availablePlayers) return [];
-
         return availablePlayers.filter(player => {
             const matchesSearch = player.name.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesRole = selectedRole === 'All' || player.role === selectedRole;
@@ -78,144 +85,129 @@ export default function PlayerSelectionModal({
         });
     }, [availablePlayers, searchTerm, selectedRole]);
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            // Use a ref for better React practice, but keeping document.querySelector for minimal change
-            const searchInput = document.querySelector<HTMLInputElement>('input[placeholder="Search players..."]');
-            searchInput?.focus();
-        }, 100);
-        return () => clearTimeout(timer);
-    }, []);
-    
-
-    const handleSelectPlayer = (playerId: string, userId: string) => {
-        onAddPlayer(playerId, userId);
-        onClose();
-    };
-
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-            {/* Reduced max-w for smaller, tighter modal */}
-            <div className="relative bg-neutral-900 rounded-xl shadow-2xl w-full max-w-2xl mx-auto border border-neutral-800 transition-transform duration-300 ease-out scale-95 opacity-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+            {/* Backdrop */}
+            <div 
+                className="absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity" 
+                onClick={onClose}
+            />
 
-                {/* Modal Header */}
-                <div className="p-5 border-b border-neutral-800 flex items-start justify-between">
+            {/* Modal Container */}
+            <div className="
+                relative w-full max-w-lg flex flex-col max-h-[85vh]
+                bg-card text-card-foreground 
+                border border-border rounded-xl shadow-2xl 
+                animate-in fade-in zoom-in-95 duration-200
+            ">
+                
+                {/* Header */}
+                <div className="px-6 py-5 border-b border-border flex justify-between items-start">
                     <div>
-                        <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-                            <Users className="w-5 h-5 text-emerald-400" /> Select Player
+                        <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                            <Users className="w-5 h-5 text-primary" />
+                            Add to Roster
                         </h2>
-                        <p className="text-neutral-400 text-sm mt-1">Search and filter available players to add.</p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                            Search for players to invite to your squad.
+                        </p>
                     </div>
-
                     <button
                         onClick={onClose}
-                        className="text-neutral-400 hover:text-white transition-all duration-200 p-2 rounded-full hover:bg-neutral-800"
-                        aria-label="Close modal"
+                        className="p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors"
                     >
-                        <X className="w-5 h-5" />
+                        <X size={20} />
                     </button>
                 </div>
 
-                <div className="p-5 border-b border-neutral-800">
-                    <div className="mb-4 relative">
-                        {/* Search Input */}
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Search className="w-4 h-4 text-neutral-500" />
-                        </div>
+                {/* Search & Filter Section */}
+                <div className="p-4 space-y-4 bg-muted/30">
+                    {/* Search Input */}
+                    <div className="relative group">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                         <input
+                            ref={searchInputRef}
                             type="text"
-                            placeholder="Search players..."
+                            placeholder="Search by name..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            // Minimal input styling
-                            className="w-full pl-10 pr-4 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all text-sm"
+                            className="
+                                w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border border-input bg-background 
+                                text-foreground placeholder:text-muted-foreground
+                                focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
+                                transition-all
+                            "
                         />
                     </div>
 
-                    {/* Role Filter Buttons */}
-                    <div className="flex flex-wrap gap-2 pt-2">
+                    {/* Role Pills */}
+                    <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                        <Filter size={14} className="text-muted-foreground shrink-0 mr-1" />
                         {roles.map((role) => (
                             <button
                                 key={role}
                                 onClick={() => setSelectedRole(role)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150 ${selectedRole === role
-                                    ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
-                                    : 'bg-neutral-700 text-neutral-300 hover:bg-neutral-600 hover:text-white'
-                                    }`}
+                                className={`
+                                    flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all border
+                                    ${selectedRole === role
+                                        ? 'bg-primary text-primary-foreground border-primary'
+                                        : 'bg-background text-muted-foreground border-border hover:border-primary/50 hover:text-foreground'
+                                    }
+                                `}
                             >
+                                {selectedRole === role && <Check size={10} strokeWidth={3} />}
                                 {role}
                             </button>
                         ))}
                     </div>
                 </div>
 
-                {/* Player Grid / Content */}
-                <div className="p-5">
-                    {availablePlayers === undefined ? (
-                        /* Loading State */
-                        <div className="flex flex-col items-center justify-center py-8">
-                            <Loader2 className="animate-spin h-6 w-6 text-emerald-500 mb-3" />
-                            <p className="text-neutral-400 text-sm">Loading players...</p>
+                {/* Results List */}
+                <div className="flex-1 overflow-y-auto p-2 min-h-[300px]">
+                    {!availablePlayers ? (
+                        <div className="flex flex-col items-center justify-center h-full text-muted-foreground space-y-3">
+                            <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                            <span className="text-sm">Loading players...</span>
                         </div>
                     ) : filteredPlayers.length > 0 ? (
-                        /* Player List (Reduced grid columns and card size) */
-                        <div className="grid grid-cols-2 gap-3 max-h-[350px] overflow-y-auto pr-1 scrollbar-hide">
+                        <div className="space-y-1 p-2">
+                            <div className="flex justify-between items-center px-2 mb-2">
+                                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                    Available
+                                </span>
+                                <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded-md">
+                                    {filteredPlayers.length}
+                                </span>
+                            </div>
                             {filteredPlayers.map((player) => (
-                                <PlayerCard
+                                <PlayerListItem
                                     key={player._id}
                                     player={player}
-                                    onSelect={() => handleSelectPlayer(player._id, player.userId)}
+                                    onAdd={() => onAddPlayer(player._id, player.userId)}
                                 />
                             ))}
                         </div>
                     ) : (
-                        /* No Players Found State */
-                        <div className="flex flex-col items-center justify-center py-8">
-                            <div className="w-12 h-12 mb-3 text-neutral-600">
-                                <SadFaceIcon className="w-full h-full" />
+                        <div className="flex flex-col items-center justify-center h-full text-muted-foreground space-y-3 opacity-70">
+                            <Frown size={48} strokeWidth={1.5} className="text-muted-foreground/50" />
+                            <div className="text-center">
+                                <p className="text-foreground font-medium">No players found</p>
+                                <p className="text-xs mt-1">Try adjusting your search or filters.</p>
                             </div>
-                            <h3 className="text-base font-medium text-white mb-1">No players found</h3>
-                            <p className="text-neutral-400 text-center text-sm max-w-xs">
-                                {searchTerm
-                                    ? `No players match "${searchTerm}"${selectedRole !== 'All' ? ` in ${selectedRole}` : ''}`
-                                    : `No players available${selectedRole !== 'All' ? ` for ${selectedRole}` : ''}`}
-                            </p>
                         </div>
                     )}
                 </div>
 
-                {/* Footer with Summary and Action */}
-                <div className="px-5 py-4 border-t border-neutral-800 bg-neutral-900 sticky bottom-0">
-                    <div className="flex justify-between items-center">
-                        <div className="text-xs text-neutral-400">
-                            Showing <span className="font-semibold text-white">{filteredPlayers.length}</span> players
-                            {selectedRole !== 'All' && ` • Role: ${selectedRole}`}
-                        </div>
-                        <div className="flex gap-3">
-                            <button
-                                onClick={onClose}
-                                className="px-4 py-1.5 rounded-lg text-neutral-300 bg-neutral-700 hover:bg-neutral-600 transition-colors font-medium text-sm"
-                            >
-                                Close
-                            </button>
-                            {filteredPlayers.length > 0 && (
-                                <button
-                                    onClick={() => handleSelectPlayer(filteredPlayers[0]._id, filteredPlayers[0].userId)}
-                                    className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-md shadow-emerald-600/30 transition-all text-sm"
-                                >
-                                    Add First
-                                </button>
-                            )}
-                        </div>
-                    </div>
+                {/* Footer */}
+                <div className="p-4 border-t border-border bg-muted/10 rounded-b-xl flex justify-end">
+                    <button
+                        onClick={onClose}
+                        className="px-5 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+                    >
+                        Cancel
+                    </button>
                 </div>
             </div>
         </div>
     );
 }
-
-const SadFaceIcon = ({ className }: { className: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-);

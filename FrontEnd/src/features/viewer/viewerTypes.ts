@@ -19,3 +19,7 @@ export interface Match {
     date?: Date;
     winner: string;
 }
+
+export interface MatchDetails {
+    
+}

@@ -1,4 +1,4 @@
-import type { ColorScheme } from "./teamColors";
+import type { ColorScheme } from "./TeamColors"; 
 
 export interface TeamInfoProps {
     name: string;

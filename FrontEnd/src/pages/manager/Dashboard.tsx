@@ -1,5 +1,5 @@
 import Navbar from "../../components/manager/Navbar";
-import image from '../../assets/images/cricket-3.png'
+import image from '../../assets/images/cricket-3.png';
 import { Users, Calendar, BarChart3, ArrowRight, MapPin, Trophy } from 'lucide-react';
 import Footer from "../../components/viewer/Footer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import { getExploreTournaments } from "../../features/manager/Tournaments/tournamentThunks";
 
 export default function ManagerDashboard() {
-
     const activeTournaments = useAppSelector(state => state.managerTournaments.exploreTournaments);
     const managerId = useAppSelector(state => state.auth.user?._id);
     const dispatch = useAppDispatch();
@@ -19,7 +18,7 @@ export default function ManagerDashboard() {
     }, [activeTournaments.length, managerId, dispatch]);
 
     // Helper to format dates
-    const formatDate = (dateString : string) => {
+    const formatDate = (dateString: string) => {
         if (!dateString) return 'TBA';
         return new Date(dateString).toLocaleDateString('en-US', {
             month: 'short',
@@ -28,19 +27,20 @@ export default function ManagerDashboard() {
         });
     };
 
-    // Helper for Status Colors
-    const getStatusColor = (status : string) => {
+    // Helper for Status Colors using Semantic Theme Variables
+    // Note: We use specific colors for success/danger, but map 'Upcoming' to the theme's Primary color
+    const getStatusColor = (status: string) => {
         switch (status?.toLowerCase()) {
             case 'ongoing':
-                return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300';
+                return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
             case 'upcoming':
-                return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300';
+                return 'bg-primary/10 text-primary';
             case 'completed':
-                return 'bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-300';
+                return 'bg-muted text-muted-foreground';
             case 'canceled':
-                return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
+                return 'bg-destructive/10 text-destructive';
             default:
-                return 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600';
+                return 'bg-secondary text-secondary-foreground';
         }
     };
 
@@ -49,19 +49,16 @@ export default function ManagerDashboard() {
             icon: Users,
             title: 'Team Management',
             description: 'Manage your cricket teams, track player performance, handle registrations, and organize squad rotations efficiently.',
-            gradient: 'from-blue-400 to-blue-600'
         },
         {
             icon: Calendar,
             title: 'Schedule & Fixtures',
             description: 'Create match schedules, manage tournament fixtures, send notifications, and handle venue bookings seamlessly.',
-            gradient: 'from-purple-400 to-purple-600'
         },
         {
             icon: BarChart3,
             title: 'Analytics & Reports',
             description: 'Access detailed statistics, generate performance reports, track team progress, and make data-driven decisions.',
-            gradient: 'from-orange-400 to-orange-600'
         }
     ];
 
@@ -75,34 +72,36 @@ export default function ManagerDashboard() {
     return (
         <>
             <Navbar />
-            <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800">
+            {/* Main Background using Theme Background */}
+            <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
 
-                <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 pt-16 lg:px-16">
-                    {/* Background Gradients */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5" />
+                <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden px-6 pt-16 lg:px-16">
+                    {/* Background Gradients using Primary/Secondary vars */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/20" />
 
                     {/* Content Container */}
-                    <div className="relative z-10 w-full p-3 mx-auto ">
+                    <div className="relative z-10 w-full p-3 mx-auto">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                             {/* Left Content */}
                             <div className="space-y-8">
                                 <div className="space-y-6">
-                                    <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
-                                        <span className="bg-gradient-to-r from-neutral-800 to-neutral-600 dark:from-neutral-200 dark:to-neutral-400 bg-clip-text text-transparent">
+                                    <h1 className="text-4xl lg:text-6xl font-bold leading-tight tracking-tight">
+                                        <span className="text-foreground">
                                             Manage Your
                                         </span>
                                         <br />
-                                        <span className="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+                                        {/* Gradient Text using Primary Color */}
+                                        <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                                             Sports Empire
                                         </span>
                                     </h1>
 
                                     <div className="space-y-4">
-                                        <p className="text-xl font-semibold text-neutral-700 dark:text-neutral-200 leading-relaxed">
+                                        <p className="text-xl font-semibold text-foreground/80 leading-relaxed">
                                             Streamline tournament operations, manage teams, and make data-driven decisions
                                         </p>
 
-                                        <p className="text-lg text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                                        <p className="text-lg text-muted-foreground leading-relaxed">
                                             Complete tournament management solution for organizing sports competitions,
                                             tracking performance, and ensuring smooth operations.
                                         </p>
@@ -111,24 +110,24 @@ export default function ManagerDashboard() {
 
                                 {/* Quick Actions */}
                                 <div className="flex flex-col sm:flex-row gap-4">
-                                    <button className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-blue-500/25">
+                                    <button className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg shadow-primary/20">
                                         <Calendar className="w-5 h-5" />
                                         <span>Create Tournament</span>
                                     </button>
-                                    <button className="border-2 border-neutral-300 dark:border-neutral-600 hover:border-blue-500 dark:hover:border-blue-400 text-neutral-700 dark:text-neutral-200 hover:text-blue-600 dark:hover:text-blue-400 px-8 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center space-x-2">
+                                    <button className="border-2 border-input bg-background hover:bg-accent hover:text-accent-foreground text-foreground px-8 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center space-x-2">
                                         <BarChart3 className="w-5 h-5" />
                                         <span>View Analytics</span>
                                     </button>
                                 </div>
 
                                 {/* Stats */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 pt-8 border-t border-neutral-200 dark:border-neutral-700">
+                                <div className="grid grid-cols-2 md:grid-cols-4 pt-8 border-t border-border">
                                     {managerStats.map((stat, index) => (
                                         <div key={index} className="text-center p-4">
-                                            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                                            <div className="text-2xl font-bold text-primary">
                                                 {stat.number}
                                             </div>
-                                            <div className="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">
+                                            <div className="text-xs text-muted-foreground uppercase tracking-wide">
                                                 {stat.label}
                                             </div>
                                         </div>
@@ -138,33 +137,33 @@ export default function ManagerDashboard() {
 
                             {/* Right Content - Dashboard Preview */}
                             <div className="relative flex justify-end">
-                                <div className="w-75 h-75 lg:w-80 lg:h-96 bg-purple-500/10 rounded-2xl transform right-10 rotate-15 bottom-4 top-4 absolute" />
+                                {/* Decorative elements using Primary color */}
+                                <div className="w-75 h-75 lg:w-80 lg:h-96 bg-primary/10 rounded-2xl transform right-10 rotate-12 bottom-4 top-4 absolute" />
 
                                 <img
                                     src={image}
                                     alt="Sports character"
-                                    className="relative z-10 max-h-[420px] object-contain"
+                                    className="relative z-10 max-h-[420px] object-contain drop-shadow-2xl"
                                 />
 
-                                {/* Decorative background element */}
-                                <div className="absolute -z-10 top-8 -right-8 w-72 h-72 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
+                                <div className="absolute -z-10 top-8 -right-8 w-72 h-72 bg-primary/20 rounded-full blur-3xl"></div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Decorative Elements */}
-                    <div className="absolute top-10 left-10 w-20 h-20 bg-blue-500/10 rounded-full blur-xl"></div>
-                    <div className="absolute bottom-20 right-20 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
+                    {/* Background Blobs */}
+                    <div className="absolute top-10 left-10 w-20 h-20 bg-primary/10 rounded-full blur-xl"></div>
+                    <div className="absolute bottom-20 right-20 w-32 h-32 bg-secondary/50 rounded-full blur-2xl"></div>
                 </section>
 
                 {/* Features Section */}
-                <section className="py-16 bg-white dark:bg-neutral-900">
+                <section className="py-16 bg-card text-card-foreground border-y border-border">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-12">
-                            <h2 className="text-3xl lg:text-4xl font-bold mb-4 pb-1 bg-gradient-to-r from-neutral-900 to-neutral-700 dark:from-neutral-100 dark:to-neutral-300 bg-clip-text text-transparent">
+                            <h2 className="text-3xl lg:text-4xl font-bold mb-4 pb-1">
                                 Powerful Management Tools
                             </h2>
-                            <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
+                            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                                 Everything you need to organize and manage professional cricket tournaments efficiently.
                             </p>
                         </div>
@@ -173,15 +172,15 @@ export default function ManagerDashboard() {
                             {features.map((feature, index) => (
                                 <div
                                     key={index}
-                                    className="bg-neutral-50 dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:shadow-lg transition-all duration-200"
+                                    className="bg-background p-6 rounded-xl border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-200 group"
                                 >
-                                    <div className={`w-12 h-12 bg-gradient-to-br ${feature.gradient} rounded-lg flex items-center justify-center mb-4`}>
-                                        <feature.icon className="w-6 h-6 text-white" />
+                                    <div className={`w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors`}>
+                                        <feature.icon className="w-6 h-6 text-primary group-hover:text-primary-foreground" />
                                     </div>
-                                    <h3 className="text-lg font-bold mb-3 text-neutral-800 dark:text-neutral-200">
+                                    <h3 className="text-lg font-bold mb-3 text-foreground">
                                         {feature.title}
                                     </h3>
-                                    <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed">
+                                    <p className="text-muted-foreground text-sm leading-relaxed">
                                         {feature.description}
                                     </p>
                                 </div>
@@ -191,18 +190,18 @@ export default function ManagerDashboard() {
                 </section>
 
                 {/* Active Tournaments Section */}
-                <section className="py-16 bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800">
+                <section className="py-16 bg-muted/30">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex items-center justify-between mb-8">
                             <div>
-                                <h2 className="text-3xl font-bold text-neutral-800 dark:text-neutral-200 mb-2">
+                                <h2 className="text-3xl font-bold text-foreground mb-2">
                                     Explore Tournaments
                                 </h2>
-                                <p className="text-neutral-600 dark:text-neutral-400">
+                                <p className="text-muted-foreground">
                                     Monitor and manage ongoing competitions
                                 </p>
                             </div>
-                            <button className="text-blue-600 dark:text-blue-400 font-semibold flex items-center space-x-2 hover:space-x-3 transition-all duration-200">
+                            <button className="text-primary font-semibold flex items-center space-x-2 hover:space-x-3 transition-all duration-200 hover:text-primary/80">
                                 <span>View All</span>
                                 <ArrowRight className="w-4 h-4" />
                             </button>
@@ -211,7 +210,6 @@ export default function ManagerDashboard() {
                         {activeTournaments && activeTournaments.length > 0 ? (
                             <div className="grid md:grid-cols-3 gap-6">
                                 {activeTournaments.map((tournament) => {
-                                    // Calculate Registration Progress
                                     const progressPercentage = tournament.maxTeams > 0
                                         ? Math.round((tournament.currTeams / tournament.maxTeams) * 100)
                                         : 0;
@@ -219,61 +217,56 @@ export default function ManagerDashboard() {
                                     return (
                                         <div
                                             key={tournament._id}
-                                            className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden hover:shadow-lg transition-all duration-200 flex flex-col"
+                                            className="bg-card text-card-foreground rounded-xl border border-border overflow-hidden hover:shadow-lg transition-all duration-200 flex flex-col hover:border-primary/50"
                                         >
-                                            {/* Optional: Add banner image if you want visual richness, otherwise keep text only */}
-                                            {/* <div className="h-32 w-full overflow-hidden">
-                                                <img src={tournament.banner} alt={tournament.title} className="w-full h-full object-cover" />
-                                            </div> */}
-
                                             <div className="p-6 flex-1 flex flex-col">
                                                 <div className="flex items-center justify-between mb-4">
                                                     <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${getStatusColor(tournament.status)}`}>
                                                         {tournament.status}
                                                     </span>
-                                                    <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-2 py-1 rounded text-xs font-medium uppercase">
+                                                    <span className="bg-secondary text-secondary-foreground px-2 py-1 rounded text-xs font-medium uppercase border border-border">
                                                         {tournament.format}
                                                     </span>
                                                 </div>
 
-                                                <h3 className="font-bold text-lg mb-2 text-neutral-800 dark:text-neutral-200 line-clamp-1" title={tournament.title}>
+                                                <h3 className="font-bold text-lg mb-2 text-foreground line-clamp-1" title={tournament.title}>
                                                     {tournament.title}
                                                 </h3>
-                                                
-                                                <div className="text-sm text-neutral-500 dark:text-neutral-400 mb-4 flex items-center gap-1 line-clamp-1">
-                                                     <MapPin className="w-3 h-3" />
-                                                     {tournament.location ? tournament.location.split(',')[0] : 'Location TBA'}
+
+                                                <div className="text-sm text-muted-foreground mb-4 flex items-center gap-1 line-clamp-1">
+                                                    <MapPin className="w-3 h-3" />
+                                                    {tournament.location ? tournament.location.split(',')[0] : 'Location TBA'}
                                                 </div>
 
                                                 <div className="space-y-4 mb-4 mt-auto">
                                                     {/* Teams Progress */}
                                                     <div>
                                                         <div className="flex items-center justify-between text-sm mb-1">
-                                                            <span className="text-neutral-600 dark:text-neutral-400">Teams Registered</span>
-                                                            <span className="font-semibold text-neutral-800 dark:text-neutral-200">
-                                                                {tournament.currTeams} <span className="text-neutral-400 font-normal">/ {tournament.maxTeams}</span>
+                                                            <span className="text-muted-foreground">Teams Registered</span>
+                                                            <span className="font-semibold text-foreground">
+                                                                {tournament.currTeams} <span className="text-muted-foreground font-normal">/ {tournament.maxTeams}</span>
                                                             </span>
                                                         </div>
-                                                        <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
+                                                        <div className="w-full bg-secondary rounded-full h-2">
                                                             <div
-                                                                className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300"
+                                                                className="bg-primary h-2 rounded-full transition-all duration-300"
                                                                 style={{ width: `${progressPercentage}%` }}
                                                             ></div>
                                                         </div>
                                                     </div>
 
                                                     {/* Prize Pool Row */}
-                                                    <div className="flex items-center justify-between text-sm bg-neutral-50 dark:bg-neutral-900 p-2 rounded-lg">
-                                                        <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
-                                                            <Trophy className="w-4 h-4 text-yellow-500" />
+                                                    <div className="flex items-center justify-between text-sm bg-muted/50 p-2 rounded-lg border border-border/50">
+                                                        <div className="flex items-center gap-2 text-muted-foreground">
+                                                            <Trophy className="w-4 h-4 text-primary" />
                                                             <span>Prize Pool</span>
                                                         </div>
-                                                        <span className="font-bold text-neutral-800 dark:text-neutral-200">₹{tournament.prizePool}</span>
+                                                        <span className="font-bold text-foreground">₹{tournament.prizePool}</span>
                                                     </div>
                                                 </div>
 
-                                                <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700">
-                                                    <div className="flex items-center justify-between text-sm text-neutral-600 dark:text-neutral-400 mb-3">
+                                                <div className="pt-4 border-t border-border">
+                                                    <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
                                                         <div className="flex items-center space-x-2">
                                                             <Calendar className="w-4 h-4" />
                                                             <span>
@@ -281,7 +274,7 @@ export default function ManagerDashboard() {
                                                             </span>
                                                         </div>
                                                     </div>
-                                                    <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-semibold transition-colors duration-200">
+                                                    <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-lg font-semibold transition-colors duration-200">
                                                         View Details
                                                     </button>
                                                 </div>
@@ -291,9 +284,9 @@ export default function ManagerDashboard() {
                                 })}
                             </div>
                         ) : (
-                            <div className="text-center py-12 bg-white dark:bg-neutral-800 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700">
-                                <p className="text-neutral-500 dark:text-neutral-400">No active tournaments found.</p>
-                                <button className="mt-4 text-blue-600 hover:text-blue-700 font-medium text-sm">Create your first tournament</button>
+                            <div className="text-center py-12 bg-card rounded-xl border border-dashed border-border">
+                                <p className="text-muted-foreground">No active tournaments found.</p>
+                                <button className="mt-4 text-primary hover:underline font-medium text-sm">Create your first tournament</button>
                             </div>
                         )}
                     </div>

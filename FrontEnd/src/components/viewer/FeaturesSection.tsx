@@ -1,33 +1,33 @@
-import { Zap, Shield, Users, Wrench, Clock, Headphones } from "lucide-react";
+import { Zap, Shield, Users, Wrench, Clock, Headphones, CheckCircle2 } from "lucide-react";
 
 const features = [
     {
-        icon: <Zap className="text-[var(--color-primary)] w-10 h-10" />,
+        icon: Zap,
         title: "Lightning Fast",
         description: "Experience blazing-fast performance with real-time updates and instant match notifications.",
     },
     {
-        icon: <Shield className="text-[var(--color-primary)] w-10 h-10" />,
+        icon: Shield,
         title: "Secure & Reliable",
         description: "Enterprise-grade security with 99.9% uptime ensures your tournaments run smoothly.",
     },
     {
-        icon: <Users className="text-[var(--color-primary)] w-10 h-10" />,
+        icon: Users,
         title: "Global Community",
         description: "Connect with over 50,000 athletes and tournament organizers worldwide.",
     },
     {
-        icon: <Wrench className="text-[var(--color-primary)] w-10 h-10" />,
+        icon: Wrench,
         title: "Professional Tools",
         description: "Advanced analytics, bracket management, and customizable tournament formats.",
     },
     {
-        icon: <Clock className="text-[var(--color-primary)] w-10 h-10" />,
+        icon: Clock,
         title: "24/7 Availability",
         description: "Access your tournaments anytime, anywhere with our cloud-based platform.",
     },
     {
-        icon: <Headphones className="text-[var(--color-primary)] w-10 h-10" />,
+        icon: Headphones,
         title: "Expert Support",
         description: "Get help from our dedicated support team of tournament management experts.",
     },
@@ -35,34 +35,51 @@ const features = [
 
 const FeaturesSection = () => {
     return (
-        <section className="py-16 px-6">
-            <div className="max-w-7xl mx-auto text-center">
+        <section className="py-20 px-6 bg-background relative overflow-hidden">
+            
+            {/* Background Decoration */}
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-primary/5 via-background to-background -z-10" />
 
-                <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-text-primary)] mb-4">
-                    Built for <span className="text-[var(--color-primary)]">Champions</span>
-                </h2>
-                <p className="text-[var(--color-text-secondary)] max-w-3xl mx-auto mb-12 text-lg">
-                    We provide the most advanced tournament management platform with
-                    features designed by athletes, for athletes. Experience the difference.
-                </p>
+            <div className="max-w-7xl mx-auto">
+                
+                {/* Header */}
+                <div className="text-center max-w-3xl mx-auto mb-16">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider mb-4">
+                        <CheckCircle2 size={14} />
+                        Why Choose MatchPoint
+                    </div>
+                    <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
+                        Built for <span className="text-primary">Champions</span>
+                    </h2>
+                    <p className="text-lg text-muted-foreground leading-relaxed">
+                        We provide the most advanced tournament management platform with
+                        features designed by athletes, for athletes. Experience the difference.
+                    </p>
+                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {features.map((feature, index) => (
-                        <div
-                            key={index}
-                            className="bg-[var(--color-surface)] p-8 rounded-xl shadow-[var(--shadow-md)] border border-[var(--color-border)] hover:scale-101 hover:shadow-[var(--shadow-lg)] hover:border-[var(--color-primary)]/30 transition-all duration-300 group"
-                        >
-                            <div className="flex justify-center mb-4 transform group-hover:scale-101 transition-transform duration-300">
-                                {feature.icon}
+                {/* Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {features.map((feature, index) => {
+                        const Icon = feature.icon;
+                        return (
+                            <div
+                                key={index}
+                                className="group bg-card border border-border p-8 rounded-2xl hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300"
+                            >
+                                <div className="mb-6 inline-flex p-3 rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                                    <Icon size={24} />
+                                </div>
+                                
+                                <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
+                                    {feature.title}
+                                </h3>
+                                
+                                <p className="text-muted-foreground leading-relaxed">
+                                    {feature.description}
+                                </p>
                             </div>
-                            <h3 className="text-[var(--color-text-primary)] text-xl font-semibold mb-3 group-hover:text-[var(--color-primary)] transition-colors duration-300">
-                                {feature.title}
-                            </h3>
-                            <p className="text-[var(--color-text-secondary)] leading-relaxed">
-                                {feature.description}
-                            </p>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </section>

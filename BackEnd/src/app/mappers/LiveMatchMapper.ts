@@ -1,9 +1,10 @@
 import { LiveMatchDTO } from "domain/dtos/LiveMatchDTO";
 import { TeamEntity } from "domain/entities/Match";
 import { MatchEntity } from "domain/entities/MatchEntity";
+import { Tournament } from "domain/entities/Tournaments";
 
 export class LiveMatchMapper {
-    static toDTO(match: MatchEntity, teamA: TeamEntity, teamB: TeamEntity, venue: string): LiveMatchDTO {
+    static toDTO(match: MatchEntity, teamA: TeamEntity, teamB: TeamEntity, tournament: Tournament): LiveMatchDTO {
 
         const innings = match.currentInningsNumber === 1
             ? match.innings1
@@ -14,6 +15,7 @@ export class LiveMatchMapper {
         return {
             matchId: match.matchId,
             tournamentId: match.tournamentId,
+            tournamentName: tournament.title,
 
             teamA: teamA.name,
             teamB: teamB.name,
@@ -24,7 +26,7 @@ export class LiveMatchMapper {
             wickets: innings.wickets,
             overs: match.oversLimit,
             status: `Over ${match.oversLimit}`,
-            venue: venue,
+            venue: tournament.location,
             type: match.isLive ? 'LIVE' : '',
 
             currentInningsNumber: match.currentInningsNumber,

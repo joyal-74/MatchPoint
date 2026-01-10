@@ -7,18 +7,54 @@ export interface StatusBadgeProps {
 export default function StatusBadge({ status, className = "", size = "md" }: StatusBadgeProps) {
     const isActive = status === true;
     
+    // Size variants
     const sizeClasses = {
-        sm: 'px-2 py-0.5 text-xs',
-        md: 'px-3 py-1 text-xs',
-        lg: 'px-4 py-1.5 text-sm'
+        sm: 'px-2 py-0.5 text-[10px] gap-1',
+        md: 'px-2.5 py-1 text-xs gap-1.5',
+        lg: 'px-3 py-1.5 text-sm gap-2'
     };
 
+    // Color variants using Semantic Theme Tokens
     const statusClasses = isActive 
-        ? 'bg-green-500/20 text-green-400' 
-        : 'bg-neutral-500/20 text-neutral-400';
+        ? 'bg-primary/10 text-primary border-primary/20' 
+        : 'bg-muted text-muted-foreground border-border';
+
+    // Dot size mapping
+    const dotSizes = {
+        sm: 'w-1 h-1',
+        md: 'w-1.5 h-1.5',
+        lg: 'w-2 h-2'
+    };
 
     return (
-        <span className={`${sizeClasses[size]} ${statusClasses} rounded-full font-medium ${className}`}>
+        <span 
+            className={`
+                inline-flex items-center justify-center rounded-full border font-medium transition-colors duration-200
+                ${sizeClasses[size]} 
+                ${statusClasses} 
+                ${className}
+            `}
+        >
+            {/* Status Indicator Dot */}
+            <span className="relative flex items-center justify-center">
+                <span 
+                    className={`
+                        rounded-full 
+                        ${isActive ? 'bg-primary' : 'bg-muted-foreground/40'}
+                        ${dotSizes[size]}
+                    `} 
+                />
+                {isActive && (
+                    <span 
+                        className={`
+                            absolute inline-flex rounded-full opacity-75 animate-ping 
+                            bg-primary 
+                            ${dotSizes[size]}
+                        `} 
+                    />
+                )}
+            </span>
+
             {isActive ? "Active" : "Inactive"}
         </span>
     );

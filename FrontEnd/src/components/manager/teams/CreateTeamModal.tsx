@@ -15,7 +15,6 @@ export interface CreateTeamModalProps {
     managerId: string;
 }
 
-
 export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, managerId }: CreateTeamModalProps) {
     const { state, dispatch, handleSubmit, handleClose } = useCreateTeamForm(managerId, onCreateTeam);
 
@@ -89,11 +88,17 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, manager
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <ModalBackdrop onClick={closeModal} />
 
-            <div className="relative w-full max-w-2xl bg-neutral-900 rounded-xl border border-neutral-700 shadow-2xl z-50">
-                <ModalHeader title="Create New Team" onClose={closeModal} disabled={state.isLoading} />
+            {/* Main Modal Container with Semantic Theming */}
+            <div className="relative w-full max-w-2xl bg-card text-card-foreground rounded-xl border border-border shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200">
+                <ModalHeader 
+                    title="Create New Team" 
+                    onClose={closeModal} 
+                    disabled={state.isLoading} 
+                />
 
                 <form onSubmit={(e) => handleSubmit(e)} className="p-6 space-y-4">
-                    {/* Logo Upload */}
+                    
+                    {/* Logo Upload Section */}
                     <div className="space-y-2">
                         <LogoUpload
                             logoPreview={state.logoPreview}
@@ -107,11 +112,16 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, manager
                             onLogoRemove={() => dispatch({ type: 'REMOVE_LOGO' })}
                             disabled={state.isLoading}
                         />
-                        {state.errors.logo && <p className="text-red-500 text-xs mt-1">{state.errors.logo}</p>}
+                        {state.errors.logo && (
+                            <p className="text-destructive text-xs mt-1 animate-pulse">
+                                {state.errors.logo}
+                            </p>
+                        )}
                     </div>
 
-                    {/* Render form fields using loop */}
+                    {/* Dynamic Fields Rendering */}
                     <div className="space-y-4">
+                        {/* First field (Name) full width */}
                         {formFields.slice(0, 1).map((field) => (
                             <div key={field.name} className="space-y-1">
                                 {field.type === "input" ? (
@@ -135,12 +145,14 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, manager
                                     />
                                 )}
                                 {state.errors[field.name] && (
-                                    <p className="text-red-500 text-xs mt-1">{state.errors[field.name]}</p>
+                                    <p className="text-destructive text-xs mt-1">
+                                        {state.errors[field.name]}
+                                    </p>
                                 )}
                             </div>
                         ))}
 
-                        {/* Grid fields */}
+                        {/* Remaining fields in a Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {formFields.slice(1).map((field) => (
                                 <div key={field.name} className="space-y-1">
@@ -165,14 +177,16 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, manager
                                         />
                                     )}
                                     {state.errors[field.name] && (
-                                        <p className="text-red-500 text-xs mt-1">{state.errors[field.name]}</p>
+                                        <p className="text-destructive text-xs mt-1">
+                                            {state.errors[field.name]}
+                                        </p>
                                     )}
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    {/* Description */}
+                    {/* Description Field */}
                     <div className="space-y-1">
                         <FormTextarea
                             label="Description"
@@ -184,12 +198,14 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, manager
                         />
                     </div>
 
-                    <FormActions
-                        submitLabel="Create Team"
-                        onCancel={closeModal}
-                        disabled={state.isLoading}
-                        loading={state.isLoading}
-                    />
+                    <div className="pt-2 border-t border-border">
+                        <FormActions
+                            submitLabel="Create Team"
+                            onCancel={closeModal}
+                            disabled={state.isLoading}
+                            loading={state.isLoading}
+                        />
+                    </div>
                 </form>
             </div>
         </div>

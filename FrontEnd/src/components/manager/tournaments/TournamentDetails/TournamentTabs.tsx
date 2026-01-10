@@ -18,7 +18,8 @@ const tabs = [
 
 export default function TournamentTabs({ activeTab, onTabChange }: TournamentTabsProps) {
     return (
-        <div className="sticky top-16 z-40 w-full bg-neutral-950/80 backdrop-blur-xl border-b border-white/5">
+        // Sticky container using theme background with opacity for blur effect
+        <div className="sticky top-16 z-40 w-full bg-background/95 backdrop-blur-xl border-b border-border transition-colors duration-300">
             <div className="w-full px-4 md:px-8 overflow-x-auto no-scrollbar">
                 <div className="flex items-center gap-6 min-w-max">
                     {tabs.map((tab) => {
@@ -32,14 +33,14 @@ export default function TournamentTabs({ activeTab, onTabChange }: TournamentTab
                                 className={`
                                     group flex items-center gap-2 py-4 text-sm font-medium border-b-2 transition-all duration-200
                                     ${isActive 
-                                        ? "border-emerald-500 text-white" 
-                                        : "border-transparent text-neutral-500 hover:text-neutral-300 hover:border-neutral-700"
+                                        ? "border-primary text-primary" 
+                                        : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/20"
                                     }
                                 `}
                             >
                                 <IconComponent 
                                     size={16} 
-                                    className={`transition-colors duration-200 ${isActive ? "text-emerald-400" : "group-hover:text-neutral-300"}`} 
+                                    className={`transition-colors duration-200 ${isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`} 
                                 />
                                 {tab.label}
                             </button>

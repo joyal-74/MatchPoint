@@ -1,6 +1,5 @@
 type FormInputType = 'text' | 'number' | 'email' | 'password' | 'tel' | 'url';
 
-
 interface FormInputProps {
     label: string;
     type?: FormInputType;
@@ -25,14 +24,22 @@ export default function FormInput({
     max
 }: FormInputProps) {
     return (
-        <div>
-            <label className="text-sm text-white mb-1 block">{label}</label>
+        <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground block">
+                {label}
+            </label>
             <input
                 type={type}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
-                className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white text-sm focus:outline-none focus:border-green-500 transition-colors"
+                className={`
+                    w-full px-3 py-2 rounded-lg text-sm transition-all duration-200
+                    bg-background border border-input text-foreground
+                    placeholder:text-muted-foreground/50
+                    focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary
+                    disabled:cursor-not-allowed disabled:opacity-50
+                `}
                 required={required}
                 disabled={disabled}
                 min={min}

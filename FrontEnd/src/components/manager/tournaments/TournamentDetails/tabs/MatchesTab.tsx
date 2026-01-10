@@ -9,7 +9,7 @@ import type { Match } from "../../../../../features/manager/managerTypes";
 
 export default function MatchesTab() {
     const dispatch = useAppDispatch();
-    const { id, type } = useParams(); // type is 'manage' or 'explore'
+    const { id, type } = useParams(); 
     const { matches, fixturesLoading } = useAppSelector(state => state.managerTournaments);
     const [fetched, setFetched] = useState(false);
 
@@ -28,7 +28,7 @@ export default function MatchesTab() {
         return (
             <div className="py-12">
                 <EmptyState
-                    icon={<Swords size={48} className="mx-auto mb-4 text-emerald-500" />}
+                    icon={<Swords size={48} className="mx-auto mb-4 text-primary" />}
                     title="No Matches Scheduled"
                     message="The fixture list is currently empty."
                     subtitle="Generate fixtures in the 'Fixtures' tab to see matchups here."
@@ -52,7 +52,7 @@ export default function MatchesTab() {
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                         </div>
-                        <h2 className="text-lg font-bold text-white tracking-wide">Live Now</h2>
+                        <h2 className="text-lg font-bold text-foreground tracking-wide">Live Now</h2>
                     </div>
                     {/* Grid Layout: 1 col on mobile, 2 cols on Large screens */}
                     <div className="grid grid-cols-1 gap-4">
@@ -66,7 +66,7 @@ export default function MatchesTab() {
             {/* 2. UPCOMING MATCHES */}
             {upcomingMatches.length > 0 && (
                 <div className="space-y-4">
-                    <div className="flex items-center gap-2 px-1 text-neutral-400">
+                    <div className="flex items-center gap-2 px-1 text-muted-foreground">
                         <Calendar size={18} />
                         <h2 className="text-sm font-bold uppercase tracking-widest">Upcoming</h2>
                     </div>
@@ -81,7 +81,7 @@ export default function MatchesTab() {
             {/* 3. COMPLETED MATCHES */}
             {completedMatches.length > 0 && (
                 <div className="space-y-4">
-                    <div className="flex items-center gap-2 px-1 text-neutral-400">
+                    <div className="flex items-center gap-2 px-1 text-muted-foreground">
                         <Trophy size={18} />
                         <h2 className="text-sm font-bold uppercase tracking-widest">Completed</h2>
                     </div>
@@ -107,19 +107,19 @@ function MatchRow({ match, isLive = false, isManager = false }: { match: Match; 
         <div className={`
             group relative flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-xl border transition-all duration-300
             ${isLive
-                ? "bg-gradient-to-r from-neutral-900 to-neutral-800 border-emerald-500/30 hover:border-emerald-500/50 shadow-lg shadow-emerald-900/10"
-                : "bg-neutral-900/50 border-white/5 hover:bg-neutral-800 hover:border-white/10"
+                ? "bg-gradient-to-r from-card to-muted border-green-500/50 hover:border-green-500/80 shadow-lg shadow-green-500/10"
+                : "bg-card border-border hover:bg-muted/30 hover:border-primary/30"
             }
         `}>
 
             {/* Top/Left: Match Info */}
-            <div className="flex flex-row sm:flex-col items-center sm:items-start justify-between w-full sm:w-auto gap-2 text-xs text-neutral-500 shrink-0">
-                <span className="font-mono px-2 py-1 rounded bg-white/5 border border-white/5 text-neutral-300">
+            <div className="flex flex-row sm:flex-col items-center sm:items-start justify-between w-full sm:w-auto gap-2 text-xs text-muted-foreground shrink-0">
+                <span className="font-mono px-2 py-1 rounded bg-muted border border-border text-foreground/70">
                     R{match.round}
                 </span>
                 <div className="flex items-center gap-1.5 whitespace-nowrap">
                     {isLive ? (
-                        <span className="text-emerald-400 font-bold flex items-center gap-1">
+                        <span className="text-green-500 font-bold flex items-center gap-1">
                             <Activity size={12} /> Live
                         </span>
                     ) : (
@@ -136,16 +136,16 @@ function MatchRow({ match, isLive = false, isManager = false }: { match: Match; 
 
                 {/* Team A (Right Aligned) */}
                 <div className="col-span-3 flex items-center justify-end gap-3 text-right">
-                    <span className="font-semibold text-white text-sm truncate hidden sm:block max-w-[100px] xl:max-w-[140px]" title={match.teamA}>
+                    <span className="font-semibold text-foreground text-sm truncate hidden sm:block max-w-[100px] xl:max-w-[140px]" title={match.teamA}>
                         {match.teamA}
                     </span>
-                    <span className="font-semibold text-white sm:hidden">{getInitials(match.teamA)}</span>
+                    <span className="font-semibold text-foreground sm:hidden">{getInitials(match.teamA)}</span>
 
-                    <div className="relative w-8 h-8 rounded-full bg-neutral-950 overflow-hidden ring-1 ring-white/10 shrink-0">
+                    <div className="relative w-8 h-8 rounded-full bg-muted overflow-hidden ring-1 ring-border shrink-0">
                         {match.teamLogoA ? (
                             <img src={match.teamLogoA} alt={match.teamA} className="w-full h-full object-contain p-0.5" />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-neutral-500">
+                            <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-muted-foreground">
                                 {getInitials(match.teamA)}
                             </div>
                         )}
@@ -154,27 +154,27 @@ function MatchRow({ match, isLive = false, isManager = false }: { match: Match; 
 
                 {/* VS Badge */}
                 <div className="col-span-1 flex justify-center">
-                    <div className="w-7 h-5 flex items-center justify-center rounded bg-black/40 border border-white/10 text-[10px] font-mono font-bold text-neutral-500">
+                    <div className="w-7 h-5 flex items-center justify-center rounded bg-muted/80 border border-border text-[10px] font-mono font-bold text-muted-foreground">
                         VS
                     </div>
                 </div>
 
                 {/* Team B (Left Aligned) */}
                 <div className="col-span-3 flex items-center justify-start gap-3 text-left">
-                    <div className="relative w-8 h-8 rounded-full bg-neutral-950 overflow-hidden ring-1 ring-white/10 shrink-0">
+                    <div className="relative w-8 h-8 rounded-full bg-muted overflow-hidden ring-1 ring-border shrink-0">
                         {match.teamLogoB ? (
                             <img src={match.teamLogoB} alt={match.teamB ?? ''} className="w-full h-full object-contain p-0.5" />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-neutral-500">
+                            <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-muted-foreground">
                                 {getInitials(match.teamB ?? '')}
                             </div>
                         )}
                     </div>
 
-                    <span className="font-semibold text-white text-sm truncate hidden sm:block max-w-[100px] xl:max-w-[140px]" title={match.teamB}>
+                    <span className="font-semibold text-foreground text-sm truncate hidden sm:block max-w-[100px] xl:max-w-[140px]" title={match.teamB}>
                         {match.teamB}
                     </span>
-                    <span className="font-semibold text-white sm:hidden">{getInitials(match.teamB ?? '')}</span>
+                    <span className="font-semibold text-foreground sm:hidden">{getInitials(match.teamB ?? '')}</span>
                 </div>
             </div>
 
@@ -186,13 +186,13 @@ function MatchRow({ match, isLive = false, isManager = false }: { match: Match; 
                         className={`
                             flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all
                             ${isLive
-                                ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/20"
-                                : "bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white border border-white/5"
+                                ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/20"
+                                : "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border"
                             }
                         `}
                     >
                         <LayoutDashboard size={14} />
-                        <span className="hidden xl:inline">DashBoard</span>
+                        <span className="hidden xl:inline">Dashboard</span>
                     </Link>
                 </div>
             )}

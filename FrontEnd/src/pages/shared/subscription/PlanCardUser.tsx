@@ -14,118 +14,94 @@ export const PlanCardUser: React.FC<{
     const isPremiumUser = currentLevel !== "Free";
     const disableFreeForPremiumUser = isFreePlan && isPremiumUser;
     const isDisabled = isCurrent || disableFreeForPremiumUser;
+    const isPopular = plan.level === "Super"; // Logic for popular badge
 
+    // Determine Button Variant based on state
     const buttonVariant = isCurrent
-        ? "current"
+        ? "outline" // Current plan usually just shows status
         : disableFreeForPremiumUser
-            ? "tertiary"
-            : (plan.level === "Super" ? "secondary" : "primary");
-
-    // Minimal color schemes
-    const getPlanColors = () => {
-        if (isCurrent) {
-            return {
-                card: "bg-cyan-950/50",
-                border: "border-l-4 border-cyan-500",
-                title: "text-cyan-400",
-                price: "text-cyan-400",
-                accent: "text-cyan-400"
-            };
-        }
-
-        switch (plan.level) {
-            case "Premium":
-                return {
-                    card: "bg-neutral-900",
-                    border: "border-l-4 border-purple-500",
-                    title: "text-neutral-100",
-                    price: "text-purple-400",
-                    accent: "text-purple-400"
-                };
-            case "Super":
-                return {
-                    card: "bg-neutral-900",
-                    border: "border-l-4 border-blue-500",
-                    title: "text-neutral-100",
-                    price: "text-blue-400",
-                    accent: "text-blue-400"
-                };
-            default:
-                return {
-                    card: "bg-neutral-900",
-                    border: "border-l-4 border-neutral-700",
-                    title: "text-neutral-100",
-                    price: "text-neutral-400",
-                    accent: "text-neutral-400"
-                };
-        }
-    };
-
-    const colors = getPlanColors();
+            ? "ghost" // Disabled state
+            : isPopular ? "primary" : "secondary";
 
     return (
         <div
-            className={`relative p-6 rounded-lg flex flex-col h-full 
-                ${colors.card} ${colors.border}
-                transition-all duration-200 hover:bg-opacity-80
+            className={`
+                relative p-6 rounded-2xl flex flex-col h-full border transition-all duration-300
+                ${isCurrent 
+                    ? "bg-primary/5 border-primary/50 shadow-[0_0_20px_rgba(var(--primary),0.1)]" // Active Plan Styling
+                    : "bg-card border-border hover:border-primary/30 hover:shadow-lg hover:-translate-y-1" // Inactive Plan Styling
+                }
             `}
         >
-            {/* Minimal badge for popular plan */}
-            {plan.level === 'Super' && (
-                <div className="absolute -top-2 right-4 bg-purple-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    Popular
+            {/* Popular Badge - Adapts to Primary Color */}
+            {isPopular && !isCurrent && (
+                <div className="absolute -top-3 right-4 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full shadow-md animate-in fade-in slide-in-from-bottom-2">
+                    Most Popular
+                </div>
+            )}
+
+            {isCurrent && (
+                <div className="absolute -top-3 right-4 bg-primary/10 text-primary border border-primary/20 text-xs font-bold px-3 py-1 rounded-full">
+                    Current Plan
                 </div>
             )}
 
             <div className="flex-grow">
                 {/* Title */}
                 <div className="mb-5">
-                    <div className="flex justify-between items-center mb-1">
-                        <h3 className={`text-xl font-bold ${colors.title}`}>
+                    <div className="flex justify-between items-center mb-2">
+                        <h3 className={`text-xl font-bold ${isCurrent ? 'text-primary' : 'text-card-foreground'}`}>
                             {plan.title}
                         </h3>
-                        {isCurrent && <Check className={`w-5 h-5 ${colors.accent}`} />}
+                        {isCurrent && <Check className="w-5 h-5 text-primary" />}
                     </div>
-                    <p className="text-sm text-neutral-400">{plan.description}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                        {plan.description}
+                    </p>
                 </div>
 
                 {/* Price */}
                 <div className="mb-6">
-                    <p className={`text-4xl font-bold ${colors.price} flex items-end gap-1`}>
+                    <p className="text-4xl font-bold text-foreground flex items-end gap-1">
                         {plan.level === "Free" ? "Free" : `₹${plan.price}`}
 
                         {plan.level !== "Free" && plan.price > 0 && (
-                            <span className="text-sm opacity-80 mb-1">
+                            <span className="text-sm font-medium text-muted-foreground mb-1.5 ml-1">
                                 /{plan.billingCycle?.toLowerCase() ?? "monthly"}
                             </span>
                         )}
                     </p>
                 </div>
 
+                {/* Divider */}
+                <div className="w-full h-px bg-border mb-6"></div>
+
                 {/* Features */}
-                <ul className="space-y-2 text-neutral-300 mb-6">
+                <ul className="space-y-3 mb-8">
                     {plan.features.map((feature, index) => (
-                        <li key={index} className="flex items-start text-sm">
-                            <Check className={`w-4 h-4 mr-2 mt-0.5 flex-shrink-0 ${colors.accent}`} />
-                            <span dangerouslySetInnerHTML={{ __html: feature }} />
+                        <li key={index} className="flex items-start text-sm text-muted-foreground group">
+                            <div className={`mt-0.5 mr-3 flex-shrink-0 ${isCurrent ? 'text-primary' : 'text-muted-foreground/70 group-hover:text-primary transition-colors'}`}>
+                                <Check size={16} strokeWidth={3} />
+                            </div>
+                            <span className="leading-snug text-foreground/90" dangerouslySetInnerHTML={{ __html: feature }} />
                         </li>
                     ))}
                 </ul>
             </div>
 
-            {/* Button */}
             <div className="mt-auto">
                 <UserButton
                     variant={buttonVariant}
-                    icon={isDisabled ? <Tag className="w-5 h-5" /> : <ArrowUpCircle className="w-5 h-5" />}
+                    icon={isDisabled ? <Tag className="w-4 h-4" /> : <ArrowUpCircle className="w-4 h-4" />}
                     disabled={isDisabled}
                     onClick={() => !isDisabled && onChoosePlan(plan)}
+                    className="w-full justify-center"
                 >
                     {isCurrent
-                        ? "Current Plan"
+                        ? "Active Plan"
                         : disableFreeForPremiumUser
-                            ? "Not Available"
-                            : (plan.level === "Super" ? "Upgrade to Super" : "Choose Plan")}
+                            ? "Downgrade Unavailable"
+                            : (isPopular ? "Upgrade to Super" : "Choose Plan")}
                 </UserButton>
             </div>
         </div>

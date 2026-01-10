@@ -1,4 +1,4 @@
-import TertiaryButton from "../../ui/TertiaryButton"; 
+import { Plus } from "lucide-react";
 
 interface TeamsHeaderProps {
     onCreateClick: () => void;
@@ -11,17 +11,26 @@ export default function ManagementHeader({
     onCreateClick,
     title = "Create & Manage Teams",
     subtitle = "Organize your teams & join tournaments",
-    buttontitle = "Create Team +",
+    buttontitle = "Create Team",
 }: TeamsHeaderProps) {
     return (
-        <div className="flex justify-between items-center mb-6 p-4 rounded-xl bg-gradient-to-r from-neutral-800/50 to-neutral-900/30 border border-neutral-700/50">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 p-6 rounded-xl bg-card border border-border shadow-sm transition-colors duration-200">
             <div>
-                <h1 className="text-xl font-semibold mb-1">{title}</h1>
-                <p className="text-neutral-400 text-sm">{subtitle}</p>
+                <h1 className="text-xl font-bold text-foreground mb-1 tracking-tight">
+                    {title}
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                    {subtitle}
+                </p>
             </div>
-            <TertiaryButton onClick={onCreateClick} className="px-4 py-2 text-sm">
+            
+            <button 
+                onClick={onCreateClick} 
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium transition-all rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/20 active:scale-95 hover:-translate-y-0.5"
+            >
+                <Plus size={18} strokeWidth={2.5} />
                 {buttontitle}
-            </TertiaryButton>
+            </button>
         </div>
     );
 }

@@ -59,17 +59,23 @@ export default function TournamentsPage() {
             <LoadingOverlay show={loading} />
             <Navbar />
 
-            <div className="min-h-screen bg-neutral-900 text-white p-6 md:p-8 mt-12 lg:mx-10">
+            {/* Main Container: Adapted for Theme & Fixed Navbar */}
+            <div className="min-h-screen bg-background text-foreground p-6 md:p-8 pt-24 lg:px-12 transition-colors duration-300">
+                
                 {/* 1. Rich Header Section */}
                 <TournamentsHeader onCreateClick={() => setIsCreateModalOpen(true)} />
 
                 {/* 2. Key Metrics / Stats Dashboard */}
-                <DashboardStats 
-                    myTournamentsCount={showMyTournaments.length} 
-                    totalExploreCount={exploreTournaments.length}
-                />
+                <div className="mt-8">
+                    <DashboardStats 
+                        myTournamentsCount={showMyTournaments.length} 
+                        totalExploreCount={exploreTournaments.length}
+                    />
+                </div>
 
-                <div className="space-y-12">
+                
+
+                <div className="space-y-12 mt-8">
                     {/* 3. My Tournaments (Your Workspace) */}
                     <MyTournamentsSection
                         tournaments={showMyTournaments}
@@ -80,7 +86,8 @@ export default function TournamentsPage() {
                         onCreate={() => setIsCreateModalOpen(true)}
                     />
 
-                    <div className="border-t border-neutral-800 pt-8">
+                    {/* Semantic Divider */}
+                    <div className="border-t border-border pt-8">
                          {/* 4. Explore Section */}
                         <ExploreTournamentsSection
                             tournaments={exploreTournaments}

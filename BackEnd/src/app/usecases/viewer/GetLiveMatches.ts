@@ -12,7 +12,7 @@ import { LiveMatchDTO } from "domain/dtos/LiveMatchDTO";
 @injectable()
 export class GetLiveMatches implements IGetLiveMatches {
     constructor(
-        @inject(DI_TOKENS.MatchesRepository) private _matchRepo: IMatchStatsRepo,
+        @inject(DI_TOKENS.MatchStatsRepository) private _matchRepo: IMatchStatsRepo,
         @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository,
         @inject(DI_TOKENS.TournamentRepository) private _tournamentRepo : ITournamentRepository,
         @inject(DI_TOKENS.Logger) private _logger: ILogger
@@ -33,7 +33,7 @@ export class GetLiveMatches implements IGetLiveMatches {
 
                 const tournament = await this._tournamentRepo.findById(match.tournamentId);
 
-                return LiveMatchMapper.toDTO(match, teamA!, teamB!, tournament?.location ?? '');
+                return LiveMatchMapper.toDTO(match, teamA!, teamB!, tournament!);
             })
         );
 

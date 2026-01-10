@@ -20,7 +20,7 @@ export class MatchViewerHandler {
 
     private async joinMatch({ matchId }: { matchId: string }) {
         try {
-            // Join the match room
+            // Join the match room (Scoreboard logic)
             this.socket.join(`viewer-match-${matchId}`);
             
             // Send current match state immediately
@@ -42,7 +42,7 @@ export class MatchViewerHandler {
             // Send viewer count to the new viewer
             this.socket.emit("viewer:count", { count: viewerCount });
             
-            console.log(`Viewer ${this.socket.id} joined match ${matchId}, total viewers: ${viewerCount}`);
+            console.log(`Viewer ${this.socket.id} joined match ${matchId} (Scoreboard), total viewers: ${viewerCount}`);
         } catch (error) {
             console.error("Viewer join error:", error);
             this.socket.emit("error", { message: "Failed to join match" });
@@ -58,7 +58,7 @@ export class MatchViewerHandler {
             count: viewerCount
         });
         
-        console.log(`Viewer ${this.socket.id} left match ${matchId}, remaining viewers: ${viewerCount}`);
+        console.log(`Viewer ${this.socket.id} left match ${matchId}`);
     }
 
     private async sendMatchState({ matchId }: { matchId: string }) {

@@ -1,4 +1,4 @@
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, AlertCircle, RefreshCw, ChevronRight } from 'lucide-react';
 import ManagerLayout from '../layout/ManagerLayout';
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingOverlay from '../../components/shared/LoadingOverlay';
@@ -27,6 +27,7 @@ const ViewTeamManager = () => {
         refetchTeam,
     } = useTeamDetails(teamId);
 
+    // 1. Loading View
     if (loading) {
         return (
             <ManagerLayout>
@@ -35,15 +36,23 @@ const ViewTeamManager = () => {
         );
     }
 
+    // 2. Error / Empty State
     if (!team) {
         return (
             <ManagerLayout>
-                <div className="flex flex-col items-center justify-center min-h-[50vh] text-center text-neutral-500 dark:text-neutral-400">
-                    <p className="text-sm mb-4">Fetching team details...</p>
+                <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-5 animate-in fade-in zoom-in-95">
+                    <div className="w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center ring-1 ring-destructive/20">
+                        <AlertCircle className="w-10 h-10 text-destructive" strokeWidth={1.5} />
+                    </div>
+                    <div className="space-y-1">
+                        <h3 className="text-xl font-bold text-foreground">Team not found</h3>
+                        <p className="text-muted-foreground">We couldn't fetch the details for this team.</p>
+                    </div>
                     <button
                         onClick={refetchTeam}
-                        className="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                        className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all shadow-md shadow-primary/20 active:scale-95"
                     >
+                        <RefreshCw size={16} />
                         Retry
                     </button>
                 </div>
@@ -51,33 +60,51 @@ const ViewTeamManager = () => {
         );
     }
 
+    // 3. Main Dashboard View
     return (
         <ManagerLayout>
             <LoadingOverlay show={loading} />
-            <div className="mt-6 w-full space-y-4">
-                {/* Back Button */}
-                <button
-                    onClick={() => navigate(-1)}
-                    className="flex items-center space-x-2 text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 mb-3 transition-colors duration-200 text-sm"
-                >
-                    <ArrowLeft className="w-5 h-5" />
-                    <span>Back to Teams</span>
-                </button>
+            
+            <div className="flex flex-col gap-6 mt-4 max-w-[1920px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-0">
+                
+                {/* Navigation Header */}
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <button
+                        onClick={() => navigate('/manager/teams')}
+                        className="hover:text-foreground transition-colors flex items-center gap-1 group"
+                    >
+                        <div className="p-1 rounded-md group-hover:bg-muted transition-colors">
+                            <ArrowLeft size={16} />
+                        </div>
+                        Teams
+                    </button>
+                    <ChevronRight size={14} className="opacity-30" />
+                    <span className="font-medium text-foreground truncate">{team.name}</span>
+                </div>
 
-                <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
-                    <TeamInfoCard team={team} />
+                {/* Content Grid */}
+                <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 items-start">
+                    
+                    {/* Left Column: Team Profile (Sidebar style) */}
+                    <div className="xl:col-span-1 h-full">
+                        <TeamInfoCard team={team} />
+                    </div>
 
-                    <PlayersSection
-                        team={team}
-                        activeTab={activeTab}
-                        setActiveTab={setActiveTab}
-                        openPlayerDetails={openPlayerDetails}
-                        openApprovalModal={openApprovalModal}
-                        openRemoveModal={openRemoveModal}
-                    />
+                    {/* Right Column: Roster Management (Main content) */}
+                    <div className="xl:col-span-3 h-full min-h-[500px]">
+                        <PlayersSection
+                            team={team}
+                            activeTab={activeTab}
+                            setActiveTab={setActiveTab}
+                            openPlayerDetails={openPlayerDetails}
+                            openApprovalModal={openApprovalModal}
+                            openRemoveModal={openRemoveModal}
+                        />
+                    </div>
                 </div>
             </div>
 
+            {/* Modals Layer */}
             {selectedPlayer && (
                 <>
                     {isPlayerModalOpen && (
@@ -87,6 +114,7 @@ const ViewTeamManager = () => {
                             onClose={() => setIsPlayerModalOpen(false)}
                         />
                     )}
+
                     {isApprovalModalOpen && (
                         <PlayerApprovalModal
                             player={selectedPlayer}
@@ -96,6 +124,7 @@ const ViewTeamManager = () => {
                             onReject={() => handleReject(selectedPlayer.playerId)}
                         />
                     )}
+
                     {isRemoveModalOpen && (
                         <RemovePlayerModal
                             player={selectedPlayer}

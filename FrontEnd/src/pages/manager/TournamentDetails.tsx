@@ -27,6 +27,8 @@ export default function TournamentDetailsPage() {
         teams.some(team => reg.teamId === team._id)
     );
 
+    console.log(teams, "teams")
+
     if (!user) throw new Error('User not found')
 
     useEffect(() => {
@@ -51,23 +53,26 @@ export default function TournamentDetailsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-neutral-950 text-white flex flex-col">
+        <div className="min-h-screen bg-background text-foreground flex flex-col transition-colors duration-300">
             <Navbar />
-            
-            <main className="flex-1 flex flex-col w-full mt-15 px-10">
-                
-                <TournamentHeader
-                    tournamentData={selectedTournament}
-                    type={type!}
-                    isRegistered={isAlreadyRegistered}
-                    onClick={() => setShowModal(true)}
-                    onBack={() => navigate(-1)}
-                />
 
-                <TournamentTabs activeTab={activeTab} onTabChange={setActiveTab} />
+            <main className="flex-1 flex flex-col w-full px-4 md:px-10 max-w-[1920px] mx-auto">
                 
-                <div className="flex-1 w-full bg-neutral-950">
-                    <div className="w-full px-4 md:px-8 py-6 animate-fade-in">
+                <div className="space-y-6">
+                    <TournamentHeader
+                        tournamentData={selectedTournament}
+                        type={type!}
+                        isRegistered={isAlreadyRegistered}
+                        onClick={() => setShowModal(true)}
+                        onBack={() => navigate(-1)}
+                    />
+
+                    <TournamentTabs activeTab={activeTab} onTabChange={setActiveTab} />
+                </div>
+                
+                <div className="flex-1 w-full bg-background mt-4">
+                    {/* Added generic animation class for smooth tab switching */}
+                    <div className="w-full py-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
                         {renderTabContent(selectedTournament, registeredTeams, activeTab, type!)}
                     </div>
                 </div>

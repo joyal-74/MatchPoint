@@ -1,6 +1,7 @@
 export interface LiveMatchDTO {
     matchId: string;
     tournamentId: string;
+    tournamentName: string;
 
     teamA: string;
     teamB: string;

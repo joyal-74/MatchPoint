@@ -1,15 +1,10 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import * as mediasoupClient from "mediasoup-client";
-
-import type { Socket } from "socket.io-client";
-import { createSocket } from "../../socket/socket";
-import type { Consumer, ConsumerOptions, DtlsParameters, RtpCapabilities, Transport, TransportOptions } from "mediasoup-client/types";
+import { viewerWebSocketService } from "../../socket/viewerWebSocketService"; // Use the singleton
+import type { Consumer, DtlsParameters, RtpCapabilities, Transport, TransportOptions } from "mediasoup-client/types";
 
 export type StreamState = "connecting" | "waiting" | "live" | "paused" | "ended" | "error";
-
 type Quality = "auto" | "low" | "medium" | "high";
-
-
 
 const QUALITY_TO_LAYER: Record<Quality, number | null> = {
     auto: null,
@@ -18,51 +13,24 @@ const QUALITY_TO_LAYER: Record<Quality, number | null> = {
     high: 2,
 };
 
-// --- Socket Payload Interfaces ---
-interface CreateTransportRes extends TransportOptions {
-    id: string;
-}
-
-interface ConnectTransportReq {
-    matchId: string;
-    transportId: string;
-    dtlsParameters: DtlsParameters;
-}
-
-interface ConsumeReq {
-    matchId: string;
-    transportId: string;
-    producerId: string;
-    rtpCapabilities: RtpCapabilities;
-}
-
-interface SetQualityReq {
-    matchId: string;
-    consumerId: string;
-    spatialLayer: number;
-    temporalLayer: number;
-}
-
-interface StreamMetadata {
-    title: string;
-    description: string;
-    streamerName: string;
-    viewers: number;
-}
+// --- Interfaces ---
+interface CreateTransportRes extends TransportOptions { id: string; }
+interface ConnectTransportReq { matchId: string; transportId: string; dtlsParameters: DtlsParameters; }
+interface ConsumeReq { matchId: string; transportId: string; producerId: string; rtpCapabilities: RtpCapabilities; }
+interface SetQualityReq { matchId: string; consumerId: string; spatialLayer: number; temporalLayer: number; }
+interface StreamMetadata { title: string; description: string; streamerName: string; viewers: number; }
 
 export function useMediasoupViewer(matchId: string | undefined) {
     const videoRef = useRef<HTMLVideoElement | null>(null);
-    const socketRef = useRef<Socket | null>(null);
     const deviceRef = useRef<mediasoupClient.Device | null>(null);
-
-    // 1. Fixed: Strictly typed Transport and Consumer refs
     const recvTransportRef = useRef<Transport | null>(null);
     const consumersRef = useRef<Map<string, Consumer>>(new Map());
     const mediaStreamRef = useRef<MediaStream>(new MediaStream());
+    
+    // Get the RAW socket instance from the singleton to handle callbacks
+    const socket = viewerWebSocketService.getSocketInstance();
 
     const pendingProducersRef = useRef<string[]>([]);
-
-    // Flags
     const initializedRef = useRef(false);
     const deviceReadyRef = useRef(false);
     const consumingRef = useRef<Set<string>>(new Set());
@@ -71,141 +39,136 @@ export function useMediasoupViewer(matchId: string | undefined) {
     const [error, setError] = useState<string | null>(null);
     const [quality, setQuality] = useState<Quality>("auto");
     const [muted, setMuted] = useState(true);
-
     const [metadata, setMetadata] = useState<StreamMetadata>({
-        title: "Loading...",
-        description: "",
-        streamerName: "",
-        viewers: 0
+        title: "Loading...", description: "", streamerName: "", viewers: 0
     });
 
-    /* ================= SOCKET HELPER ================= */
-    // 2. Fixed: Generic emit wrapper
+    // --- Socket Helper Wrapper ---
     const emitAsync = useCallback(<TRes, TReq = unknown>(event: string, data?: TReq): Promise<TRes> => {
         return new Promise((resolve, reject) => {
-            if (!socketRef.current) return reject(new Error("No socket"));
-            socketRef.current.emit(event, data, (res: TRes & { error?: string }) => {
+            if (!socket || !socket.connected) return reject(new Error("Socket disconnected"));
+            socket.emit(event, data, (res: TRes & { error?: string }) => {
                 if (res?.error) reject(new Error(res.error));
                 else resolve(res);
             });
         });
-    }, []);
+    }, [socket]);
 
-    /* ================= INITIALIZE ================= */
+    // --- Initialization ---
     useEffect(() => {
-        if (!matchId) return;
+        if (!matchId || !socket) return;
 
-        const socket = createSocket();
-        socketRef.current = socket;
+        console.log("🟢 [VIEWER] Hook mounted");
 
-        console.log("🟢 [VIEWER] socket created");
-
-        // 1. Connection Event
-        socket.on("connect", () => {
-            if (!initializedRef.current) initViewer();
-        });
-
-        socket.on("stream-metadata-updated", (data: Partial<StreamMetadata>) => {
-            setMetadata(prev => ({ ...prev, ...data }));
-        });
-
-        // 2. New Producer Event
-        socket.on("new-producer", ({ producerId }: { producerId: string }) => {
+        const handleConnect = () => { if (!initializedRef.current) initViewer(); };
+        const handleMetadata = (data: Partial<StreamMetadata>) => setMetadata(prev => ({ ...prev, ...data }));
+        
+        const handleNewProducer = ({ producerId }: { producerId: string }) => {
             if (!initializedRef.current || state === "ended") {
-                console.log("🔄 Stream restarted! Re-initializing...");
+                console.log("🔄 Stream started/restarted");
                 initViewer();
             } else {
                 consume(producerId);
             }
-        });
+        };
 
-        socket.on("producer-left", onProducerLeft);
-        socket.on("producer-paused", onProducerPaused);
-        socket.on("producer-resumed", onProducerResumed);
-
-        socket.on("stream-ended", () => {
+        const handleStreamEnded = () => {
             console.log("🏁 Stream ended");
             softCleanup();
             setState("ended");
-        });
+        };
 
+        // Handlers for producer state
+        const onProducerLeft = ({ producerId }: { producerId: string }) => {
+            const consumer = consumersRef.current.get(producerId);
+            if (consumer) {
+                consumer.close();
+                consumersRef.current.delete(producerId);
+                mediaStreamRef.current.removeTrack(consumer.track);
+                checkActiveTracks();
+            }
+        };
+
+        // Attach listeners
+        socket.on("connect", handleConnect);
+        socket.on("stream-metadata-updated", handleMetadata);
+        socket.on("new-producer", handleNewProducer);
+        socket.on("stream-ended", handleStreamEnded);
+        socket.on("producer-left", onProducerLeft);
+
+        // If already connected, init immediately
         if (socket.connected && !initializedRef.current) {
             initViewer();
         }
 
         return () => {
-            console.log("🔴 [VIEWER] unmounting");
-            fullCleanup();
+            console.log("🔴 [VIEWER] Unmounting - Cleaning up media only");
+            // Remove listeners
+            socket.off("connect", handleConnect);
+            socket.off("stream-metadata-updated", handleMetadata);
+            socket.off("new-producer", handleNewProducer);
+            socket.off("stream-ended", handleStreamEnded);
+            socket.off("producer-left", onProducerLeft);
+            
+            // Close transports but DO NOT disconnect socket
+            softCleanup();
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [matchId]);
+    }, [matchId, socket]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const initViewer = async () => {
-        if (initializedRef.current && state !== "ended") return;
-
+        if (initializedRef.current && state !== "ended" && state !== "error") return;
         initializedRef.current = true;
-        console.log("🚀 [VIEWER] initViewer called");
 
         try {
             setState("connecting");
 
+            // Get Metadata & Join Room (Already joined by hook, but ensuring specifically for stream)
             const metaPromise = emitAsync<StreamMetadata>("live:get-metadata", { matchId });
+            
+            // IMPORTANT: We use the existing socket, so we don't need to re-join if the other hook did it,
+            // but calling it ensures the backend LiveStreamHandler sends us the specific streamState
+            socket?.emit("viewer:join", { matchId });
 
-            await socketRef.current?.emit("viewer:join", { matchId });
+            metaPromise.then(data => setMetadata(prev => ({ ...prev, ...data })))
+                       .catch(() => console.warn("No metadata available yet"));
 
-            metaPromise.then(data => {
-                setMetadata(prev => ({ ...prev, ...data }));
-            }).catch(err => console.error("Failed to fetch metadata", err));
-
+            // Initialize Device
             deviceRef.current = new mediasoupClient.Device();
-
-            // 3. Fixed: Typed API calls
             const rtpCaps = await emitAsync<RtpCapabilities>("live:get-rtp-capabilities", { matchId });
             await deviceRef.current.load({ routerRtpCapabilities: rtpCaps });
             deviceReadyRef.current = true;
 
+            // Create Transport
             const transportParams = await emitAsync<CreateTransportRes>("live:create-transport", {
-                matchId,
-                direction: "recv",
+                matchId, direction: "recv",
             });
             await createRecvTransport(transportParams);
 
+            // Get Existing Producers
             const producers = await emitAsync<string[]>("live:get-producers", { matchId });
-            console.log("🎯 [VIEWER] producers list:", producers);
+            console.log("🎯 Producers found:", producers);
 
             if (producers.length > 0) {
-                for (const producerId of producers) {
-                    await consume(producerId);
-                }
+                for (const pid of producers) await consume(pid);
             } else {
                 setState("waiting");
             }
 
-        } catch (e: unknown) {
+        } catch (e) {
             console.error("Init Error:", e);
-            setError(e instanceof Error ? e.message : "Initialization failed");
+            setError("Failed to connect to stream");
             setState("error");
             initializedRef.current = false;
         }
     };
 
-    /* ================= TRANSPORT ================= */
     const createRecvTransport = async (params: TransportOptions) => {
         if (!deviceRef.current) return;
-
-        console.log("🚛 [VIEWER] creating recv transport", {
-            id: params.id,
-            ice: params.iceCandidates?.length,
-        });
-
+        
         const transport = deviceRef.current.createRecvTransport(params);
         recvTransportRef.current = transport;
 
-        console.log("✅ [VIEWER] recv transport ready:", transport.id);
-
         transport.on("connect", async ({ dtlsParameters }, cb, eb) => {
-            console.log("🔐 [VIEWER] transport connect (DTLS)", dtlsParameters);
-
             try {
                 await emitAsync<void, ConnectTransportReq>("transport:connect", {
                     matchId: matchId!,
@@ -213,13 +176,8 @@ export function useMediasoupViewer(matchId: string | undefined) {
                     dtlsParameters,
                 });
                 cb();
-
-                console.log("✅ [VIEWER] transport DTLS connected");
-
-
-                for (const producerId of pendingProducersRef.current) {
-                    consume(producerId);
-                }
+                // Flush pending
+                for (const pid of pendingProducersRef.current) consume(pid);
                 pendingProducersRef.current = [];
             } catch (e) {
                 eb(e as Error);
@@ -227,56 +185,35 @@ export function useMediasoupViewer(matchId: string | undefined) {
         });
     };
 
-    /* ================= CONSUME ================= */
     const consume = async (producerId: string) => {
         if (consumersRef.current.has(producerId) || consumingRef.current.has(producerId)) return;
         consumingRef.current.add(producerId);
 
         try {
-            if (!deviceReadyRef.current || !recvTransportRef.current || recvTransportRef.current.closed) {
+            if (!deviceReadyRef.current || !recvTransportRef.current) {
                 pendingProducersRef.current.push(producerId);
                 return;
             }
 
-            console.log("📥 [VIEWER] requesting consume", {
-                producerId,
-                transportId: recvTransportRef.current?.id,
-            });
-
-            const data = await emitAsync<ConsumerOptions, ConsumeReq>("live:consume", {
+            const data = await emitAsync<any, ConsumeReq>("live:consume", {
                 matchId: matchId!,
                 transportId: recvTransportRef.current.id,
                 producerId,
                 rtpCapabilities: deviceRef.current!.rtpCapabilities,
             });
 
-            console.log("📦 [VIEWER] consume response", data);
-
-
             const consumer = await recvTransportRef.current.consume(data);
             consumersRef.current.set(producerId, consumer);
-
-            console.log("🎥 [VIEWER] consumer created", {
-                id: consumer.id,
-                kind: consumer.kind,
-                paused: consumer.paused,
-                trackReady: !!consumer.track,
-                trackState: consumer.track?.readyState,
-            });
-
             mediaStreamRef.current.addTrack(consumer.track);
+            
             attachStream();
 
-
-
             if (consumer.paused) {
-                await emitAsync("live:resume-consumer", {
-                    matchId,
-                    consumerId: consumer.id,
-                });
+                await emitAsync("live:resume-consumer", { matchId, consumerId: consumer.id });
             }
 
-            setState((prev) => (prev === "paused" ? "paused" : "live"));
+            // If we have video, we are live
+            if (consumer.kind === 'video') setState("live");
 
         } catch (error) {
             console.error("Consume error", error);
@@ -285,97 +222,71 @@ export function useMediasoupViewer(matchId: string | undefined) {
         }
     };
 
-    /* ================= VIDEO HANDLING ================= */
     const attachStream = () => {
         if (!videoRef.current) return;
-        if (videoRef.current.srcObject !== mediaStreamRef.current) {
-            videoRef.current.srcObject = mediaStreamRef.current;
+        const stream = mediaStreamRef.current;
+        
+        if (videoRef.current.srcObject !== stream) {
+            videoRef.current.srcObject = stream;
         }
+        
         if (videoRef.current.muted !== muted) videoRef.current.muted = muted;
 
-        if (mediaStreamRef.current.getTracks().length > 0 && videoRef.current.paused) {
-            videoRef.current.play().catch(e => console.warn("Autoplay:", e));
+        // Try to play if we have tracks
+        if (stream.getTracks().length > 0 && videoRef.current.paused) {
+            videoRef.current.play().catch(e => console.warn("Autoplay block:", e));
         }
     };
 
-    useEffect(() => {
-        attachStream();
-    });
+    const checkActiveTracks = () => {
+        const tracks = mediaStreamRef.current.getTracks();
+        if (tracks.length === 0) setState("waiting");
+    };
 
-    /* ================= CLEANUP LOGIC ================= */
+    // --- Cleanup Helper ---
     const softCleanup = () => {
         consumersRef.current.forEach((c) => c.close());
         consumersRef.current.clear();
-
         if (recvTransportRef.current) {
             recvTransportRef.current.close();
             recvTransportRef.current = null;
         }
-
         initializedRef.current = false;
         deviceReadyRef.current = false;
-
-        if (mediaStreamRef.current) {
-            mediaStreamRef.current.getTracks().forEach((t) => {
-                t.stop();
-                mediaStreamRef.current.removeTrack(t);
-            });
-            mediaStreamRef.current = new MediaStream();
-        }
-        if (videoRef.current) {
-            videoRef.current.srcObject = null;
-        }
-    };
-
-    const fullCleanup = () => {
-        softCleanup();
-        socketRef.current?.disconnect();
-    };
-
-    /* ================= EVENTS ================= */
-    const onProducerLeft = ({ producerId }: { producerId: string }) => {
-        const consumer = consumersRef.current.get(producerId);
-        if (!consumer) return;
-        consumer.close();
-        consumersRef.current.delete(producerId);
-        mediaStreamRef.current.removeTrack(consumer.track);
-    };
-
-    const onProducerPaused = ({ producerId }: { producerId: string }) => {
-        const consumer = consumersRef.current.get(producerId);
-        if (consumer) {
-            consumer.pause();
-            if (consumer.kind === 'video') setState("paused");
-        }
-    };
-
-    const onProducerResumed = ({ producerId }: { producerId: string }) => {
-        const consumer = consumersRef.current.get(producerId);
-        if (consumer) {
-            consumer.resume();
-            if (consumer.kind === 'video') setState("live");
-        }
-    };
-
-    const applyQuality = useCallback(async (consumer: Consumer) => {
-        if (consumer.kind !== "video") return;
-
-        const target = QUALITY_TO_LAYER[quality];
-        if (target === null) return;
-
-        if (target === null) return;
-
-        await emitAsync<void, SetQualityReq>("viewer:set-quality", {
-            matchId: matchId!,
-            consumerId: consumer.id,
-            spatialLayer: target,
-            temporalLayer: 2,
+        
+        // Clear media stream tracks locally
+        mediaStreamRef.current.getTracks().forEach(t => {
+            t.stop();
+            mediaStreamRef.current.removeTrack(t);
         });
+        
+        if (videoRef.current) videoRef.current.srcObject = null;
+    };
+
+    // --- Quality ---
+    useEffect(() => {
+        const applyQuality = async () => {
+            const target = QUALITY_TO_LAYER[quality];
+            if (target === null) return;
+
+            for (const consumer of consumersRef.current.values()) {
+                if (consumer.kind === "video") {
+                    await emitAsync<void, SetQualityReq>("viewer:set-quality", {
+                        matchId: matchId!,
+                        consumerId: consumer.id,
+                        spatialLayer: target,
+                        temporalLayer: 2,
+                    });
+                }
+            }
+        };
+        applyQuality();
     }, [quality, matchId, emitAsync]);
 
+    // --- Audio Toggle Sync ---
     useEffect(() => {
-        consumersRef.current.forEach((c) => applyQuality(c));
-    }, [applyQuality]);
+        if (videoRef.current) videoRef.current.muted = muted;
+    }, [muted]);
 
     return { videoRef, state, error, muted, setMuted, quality, setQuality, metadata };
 }

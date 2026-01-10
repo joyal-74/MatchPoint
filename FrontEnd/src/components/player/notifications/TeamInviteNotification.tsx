@@ -18,7 +18,11 @@ export default function TeamInviteNotification({ notification }: Props) {
 
     const inviteStatus = notification.meta?.inviteStatus ?? "pending";
     const isPending = inviteStatus === "pending";
-    const isRead = notification.isRead;
+    
+    // Determine visual state
+    const containerClasses = isPending 
+        ? "border-l-primary bg-primary/5" 
+        : "border-l-muted bg-background/50 opacity-80";
 
     const handleResponse = async (status: "approved" | "rejected") => {
         if (!playerId || !notification.meta?.teamId || !isPending) return;
@@ -31,71 +35,78 @@ export default function TeamInviteNotification({ notification }: Props) {
             })
         ).unwrap();
 
-        // backend updates inviteStatus + isRead
         dispatch(fetchNotifications(playerId));
         dispatch(fetchUnreadCount(playerId));
     };
 
     return (
-        <div
-            className={`
-                p-4 border-l-2 border-l-blue-500 transition-all
-                ${isRead ? "opacity-60" : "bg-neutral-800/20"}
-                hover:bg-neutral-800/40
-            `}
-        >
-            <div className="flex gap-3">
+        <div className={`
+            p-4 border-l-4 transition-all duration-200 
+            hover:bg-muted/50 group
+            ${containerClasses}
+        `}>
+            <div className="flex gap-4">
                 {/* Icon */}
-                <div className="mt-1 p-2 h-fit rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400">
-                    <Users size={18} />
+                <div className="mt-1 shrink-0">
+                    <div className="p-2.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                        <Users size={18} />
+                    </div>
                 </div>
 
                 {/* Content */}
-                <div className="flex-1">
+                <div className="flex-1 min-w-0 space-y-2">
                     <div className="flex justify-between items-start">
-                        <p className="text-sm font-semibold text-white">
+                        <p className="text-sm font-semibold text-foreground leading-tight">
                             {notification.title}
                         </p>
-                        <span className="text-[10px] text-neutral-500">
+                        <span className="text-[10px] text-muted-foreground whitespace-nowrap ml-2">
                             {timeAgo(notification.createdAt)}
                         </span>
                     </div>
 
-                    <p className="text-xs text-neutral-400 mt-1 mb-3">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
                         {notification.message}
                     </p>
 
-                    {/* Invite actions OR status */}
-                    {isPending ? (
-                        <div className="flex gap-2">
-                            <button
-                                onClick={() => handleResponse("approved")}
-                                className="flex-1 flex items-center justify-center gap-1.5 bg-green-600 hover:bg-green-500 text-white text-xs font-medium py-1.5 px-3 rounded-md transition-all active:scale-95"
-                            >
-                                <Check size={14} /> Accept
-                            </button>
+                    {/* Actions / Status */}
+                    <div className="pt-1">
+                        {isPending ? (
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleResponse("approved");
+                                    }}
+                                    className="flex-1 flex items-center justify-center gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold py-1.5 px-3 rounded-md transition-all shadow-sm active:scale-95"
+                                >
+                                    <Check size={14} /> Accept
+                                </button>
 
-                            <button
-                                onClick={() => handleResponse("rejected")}
-                                className="flex-1 flex items-center justify-center gap-1.5 bg-neutral-800 hover:bg-red-900/30 hover:text-red-400 border border-neutral-700 text-neutral-300 text-xs font-medium py-1.5 px-3 rounded-md transition-all active:scale-95"
-                            >
-                                <X size={14} /> Reject
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="flex items-center gap-2">
-                            {inviteStatus === "approved" && (
-                                <span className="text-xs font-semibold text-green-400">
-                                    ✓ Accepted
-                                </span>
-                            )}
-                            {inviteStatus === "rejected" && (
-                                <span className="text-xs font-semibold text-red-400">
-                                    ✕ Rejected
-                                </span>
-                            )}
-                        </div>
-                    )}
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleResponse("rejected");
+                                    }}
+                                    className="flex-1 flex items-center justify-center gap-1.5 bg-background border border-input text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 text-xs font-semibold py-1.5 px-3 rounded-md transition-all active:scale-95"
+                                >
+                                    <X size={14} /> Decline
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                {inviteStatus === "approved" && (
+                                    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-green-600 dark:text-green-400 bg-green-500/10 px-2.5 py-1 rounded-md border border-green-500/20">
+                                        <Check size={12} /> Accepted
+                                    </span>
+                                )}
+                                {inviteStatus === "rejected" && (
+                                    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-destructive bg-destructive/10 px-2.5 py-1 rounded-md border border-destructive/20">
+                                        <X size={12} /> Declined
+                                    </span>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

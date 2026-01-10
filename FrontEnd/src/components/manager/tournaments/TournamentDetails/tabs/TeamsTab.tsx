@@ -35,12 +35,12 @@ export default function TeamsTab({ registeredTeams }: TeamsTabProps) {
 
     if (registeredTeams.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-16 px-4 bg-neutral-900/30 rounded-2xl border border-white/5 border-dashed">
-                <div className="p-4 rounded-full bg-neutral-800 text-neutral-500 mb-4">
+            <div className="flex flex-col items-center justify-center py-16 px-4 bg-muted/30 rounded-2xl border border-dashed border-border">
+                <div className="p-4 rounded-full bg-muted text-muted-foreground mb-4">
                     <Users size={32} />
                 </div>
-                <h3 className="text-lg font-semibold text-white">No Teams Registered</h3>
-                <p className="text-neutral-400 text-sm mt-1 max-w-xs text-center">
+                <h3 className="text-lg font-semibold text-foreground">No Teams Registered</h3>
+                <p className="text-muted-foreground text-sm mt-1 max-w-xs text-center">
                     Share the tournament link to start accepting team registrations.
                 </p>
             </div>
@@ -52,22 +52,22 @@ export default function TeamsTab({ registeredTeams }: TeamsTabProps) {
             {/* Header Section */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
                         Team Roster
-                        <span className="px-2 py-0.5 rounded-full bg-neutral-800 border border-white/10 text-xs text-neutral-400 font-mono">
+                        <span className="px-2 py-0.5 rounded-full bg-muted border border-border text-xs text-muted-foreground font-mono">
                             {registeredTeams.length}
                         </span>
                     </h2>
-                    <p className="text-sm text-neutral-500 mt-1">Manage and view all participating squads</p>
+                    <p className="text-sm text-muted-foreground mt-1">Manage and view all participating squads</p>
                 </div>
 
-                {/* Decorative Search (Visual Only) */}
+                {/* Search Bar */}
                 <div className="relative w-full sm:w-64 group">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 group-focus-within:text-emerald-400 transition-colors" size={16} />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={16} />
                     <input 
                         type="text" 
                         placeholder="Find a team..." 
-                        className="w-full bg-neutral-900 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-neutral-600"
+                        className="w-full bg-background border border-border rounded-xl py-2 pl-10 pr-4 text-sm text-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-muted-foreground/70"
                     />
                 </div>
             </div>
@@ -78,15 +78,15 @@ export default function TeamsTab({ registeredTeams }: TeamsTabProps) {
                     <div
                         key={i}
                         onClick={() => openModal(team)}
-                        className="group relative bg-neutral-900/50 hover:bg-neutral-800/80 rounded-2xl p-5 border border-white/5 hover:border-emerald-500/30 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-emerald-900/10 flex flex-col"
+                        className="group relative bg-card hover:bg-muted/30 rounded-2xl p-5 border border-border hover:border-primary/50 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-lg flex flex-col"
                     >
                         {/* Top Row: Rank & Status */}
                         <div className="flex justify-between items-start mb-4">
-                            <span className="font-mono text-[10px] text-neutral-500 border border-white/5 bg-white/5 px-2 py-1 rounded-md">
+                            <span className="font-mono text-[10px] text-muted-foreground border border-border bg-muted/50 px-2 py-1 rounded-md">
                                 #{String(i + 1).padStart(2, '0')}
                             </span>
                             <div className="opacity-0 group-hover:opacity-100 transition-opacity -mr-2 -mt-2">
-                                <button className="p-2 hover:bg-white/10 rounded-full text-neutral-400 hover:text-white">
+                                <button className="p-2 hover:bg-muted rounded-full text-muted-foreground hover:text-foreground">
                                     <ChevronRight size={16} />
                                 </button>
                             </div>
@@ -94,34 +94,34 @@ export default function TeamsTab({ registeredTeams }: TeamsTabProps) {
 
                         {/* Center: Avatar & Name */}
                         <div className="flex flex-col items-center text-center mb-6">
-                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-neutral-800 to-neutral-900 border border-white/10 flex items-center justify-center mb-3 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                                <span className="text-xl font-bold text-neutral-400 group-hover:text-emerald-400 transition-colors">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-muted to-background border border-border flex items-center justify-center mb-3 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                                <span className="text-xl font-bold text-muted-foreground group-hover:text-primary transition-colors">
                                     {getInitials(team.name)}
                                 </span>
                             </div>
-                            <h3 className="text-lg font-bold text-white leading-tight group-hover:text-emerald-300 transition-colors line-clamp-1 w-full" title={team.name}>
+                            <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-1 w-full" title={team.name}>
                                 {team.name}
                             </h3>
-                            <span className="text-xs text-neutral-500 font-medium mt-1">Confirmed Squad</span>
+                            <span className="text-xs text-muted-foreground font-medium mt-1">Confirmed Squad</span>
                         </div>
 
                         {/* Bottom: Info Grid */}
-                        <div className="mt-auto pt-4 border-t border-white/5 grid grid-cols-2 gap-2 text-xs">
+                        <div className="mt-auto pt-4 border-t border-border grid grid-cols-2 gap-2 text-xs">
                             <div className="flex flex-col gap-1">
-                                <span className="text-neutral-500 flex items-center gap-1.5">
+                                <span className="text-muted-foreground flex items-center gap-1.5">
                                     <Crown size={12} className="text-amber-500" />
                                     Captain
                                 </span>
-                                <span className="text-neutral-300 font-medium truncate" title={team.captain}>
+                                <span className="text-foreground/80 font-medium truncate" title={team.captain}>
                                     {team.captain}
                                 </span>
                             </div>
                             <div className="flex flex-col gap-1 items-end text-right">
-                                <span className="text-neutral-500 flex items-center gap-1.5">
+                                <span className="text-muted-foreground flex items-center gap-1.5">
                                     <Calendar size={12} />
                                     Joined
                                 </span>
-                                <span className="text-neutral-300 font-medium">
+                                <span className="text-foreground/80 font-medium">
                                     {formatDate(team.createdAt)}
                                 </span>
                             </div>

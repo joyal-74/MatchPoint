@@ -1,5 +1,5 @@
-import { ArrowRight, Calendar, MapPin, Users } from 'lucide-react'
-import type { Tournament } from '../../features/manager/managerTypes'
+import { ArrowRight, Calendar, MapPin, Users, Trophy } from 'lucide-react';
+import type { Tournament } from '../../features/manager/managerTypes';
 
 interface TournamentsCardProps {
     upcomingTournaments: Tournament[];
@@ -7,73 +7,78 @@ interface TournamentsCardProps {
 
 const TournamentsCard = ({ upcomingTournaments }: TournamentsCardProps) => {
     return (
-        <>
-            <section id="tournaments" className="py-16 bg-[var(--color-background)]">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between mb-8">
-                        <div>
-                            <h2 className="text-3xl font-bold text-neutral-800 dark:text-neutral-200 mb-2">
-                                Upcoming Tournaments
-                            </h2>
-                            <p className="text-neutral-600 dark:text-neutral-300">
-                                Register for upcoming cricket tournaments
-                            </p>
-                        </div>
-                        <button className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center space-x-2">
-                            <span>View All</span>
-                            <ArrowRight className="w-4 h-4" />
-                        </button>
+        <section id="tournaments" className="py-16 bg-muted/30">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                {/* Section Header */}
+                <div className="flex items-end justify-between mb-8">
+                    <div>
+                        <h2 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-2">
+                            <Trophy className="text-yellow-500" /> Upcoming Tournaments
+                        </h2>
+                        <p className="text-muted-foreground">
+                            Register for premier cricket tournaments happening near you.
+                        </p>
                     </div>
+                    <button className="text-sm font-semibold text-primary hover:text-primary/80 flex items-center gap-1 transition-colors">
+                        View All <ArrowRight size={16} />
+                    </button>
+                </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
-                        {upcomingTournaments.map((tournament, index) => (
-                            <div
-                                key={index}
-                                className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 p-6 hover:shadow-md transition-shadow duration-200"
-                            >
-                                <div className="flex items-center justify-between mb-4">
-                                    <span className="bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full text-sm font-medium">
-                                        {tournament.format}
-                                    </span>
-                                    <div className="text-right">
-                                        <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
-                                            {tournament.prizePool}
-                                        </div>
-                                        <div className="text-xs text-neutral-500 dark:text-neutral-400">
-                                            Prize Pool
-                                        </div>
+                {/* Cards Grid */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {upcomingTournaments.map((tournament, index) => (
+                        <div
+                            key={index}
+                            className="bg-card text-card-foreground rounded-xl border border-border p-6 hover:shadow-lg hover:border-primary/50 transition-all duration-300 group flex flex-col h-full"
+                        >
+                            {/* Card Header: Format & Prize */}
+                            <div className="flex items-start justify-between mb-4">
+                                <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border border-primary/20">
+                                    {tournament.format}
+                                </span>
+                                <div className="text-right">
+                                    <div className="text-lg font-bold text-foreground">
+                                        {tournament.prizePool}
+                                    </div>
+                                    <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+                                        Prize Pool
                                     </div>
                                 </div>
+                            </div>
 
-                                <h3 className="font-bold text-lg mb-3 text-neutral-800 dark:text-neutral-200">
+                            {/* Card Content */}
+                            <div className="flex-1">
+                                <h3 className="font-bold text-xl mb-4 group-hover:text-primary transition-colors line-clamp-2">
                                     {tournament.title}
                                 </h3>
 
-                                <div className="space-y-2 mb-4">
-                                    <div className="flex items-center space-x-2 text-sm text-neutral-600 dark:text-neutral-300">
-                                        <Calendar className="w-4 h-4" />
+                                <div className="space-y-3 mb-6">
+                                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                                        <Calendar size={16} className="text-primary/70" />
                                         <span>{new Date(tournament.startDate).toLocaleDateString()}</span>
                                     </div>
-                                    <div className="flex items-center space-x-2 text-sm text-neutral-600 dark:text-neutral-300">
-                                        <Users className="w-4 h-4" />
-                                        <span>{tournament.teams?.length} Teams</span>
+                                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                                        <Users size={16} className="text-primary/70" />
+                                        <span>{tournament.teams?.length || 0} Teams Registered</span>
                                     </div>
-                                    <div className="flex items-center space-x-2 text-sm text-neutral-600 dark:text-neutral-300">
-                                        <MapPin className="w-4 h-4" />
-                                        <span>{tournament.location}</span>
+                                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                                        <MapPin size={16} className="text-primary/70" />
+                                        <span className="truncate">{tournament.location}</span>
                                     </div>
                                 </div>
-
-                                <button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-lg font-semibold transition-colors duration-200">
-                                    Register Now
-                                </button>
                             </div>
-                        ))}
-                    </div>
+
+                            {/* Card Footer: Action */}
+                            <button className="w-full py-2.5 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg text-sm font-semibold transition-all shadow-sm group-hover:shadow-md mt-auto">
+                                Register Now
+                            </button>
+                        </div>
+                    ))}
                 </div>
-            </section>
-        </>
-    )
+            </div>
+        </section>
+    );
 }
 
-export default TournamentsCard
+export default TournamentsCard;

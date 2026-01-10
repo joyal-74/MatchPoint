@@ -1,9 +1,10 @@
 import { Socket } from "socket.io-client";
 import { createSocket, getSocket } from "./socket";
 
-
 export class ViewerWebSocketService {
-    private socket: Socket | null = null;
+    // Ideally private, but if you need direct access for WebRTC transports later,
+    // you might make this public. Keeping private for now and adding methods.
+    private socket: Socket | null = null; 
     private matchId: string | null = null;
     private listeners: Map<string, Function[]> = new Map();
 
@@ -29,13 +30,20 @@ export class ViewerWebSocketService {
             }
         });
 
+        // Match Logic Events
         this.socket.on("match:update", (data) => this.emit("matchUpdate", data));
         this.socket.on("match:state", (data) => this.emit("matchState", data));
         this.socket.on("commentary", (data) => this.emit("commentary", data));
         this.socket.on("viewer:joined", (data) => this.emit("viewerJoined", data));
         this.socket.on("viewer:left", (data) => this.emit("viewerLeft", data));
+        
+        // Stream Logic Events (Added)
+        this.socket.on("streamState", (data) => this.emit("streamState", data));
+
         this.socket.on("error", (error) => this.emit("error", error));
     }
+
+    // --- Match Actions ---
 
     joinMatch(matchId: string) {
         if (!this.socket?.connected) {
@@ -61,6 +69,15 @@ export class ViewerWebSocketService {
     subscribeCommentary(matchId: string) {
         this.socket?.emit("viewer:subscribe-commentary", { matchId });
     }
+
+    // --- Stream Actions (Added) ---
+
+    joinStream(matchId: string) {
+        // This triggers the LiveStreamHandler on the backend
+        this.socket?.emit("viewer:join", { matchId });
+    }
+
+    // --- Event Handling ---
 
     on(event: string, callback: Function) {
         if (!this.listeners.has(event)) this.listeners.set(event, []);
@@ -88,6 +105,11 @@ export class ViewerWebSocketService {
 
     isConnected() {
         return !!this.socket?.connected;
+    }
+    
+    // Helper to get socket if needed for advanced WebRTC handling externally
+    getSocketInstance() {
+        return this.socket;
     }
 }
 

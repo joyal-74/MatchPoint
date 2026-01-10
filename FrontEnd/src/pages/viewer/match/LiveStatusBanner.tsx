@@ -53,20 +53,20 @@ function LiveStatusBanner({ teamA, teamB, liveScore, getPlayerName }: LiveStatus
         const runsNum = typeof log.runs === 'number' ? log.runs : parseInt(log.runs as unknown as string, 10);
 
         // Wicket
-        if (display.includes('W')) return 'bg-red-500/20 text-red-500 border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.3)]';
+        if (display.includes('W')) return 'bg-red-500/10 text-red-600 border-red-500/20 shadow-sm';
         // Boundaries
-        if (runsNum === 6) return 'bg-purple-500/20 text-purple-400 border-purple-500/50 shadow-[0_0_10px_rgba(168,85,247,0.3)]';
-        if (runsNum === 4) return 'bg-blue-500/20 text-blue-400 border-blue-500/50';
+        if (runsNum === 6) return 'bg-purple-500/10 text-purple-600 border-purple-500/20 shadow-sm';
+        if (runsNum === 4) return 'bg-blue-500/10 text-blue-600 border-blue-500/20';
         // Dots/Singles
-        if (runsNum === 0) return 'bg-neutral-800 text-neutral-500 border-neutral-700';
-        return 'bg-neutral-700 text-white border-neutral-600';
+        if (runsNum === 0) return 'bg-muted text-muted-foreground border-border';
+        return 'bg-card text-foreground border-border';
     };
 
     // --- RENDER PREP ---
     if (!liveScore || !teamA || !teamB) {
         return (
             <div className="max-w-7xl mx-auto px-4 mt-6">
-                <div className="h-24 bg-neutral-900/50 rounded-xl border border-neutral-800 animate-pulse" />
+                <div className="h-32 bg-muted/30 rounded-xl border border-border animate-pulse" />
             </div>
         );
     }
@@ -86,20 +86,20 @@ function LiveStatusBanner({ teamA, teamB, liveScore, getPlayerName }: LiveStatus
     const recentLogs = Array.isArray(currentInningsData?.recentLogs) ? currentInningsData.recentLogs.slice(-6) : [];
 
     return (
-        <div className="relative z-10 mx-auto px-20 mt-6">
-            <div className="bg-neutral-900/60 backdrop-blur-md rounded-xl border border-white/5 shadow-2xl overflow-hidden">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+            <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
 
                 {/* 1. Status Bar (Hero) */}
-                <div className="bg-white/5 px-6 py-3 border-b border-white/5 flex flex-col md:flex-row justify-between items-center gap-2">
-                    <div className="flex items-center gap-2 text-sm font-medium text-neutral-300">
+                <div className="bg-muted/30 px-6 py-3 border-b border-border flex flex-col md:flex-row justify-between items-center gap-2">
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                         <Activity size={16} className="text-emerald-500" />
-                        <span className="uppercase tracking-wider text-xs text-neutral-500 font-bold">Status</span>
-                        <span className="text-white">{statusMessage}</span>
+                        <span className="uppercase tracking-wider text-xs text-muted-foreground font-bold">Status</span>
+                        <span>{statusMessage}</span>
                     </div>
                     {currentInnings === 2 && (
-                        <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
-                            <Target size={14} />
-                            Target: <span className="text-white font-bold">{liveScore.target ?? "-"}</span>
+                        <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
+                            <Target size={14} className="text-primary" />
+                            Target: <span className="text-foreground font-bold">{liveScore.target ?? "-"}</span>
                         </div>
                     )}
                 </div>
@@ -110,12 +110,12 @@ function LiveStatusBanner({ teamA, teamB, liveScore, getPlayerName }: LiveStatus
                     {/* LEFT: Current Score (Big) */}
                     <div className="flex items-center gap-6">
                         <div className="flex flex-col">
-                            <span className="text-xs text-neutral-500 uppercase font-bold tracking-wider mb-4">{battingTeamName}</span>
+                            <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-2">{battingTeamName}</span>
                             <div className="flex items-baseline gap-3">
-                                <span className="text-5xl md:text-6xl font-black text-white tracking-tighter tabular-nums leading-none">
+                                <span className="text-5xl md:text-6xl font-black text-foreground tracking-tighter tabular-nums leading-none">
                                     {currentInningsData?.runs ?? 0}/{currentInningsData?.wickets ?? 0}
                                 </span>
-                                <span className="text-xl md:text-2xl text-neutral-500 font-medium">
+                                <span className="text-xl md:text-2xl text-muted-foreground font-medium">
                                     {formatOvers(currentInningsData?.legalBalls)} <span className="text-base">ov</span>
                                 </span>
                             </div>
@@ -123,11 +123,11 @@ function LiveStatusBanner({ teamA, teamB, liveScore, getPlayerName }: LiveStatus
                     </div>
 
                     {/* CENTER: Run Rates (Divider on Desktop) */}
-                    <div className="flex items-center gap-6 lg:border-x lg:border-white/5 lg:px-8 justify-start lg:justify-center">
+                    <div className="flex items-center gap-8 lg:border-x lg:border-border/50 lg:px-10 justify-start lg:justify-center">
                         {/* CRR */}
                         <div className="flex flex-col gap-1">
-                            <span className="text-[10px] text-neutral-500 uppercase font-bold tracking-widest">CRR</span>
-                            <span className="text-xl font-mono font-bold text-emerald-400">
+                            <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">CRR</span>
+                            <span className="text-xl font-mono font-bold text-emerald-600 dark:text-emerald-400">
                                 {currentInningsData?.currentRunRate ?? liveScore.currentRunRate ?? "0.00"}
                             </span>
                         </div>
@@ -135,8 +135,8 @@ function LiveStatusBanner({ teamA, teamB, liveScore, getPlayerName }: LiveStatus
                         {/* RRR (If Chasing) */}
                         {currentInnings === 2 && (
                             <div className="flex flex-col gap-1">
-                                <span className="text-[10px] text-neutral-500 uppercase font-bold tracking-widest">RRR</span>
-                                <span className={`text-xl font-mono font-bold ${liveScore.requiredRunRate && liveScore.requiredRunRate > 10 ? 'text-red-400' : 'text-blue-400'}`}>
+                                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">RRR</span>
+                                <span className={`text-xl font-mono font-bold ${liveScore.requiredRunRate && liveScore.requiredRunRate > 10 ? 'text-destructive' : 'text-primary'}`}>
                                     {typeof liveScore.requiredRunRate === "number" ? liveScore.requiredRunRate.toFixed(2) : "-"}
                                 </span>
                             </div>
@@ -146,11 +146,11 @@ function LiveStatusBanner({ teamA, teamB, liveScore, getPlayerName }: LiveStatus
                     {/* RIGHT: Timeline & Bowler */}
                     <div className="flex flex-col gap-4">
                         {/* Recent Balls Timeline */}
-                        <div className="flex flex-col gap-2">
-                            <div className="flex justify-between items-center text-xs text-neutral-500 uppercase font-bold tracking-wider">
+                        <div className="flex flex-col gap-3">
+                            <div className="flex justify-between items-center text-xs text-muted-foreground uppercase font-bold tracking-wider">
                                 <span>Last 6 Balls</span>
-                                <span className="flex items-center gap-1 normal-case text-neutral-400">
-                                    <Disc size={12} className="text-neutral-600" />
+                                <span className="flex items-center gap-1 normal-case text-foreground font-medium">
+                                    <Disc size={12} className="text-primary" />
                                     {bowlerName}
                                 </span>
                             </div>
@@ -172,7 +172,7 @@ function LiveStatusBanner({ teamA, teamB, liveScore, getPlayerName }: LiveStatus
                                         );
                                     })
                                 ) : (
-                                    <div className="text-xs text-neutral-600 italic">Waiting for first ball...</div>
+                                    <div className="text-xs text-muted-foreground italic">Waiting for first ball...</div>
                                 )}
                             </div>
                         </div>

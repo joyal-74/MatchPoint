@@ -96,7 +96,8 @@ export default function EditTeamModal({ isOpen, onClose, onEditTeam, teamData }:
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <ModalBackdrop onClick={closeModal} />
 
-            <div className="relative w-full max-w-2xl bg-neutral-900 rounded-xl border border-neutral-700 shadow-2xl z-50">
+            {/* Modal Container with Semantic Theming */}
+            <div className="relative w-full max-w-2xl bg-card text-card-foreground rounded-xl border border-border shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200">
                 <ModalHeader
                     title="Edit Team"
                     onClose={closeModal}
@@ -105,6 +106,7 @@ export default function EditTeamModal({ isOpen, onClose, onEditTeam, teamData }:
 
                 <form onSubmit={onSubmit} className="p-6 space-y-6">
 
+                    {/* Logo Section */}
                     <div className="space-y-2">
                         <LogoUpload
                             logoPreview={state.logoPreview}
@@ -112,9 +114,14 @@ export default function EditTeamModal({ isOpen, onClose, onEditTeam, teamData }:
                             onLogoRemove={handleLogoRemove}
                             disabled={state.isLoading}
                         />
-                        {state.errors.logo && <p className="text-red-500 text-xs mt-1">{state.errors.logo}</p>}
+                        {state.errors.logo && (
+                            <p className="text-destructive text-xs mt-1 animate-pulse">
+                                {state.errors.logo}
+                            </p>
+                        )}
                     </div>
 
+                    {/* Name Input */}
                     <div className="space-y-1">
                         <FormInput
                             label="Team Name"
@@ -124,9 +131,14 @@ export default function EditTeamModal({ isOpen, onClose, onEditTeam, teamData }:
                             placeholder="Enter team name"
                             disabled={state.isLoading}
                         />
-                        {state.errors.name && <p className="text-red-500 text-xs mt-1">{state.errors.name}</p>}
+                        {state.errors.name && (
+                            <p className="text-destructive text-xs mt-1">
+                                {state.errors.name}
+                            </p>
+                        )}
                     </div>
 
+                    {/* Dynamic Fields Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {formFields.slice(1).map((field) => (
                             <div key={field.name} className="space-y-1">
@@ -151,12 +163,15 @@ export default function EditTeamModal({ isOpen, onClose, onEditTeam, teamData }:
                                     />
                                 )}
                                 {state.errors[field.name] && (
-                                    <p className="text-red-500 text-xs mt-1">{state.errors[field.name]}</p>
+                                    <p className="text-destructive text-xs mt-1">
+                                        {state.errors[field.name]}
+                                    </p>
                                 )}
                             </div>
                         ))}
                     </div>
 
+                    {/* Description Textarea */}
                     <div className="space-y-1">
                         <FormTextarea
                             label="Description"
@@ -168,12 +183,14 @@ export default function EditTeamModal({ isOpen, onClose, onEditTeam, teamData }:
                         />
                     </div>
 
-                    <FormActions
-                        submitLabel="Update Team"
-                        onCancel={closeModal}
-                        disabled={state.isLoading}
-                        loading={state.isLoading}
-                    />
+                    <div className="pt-2 border-t border-border">
+                        <FormActions
+                            submitLabel="Update Team"
+                            onCancel={closeModal}
+                            disabled={state.isLoading}
+                            loading={state.isLoading}
+                        />
+                    </div>
                 </form>
             </div>
         </div>
