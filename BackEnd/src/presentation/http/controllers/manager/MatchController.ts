@@ -1,7 +1,7 @@
 import { injectable, inject } from "tsyringe";
 import { DI_TOKENS } from "domain/constants/Identifiers";
 
-import { IEndMatchUseCase, IGetLiveScoreUseCase, ISaveMatchData } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { IEndMatchUseCase, IGetLiveScoreUseCase, ISaveMatchData, IStartMatchUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { IMatchPlayerServices } from "app/services/manager/IMatchPlayerService";
 import { IMatchScoreService } from "app/services/manager/IMatchScoreService";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
@@ -16,6 +16,7 @@ export class MatchController {
         @inject(DI_TOKENS.MatchPlayerServices) private _matchDetailsService: IMatchPlayerServices,
         @inject(DI_TOKENS.MatchScoreService) private _matchScoreService: IMatchScoreService,
         @inject(DI_TOKENS.SaveMatchData) private _saveMatchData: ISaveMatchData,
+        @inject(DI_TOKENS.StartMatchUseCase) private _startMatchData: IStartMatchUseCase,
         @inject(DI_TOKENS.GetLiveScoreUseCase) private _getLiveScoreUseCase: IGetLiveScoreUseCase,
         @inject(DI_TOKENS.EndMatchUseCase) private _endMatchUseCase: IEndMatchUseCase,
     ) { }
@@ -69,6 +70,17 @@ export class MatchController {
         return new HttpResponse(
             HttpStatusCode.OK,
             buildResponse(true, 'Match saved', result)
+        );
+    };
+
+    startMatchData = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { matchId } = httpRequest.body;
+
+        const result = await this._startMatchData.execute(matchId);
+
+        return new HttpResponse(
+            HttpStatusCode.OK,
+            buildResponse(true, 'Match started', result)
         );
     };
 

@@ -17,96 +17,111 @@ export function PaymentModal({ open, planTitle, amount, onClose, onSelect }: Pro
         minimumFractionDigits: 0,
     }).format(amount);
 
-    const paymentButtonClasses = "flex items-center justify-between p-4 rounded transition-all duration-200 border cursor-pointer";
+    const baseButtonClasses = "flex items-center justify-between p-4 rounded-xl transition-all duration-200 border cursor-pointer group";
 
     return (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[999] p-4">
-            <div className="bg-neutral-900 p-8 rounded-3xl w-full max-w-md shadow-2xl border border-neutral-700/50 transform transition-all duration-300 scale-100 opacity-100">
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-[999] p-4 animate-in fade-in duration-200">
+            <div className="bg-card text-card-foreground p-8 rounded-3xl w-full max-w-md shadow-2xl border border-border transform transition-all duration-300 scale-100 opacity-100 animate-in zoom-in-95">
 
                 {/* Header Section */}
                 <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-3">
-                        <div className="bg-emerald-500/10 p-2.5 rounded-xl">
-                            <Shield className="w-6 h-6 text-emerald-400" />
+                        <div className="bg-primary/10 p-2.5 rounded-xl border border-primary/20">
+                            <Shield className="w-6 h-6 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
                                 Secure Checkout
                             </h2>
-                            <p className="text-neutral-400 text-sm mt-0.5">Complete your subscription upgrade</p>
+                            <p className="text-muted-foreground text-sm mt-0.5">Complete your subscription upgrade</p>
                         </div>
                     </div>
                     <button 
                         onClick={onClose}
-                        className="p-2 -mr-2 rounded-full hover:bg-neutral-800 transition-colors"
+                        className="p-2 -mr-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
                         aria-label="Close Payment Modal"
                     >
-                        <X className="w-5 h-5 text-neutral-400 hover:text-white" />
+                        <X className="w-5 h-5" />
                     </button>
                 </div>
 
-                {/* Plan Summary */}
-                <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 p-5 rounded-2xl mb-6 border border-emerald-500/20">
-                    <div className="flex items-center justify-between mb-2">
-                        <p className="text-sm text-neutral-400">
+                {/* Plan Summary - Highlighting using Primary Theme */}
+                <div className="bg-gradient-to-br from-primary/10 to-primary/5 p-5 rounded-2xl mb-6 border border-primary/20 relative overflow-hidden">
+                    {/* Decorative blurred blob */}
+                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 blur-3xl rounded-full pointer-events-none"></div>
+
+                    <div className="flex items-center justify-between mb-2 relative z-10">
+                        <p className="text-sm text-muted-foreground font-medium">
                             Plan Selected
                         </p>
-                        <Lock className="w-4 h-4 text-emerald-400" />
+                        <Lock className="w-4 h-4 text-primary" />
                     </div>
-                    <p className="text-lg text-emerald-400 font-semibold mb-1">{planTitle}</p>
-                    <p className="text-3xl font-bold text-white">{formattedAmount}</p>
+                    <p className="text-lg text-primary font-semibold mb-1 relative z-10">{planTitle}</p>
+                    <p className="text-3xl font-bold text-foreground relative z-10">{formattedAmount}</p>
                 </div>
                 
                 {/* Payment Method Selection */}
-                <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wide">Payment Method</h3>
+                <h3 className="text-foreground font-semibold mb-4 text-sm uppercase tracking-wide flex items-center gap-2">
+                    Payment Method
+                    <span className="h-px flex-1 bg-border"></span>
+                </h3>
 
                 <div className="grid grid-cols-1 gap-3">
-                    {/* Razorpay Button - Active */}
+                    {/* Razorpay Button - Active / Primary */}
                     <button
                         onClick={() => onSelect("razorpay")}
-                        className={`${paymentButtonClasses} bg-gradient-to-r from-emerald-600/20 to-emerald-500/10 border-emerald-500/50 hover:from-emerald-600/30 hover:to-emerald-500/20 hover:border-emerald-400`}
+                        className={`
+                            ${baseButtonClasses} 
+                            bg-card hover:bg-accent/50
+                            border-primary/50 hover:border-primary
+                            shadow-sm hover:shadow-md hover:shadow-primary/10
+                        `}
                     >
                         <div className="flex items-center">
-                            <div className="bg-emerald-500/20 p-2 rounded-lg mr-3">
-                                <Wallet className="w-5 h-5 text-emerald-400" />
+                            <div className="bg-primary/10 p-2 rounded-lg mr-3 border border-primary/10 group-hover:border-primary/30 transition-colors">
+                                <Wallet className="w-5 h-5 text-primary" />
                             </div>
                             <div className="text-left">
-                                <span className="font-semibold text-white block">Razorpay</span>
-                                <span className="text-xs text-neutral-400">UPI, Cards, Wallets & More</span>
+                                <span className="font-semibold text-foreground block group-hover:text-primary transition-colors">Razorpay</span>
+                                <span className="text-xs text-muted-foreground">UPI, Cards, Wallets & More</span>
                             </div>
                         </div>
-                        <ArrowRight className="w-5 h-5 text-emerald-400" />
+                        <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
                     </button>
 
-                    <div
-                        className={`${paymentButtonClasses} bg-neutral-800/50 border-neutral-700 opacity-50 cursor-not-allowed`}
-                    >
+                    {/* Stripe Button - Inactive */}
+                    <div className={`${baseButtonClasses} bg-muted/40 border-border opacity-60 cursor-not-allowed`}>
                         <div className="flex items-center">
-                            <div className="bg-neutral-700/50 p-2 rounded-lg mr-3">
-                                <CreditCard className="w-5 h-5 text-neutral-500" />
+                            <div className="bg-muted p-2 rounded-lg mr-3">
+                                <CreditCard className="w-5 h-5 text-muted-foreground" />
                             </div>
                             <div className="text-left">
-                                <span className="font-semibold text-neutral-400 block">Stripe</span>
-                                <span className="text-xs text-neutral-500">Coming Soon</span>
+                                <span className="font-semibold text-muted-foreground block">Stripe</span>
+                                <span className="text-xs text-muted-foreground/70">Coming Soon</span>
                             </div>
                         </div>
-                        <Lock className="w-4 h-4 text-neutral-500" />
+                        <Lock className="w-4 h-4 text-muted-foreground" />
                     </div>
 
-                    <div
-                        className={`${paymentButtonClasses} bg-neutral-800/50 border-neutral-700 opacity-50 cursor-not-allowed`}
-                    >
+                    {/* PayPal Button - Inactive */}
+                    <div className={`${baseButtonClasses} bg-muted/40 border-border opacity-60 cursor-not-allowed`}>
                         <div className="flex items-center">
-                            <div className="bg-neutral-700/50 p-2 rounded-lg mr-3">
-                                <ShoppingBag className="w-5 h-5 text-neutral-500" />
+                            <div className="bg-muted p-2 rounded-lg mr-3">
+                                <ShoppingBag className="w-5 h-5 text-muted-foreground" />
                             </div>
                             <div className="text-left">
-                                <span className="font-semibold text-neutral-400 block">PayPal</span>
-                                <span className="text-xs text-neutral-500">Coming Soon</span>
+                                <span className="font-semibold text-muted-foreground block">PayPal</span>
+                                <span className="text-xs text-muted-foreground/70">Coming Soon</span>
                             </div>
                         </div>
-                        <Lock className="w-4 h-4 text-neutral-500" />
+                        <Lock className="w-4 h-4 text-muted-foreground" />
                     </div>
+                </div>
+
+                {/* Secure Footer Note */}
+                <div className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground/80">
+                    <Lock size={12} />
+                    <span>Payments are encrypted and secured.</span>
                 </div>
             </div>
         </div>

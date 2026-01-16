@@ -10,7 +10,9 @@ export class SubscriptionMapper {
             expiryDate: doc.expiryDate,
             transactionId: doc.transactionId,
             createdAt: doc.createdAt,
-            updatedAt: doc.updatedAt
+            updatedAt: doc.updatedAt,
+            reservedPlan: doc.reservedPlan,
+            scheduledChange: doc.scheduledChange
         };
     }
 }

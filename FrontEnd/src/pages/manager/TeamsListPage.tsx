@@ -29,14 +29,16 @@ const TeamsListPage: React.FC = () => {
         <ManagerLayout>
             <LoadingOverlay show={loading} />
 
-            <div className="text-white mt-8">
+            {/* Main Container - Updated text color for theme support */}
+            <div className="text-foreground mt-8 space-y-8 p-4 md:p-0">
+                
                 <TeamsHeader onCreateClick={openCreateModal} />
 
                 <section className="mb-12">
-                    <div className="flex justify-between items-center mb-6">
+                    <div className="flex justify-between items-end mb-6 border-b border-border pb-4">
                         <div>
-                            <h2 className="text-xl font-semibold mb-2">My Teams</h2>
-                            <p className="text-neutral-400">{teams.length} teams created</p>
+                            <h2 className="text-xl font-bold text-foreground tracking-tight">My Teams</h2>
+                            <p className="text-sm text-muted-foreground mt-1">{teams.length} teams created</p>
                         </div>
                         <SecondaryButton>View All →</SecondaryButton>
                     </div>

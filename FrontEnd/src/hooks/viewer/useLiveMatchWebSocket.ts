@@ -12,13 +12,14 @@ export const useLiveMatchViewer = (matchId: string | undefined) => {
     const [commentary, setCommentary] = useState<CommentaryItem[]>([]);
     const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
     const [viewerCount, setViewerCount] = useState<number>(0);
-    
-    // 1. New State for Stream Status
     const [isStreamOnline, setIsStreamOnline] = useState<boolean>(false);
+    const [lastUpdateType, setLastUpdateType] = useState<string>('');
 
     const pollingRef = useRef<number | null>(null);
 
-    // Initial Load
+    console.log(isStreamOnline, 'stream')
+
+    // Initial API Load
     useEffect(() => {
         if (matchId) {
             dispatch(loadMatchDashboard(matchId))
@@ -26,17 +27,11 @@ export const useLiveMatchViewer = (matchId: string | undefined) => {
                 .then((data) => {
                     dispatch(setInitialInnings({ match: data.match }));
                     dispatch(loadInitialLiveScore(matchId));
-                    
-                    // Optional: If your backend returns initial stream status in dashboard data, set it here
-                    // setIsStreamOnline(data.match.isStreamActive || false); 
                 });
         }
     }, [matchId, dispatch]);
 
-
-    const [lastUpdateType, setLastUpdateType] = useState<string>('');
-
-
+    // WebSocket Handlers
     const handleMatchState = useCallback((data: any) => {
         const matchUpdate = data.liveScore ?? data;
         const { timestamp, updateType, ...cleanUpdate } = matchUpdate;
@@ -47,7 +42,6 @@ export const useLiveMatchViewer = (matchId: string | undefined) => {
             setLastUpdateType(updateType);
         }
 
-        if (timestamp) console.log("Update timestamp:", new Date(timestamp).toLocaleTimeString());
         setLastUpdate(new Date());
     }, [dispatch]);
 
@@ -55,21 +49,16 @@ export const useLiveMatchViewer = (matchId: string | undefined) => {
         setCommentary(prev => [...prev, data].slice(-50));
     }, []);
 
-    const handleViewerJoined = useCallback(
-        (data: any) => setViewerCount(data.count),
-        []
-    );
-    const handleViewerLeft = useCallback(
-        (data: any) => setViewerCount(data.count),
-        []
-    );
+    const handleViewerJoined = useCallback((data: any) => setViewerCount(data.count), []);
+    const handleViewerLeft = useCallback((data: any) => setViewerCount(data.count), []);
 
-    // 2. Handler for Stream Status Events
+    // Stream State Handler
     const handleStreamState = useCallback((data: { isLive: boolean }) => {
+        console.log("📺 Stream State Received:", data);
         setIsStreamOnline(data.isLive);
     }, []);
 
-
+    // Socket Connection Effect
     useEffect(() => {
         if (!matchId) return;
 
@@ -83,29 +72,32 @@ export const useLiveMatchViewer = (matchId: string | undefined) => {
     
         const onDisconnected = () => {
             setConnectionStatus("disconnected");
-            setIsStreamOnline(false); // Assume stream is down if disconnected
+            setIsStreamOnline(false);
         };
 
+        // Attach Listeners
         viewerWebSocketService.on("connected", onConnected);
         viewerWebSocketService.on("disconnected", onDisconnected);
-
         viewerWebSocketService.on("matchState", handleMatchState);
         viewerWebSocketService.on("commentary", handleCommentary);
         viewerWebSocketService.on("viewerJoined", handleViewerJoined);
         viewerWebSocketService.on("viewerLeft", handleViewerLeft);
         viewerWebSocketService.on("matchUpdate", handleMatchState);
-
-        // 3. Listen for Stream Events
-        // Ensure your backend emits 'streamState' to the viewer room
+        
+        // Listen for Stream Events
         viewerWebSocketService.on("streamState", handleStreamState);
 
+        // JOIN ACTIONS
+        // 1. Join Scoreboard Room
         viewerWebSocketService.joinMatch(matchId);
         viewerWebSocketService.subscribeCommentary(matchId);
+
+        // 2. Join Stream Room (Triggers LiveStreamHandler on backend)
+        viewerWebSocketService.joinStream(matchId);
 
         return () => {
             viewerWebSocketService.off("connected", onConnected);
             viewerWebSocketService.off("disconnected", onDisconnected);
-
             viewerWebSocketService.off("matchState", handleMatchState);
             viewerWebSocketService.off("commentary", handleCommentary);
             viewerWebSocketService.off("viewerJoined", handleViewerJoined);

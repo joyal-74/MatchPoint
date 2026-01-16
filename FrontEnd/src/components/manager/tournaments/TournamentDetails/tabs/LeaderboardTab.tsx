@@ -1,97 +1,114 @@
 import { useEffect, type JSX } from "react";
-import { Zap, Skull, Trophy } from "lucide-react";
+import { Zap, Skull, Trophy, Medal } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks/hooks";
 import { fetchLeaderboard } from "../../../../../features/manager/Tournaments/tournamentThunks";
 import { useParams } from "react-router-dom";
 import LoadingOverlay from "../../../../shared/LoadingOverlay";
-import type { RootState } from "../../../../../app/rootReducer";
+import type { RootState } from "../../../../../app/store";
 
-const ACCENT_CLASSES = {
+
+const ACCENT_STYLES = {
     orange: {
         border: "border-orange-500",
-        bgHeader: "bg-gray-700/50",
-        textIcon: "text-orange-400",
-        textLg: "text-orange-400",
-        textSm: "text-orange-300",
-        bgFirst: "bg-orange-900/40",
+        icon: "text-orange-600 dark:text-orange-400",
+        textValue: "text-orange-700 dark:text-orange-400",
+        highlightRow: "bg-orange-500/10 dark:bg-orange-500/20",
     },
     purple: {
         border: "border-purple-500",
-        bgHeader: "bg-gray-700/50",
-        textIcon: "text-purple-400",
-        textLg: "text-purple-400",
-        textSm: "text-purple-300",
-        bgFirst: "bg-purple-900/40",
+        icon: "text-purple-600 dark:text-purple-400",
+        textValue: "text-purple-700 dark:text-purple-400",
+        highlightRow: "bg-purple-500/10 dark:bg-purple-500/20",
     },
     yellow: {
         border: "border-yellow-500",
-        bgHeader: "bg-gray-700/50",
-        textIcon: "text-yellow-400",
-        textLg: "text-yellow-400",
-        textSm: "text-yellow-300",
-        bgFirst: "bg-yellow-900/40",
+        icon: "text-yellow-600 dark:text-yellow-400",
+        textValue: "text-yellow-700 dark:text-yellow-400",
+        highlightRow: "bg-yellow-500/10 dark:bg-yellow-500/20",
     },
 };
 
 // Reusable Table Component
-const LeaderboardTable = ({ title, data, valueLabel, icon, accentColor, }: {
-    title: string; data: any[]; valueLabel: string; icon: JSX.Element; accentColor: "orange" | "purple" | "yellow";
+const LeaderboardTable = ({ 
+    title, 
+    data, 
+    valueLabel, 
+    icon, 
+    accentColor, 
+}: {
+    title: string; 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any[]; 
+    valueLabel: string; 
+    icon: JSX.Element; 
+    accentColor: "orange" | "purple" | "yellow";
 }) => {
-    const styles = ACCENT_CLASSES[accentColor];
+    const styles = ACCENT_STYLES[accentColor];
 
     return (
-        <div className="bg-neutral-800 rounded-xl shadow-2xl overflow-hidden h-full">
-            <div
-                className={`p-4 flex items-center space-x-2 border-b-4 ${styles.border} ${styles.bgHeader}`}
-            >
-                {icon}
-                <h3 className="text-xl font-bold text-white">{title}</h3>
+        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden h-full flex flex-col">
+            {/* Header */}
+            <div className={`p-4 flex items-center space-x-3 border-b-4 ${styles.border} bg-muted/30`}>
+                <div className={`${styles.icon}`}>
+                    {icon}
+                </div>
+                <h3 className="text-lg font-bold text-foreground">{title}</h3>
             </div>
 
-            <div className="grid grid-cols-10 gap-2 py-3 px-4 text-xs font-semibold uppercase tracking-wider text-gray-400 border-b border-gray-700">
+            {/* Column Headers */}
+            <div className="grid grid-cols-10 gap-2 py-3 px-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground border-b border-border bg-card">
                 <div className="col-span-1">#</div>
                 <div className="col-span-6">Player</div>
                 <div className="col-span-1 text-center">Team</div>
                 <div className="col-span-2 text-right">{valueLabel}</div>
             </div>
 
-            <div className="divide-y divide-gray-700">
+            {/* List */}
+            <div className="divide-y divide-border flex-1">
                 {data.map((player, idx) => (
                     <div
-                        key={player.playerId}
-                        className={`grid grid-cols-10 gap-2 py-3 px-4 items-center hover:bg-gray-700/80 transition-colors duration-150
-                            ${idx + 1 === 1 ? styles.bgFirst : ""}
+                        key={player.playerId || idx}
+                        className={`grid grid-cols-10 gap-2 py-3 px-4 items-center transition-colors duration-150
+                            ${idx === 0 ? styles.highlightRow : "hover:bg-muted/50"}
                         `}
                     >
-                        <div className="col-span-1 font-bold">
-                            <span
-                                className={
-                                    idx + 1 <= 3
-                                        ? `${styles.textLg} text-lg`
-                                        : "text-gray-300"
-                                }
-                            >
-                                {idx + 1}
-                            </span>
+                        {/* Rank */}
+                        <div className="col-span-1 font-bold flex items-center">
+                            {idx === 0 ? (
+                                <Medal size={16} className={styles.icon} />
+                            ) : (
+                                <span className={`text-sm ${idx < 3 ? "text-foreground font-extrabold" : "text-muted-foreground"}`}>
+                                    {idx + 1}
+                                </span>
+                            )}
                         </div>
 
-                        <div className="col-span-6 text-sm text-gray-100 font-medium truncate">
+                        {/* Player Name */}
+                        <div className="col-span-6 text-sm text-foreground font-medium truncate">
                             {player.name}
                         </div>
 
-                        <div className="col-span-1 text-center text-xs text-gray-400 font-medium">
-                            {player.teamName}
+                        {/* Team Code */}
+                        <div className="col-span-1 text-center text-xs text-muted-foreground font-medium">
+                            {player.teamName ? player.teamName.substring(0, 3).toUpperCase() : '-'}
                         </div>
 
+                        {/* Value */}
                         <div className="col-span-2 text-right font-extrabold">
-                            <span className={styles.textSm}>
+                            <span className={`text-sm ${styles.textValue}`}>
                                 {valueLabel === "MVP Pts"
-                                    ? player.value?.toFixed(1)
+                                    ? Number(player.value).toFixed(1)
                                     : player.value}
                             </span>
                         </div>
                     </div>
                 ))}
+                
+                {data.length === 0 && (
+                    <div className="p-8 text-center text-muted-foreground text-sm">
+                        No data recorded yet
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -102,11 +119,9 @@ const LeaderboardTable = ({ title, data, valueLabel, icon, accentColor, }: {
 export default function LeaderBoardData() {
     const dispatch = useAppDispatch();
     const { leaderboard, loading } = useAppSelector((state: RootState) => state.managerTournaments);
-    console.log(leaderboard, 'lllll')
     const { id } = useParams<{ id: string }>();
 
     useEffect(() => {
-
         if (id && (!leaderboard.tournamentId || leaderboard.tournamentId !== id)) {
             dispatch(fetchLeaderboard(id));
         }
@@ -114,46 +129,52 @@ export default function LeaderBoardData() {
 
     if (loading)
         return (
-            <LoadingOverlay show={loading} />
+            <div className="min-h-[400px] relative">
+                <LoadingOverlay show={loading} />
+            </div>
         );
 
-    if (!leaderboard || leaderboard.topRuns.length === 0)
+    // Empty State
+    if (!leaderboard || (!leaderboard.topRuns?.length && !leaderboard.topWickets?.length))
         return (
-            <div className="p-8 text-center text-gray-400">
-                <Trophy size={48} className="mx-auto mb-4" />
-                <p className="text-xl font-semibold">No Leaderboard Data Available</p>
-                <p>Please check if any matches have been completed for this tournament.</p>
+            <div className="p-12 text-center bg-card border border-border border-dashed rounded-xl mx-4 my-6">
+                <Trophy size={48} className="mx-auto mb-4 text-muted-foreground/50" />
+                <p className="text-xl font-semibold text-foreground">No Leaderboard Data Available</p>
+                <p className="text-muted-foreground mt-2">Stats will appear here once matches are completed.</p>
             </div>
         );
 
     return (
-        <div className="p-3 text-white sm:p-6 lg:p-5">
-            <h1 className="text-2xl font-bold text-white mb-5 border-b border-gray-700 pb-4">
+        <div className="p-3 sm:p-6 lg:p-5">
+            <h1 className="text-2xl font-bold text-foreground mb-6 pb-4 border-b border-border">
                 Tournament Statistical Leaders
             </h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Orange Cap - Batting */}
                 <LeaderboardTable
-                    title="Top Runs Scorer (Orange Cap)"
-                    data={leaderboard.topRuns}
+                    title="Top Runs (Orange Cap)"
+                    data={leaderboard.topRuns || []}
                     valueLabel="Runs"
-                    icon={<Zap size={24} className="text-orange-400" />}
+                    icon={<Zap size={20} />}
                     accentColor="orange"
                 />
 
+                {/* Purple Cap - Bowling */}
                 <LeaderboardTable
-                    title="Top Wicket Taker (Purple Cap)"
-                    data={leaderboard.topWickets}
+                    title="Top Wickets (Purple Cap)"
+                    data={leaderboard.topWickets || []}
                     valueLabel="Wickets"
-                    icon={<Skull size={24} className="text-purple-400" />}
+                    icon={<Skull size={20} />}
                     accentColor="purple"
                 />
 
+                {/* MVP - All Rounder */}
                 <LeaderboardTable
                     title="Most Valuable Player"
-                    data={leaderboard.mvp}
+                    data={leaderboard.mvp || []}
                     valueLabel="MVP Pts"
-                    icon={<Trophy size={24} className="text-yellow-400" />}
+                    icon={<Trophy size={20} />}
                     accentColor="yellow"
                 />
             </div>

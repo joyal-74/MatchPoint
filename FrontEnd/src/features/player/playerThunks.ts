@@ -4,12 +4,6 @@ import { playerEndpoints } from "../../api/endpoints/playerEndpoints";
 import { setUser } from "../auth";
 import type { UpdatePlayerProfilePayload, UpdateUserDataPayload } from "../manager/managerTypes";
 
-// Fetch all teams
-// export const getMyTeams = createAsyncThunk(
-//     "player/getMyTeams",
-//     createApiThunk(playerEndpoints.getMyTeams)
-// );
-
 
 export const getMyAllTeams = createAsyncThunk(
     "player/getMyAllTeams",

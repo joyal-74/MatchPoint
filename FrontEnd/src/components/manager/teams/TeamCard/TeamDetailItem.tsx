@@ -16,11 +16,11 @@ export default function TeamDetailItem({
     textClassName = ""
 }: TeamDetailItemProps) {
     return (
-        <div className={`flex items-center text-sm text-neutral-300 ${className}`}>
-            <span className={`mr-2 ${iconClassName}`}>
+        <div className={`flex items-center gap-2 text-sm ${className}`}>
+            <span className={`flex-shrink-0 flex items-center justify-center text-muted-foreground ${iconClassName}`}>
                 {icon}
             </span>
-            <span className={textClassName}>
+            <span className={`truncate text-muted-foreground ${textClassName}`}>
                 {children}
             </span>
         </div>

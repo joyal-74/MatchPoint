@@ -46,6 +46,7 @@ const RepositoryTokens = {
     NotificationRepository: "NotificationRepository",
     WalletRepository: "WalletRepository",
     OtpRepository: "OtpRepository",
+    PointsTableRepository: "PointsTableRepository",
 }
 
 // services
@@ -65,6 +66,8 @@ const ServiceTokens = {
     TransactionService: "TransactionService",
     SubscriptionPaymentService: "SubscriptionPaymentService",
     GetPlansAndUserSubscription: "GetPlansAndUserSubscription",
+    StartTournament: "StartTournament",
+    TournamentRefundService: "TournamentRefundService",
 }
 
 // usecases
@@ -157,7 +160,7 @@ const ManagerUsecaseTokens = {
     EditTournamentsUsecase : 'EditTournamentsUsecase',
     CancelTournamentsUsecase : 'CancelTournamentsUsecase',
     TournamentsDetailsUsecase : 'TournamentsDetailsUsecase',
-    EntryFeePaymentUsecase : 'TournamentsDetailsUsecase',
+    EntryFeePaymentUsecase : 'EntryFeePaymentUsecase',
     UpdateTournamenTeamUsecase : 'UpdateTournamenTeamUsecase',
     TournamentTeamsUsecase : 'TournamentTeamsUsecase',
     GetFixturesUsecase : 'GetFixturesUsecase',
@@ -165,6 +168,9 @@ const ManagerUsecaseTokens = {
     CreateMatchesUsecase : 'CreateMatchesUsecase',
     GetMatchesUsecase : 'GetMatchesUsecase',
     GetLeaderBoardUsecase : 'GetLeaderBoardUsecase',
+
+    GetDashboardAnalytics : 'GetDashboardAnalytics',
+    UpdateUserDirectlyPlan : 'UpdateUserDirectlyPlan',
 }
 
 const MatchUsecaseTokens = {
@@ -182,6 +188,7 @@ const MatchUsecaseTokens = {
     EndInningsUseCase: "EndInningsUseCase",
     AddPenaltyUseCase: "AddPenaltyUseCase",
     RetireBatsmanUseCase: "RetireBatsmanUseCase",
+    StartMatchUseCase: "StartMatchUseCase",
     EndMatchUseCase: "EndMatchUseCase",
 }
 
@@ -195,13 +202,14 @@ const PlayerUsecaseTokens = {
     GetPlayerProfile : 'GetPlayerProfile',
     UpdatePlayerProfile : 'UpdatePlayerProfile',
     UpdatePlayerFields : 'UpdatePlayerFields',
-    GetAllTeamsPlayerUseCase : 'GetAllTeamsPlayerUseCase',
+    GetPlayerJoinedTeamsUseCase : 'GetPlayerJoinedTeamsUseCase',
+    GetPlayerTeamsUseCase : 'GetPlayerTeamsUseCase',
     JoinTeamUseCase : 'JoinTeamUseCase',
-    GetMyTeamsUseCase : 'GetMyTeamsUseCase',
-    GetAllMyTeamsUseCase : 'GetAllMyTeamsUseCase',
     GetMyTeamDetailsUseCase : 'GetMyTeamDetailsUseCase',
     UpdatePlayerInviteStatus : 'UpdatePlayerInviteStatus',
     GetPlayerTournaments : 'GetPlayerTournaments',
+    GetPlayerTournamentDetails : 'GetPlayerTournamentDetails',
+    GetPlayerMatches : 'GetPlayerMatches',
 }
 
 const ViewerUsecaseTokens = {

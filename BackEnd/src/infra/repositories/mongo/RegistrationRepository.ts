@@ -1,4 +1,5 @@
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
+import { TrafficPoint } from "domain/dtos/Analytics.dto";
 import { TournamentTeamData } from "domain/dtos/Tournament";
 import { Registration } from "domain/entities/Registration";
 import { NotFoundError } from "domain/errors";
@@ -108,5 +109,38 @@ export class RegistrationRepository implements IRegistrationRepository {
             .distinct("teamId");
 
         return ids.map(id => id.toString());
+    }
+
+    async getPaidRegistrationsByTournament(tournamentId: string): Promise<Registration[]> {
+        return await RegistrationModel.find({
+            tournamentId: tournamentId,
+            paymentStatus: 'completed'
+        }).populate('teamId', 'name').exec();
+    }
+
+    async getDailyRegistrations(tournamentIds: string[], days: number): Promise<TrafficPoint[]> {
+
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - days);
+        startDate.setHours(0, 0, 0, 0);
+
+
+        return RegistrationModel.aggregate([
+            {
+                $match: {
+                    tournamentId: { $in: tournamentIds },
+                    createdAt: { $gte: startDate }
+                }
+            },
+            {
+                $group: {
+                    _id: { $dayOfWeek: "$createdAt" },
+                    teams: { $count: {} }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            }
+        ]);
     }
 }

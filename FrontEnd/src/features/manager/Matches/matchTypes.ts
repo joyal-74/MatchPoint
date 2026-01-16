@@ -1,5 +1,6 @@
 export interface Player {
     _id: string;
+    userId: string;
     name: string;
     role: string;
     status: string;
@@ -30,6 +31,7 @@ export interface MatchExtras {
 export interface Match {
     _id: string;
     tournamentId: string;
+    tournamentName : string;
     matchNumber: string;
     round: number;
     date: string;

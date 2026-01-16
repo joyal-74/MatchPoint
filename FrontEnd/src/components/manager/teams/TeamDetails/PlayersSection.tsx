@@ -1,5 +1,4 @@
-import { Clock } from 'lucide-react';
-
+import { Clock, Users } from 'lucide-react';
 import type { PlayerDetails, Team } from '../Types';
 import PendingList from './PendingList';
 import MembersList from './MembersList';
@@ -21,59 +20,73 @@ const PlayersSection = ({
 }) => {
     const approvedPlayers = team.members?.filter((p: PlayerDetails) => p.approvalStatus === 'approved') || [];
     const pendingPlayers = team.members?.filter((p: PlayerDetails) => p.approvalStatus === 'pending') || [];
-
+    
     return (
-        <div className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden min-h-full xl:col-span-3">
-            <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-700 flex justify-between items-center">
-                <div>
-                    <h2 className="text-lg font-semibold text-neutral-800 dark:text-white">
-                        {activeTab === 'pending' ? 'Pending Requests' : 'Team Members'}
-                    </h2>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
-                        {activeTab === 'pending'
-                            ? `${pendingPlayers.length} pending`
-                            : `${approvedPlayers.length} of ${team.maxPlayers} players`}
-                    </p>
-                </div>
-
-                {pendingPlayers.length > 0 && (
-                    <div className="flex bg-gray-100 dark:bg-gray-700 rounded-full p-1">
+        <div className="bg-card text-card-foreground rounded-xl border border-border shadow-sm flex flex-col h-full min-h-[600px]">
+            
+            {/* Toolbar Header */}
+            <div className="px-6 py-4 border-b border-border flex flex-col sm:flex-row justify-between items-end sm:items-center gap-4">
+                
+                {/* Title & Tabs */}
+                <div className="flex flex-col gap-4 w-full sm:w-auto">                    
+                    {/* Modern Underline Tabs */}
+                    <div className="flex gap-6 -mb-[17px]">
                         <button
                             onClick={() => setActiveTab('members')}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeTab === 'members'
-                                ? 'bg-white dark:bg-neutral-800 text-neutral-800 dark:text-white shadow-sm'
-                                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-white'
-                                }`}
+                            className={`
+                                pb-4 text-sm font-medium transition-all border-b-2 flex items-center gap-2
+                                ${activeTab === 'members' 
+                                    ? 'border-primary text-foreground' 
+                                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
+                                }
+                            `}
                         >
-                            Members ({approvedPlayers.length})
+                            <Users size={14} />
+                            Active Members
+                            <span className="bg-muted text-muted-foreground px-1.5 rounded-md text-xs">{approvedPlayers.length}</span>
                         </button>
+
                         <button
                             onClick={() => setActiveTab('pending')}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeTab === 'pending'
-                                ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 shadow-sm'
-                                : 'text-neutral-600 dark:text-neutral-400 hover:text-yellow-700 dark:hover:text-yellow-300'
-                                }`}
+                            className={`
+                                pb-4 text-sm font-medium transition-all border-b-2 flex items-center gap-2
+                                ${activeTab === 'pending' 
+                                    ? 'border-primary text-foreground' 
+                                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
+                                }
+                            `}
                         >
-                            <Clock className="w-4 h-4 inline mr-1" />
-                            Pending ({pendingPlayers.length})
+                            <Clock size={14} />
+                            Requests
+                            {pendingPlayers.length > 0 && (
+                                <span className="bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20 px-1.5 rounded-md text-xs animate-pulse">
+                                    {pendingPlayers.length}
+                                </span>
+                            )}
                         </button>
                     </div>
-                )}
+                </div>
+
             </div>
 
-            <div className="p-6">
+            {/* Scrollable Content Area */}
+            <div className="p-6 flex-1 bg-muted/5">
                 {activeTab === 'pending' ? (
-                    <PendingList
-                        players={pendingPlayers}
-                        openPlayerDetails={openPlayerDetails}
-                        openApprovalModal={openApprovalModal}
-                    />
+                    <div className="animate-in fade-in slide-in-from-right-2 duration-300">
+                        <PendingList
+                            players={pendingPlayers}
+                            openPlayerDetails={openPlayerDetails}
+                            openApprovalModal={openApprovalModal}
+                        />
+                    </div>
                 ) : (
-                    <MembersList
-                        players={approvedPlayers}
-                        openPlayerDetails={openPlayerDetails}
-                        openRemoveModal={openRemoveModal}
-                    />
+                    <div className="animate-in fade-in slide-in-from-left-2 duration-300">
+                        <MembersList
+                            players={approvedPlayers}
+                            openPlayerDetails={openPlayerDetails}
+                            openRemoveModal={openRemoveModal}
+                        />
+                    </div>
                 )}
             </div>
         </div>

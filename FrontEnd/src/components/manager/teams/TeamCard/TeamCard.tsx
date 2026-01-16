@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
+import { Users, CalendarDays, ArrowRight } from "lucide-react";
 import type { EditTeamPayload } from "../../../../features/manager/managerTypes";
-import SecondaryButton from "../../../ui/SecondaryButton";
 import TeamDetailItem from "./TeamDetailItem";
 import TeamInfo from "./TeamInfo";
 import TeamLogo from "./TeamLogo";
 import TeamMenu from "./TeamMenu";
-import { getColorScheme } from "./teamColors"; 
+import { getColorScheme } from "./TeamColors"; 
 import type { TeamStatus } from "../Types";
 
 export interface TeamCardProps {
@@ -50,19 +50,25 @@ export default function TeamCard({
 
     return (
         <div className={`relative group ${className}`}>
-            {/* Glassmorphic card with gradient background */}
+            
+            {/* Semantic Card Container */}
             <div className={`
-                relative bg-gradient-to-br ${colorScheme.bg} backdrop-blur-sm
-                rounded-xl border ${colorScheme.border} ${colorScheme.hoverBorder}
+                relative flex flex-col h-full
+                bg-card text-card-foreground
+                rounded-xl border border-border
                 overflow-hidden transition-all duration-300 
-                hover:shadow-lg ${colorScheme.glow}
+                hover:shadow-lg hover:border-primary/50
+                group-hover:-translate-y-1
             `}>
-                {/* Top accent bar */}
-                <div className={`h-1 ${colorScheme.accent}`} />
+                
+                {/* Top Accent Bar (Uses Color Scheme) */}
+                <div className={`h-1.5 w-full ${colorScheme.bg || 'bg-primary'}`} />
 
-                <div className="p-5">
+                <div className="p-5 flex-1 flex flex-col">
+                    {/* Header Section */}
                     <div className="flex items-start gap-4 mb-4">
                         <TeamLogo logo={logo} name={name} />
+                        
                         <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between">
                                 <TeamInfo name={name} sport={sport} colorScheme={colorScheme} />
@@ -85,40 +91,43 @@ export default function TeamCard({
                         </div>
                     </div>
 
-                    <div className="space-y-3 mt-4">
+                    {/* Divider */}
+                    <div className="h-px bg-border w-full my-4" />
+
+                    {/* Details Section */}
+                    <div className="space-y-4 mt-auto">
                         <TeamDetailItem
-                            icon={
-                                <svg className={`w-5 h-5 ${colorScheme.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                        d="M5.121 17.804A9 9 0 1118.879 6.196M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                            }
+                            icon={<Users className={`w-4 h-4 ${colorScheme.text || 'text-primary'}`} />}
                         >
-                            {membersCount}/{maxPlayers} players
+                            <span className="text-muted-foreground">
+                                <span className="font-medium text-foreground">{membersCount}</span>
+                                / {maxPlayers} players
+                            </span>
                         </TeamDetailItem>
 
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center gap-2">
                             <TeamDetailItem
-                                icon={
-                                    <svg className="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                }
+                                icon={<CalendarDays className="w-4 h-4 text-muted-foreground" />}
                             >
-                                Created: {new Date(createdAt).toLocaleDateString()}
+                                <span className="text-muted-foreground text-xs">
+                                    {new Date(createdAt).toLocaleDateString()}
+                                </span>
                             </TeamDetailItem>
 
-                            <SecondaryButton 
-                                className={`
-                                    py-1.5 px-4 text-[13px] ${colorScheme.text} ${colorScheme.hoverText} rounded-lg font-medium text-sm transition-all duration-300 
-                                    border ${colorScheme.buttonBorder} ${colorScheme.buttonHoverBorder} ${colorScheme.buttonBg} ${colorScheme.buttonHoverBg} 
-                                    disabled:opacity-50
-                                `} 
+                            {/* Action Button */}
+                            <button
                                 type="button"
-                                onClick={()=> navigate(`/manager/team/${_id}`)}
+                                onClick={() => navigate(`/manager/team/${_id}`)}
+                                className={`
+                                    flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                                    bg-muted text-muted-foreground
+                                    hover:bg-primary hover:text-primary-foreground
+                                    group-hover:shadow-md
+                                `}
                             >
                                 View
-                            </SecondaryButton>
+                                <ArrowRight size={14} className="opacity-70 group-hover:translate-x-1 transition-transform" />
+                            </button>
                         </div>
                     </div>
                 </div>

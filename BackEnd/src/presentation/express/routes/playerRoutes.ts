@@ -23,9 +23,7 @@ router.get('/:playerId/profile', expressAdapter(playerProfileController.getProfi
 
 router.get('/teams', expressAdapter(playerTeamController.getAllTeams))
 
-router.get('/teams/:playerId/:status', expressAdapter(playerTeamController.getMyTeams))
-
-router.get('/teams/:playerId', expressAdapter(playerTeamController.getAllMyTeams))
+router.get('/teams/:playerId', expressAdapter(playerTeamController.getMyTeams))
 
 router.post('/team/:playerId/invite/status', expressAdapter(playerTeamController.updateStatus))
 
@@ -34,5 +32,9 @@ router.get('/team/:teamId/details', expressAdapter(playerTeamController.getTeamD
 router.post('/:teamId/join', expressAdapter(playerTeamController.joinTeams))
 
 router.get('/tournaments', expressAdapter(playerTournamentController.getplayerTournaments))
+
+router.post('/tournaments/details', expressAdapter(playerTournamentController.getPlayerTournamentDetails))
+
+router.get('/tournament/matches', expressAdapter(playerTournamentController.getplayerMatches))
 
 export default router;

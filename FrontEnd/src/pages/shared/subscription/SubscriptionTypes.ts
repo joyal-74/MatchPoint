@@ -1,22 +1,32 @@
-export type PlanLevel = 'Free' | 'Premium' | 'Super';
-export type BillingCycle = 'Monthly' | 'Yearly';
+export type PlanLevel = "Free" | "Basic" | "Super" | "Premium";
 
-export interface AvailablePlan {
-    _id : string;
+export interface ScheduledChange {
     level: PlanLevel;
-    title: string;
-    description: string;
-    price: number;
-    billingCycle: BillingCycle;
-    features: string[];
-    isPopular?: boolean;
+    billingCycle: "Monthly" | "Yearly";
+    status: "pending_downgrade" | "pending_upgrade";
 }
 
 export interface UserSubscription {
-    planId: string;
+    _id: string;
+    userId: string;
     level: PlanLevel;
+    billingCycle: "Monthly" | "Yearly";
+    expiryDate: string; 
+    status: "active" | "pending" | "expired";
+    
+    reservedPlan?: {
+        level: PlanLevel;
+        daysRemaining: number;
+    };
+    scheduledChange?: ScheduledChange;
+}
+
+export interface AvailablePlan {
+    _id: string;
+    title: string;
+    description: string;
     price: number;
-    billingCycle: BillingCycle;
-    expiryDate: string;
-    status: 'Active' | 'Pending Cancellation';
+    level: PlanLevel;
+    features: string[];
+    billingCycle: "Monthly" | "Yearly";
 }

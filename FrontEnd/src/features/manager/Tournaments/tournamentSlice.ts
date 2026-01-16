@@ -14,13 +14,16 @@ import {
     createTournamentMatches,
     getTournamentMatches,
     fetchLeaderboard,
+    getDashboardAnalytics,
 } from "./tournamentThunks";
 import type { Fixture, Leaderboard, Match, Tournament } from "../managerTypes";
 import type { RegisteredTeam } from "../../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
+import type { AnalyticsData } from "./tournamentTypes";
 
 interface ManagerTournamentState {
     myTournaments: Tournament[];
     exploreTournaments: Tournament[];
+    analyticsData: AnalyticsData | null;
     selectedTournament: Tournament | null;
     registeredTeams: RegisteredTeam[],
     fixtures: Fixture | null,
@@ -35,6 +38,7 @@ interface ManagerTournamentState {
 const initialState: ManagerTournamentState = {
     myTournaments: [],
     exploreTournaments: [],
+    analyticsData: null,
     selectedTournament: null,
     fixtures: null,
     matches: null,
@@ -277,6 +281,17 @@ const managerTournamentSlice = createSlice({
                 state.leaderboard = action.payload;
             })
             .addCase(fetchLeaderboard.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            })
+
+            .addCase(getDashboardAnalytics.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getDashboardAnalytics.fulfilled, (state, action) => {
+                state.analyticsData = action.payload;
+            })
+            .addCase(getDashboardAnalytics.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             });

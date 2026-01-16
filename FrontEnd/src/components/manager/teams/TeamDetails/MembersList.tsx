@@ -1,4 +1,4 @@
-import { ArrowBigRightDash } from "lucide-react";
+import { UserMinus, User } from "lucide-react";
 import type { PlayerDetails } from '../Types';
 
 interface MembersListProps {
@@ -12,55 +12,66 @@ const MembersList = ({
     openPlayerDetails,
     openRemoveModal
 }: MembersListProps) => {
+    
+    // Empty State
     if (players.length === 0)
         return (
-            <p className="text-sm text-neutral-500 dark:text-neutral-400 text-center py-8 col-span-full">
-                No players have joined yet.
-            </p>
+            <div className="text-center py-12 col-span-full border-2 border-dashed border-border rounded-xl bg-muted/20">
+                <p className="text-muted-foreground text-sm font-medium">
+                    No players have joined this team yet.
+                </p>
+            </div>
         );
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {players.map((player) => (
-                <div
+                <div 
                     key={player.playerId}
-                    className="group flex items-center space-x-3 p-4 bg-neutral-50 dark:bg-neutral-700/50 rounded-lg border border-neutral-200 dark:border-neutral-600 hover:bg-white dark:hover:bg-neutral-600/50 transition-colors"
+                    className="group relative flex items-center gap-4 p-4 rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-pointer"
+                    onClick={() => openPlayerDetails(player)}
                 >
-                    <img
-                        src={player.profileImage || '/player.png'}
-                        alt={player.firstName}
-                        className="w-12 h-12 rounded-full object-cover border border-neutral-300 dark:border-neutral-500 flex-shrink-0 cursor-pointer"
-                        onClick={() => openPlayerDetails(player)}
-                    />
+                    {/* Avatar */}
+                    <div className="relative shrink-0">
+                        <div className="w-12 h-12 rounded-full bg-muted border border-border flex items-center justify-center overflow-hidden">
+                            {player.profileImage ? (
+                                <img
+                                    src={player.profileImage}
+                                    alt={player.firstName}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <User className="w-6 h-6 text-muted-foreground/50" />
+                            )}
+                        </div>
+                        {/* Status Dot (Optional - visually indicates 'Active') */}
+                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-card rounded-full"></div>
+                    </div>
 
-                    <div
-                        className="flex-1 min-w-0 cursor-pointer"
-                        onClick={() => openPlayerDetails(player)}
-                    >
-                        <h3 className="font-medium text-neutral-800 dark:text-white text-sm truncate">
+                    {/* Text Info */}
+                    <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-foreground text-sm truncate group-hover:text-primary transition-colors">
                             {player.firstName} {player.lastName}
                         </h3>
-                        <p className="text-xs text-neutral-600 dark:text-neutral-400 truncate">
-                            {player.profile?.position || 'No position'}
+                        <p className="text-xs text-muted-foreground truncate">
+                            {player.profile?.position || 'Team Member'}
                         </p>
                     </div>
 
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            openRemoveModal(player);
-                        }}
-                        className="
-                             
-                            p-2 rounded-md
-                            text-red-500
-                            hover:bg-red-500 hover:text-white
-                            transition-all
-                        "
-                    >
-                        <ArrowBigRightDash  className="w-4 h-4" />
-                    </button>
-
+                    {/* Actions */}
+                    <div className="flex items-center">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                openRemoveModal(player);
+                            }}
+                            className="p-2 rounded-lg text-muted-foreground hover:bg-destructive hover:text-destructive-foreground transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                            title="Remove Player"
+                            aria-label="Remove Player"
+                        >
+                            <UserMinus size={16} />
+                        </button>
+                    </div>
                 </div>
             ))}
         </div>

@@ -1,27 +1,45 @@
-import { memo } from "react";
+import React, { memo } from "react";
 
-export const ActionButton: React.FC<{ icon: React.ReactNode; label: string; color: 'yellow' | 'green' | 'indigo'; onClick: () => void, disabled?: boolean }> = memo(({ icon, label, color, onClick, disabled }) => {
-    let colorClasses;
-    switch (color) {
-        case 'yellow':
-            colorClasses = 'bg-yellow-600 hover:bg-yellow-700 shadow-yellow-700/50';
-            break;
-        case 'green':
-            colorClasses = 'bg-green-600 hover:bg-green-700 shadow-green-700/50';
-            break;
-        case 'indigo':
-            colorClasses = 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-700/50';
-            break;
-    }
+type ActionButtonProps = {
+    icon: React.ReactNode;
+    label: string;
+    variant?: 'primary' | 'secondary' | 'outline' | 'destructive' | 'ghost';
+    onClick: () => void;
+    disabled?: boolean;
+    className?: string; // Added for extra flexibility
+};
+
+export const ActionButton: React.FC<ActionButtonProps> = memo(({ 
+    icon, 
+    label, 
+    variant = 'primary', 
+    onClick, 
+    disabled,
+    className = ""
+}) => {
+    
+
+    const variants = {
+        primary: "bg-primary text-primary-foreground hover:opacity-90 shadow-md shadow-primary/20",
+        secondary: "bg-secondary text-secondary-foreground border border-border/50 hover:bg-secondary/80",
+        outline: "bg-transparent border border-border text-foreground hover:bg-muted hover:text-foreground",
+        destructive: "bg-destructive text-destructive-foreground hover:opacity-90",
+        ghost: "bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground"
+    };
 
     return (
         <button
             onClick={onClick}
             disabled={disabled}
-            className={`py-2 px-4 rounded-lg font-semibold text-sm transition duration-200 flex items-center justify-center space-x-2 text-white shadow-lg ${colorClasses}`}
+            className={`
+                flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium 
+                transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none 
+                ${variants[variant]} 
+                ${className}
+            `}
         >
-            {icon}
-            <span>{label}</span>
+            <span className="shrink-0">{icon}</span>
+            <span className="whitespace-nowrap">{label}</span>
         </button>
     );
 });

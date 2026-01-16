@@ -1,4 +1,3 @@
-// 1. Providers
 import { WinstonLogger } from "../providers/WinstonLogger";
 import { JWTService } from "../services/jwtServices";
 import { NodeMailerService } from "../services/NodeMailerService";

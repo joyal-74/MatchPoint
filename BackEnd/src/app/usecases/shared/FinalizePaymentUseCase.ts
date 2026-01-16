@@ -25,8 +25,6 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
         const verification = await this._paymentProvider.verifyPayment(sessionId);
 
-        console.log(verification, "verification")
-
         return {
             status: verification.status,
             paymentId: verification.paymentId,

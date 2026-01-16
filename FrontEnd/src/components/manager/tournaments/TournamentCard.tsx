@@ -12,42 +12,9 @@ interface TournamentCardProps {
     onCancel?: (id: string) => void;
 }
 
-// Themes now include gradients for a more premium look
-const THEMES = [
-    {
-        name: "Blue",
-        badge: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-        border: "border-blue-500/20 hover:border-blue-400",
-        gradient: "from-blue-500/5 via-transparent to-transparent",
-        icon: "text-blue-400"
-    },
-    {
-        name: "Purple",
-        badge: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-        border: "border-purple-500/20 hover:border-purple-400",
-        gradient: "from-purple-500/5 via-transparent to-transparent",
-        icon: "text-purple-400"
-    },
-    {
-        name: "Emerald",
-        badge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-        border: "border-emerald-500/20 hover:border-emerald-400",
-        gradient: "from-emerald-500/5 via-transparent to-transparent",
-        icon: "text-emerald-400"
-    },
-    {
-        name: "Orange",
-        badge: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-        border: "border-orange-500/20 hover:border-orange-400",
-        gradient: "from-orange-500/5 via-transparent to-transparent",
-        icon: "text-orange-400"
-    },
-];
-
 const TournamentCard: React.FC<TournamentCardProps> = ({
     tournament,
     type,
-    index,
     onAction,
     onEdit,
     onCancel,
@@ -58,41 +25,44 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
 
     // --- LOGIC ---
     const isManage = type === "manage";
-    const isEnded = status === "ended";
+    const isEnded = status === "completed";
     const isOngoing = status === "ongoing";
-
-    const theme = THEMES[index % THEMES.length];
 
     const formattedDate = new Date(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     const progressPercent = Math.min((currTeams / maxTeams) * 100, 100);
 
     // --- STYLES ---
-    // Base background with a subtle gradient overlay based on theme
+    // Base classes using Semantic Variables
     const baseClasses = "relative w-full rounded-2xl border transition-all duration-300 flex flex-col h-full overflow-hidden";
 
-    const manageStyle = "bg-neutral-900 border-neutral-800 hover:border-neutral-700 hover:shadow-lg hover:shadow-neutral-900/50";
-    const exploreStyle = `bg-neutral-900 ${theme.border} hover:-translate-y-1 hover:shadow-lg hover:shadow-${theme.name.toLowerCase()}-900/20 bg-gradient-to-br ${theme.gradient}`;
+    // Manage: Clean, utilitarian look
+    const manageStyle = "bg-card border-border hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5";
+    
+    // Explore: Gradient hint using the Primary color
+    const exploreStyle = "bg-gradient-to-br from-card to-muted border-border hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/50";
 
     const cardClasses = isManage ? manageStyle : exploreStyle;
 
-    // Render "Ended" State (Dimmed but clean)
+    
+
+    // Render "Ended" State (Dimmed)
     if (isEnded) {
         return (
-            <div className={`w-full rounded-xl border border-neutral-800 bg-neutral-900/50 p-5 opacity-75 grayscale hover:grayscale-0 transition-all`}>
+            <div className={`w-full rounded-xl border border-border bg-muted/50 p-5 opacity-75 grayscale hover:grayscale-0 transition-all cursor-default`}>
                 <div className="flex justify-between items-start">
                     <div>
-                        <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-neutral-800 text-neutral-400 border border-neutral-700 mb-2">
+                        <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-muted text-muted-foreground border border-border mb-2">
                             {status}
                         </span>
-                        <h3 className="text-base font-bold text-neutral-300 line-clamp-1">{title}</h3>
+                        <h3 className="text-base font-bold text-foreground line-clamp-1">{title}</h3>
                     </div>
-                    <div className="text-neutral-500">
+                    <div className="text-muted-foreground">
                         <Trophy size={18} />
                     </div>
                 </div>
-                <div className="mt-4 flex items-center text-sm font-medium text-neutral-400">
+                <div className="mt-4 flex items-center text-sm font-medium text-muted-foreground">
                     <FaRupeeSign className="mr-1" size={12} /> {prizePool.toLocaleString()}
-                    <span className="mx-2 text-neutral-700">|</span>
+                    <span className="mx-2 text-border">|</span>
                     <span className="text-xs">{formattedDate}</span>
                 </div>
             </div>
@@ -104,13 +74,14 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
 
             {/* Top Row: Status Badge & Admin Actions */}
             <div className="flex items-start justify-between mb-4">
-                <div className={`flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${isOngoing ? "bg-red-500/10 text-red-400 border-red-500/20" :
-                        isManage ? "bg-neutral-800 text-neutral-400 border-neutral-700" :
-                            theme.badge
+                <div className={`flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border transition-colors
+                    ${isOngoing 
+                        ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20" // Live is always Red (Destructive/Alert)
+                        : "bg-muted text-muted-foreground border-border"
                     }`}>
                     {isOngoing && (
                         <span className="relative flex h-2 w-2 mr-1">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                         </span>
                     )}
@@ -120,12 +91,20 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
                 {isManage && (
                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         {onEdit && (
-                            <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1.5 rounded-lg bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-white transition-colors">
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); onEdit(); }} 
+                                className="p-1.5 rounded-lg bg-secondary text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+                                title="Edit Tournament"
+                            >
                                 <Edit3 size={14} />
                             </button>
                         )}
                         {onCancel && (
-                            <button onClick={(e) => { e.stopPropagation(); onCancel(_id); }} className="p-1.5 rounded-lg bg-neutral-800 text-neutral-400 hover:bg-red-900/30 hover:text-red-400 transition-colors">
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); onCancel(_id); }} 
+                                className="p-1.5 rounded-lg bg-secondary text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                                title="Cancel Tournament"
+                            >
                                 <XCircle size={14} />
                             </button>
                         )}
@@ -135,33 +114,33 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
 
             {/* Main Content */}
             <div className="mb-4">
-                <h3 className="text-xl font-bold text-white mb-1 line-clamp-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-neutral-400 transition-all">
+                <h3 className="text-xl font-bold text-foreground mb-1 line-clamp-1 group-hover:text-primary transition-colors duration-200">
                     {title}
                 </h3>
 
-                {/* Highlighted Prize Pool */}
-                <div className="flex items-baseline gap-1 text-amber-400 mt-1">
+                {/* Highlighted Prize Pool using Primary Color */}
+                <div className="flex items-baseline gap-1 text-primary mt-1">
                     <Trophy size={14} className="opacity-80" />
                     <span className="text-lg font-bold font-mono tracking-tight">₹{prizePool.toLocaleString()}</span>
-                    <span className="text-xs text-neutral-500 ml-1 font-sans">Prize Pool</span>
+                    <span className="text-xs text-muted-foreground ml-1 font-sans">Prize Pool</span>
                 </div>
             </div>
 
             {/* Details Grid */}
-            <div className="grid grid-cols-2 gap-y-3 gap-x-2 text-sm text-neutral-400 mb-5">
+            <div className="grid grid-cols-2 gap-y-3 gap-x-2 text-sm text-muted-foreground mb-5">
                 <div className="flex items-center gap-2">
-                    <Calendar size={14} className="text-neutral-600" />
+                    <Calendar size={14} className="text-muted-foreground/70" />
                     <span>{formattedDate}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <MapPin size={14} className="text-neutral-600" />
+                    <MapPin size={14} className="text-muted-foreground/70" />
                     <span className="truncate max-w-[100px]">{location}</span>
                 </div>
                 <div className="flex items-center gap-2 col-span-2">
-                    <div className="flex items-center justify-center w-3.5 h-3.5 rounded-full border border-neutral-700 bg-neutral-800">
-                        <FaRupeeSign size={8} className="text-neutral-400" />
+                    <div className="flex items-center justify-center w-3.5 h-3.5 rounded-full border border-border bg-muted">
+                        <FaRupeeSign size={8} className="text-muted-foreground" />
                     </div>
-                    <span className={Number(entryFee) === 0 ? "text-emerald-400 font-medium" : "text-neutral-300"}>
+                    <span className={Number(entryFee) === 0 ? "text-green-500 font-medium" : "text-foreground"}>
                         {Number(entryFee) === 0 ? "Free Entry" : `₹${entryFee} Entry`}
                     </span>
                 </div>
@@ -170,31 +149,31 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
             {/* Progress Section */}
             <div className="mt-auto">
                 <div className="flex justify-between items-end mb-2 text-xs">
-                    <div className="flex items-center gap-1.5 text-neutral-400">
+                    <div className="flex items-center gap-1.5 text-muted-foreground">
                         <Users size={12} />
                         <span>Teams Joined</span>
                     </div>
-                    <span className={`${currTeams >= maxTeams ? 'text-red-400' : 'text-white'} font-mono font-bold`}>
-                        {currTeams}<span className="text-neutral-600">/</span>{maxTeams}
+                    <span className={`${currTeams >= maxTeams ? 'text-destructive' : 'text-foreground'} font-mono font-bold`}>
+                        {currTeams}<span className="text-muted-foreground">/</span>{maxTeams}
                     </span>
                 </div>
 
-                <div className="h-1.5 w-full bg-neutral-800 rounded-full overflow-hidden mb-4">
+                <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden mb-4">
                     <div
-                        className={`h-full rounded-full transition-all duration-700 ease-out ${isOngoing ? 'bg-emerald-500' : theme.icon.replace('text-', 'bg-')
-                            }`}
+                        className={`h-full rounded-full transition-all duration-700 ease-out ${isOngoing ? 'bg-red-500' : 'bg-primary'}`}
                         style={{ width: `${progressPercent}%` }}
                     />
                 </div>
 
                 {/* Action Button */}
                 <button
-                onClick={onAction}
-                className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 
-                    ${isManage
-                        ? "bg-neutral-800 text-white hover:bg-neutral-700"
-                        : "bg-white text-black hover:bg-neutral-200 hover:gap-3"
-                    }`}>
+                    onClick={onAction}
+                    className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 shadow-sm
+                        ${isManage
+                            ? "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border"
+                            : "bg-primary text-primary-foreground hover:bg-primary/90 hover:gap-3"
+                        }`}
+                >
                     {isManage ? 'Manage Tournament' : 'View Details'}
                     <ArrowRight size={16} />
                 </button>

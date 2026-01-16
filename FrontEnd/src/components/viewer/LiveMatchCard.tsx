@@ -1,21 +1,14 @@
-import { MapPin, Trophy, ArrowRight, PlayCircle } from "lucide-react";
+import { Trophy, ArrowRight, PlayCircle, Radio } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { Match } from "../../features/viewer/viewerTypes";
 
-// Helper for Team Short Name
 const getTeamShortName = (teamName: string) => {
     return teamName
         .split(" ")
         .map(word => word[0])
         .join("")
         .toUpperCase()
-        .slice(0, 3); // Limit to 3 chars
-};
-
-// Helper for Short Venue
-const getShortVenue = (venue: string) => {
-    if (!venue) return "Venue TBD";
-    return venue.split(",")[0].trim();
+        .slice(0, 3);
 };
 
 interface LiveMatchCardProps {
@@ -25,82 +18,87 @@ interface LiveMatchCardProps {
 const LiveMatchCard = ({ match }: LiveMatchCardProps) => {
     const navigate = useNavigate();
 
-    return (
-        <div className="group relative bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden hover:border-neutral-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50">
-            
-            {/* Background Glow on Hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    // Mock scores if missing (safe fallback)
+    const scoreA = match.innings1 ? `${match.innings1.runs}/${match.innings1.wickets}` : "0/0";
+    const oversA = match.innings1 ? match.innings1.overs : "0.0";
+    const scoreB = match.innings2 ? `${match.innings2.runs}/${match.innings2.wickets}` : "Yet to Bat";
+    const oversB = match.innings2 ? match.innings2.overs : "";
 
-            {/* Top Bar: Status & Tournament */}
-            <div className="relative p-5 border-b border-white/5 flex justify-between items-center bg-black/20">
-                <div className="flex items-center gap-2">
-                    <span className="relative flex h-2.5 w-2.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
-                    </span>
-                    <span className="text-xs font-bold text-red-500 tracking-wider uppercase">Live Now</span>
+    return (
+        <div 
+            onClick={() => navigate(`/live/${match.matchId}/details`)}
+            className="group relative bg-card border border-border rounded-2xl overflow-hidden hover:shadow-xl hover:border-primary/40 transition-all duration-300 cursor-pointer flex flex-col"
+        >
+            {/* --- Card Header: League & Status --- */}
+            <div className="px-5 py-4 flex justify-between items-start border-b border-border/50 bg-muted/20">
+                <div className="flex items-center gap-2 overflow-hidden">
+                    <div className="p-1.5 bg-background rounded-lg border border-border shrink-0">
+                        <Trophy size={14} className="text-yellow-500" />
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-xs font-bold text-foreground truncate max-w-[150px]">
+                            {match.tournamentName || "Tournament"}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">
+                            {match.matchType || "T20"} • {match.venue?.split(',')[0]}
+                        </span>
+                    </div>
                 </div>
-                <div className="flex items-center gap-1.5 text-xs font-medium text-neutral-400 bg-white/5 px-2 py-1 rounded-md">
-                    <Trophy size={12} className="text-yellow-500" />
-                    <span className="truncate max-w-[120px]">{match.matchType || 'T20 Match'}</span>
+
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 text-red-600 border border-red-500/20">
+                    <Radio size={12} className="animate-pulse" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider">Live</span>
                 </div>
             </div>
 
-            {/* Middle: Teams & Score */}
-            <div className="relative p-6 space-y-6">
+            {/* --- Card Body: The Scoreboard --- */}
+            <div className="p-5 flex-1 flex flex-col justify-center">
                 
                 {/* Team A */}
-                <div className="flex items-center justify-between group/team">
+                <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-neutral-800 to-neutral-900 border border-white/10 flex items-center justify-center shadow-lg group-hover/team:border-blue-500/30 transition-colors">
-                            <span className="font-bold text-sm text-blue-400 tracking-wider">
-                                {getTeamShortName(match.teamA)}
-                            </span>
+                        <div className="w-10 h-10 rounded-full bg-primary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-xs">
+                            {getTeamShortName(match.teamA)}
                         </div>
-                        <span className="font-semibold text-white text-lg truncate" title={match.teamA}>
-                            {match.teamA}
-                        </span>
+                        <div>
+                            <h3 className="font-bold text-foreground text-lg leading-tight">{match.teamA}</h3>
+                            {match.currentInnings === 1 && <span className="text-[10px] text-primary font-medium">Batting</span>}
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <div className="text-xl font-bold text-foreground">{scoreA}</div>
+                        <div className="text-xs text-muted-foreground">({oversA} ov)</div>
                     </div>
                 </div>
 
-                {/* VS Divider */}
-                <div className="flex items-center gap-4">
-                    <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent flex-1" />
-                    <span className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">VS</span>
-                    <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent flex-1" />
-                </div>
+                {/* Divider */}
+                <div className="h-px bg-border w-full mb-4" />
 
                 {/* Team B */}
-                <div className="flex items-center justify-between group/team">
+                <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-neutral-800 to-neutral-900 border border-white/10 flex items-center justify-center shadow-lg group-hover/team:border-red-500/30 transition-colors">
-                            <span className="font-bold text-sm text-red-400 tracking-wider">
-                                {getTeamShortName(match.teamB ?? '') || 'Bye'}
-                            </span>
+                        <div className="w-10 h-10 rounded-full bg-muted text-muted-foreground border border-border flex items-center justify-center font-bold text-xs">
+                            {getTeamShortName(match.teamB || "TBA")}
                         </div>
-                        <span className="font-semibold text-white text-lg truncate" title={match.teamB}>
-                            {match.teamB}
-                        </span>
+                        <div>
+                            <h3 className="font-bold text-foreground text-lg leading-tight">{match.teamB || "TBA"}</h3>
+                            {match.currentInnings === 2 && <span className="text-[10px] text-primary font-medium">Batting</span>}
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <div className="text-xl font-bold text-foreground">{scoreB}</div>
+                        {oversB && <div className="text-xs text-muted-foreground">({oversB} ov)</div>}
                     </div>
                 </div>
+
             </div>
 
-            {/* Bottom: Info & Action */}
-            <div className="relative px-6 pb-6 pt-2">
-                <div className="flex items-center justify-between mb-5 text-xs text-neutral-500">
-                    <div className="flex items-center gap-1.5">
-                        <MapPin size={12} />
-                        {getShortVenue(match.venue)}
-                    </div>
-                </div>
-
-                <button 
-                    onClick={() => navigate(`/live/${match._id}/details`)}
-                    className="w-full group/btn relative flex items-center justify-center gap-2 bg-white text-black py-3 rounded-xl font-bold text-sm hover:bg-neutral-200 transition-all active:scale-[0.98]"
-                >
-                    <PlayCircle size={16} className="text-neutral-900 group-hover/btn:fill-current transition-all" />
-                    Watch Match
-                    <ArrowRight size={16} className="opacity-0 -translate-x-2 group-hover/btn:opacity-100 group-hover/btn:translate-x-0 transition-all duration-300" />
+            {/* --- Card Footer: Action --- */}
+            <div className="px-5 pb-5 pt-0 mt-auto">
+                <button className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-xl font-semibold text-sm hover:bg-primary/90 transition-all shadow-sm group/btn">
+                    <PlayCircle size={16} className="fill-current" />
+                    <span>Watch Center</span>
+                    <ArrowRight size={16} className="opacity-0 -translate-x-2 group-hover/btn:opacity-100 group-hover/btn:translate-x-0 transition-all duration-200" />
                 </button>
             </div>
         </div>

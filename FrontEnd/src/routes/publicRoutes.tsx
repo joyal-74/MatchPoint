@@ -1,5 +1,5 @@
 import NavbarWrapper from '../components/shared/NavbarWrapper';
-import SettingsPage from '../components/shared/SettingsPage';
+import SettingsPage from '../pages/shared/SettingsPage';
 import AdminLoginPage from '../pages/auth/AdminLogin';
 import EnterAccountOtpPage from '../pages/auth/EnterAccountOtpPage';
 import EnterForgotOtpPage from '../pages/auth/EnterForgotOtpPage';
@@ -37,7 +37,6 @@ export const publicRoutes = [
     // Shared pages
     { path: "/unauthorized", element: <Unauthorized /> },
     { path: "/blocked", element: <Blocked /> },
-    { path: "/leaderboard", element: <AllTimeLeaderboard /> },
     {
         path: "/:role/subscription",
         element: (
@@ -68,6 +67,16 @@ export const publicRoutes = [
     },
     {
         path: "/:role/leaderboard",
+        element: (
+            <ProtectedRoute>
+                <NavbarWrapper>
+                    <AllTimeLeaderboard />
+                </NavbarWrapper>
+            </ProtectedRoute>
+        )
+    },
+    {
+        path: "/leaderboard",
         element: (
             <ProtectedRoute>
                 <NavbarWrapper>

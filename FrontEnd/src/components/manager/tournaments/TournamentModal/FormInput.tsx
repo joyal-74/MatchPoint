@@ -6,16 +6,18 @@ export default function FormInput({
     label, icon, type, name, value, onChange,
     placeholder, required = false, min, options, rows
 }: FormInputProps) {
+  
     const commonClasses =
-        "w-full px-4 py-2.5 bg-neutral-800/50 border border-neutral-700/50 " +
-        "rounded-lg text-white placeholder-neutral-400 focus:outline-none " +
-        "focus:ring-2 text-sm focus:ring-green-500/50 focus:border-transparent " +
-        "backdrop-blur-sm transition-all duration-200";
+        "w-full px-4 py-2.5 bg-background border border-input " +
+        "rounded-lg text-foreground placeholder:text-muted-foreground/50 focus:outline-none " +
+        "focus:ring-2 text-sm focus:ring-primary/50 focus:border-primary " +
+        "transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium " +
+        "dark:[&::-webkit-calendar-picker-indicator]:invert"; 
 
     return (
         <div className="space-y-2">
-            <label className="text-sm font-medium text-neutral-300 flex items-center gap-2">
-                {icon}
+            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                {icon && <span className="text-primary">{icon}</span>}
                 {label}
             </label>
 
@@ -35,7 +37,6 @@ export default function FormInput({
                         onChange(syntheticEvent);
                     }}
                     placeholder={placeholder || `Select ${label.toLowerCase()}`}
-
                 />
             ) : type === "textarea" ? (
                 <textarea

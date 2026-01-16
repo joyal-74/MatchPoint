@@ -39,13 +39,13 @@ export interface Tournament {
     prizePool: number;
     playersPerTeam: number;
     status: TourStatus;
-    isBlocked : boolean;
+    isBlocked: boolean;
     format: Format;
     organizer: string;
     contact: Contact;
     rules: string[];
-    isDeleted : boolean;
-    banner : string;
+    isDeleted: boolean;
+    banner: string;
 }
 
 export interface TournamentRegister {
@@ -89,4 +89,17 @@ export interface Leaderboard {
     topRuns: RunsBoard[];
     topWickets: WicketBoard[];
     mvp: MvpBoard[];
+}
+
+export interface PointsRow {
+    tournamentId : string;
+    rank: number;
+    team: string;
+    p: number;
+    w: number;
+    l: number;
+    t: number;
+    nrr: string;
+    pts: number;
+    form: string[];
 }

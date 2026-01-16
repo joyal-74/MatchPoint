@@ -1,3 +1,5 @@
+import { Users } from "lucide-react";
+
 export interface TeamLogoProps {
     logo?: string;
     name: string;
@@ -13,25 +15,33 @@ export default function TeamLogo({ logo, name, size = 'md', className = '' }: Te
     };
 
     const iconSizes = {
-        sm: 'w-4 h-4',
-        md: 'w-6 h-6',
-        lg: 'w-8 h-8'
+        sm: 20,
+        md: 28,
+        lg: 32
     };
 
     return (
         <div className={`flex-shrink-0 ${className}`}>
-            <div className={`${sizeClasses[size]} rounded-full overflow-hidden bg-neutral-700 flex items-center justify-center border-2 border-neutral-600`}>
+            <div className={`
+                ${sizeClasses[size]} 
+                rounded-full overflow-hidden 
+                bg-muted border-2 border-border 
+                flex items-center justify-center 
+                shadow-sm
+            `}>
                 {logo ? (
                     <img 
                         src={logo} 
                         alt={`${name} Logo`} 
-                        className="w-full h-full object-cover" 
+                        className="w-full h-full object-cover transition-transform hover:scale-105 duration-300" 
                     />
                 ) : (
-                    <div className="w-full h-full bg-neutral-600 flex items-center justify-center">
-                        <svg className={`${iconSizes[size]} text-neutral-400`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
+                    <div className="w-full h-full flex items-center justify-center bg-muted/50">
+                        <Users 
+                            size={iconSizes[size]} 
+                            className="text-muted-foreground/50" 
+                            strokeWidth={1.5}
+                        />
                     </div>
                 )}
             </div>

@@ -18,6 +18,8 @@ export class GetTournamentDetails implements IGetTournamentDetails {
         
         const tournament = await this._tournamentRepo.findById(tournamentId);
 
+        console.log(tournament, 'trnmrnt')
+
         if (!tournament) {
             this._logger.error(`Tournament not found: ${tournamentId}`);
             throw new NotFoundError("Tournament not found");

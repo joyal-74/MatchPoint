@@ -3,19 +3,18 @@ import { Bell, MessageCircle } from "lucide-react";
 import ProfileCard from "../shared/ProfileCard";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { logoutUser } from "../../features/auth";
-import { useLocation, useNavigate } from "react-router-dom";
-import NotificationDropdown from "./notifications/NotificationDropdown";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useNotifications } from "../../hooks/useNotifications";
+import NotificationDropdown from "./notifications/NotificationDropdown";
 
 const Navbar: React.FC = () => {
     const [showProfileCard, setShowProfileCard] = useState(false);
-
     const profileRef = useRef<HTMLDivElement>(null);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const location = useLocation();
+    
     const user = useAppSelector(s => s.auth.user);
-
     const role = user?.role ?? "guest";
 
     const {
@@ -25,15 +24,25 @@ const Navbar: React.FC = () => {
         close: closeNotifications
     } = useNotifications(user?._id);
 
+    // Handle click outside for profile card
     useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => profileRef.current && !profileRef.current.contains(e.target as Node) && setShowProfileCard(false);
+        const handleClickOutside = (event: MouseEvent) => {
+            if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+                setShowProfileCard(false);
+            }
+        };
+
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     const handleLogout = async () => {
-        await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
-        navigate("/login");
+        try {
+            await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
+            navigate("/login");
+        } catch (error) {
+            console.error("Logout failed", error);
+        }
     };
 
     const handleProfileAction = (action: "logout" | "teams" | "profile" | 'settings') => {
@@ -62,66 +71,102 @@ const Navbar: React.FC = () => {
     ];
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-20 py-3 bg-[var(--color-surface)] border-b border-[var(--color-border)] shadow-[var(--shadow-sm)]">
-            <h1 className="text-[var(--color-text-primary)] text-2xl font-rowdies">
-                <span className="text-[var(--color-primary)]">M</span>atch<span className="text-[var(--color-primary)]">P</span>oint
-            </h1>
+        <>
+            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-20 py-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border transition-colors duration-300">
+                
+                <div className="flex items-center gap-12">
+                    {/* Logo Section */}
+                    <h1 
+                        className="text-foreground text-2xl font-rowdies cursor-pointer" 
+                        onClick={() => navigate('/player/dashboard')}
+                    >
+                        <span className="text-primary">M</span>atch
+                        <span className="text-primary">P</span>oint
+                    </h1>
 
-            <ul className="hidden md:flex gap-8 lg:gap-12 ml-12 text-sm font-medium">
-                {menuItems.map(item => (
-                    <li key={item.path}>
-                        <h1 onClick={() => navigate(item.path)} className={`${location.pathname === item.path ? 'text-[var(--color-primary)] font-semibold' :
-                            'text-[var(--color-text-secondary)]'} hover:text-[var(--color-primary)] transition-colors duration-200 cursor-pointer`}>
-                            {item.name}
-                        </h1>
-                    </li>
-                ))}
-            </ul>
-
-            <div className="flex items-center gap-3 md:gap-4 relative">
-                <button
-                    onClick={toggleNotifications}
-                    className="relative p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-secondary)] rounded-full transition-all duration-200"
-                >
-                    <Bell className="w-5 h-5" />
-                    {unreadCount > 0 && (
-                        <span className="absolute top-1 right-1 bg-red-600 text-xs px-1 rounded-full">
-                            {unreadCount}
-                        </span>
-                    )}
-                </button>
-
-                <button
-                    className="relative p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-secondary)] rounded-full transition-all duration-200"
-                    onClick={() => navigate('/player/chat')}
-                >
-                    <MessageCircle className="w-5 h-5" />
-                </button>
-
-
-                <div ref={profileRef}>
-                    <img src={user?.profileImage || '/placeholder.png'}
-                        alt="Profile"
-                        className="w-8 h-8 rounded-full border-2 border-[var(--color-border)] hover:border-[var(--color-primary)] transition-colors duration-200 cursor-pointer"
-                        onClick={() => setShowProfileCard(prev => !prev)} />
-                    {showProfileCard && <div className="absolute right-0 mt-2">
-                        <ProfileCard role={role} onAction={handleProfileAction} /></div>}
+                    {/* Navigation Links */}
+                    <ul className="hidden md:flex gap-8 text-sm font-medium">
+                        {menuItems.map(item => (
+                            <li key={item.path}>
+                                <button
+                                    onClick={() => navigate(item.path)}
+                                    className={`${location.pathname === item.path
+                                            ? 'text-primary font-semibold'
+                                            : 'text-muted-foreground hover:text-foreground'
+                                        } transition-colors duration-200 cursor-pointer`}
+                                >
+                                    {item.name}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
 
-                {showNotifications && (
+                {/* Right Side Actions */}
+                <div className="flex items-center gap-3 md:gap-4 relative">
+                    
+                    {/* Notification Bell */}
+                    <button
+                        onClick={toggleNotifications}
+                        className={`relative p-2 rounded-full transition-all duration-200 
+                            ${showNotifications 
+                                ? 'bg-accent text-accent-foreground' 
+                                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                            }`}
+                    >
+                        <Bell className="w-5 h-5" />
+                        {unreadCount > 0 && (
+                            <span className="absolute top-1 right-1 bg-destructive text-destructive-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] flex items-center justify-center">
+                                {unreadCount}
+                            </span>
+                        )}
+                    </button>
 
+                    {/* Chat Button */}
+                    <button
+                        onClick={() => navigate('/player/chat')}
+                        className={`relative p-2 rounded-full transition-all duration-200 
+                            ${location.pathname === '/player/chat'
+                                ? 'bg-accent text-accent-foreground'
+                                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                            }`}
+                    >
+                        <MessageCircle className="w-5 h-5" />
+                    </button>
+
+                    {/* Profile Dropdown */}
+                    <div ref={profileRef} className="relative">
+                        <img
+                            src={user?.profileImage || '/placeholder.png'}
+                            alt="Profile"
+                            className="w-8 h-8 rounded-full border-2 border-border hover:border-primary transition-colors duration-200 cursor-pointer object-cover"
+                            onClick={() => setShowProfileCard((prev) => !prev)}
+                        />
+
+                        {showProfileCard && (
+                            <div className="absolute right-0 mt-2 w-64 origin-top-right">
+                                <ProfileCard role={role} onAction={handleProfileAction} />
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Notification Dropdown Container */}
+                {showNotifications && (
                     <>
                         <div
                             className="fixed inset-0 z-40 bg-black/0"
                             onClick={closeNotifications}
                         />
-                        <div className="absolute right-0 top-12 w-96 z-50">
+                        <div className="absolute right-6 md:right-20 top-16 w-80 md:w-96 z-50">
                             <NotificationDropdown onClose={closeNotifications} role={role} />
                         </div>
                     </>
                 )}
-            </div>
-        </nav>
+            </nav>
+
+            <div className="h-[64px]" />
+        </>
     );
 };
 

@@ -1,3 +1,4 @@
+import { TrafficPoint } from "domain/dtos/Analytics.dto";
 import { TournamentTeamData } from "domain/dtos/Tournament";
 import { Registration } from "domain/entities/Registration";
 
@@ -9,4 +10,6 @@ export interface IRegistrationRepository {
     updatePaymentStatus(registrationId: string, paymentStatus: 'completed' | 'failed', paymentId: string): Promise<Registration>;
     findByPaymentId(paymentId: string): Promise<Registration | null>;
     findByTeamIds(teamIds: string[]): Promise<Registration[] | null>;
+    getPaidRegistrationsByTournament(tournamentId: string): Promise<Registration[]>;
+    getDailyRegistrations(tournamentIds: string[], days: number): Promise<TrafficPoint[]>;
 }

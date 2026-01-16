@@ -1,75 +1,119 @@
-import { MapPin, Users, Target } from 'lucide-react';
+import { MapPin, Users, Target, Trophy, Activity, Swords } from 'lucide-react';
 import type { Team } from '../Types';
 
-const TeamInfoCard = ({ team }: { team : Team }) => {
+const TeamInfoCard = ({ team }: { team: Team }) => {
+    
+    // Helper for semantic badge styling
+    const getStatusStyles = (phase: string) => {
+        switch (phase) {
+            case 'recruiting':
+                return 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20';
+            case 'active':
+                return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20';
+            default:
+                return 'bg-muted text-muted-foreground border-border';
+        }
+    };
+
     return (
-        <div className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 p-6">
-            <div className="text-center mb-6">
-                <img
-                    src={team.logo}
-                    alt={team.name}
-                    className="w-20 h-20 rounded-full object-cover border-4 border-neutral-100 dark:border-neutral-700 mx-auto mb-4"
-                />
-                <h1 className="text-xl font-bold text-neutral-800 dark:text-white mb-2">{team.name}</h1>
-                <div className="flex items-center justify-center space-x-1 text-sm text-neutral-600 dark:text-neutral-400 mb-3">
-                    <MapPin className="w-4 h-4" />
+        <div className="bg-card text-card-foreground rounded-xl border border-border shadow-sm overflow-hidden h-full flex flex-col">
+            
+            {/* 1. decorative Cover Banner */}
+            <div className="h-24 bg-gradient-to-r from-primary/20 via-primary/10 to-background relative overflow-hidden">
+                {/* Abstract decoration */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+            </div>
+
+            {/* 2. Profile Header Section */}
+            <div className="px-6 relative flex flex-col items-center text-center -mt-12">
+                {/* Logo with Elevation */}
+                <div className="relative mb-3 group">
+                    <div className="w-24 h-24 rounded-full p-1 bg-card ring-1 ring-border shadow-xl">
+                        <img
+                            src={team.logo}
+                            alt={team.name}
+                            className="w-full h-full rounded-full object-cover"
+                        />
+                    </div>
+                    {/* Floating Trophy Icon */}
+                    <div className="absolute bottom-0 right-0 bg-card p-1.5 rounded-full border border-border shadow-sm text-primary">
+                        <Trophy size={14} fill="currentColor" className="opacity-20 text-foreground" />
+                        <Trophy size={14} className="absolute inset-0 m-auto" />
+                    </div>
+                </div>
+
+                {/* Name & Location */}
+                <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">
+                    {team.name}
+                </h1>
+                <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-4">
+                    <MapPin size={14} />
                     <span>{team.city}, {team.state}</span>
                 </div>
-                <div className="flex justify-center space-x-2">
-                    <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-medium capitalize">
+
+                {/* Tags Row */}
+                <div className="flex flex-wrap justify-center gap-2 mb-6">
+                    <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border border-primary/20">
                         {team.sport}
                     </span>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${team.phase === 'recruiting'
-                            ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300'
-                            : team.phase === 'active'
-                                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
-                                : 'bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-300'
-                        }`}>
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${getStatusStyles(team.phase)}`}>
                         {team.phase}
                     </span>
                 </div>
             </div>
 
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed text-center mb-6">
-                {team.description}
-            </p>
+            {/* 3. Description & Stats */}
+            <div className="px-6 pb-6 flex-1 flex flex-col gap-6">
+                
+                {/* Description */}
+                <div className="text-sm text-muted-foreground text-center leading-relaxed">
+                    "{team.description}"
+                </div>
 
-            <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-3 bg-neutral-50 dark:bg-neutral-700/50 rounded-lg">
-                        <div className="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg mx-auto mb-2">
-                            <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                        </div>
-                        <p className="text-lg font-bold text-neutral-800 dark:text-white">{team.membersCount}</p>
-                        <p className="text-xs text-neutral-600 dark:text-neutral-400">Current</p>
+                {/* Clean Divided Stats Row */}
+                <div className="grid grid-cols-3 border-y border-border py-4 bg-muted/20 rounded-lg">
+                    <div className="flex flex-col items-center justify-center border-r border-border/60">
+                        <span className="flex items-center gap-1.5 text-xs text-muted-foreground uppercase font-medium mb-1">
+                            <Users size={14} /> Members
+                        </span>
+                        <span className="text-lg font-bold text-foreground">{team.membersCount}</span>
                     </div>
-                    <div className="text-center p-3 bg-neutral-50 dark:bg-neutral-700/50 rounded-lg">
-                        <div className="flex items-center justify-center w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg mx-auto mb-2">
-                            <Target className="w-4 h-4 text-green-600 dark:text-green-400" />
-                        </div>
-                        <p className="text-lg font-bold text-neutral-800 dark:text-white">{team.maxPlayers}</p>
-                        <p className="text-xs text-neutral-600 dark:text-neutral-400">Capacity</p>
+                    
+                    <div className="flex flex-col items-center justify-center border-r border-border/60">
+                        <span className="flex items-center gap-1.5 text-xs text-muted-foreground uppercase font-medium mb-1">
+                            <Target size={14} /> Capacity
+                        </span>
+                        <span className="text-lg font-bold text-foreground">{team.maxPlayers}</span>
+                    </div>
+
+                    <div className="flex flex-col items-center justify-center">
+                        <span className="flex items-center gap-1.5 text-xs text-muted-foreground uppercase font-medium mb-1">
+                            <Swords size={14} /> Matches
+                        </span>
+                        <span className="text-lg font-bold text-foreground">{team.stats.totalMatches}</span>
                     </div>
                 </div>
 
-                <div className="p-3 bg-neutral-50 dark:bg-neutral-700/50 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-neutral-600 dark:text-neutral-400">Win Rate</span>
-                        <span className="text-sm font-semibold text-neutral-800 dark:text-white">{team.stats.winRate}%</span>
+                {/* Hero Metric: Win Rate */}
+                <div className="mt-auto bg-primary/5 rounded-xl p-4 border border-primary/10 relative overflow-hidden group">
+                    <div className="flex justify-between items-end mb-2 relative z-10">
+                        <div className="flex items-center gap-2 text-primary font-medium">
+                            <Activity size={18} />
+                            <span>Win Rate</span>
+                        </div>
+                        <span className="text-2xl font-bold text-foreground">{team.stats.winRate}%</span>
                     </div>
-                    <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
+                    
+                    {/* Progress Bar */}
+                    <div className="w-full bg-background rounded-full h-2.5 overflow-hidden border border-border/50 relative z-10">
                         <div
-                            className="bg-green-500 h-2 rounded-full"
+                            className="bg-primary h-full rounded-full transition-all duration-1000 ease-out"
                             style={{ width: `${team.stats.winRate}%` }}
-                        ></div>
+                        />
                     </div>
-                </div>
 
-                <div className="p-3 bg-neutral-50 dark:bg-neutral-700/50 rounded-lg">
-                    <div className="flex items-center justify-between">
-                        <span className="text-sm text-neutral-600 dark:text-neutral-400">Total Matches</span>
-                        <span className="text-sm font-semibold text-neutral-800 dark:text-white">{team.stats.totalMatches}</span>
-                    </div>
+                    {/* Subtle Background Pattern for Visual Interest */}
+                    <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-primary/10 to-transparent skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
             </div>
         </div>

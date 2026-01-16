@@ -25,7 +25,7 @@ export class InitiateTournamentPayment implements IInitiateTournamentPayment {
         @inject(DI_TOKENS.UnitOfWork) private _uow: IUnitOfWork
     ) {
         this.providers = {
-            razorpay: _razorpayProvider,
+            razorpay: this._razorpayProvider,
         };
     }
 
@@ -37,6 +37,9 @@ export class InitiateTournamentPayment implements IInitiateTournamentPayment {
         if (existingRegistration && existingRegistration.paymentStatus === 'completed') {
             throw new BadRequestError('Team already registered');
         }
+
+        console.log(tournamentId, " tournamentId")
+        console.log(teamId, "teamId")
 
         await this._validator.execute(tournamentId, teamId);
 

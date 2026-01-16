@@ -12,6 +12,11 @@ export const saveMatchData = createAsyncThunk(
     createApiThunk(matchEndpoints.saveMatchData)
 );
 
+export const startMatch = createAsyncThunk(
+    "manager/startMatch",
+    createApiThunk(matchEndpoints.startMatch)
+);
+
 export const loadInitialLiveScore = createAsyncThunk(
     "manager/loadInitialLiveScore",
     createApiThunk(matchEndpoints.loadInitialLiveScore)

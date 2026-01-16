@@ -1,31 +1,44 @@
-export const UserButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & { icon: React.ReactNode, variant?: 'primary' | 'secondary' | 'tertiary' | 'current' }> = ({ icon, children, variant = 'primary', className, ...props }) => {
+import React from 'react';
 
-    // Removed the 'uppercase' style to improve readability on action buttons, keeping it bold.
-    const baseStyle = 'flex items-center justify-center space-x-2 w-full px-5 py-2 rounded-xl font-bold tracking-wide transition duration-200 shadow-lg text-sm';
-    let colorStyle = '';
+export const UserButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & { 
+    icon?: React.ReactNode, 
+    variant?: 'primary' | 'secondary' | 'tertiary' | 'current' | 'outline' | 'ghost' 
+}> = ({ icon, children, variant = 'primary', className, ...props }) => {
+
+    const baseStyle = 'flex items-center justify-center space-x-2 w-full px-5 py-2.5 rounded-xl font-bold tracking-wide transition-all duration-200 text-sm active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed';
+    
+    let variantStyles = '';
 
     switch (variant) {
         case 'primary':
-            // NEW: Use Cyan for standard action
-            colorStyle = 'bg-cyan-600 hover:bg-cyan-700 text-white shadow-cyan-500/50';
+            // High emphasis action (Upgrade/Subscribe)
+            variantStyles = 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 hover:shadow-primary/40';
             break;
         case 'secondary':
-            // NEW: Use Emerald for highest priority action (Super Plan Upgrade)
-            colorStyle = 'bg-emerald-500 hover:bg-emerald-600 text-neutral-900 shadow-emerald-500/50';
+            // Standard action
+            variantStyles = 'bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border/50 shadow-sm';
             break;
         case 'tertiary':
-            // NEW: Subdued dark color for "Not Available" / disabled look
-            colorStyle = 'bg-neutral-700 hover:bg-neutral-600/80 text-neutral-400 shadow-none cursor-not-allowed';
+            // Disabled / Unavailable state
+            variantStyles = 'bg-muted text-muted-foreground cursor-not-allowed hover:bg-muted opacity-70 shadow-none';
             break;
         case 'current':
-            // NEW: Darker gray for the current plan indicator, no border needed.
-            colorStyle = 'bg-neutral-700 text-neutral-300 cursor-default shadow-none';
+            // Indicator for active plan
+            variantStyles = 'bg-muted/50 text-foreground border border-border cursor-default hover:bg-muted/50 shadow-none active:scale-100';
             break;
+        case 'outline':
+            variantStyles = 'border-2 border-primary text-primary hover:bg-primary/10 bg-transparent shadow-none';
+            break;
+        case 'ghost':
+            variantStyles = 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50 shadow-none';
+            break;
+        default:
+            variantStyles = 'bg-primary text-primary-foreground hover:bg-primary/90';
     }
 
     return (
-        <button className={`${baseStyle} ${colorStyle} ${className}`} {...props}>
-            {icon}
+        <button className={`${baseStyle} ${variantStyles} ${className}`} {...props}>
+            {icon && <span className="shrink-0">{icon}</span>}
             <span>{children}</span>
         </button>
     );

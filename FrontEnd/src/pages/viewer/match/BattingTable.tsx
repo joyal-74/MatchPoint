@@ -1,4 +1,4 @@
-import { User } from "lucide-react"; // Using Lucide Icons
+import { User, Activity } from "lucide-react";
 import type { BattingStats } from "../../../features/manager/Matches/matchTypes";
 
 interface BattingTableProps {
@@ -20,68 +20,74 @@ export const BattingTable = ({ stats, teamName, balls, getPlayerName, getPlayerR
     const safeStats = Array.isArray(stats) ? stats : [];
 
     return (
-        <div className="w-full">
+        <div className="w-full flex flex-col h-full">
             {/* Table Header Row */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-muted/30">
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-blue-500/10 rounded-lg">
-                        <User size={18} className="text-blue-400" />
+                        <User size={18} className="text-blue-500" />
                     </div>
                     <div>
-                        <h3 className="font-bold text-white text-sm uppercase tracking-wide">Batting Scorecard</h3>
-                        <p className="text-xs text-neutral-500">{teamName} • {formatBallsToOvers(balls)} overs</p>
+                        <h3 className="font-bold text-foreground text-sm uppercase tracking-wide">Batting Scorecard</h3>
+                        <p className="text-xs text-muted-foreground">{teamName} • {formatBallsToOvers(balls)} overs</p>
                     </div>
                 </div>
             </div>
 
             {/* Table Content */}
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto flex-1">
                 <table className="w-full text-sm text-left">
-                    <thead className="text-xs text-neutral-500 uppercase bg-black/20 border-b border-white/5">
+                    <thead className="text-xs text-muted-foreground uppercase bg-muted/10 border-b border-border">
                         <tr>
-                            <th className="px-6 py-4 font-bold tracking-wider">Batter</th>
-                            <th className="px-4 py-4 text-right">R</th>
-                            <th className="px-4 py-4 text-right">B</th>
-                            <th className="px-4 py-4 text-right hidden sm:table-cell">4s</th>
-                            <th className="px-4 py-4 text-right hidden sm:table-cell">6s</th>
-                            <th className="px-4 py-4 text-right text-neutral-400">SR</th>
+                            <th className="px-6 py-3 font-semibold tracking-wider">Batter</th>
+                            <th className="px-4 py-3 text-right font-semibold">R</th>
+                            <th className="px-4 py-3 text-right font-semibold">B</th>
+                            <th className="px-4 py-3 text-right font-semibold hidden sm:table-cell">4s</th>
+                            <th className="px-4 py-3 text-right font-semibold hidden sm:table-cell">6s</th>
+                            <th className="px-4 py-3 text-right font-semibold text-muted-foreground">SR</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5">
+                    <tbody className="divide-y divide-border">
                         {safeStats.map((batsman) => {
                             const isNotOut = !batsman.out;
                             return (
                                 <tr 
                                     key={batsman.playerId} 
-                                    className={`transition-colors hover:bg-white/[0.02] ${isNotOut ? 'bg-green-500/5' : ''}`}
+                                    className={`transition-colors hover:bg-muted/30 ${isNotOut ? 'bg-primary/5' : ''}`}
                                 >
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
-                                            <div className={`w-1 h-8 rounded-full ${isNotOut ? 'bg-green-500' : 'bg-neutral-700'}`} />
+                                            {/* Status Indicator */}
+                                            <div className={`w-1 h-8 rounded-full ${isNotOut ? 'bg-primary' : 'bg-muted-foreground/30'}`} />
+                                            
                                             <div>
-                                                <div className="font-bold text-white flex items-center gap-2">
+                                                <div className="font-medium text-foreground flex items-center gap-2">
                                                     {getPlayerName(batsman.playerId)}
-                                                    {isNotOut && <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded border border-green-500/20">NOT OUT</span>}
+                                                    {isNotOut && (
+                                                        <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded border border-primary/20 font-bold uppercase tracking-wider flex items-center gap-1">
+                                                            <Activity size={8} className="animate-pulse" /> Not Out
+                                                        </span>
+                                                    )}
                                                 </div>
-                                                <div className="text-xs text-neutral-500 font-medium mt-0.5">
+                                                <div className="text-xs text-muted-foreground font-medium mt-0.5">
                                                     {getPlayerRole(batsman.playerId)}
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-4 py-4 text-right font-bold text-white text-base">
+                                    <td className="px-4 py-4 text-right font-bold text-foreground text-base">
                                         {batsman.runs}
                                     </td>
-                                    <td className="px-4 py-4 text-right text-neutral-400">
+                                    <td className="px-4 py-4 text-right text-muted-foreground font-medium">
                                         {batsman.balls}
                                     </td>
-                                    <td className="px-4 py-4 text-right text-neutral-500 hidden sm:table-cell">
+                                    <td className="px-4 py-4 text-right text-muted-foreground hidden sm:table-cell">
                                         {batsman.fours}
                                     </td>
-                                    <td className="px-4 py-4 text-right text-neutral-500 hidden sm:table-cell">
+                                    <td className="px-4 py-4 text-right text-muted-foreground hidden sm:table-cell">
                                         {batsman.sixes}
                                     </td>
-                                    <td className="px-4 py-4 text-right font-mono text-neutral-300">
+                                    <td className="px-4 py-4 text-right font-mono text-muted-foreground">
                                         {batsman.strikeRate}
                                     </td>
                                 </tr>
@@ -89,7 +95,7 @@ export const BattingTable = ({ stats, teamName, balls, getPlayerName, getPlayerR
                         })}
                         {safeStats.length === 0 && (
                             <tr>
-                                <td colSpan={6} className="px-6 py-12 text-center text-neutral-500 italic">
+                                <td colSpan={6} className="px-6 py-12 text-center text-muted-foreground italic">
                                     Innings has not started yet.
                                 </td>
                             </tr>

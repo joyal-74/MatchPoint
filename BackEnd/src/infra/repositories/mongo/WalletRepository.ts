@@ -1,4 +1,4 @@
-import { IWalletRepository, WalletCreateData } from "app/repositories/interfaces/shared/IWalletRepository";
+import { IWalletRepository, WalletCreateData, WalletCreditData } from "app/repositories/interfaces/shared/IWalletRepository";
 import { Wallet } from "domain/entities/Wallet";
 import { WalletModel } from "infra/databases/mongo/models/WalletModel";
 import { ClientSession } from "mongoose";
@@ -17,6 +17,29 @@ export class WalletRepository implements IWalletRepository {
             doc.currency,
             doc.isFrozen
         );
+    }
+
+    async creditAmount(data: WalletCreditData, ctx?: unknown): Promise<void> {
+        const session = ctx as ClientSession;
+
+        // 1. Find the User's Wallet
+        const wallet = await WalletModel.findOne({ 
+            ownerId: data.userId, 
+            ownerType: 'USER' 
+        }).session(session);
+
+        if (!wallet) {
+            throw new Error(`Wallet not found for user ${data.userId}`);
+        }
+
+        // 2. Add Money to Balance
+        const updatedWallet = await WalletModel.findOneAndUpdate(
+            { _id: wallet._id },
+            { $inc: { balance: data.amount } },
+            { session, new: true }
+        );
+
+        if (!updatedWallet) throw new Error("Failed to update wallet balance");
     }
 
     async getByOwner(ownerId: string, ownerType: 'USER' | 'TOURNAMENT' | 'ADMIN', ctx?: unknown) {

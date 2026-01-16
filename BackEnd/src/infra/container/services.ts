@@ -19,6 +19,8 @@ import { PlayerTeamServices } from "../services/PlayerTeamServices";
 import { UserServices } from "../services/UserServices";
 import { UserAuthServices } from "../services/UserAuthServices";
 import { GetPlansAndUserSubscription } from "../services/GetPlansAndUserSubscription";
+import { StartTournament } from "infra/services/StartTournament";
+import { TournamentRefundService } from "infra/services/TournamentRefundService";
 
 // registrations
 container.register(DI_TOKENS.UserManagementService, { useClass: UserManagementService });
@@ -38,3 +40,5 @@ container.register(DI_TOKENS.LiveStreamService, { useClass: LiveStreamService })
 container.register(DI_TOKENS.TransactionService, { useClass: TransactionService });
 container.register(DI_TOKENS.SubscriptionPaymentService, { useClass: SubscriptionPaymentService });
 container.register(DI_TOKENS.GetPlansAndUserSubscription, { useClass: GetPlansAndUserSubscription });
+container.register(DI_TOKENS.StartTournament, { useClass: StartTournament });
+container.register(DI_TOKENS.TournamentRefundService, { useClass: TournamentRefundService });

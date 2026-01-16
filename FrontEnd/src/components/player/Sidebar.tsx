@@ -20,31 +20,42 @@ const Sidebar: React.FC = () => {
     const menuItems: MenuItem[] = [
         { name: "Profile", path: "/player/profile", icon: <User size={20} /> },
         { name: "My Teams", path: "/player/myteams/approved", icon: <Users2 size={20} /> },
-        { name: "Tournaments", path: "/player/tournaments", icon: <Trophy size={20} /> },
+        { name: "Tournaments", path: "/player/mytournaments", icon: <Trophy size={20} /> },
         { name: "My Statistics", path: "/player/statistics", icon: <BarChart3 size={20} /> },
         { name: "Subscription", path: "/player/subscription", icon: <CreditCard size={20} /> },
         { name: "Settings", path: "/player/settings", icon: <Settings size={20} /> },
     ];
 
     return (
-        <aside className="fixed top-15 left-0 h-full w-15 lg:w-65 bg-[var(--color-background-secondary)] text-[var(--color-text-primary)] shadow-lg flex flex-col">
-            <nav className="flex-1 mt-4">
+        <aside className="fixed top-[60px] left-0 h-[calc(100vh-60px)] w-16 lg:w-64 bg-background border-r border-border text-foreground transition-colors duration-300 z-40 hidden md:flex flex-col">
+            <nav className="flex-1 mt-6 px-3 space-y-1">
                 {menuItems.map((item) => (
                     <NavLink
                         key={item.name}
                         to={item.path}
                         className={({ isActive }) =>
-                            `w-full flex items-center gap-3 pl-5 lg:pl-20 py-4 text-sm font-medium transition-colors ${isActive
-                                ? "text-[var(--color-link-hover)] font-semibold"
-                                : "text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]"
+                            `group flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-md transition-all duration-200
+                            ${isActive
+                                ? "bg-primary/10 text-primary shadow-sm"
+                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
                             }`
                         }
                     >
-                        {item.icon}
-                        <span className="hidden lg:inline">{item.name}</span>
+                        {({ isActive }) => (
+                            <>
+                                <span className={`transition-colors duration-200 ${isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`}>
+                                    {item.icon}
+                                </span>
+                                <span className="hidden lg:inline">{item.name}</span>
+                            </>
+                        )}
                     </NavLink>
                 ))}
             </nav>
+
+            <div className="p-4 border-t border-border mt-auto hidden lg:block">
+                <p className="text-xs text-muted-foreground">© 2026 MatchPoint</p>
+            </div>
         </aside>
     );
 };

@@ -1,11 +1,11 @@
 import { TeamsController } from 'presentation/http/controllers/player/TeamsController';
 import { FetchAllTeams } from 'app/usecases/player/FetchPlayerTeams';
 import { JoinTeamUseCase } from 'app/usecases/player/JoinTeams';
-import { GetMyTeamsUseCase } from 'app/usecases/player/GetMyTeams';
+import { GetMyTeamsUseCase } from 'app/usecases/player/GetPlayerTeamsUseCase';
 import { GetMyTeamDetails } from 'app/usecases/player/GetMyTeamDetails';
 import { teamRepository, playerRepository, notificationRepository } from '../shared/repositories';
 import { logger } from '../shared/providers';
-import { GetAllMyTeamsUseCase } from 'app/usecases/player/GetAllMyTeams';
+import { GetAllMyTeamsUseCase } from 'app/usecases/player/GetPlayerJoinedTeams';
 import { teamServices } from '../shared/services';
 import { UpdatePlayerInviteStatus } from 'app/usecases/player/UpdatePlayerInviteStatus';
 

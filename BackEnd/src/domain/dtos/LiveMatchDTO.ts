@@ -1,6 +1,7 @@
 export interface LiveMatchDTO {
     matchId: string;
     tournamentId: string;
+    tournamentName: string;
 
     teamA: string;
     teamB: string;
@@ -16,4 +17,28 @@ export interface LiveMatchDTO {
 
     currentInningsNumber: number;
     isMatchComplete: boolean;
+}
+
+export interface LiveMatchCardDTO {
+    matchId: string;
+
+    teamA: {
+        id: string;
+        name: string;
+        logo: string;
+    };
+
+    teamB: {
+        id: string;
+        name: string;
+        logo: string;
+    };
+
+    scoreA: string;
+    oversA: string;
+
+    scoreB: string;
+    oversB: string;
+
+    isStreamLive: boolean;
 }

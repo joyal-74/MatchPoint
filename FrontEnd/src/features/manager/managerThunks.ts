@@ -79,3 +79,13 @@ export const addPlayerToTeam   = createAsyncThunk(
     "manager/updatePlayerStatus",
     createApiThunk(managerEndpoints.addPlayerToTeam )
 );
+
+export const startTournament   = createAsyncThunk(
+    "manager/startTournament",
+    createApiThunk(managerEndpoints.startTournament )
+);
+
+export const cancelTournament   = createAsyncThunk(
+    "manager/cancelTournament",
+    createApiThunk(managerEndpoints.cancelTournament )
+);

@@ -37,6 +37,7 @@ router.put("/team/:teamId", upload.single("logo"), expressFileUpdateHandler(team
 router.post("/tournament", upload.single("banner"), expressFileUpdateHandler(tournamentManagementController.addNewTournament));
 router.put("/tournament/:managerId", upload.single("banner"), expressFileUpdateHandler(tournamentManagementController.editTournament));
 router.get("/tournament/:managerId", expressAdapter(tournamentManagementController.getMyTournaments));
+router.get("/tournament/:managerId/analytics", expressAdapter(tournamentManagementController.getDashboardAnalytics));
 router.patch("/tournament/:tournamentId", expressAdapter(tournamentManagementController.cancelTournament));
 router.get("/tournament/:tournamentId/details", expressAdapter(tournamentManagementController.tournamentDetails));
 router.get("/tournament/explore/:managerId", expressAdapter(tournamentManagementController.getExploreTournaments));
@@ -46,6 +47,8 @@ router.post("/registration/:registrationId/status", expressAdapter(tournamentMan
 router.get("/tournament/:tournamentId/teams", expressAdapter(tournamentManagementController.getTournamentTeams));
 router.get("/tournament/:tournamentId/available-players", expressAdapter(teamManagementController.availablePlayers));
 
+router.post("/tournament/start", expressAdapter(tournamentManagementController.startTournament));
+router.post("/tournament/:tournamentId/matches", expressAdapter(tournamentManagementController.createTournamentMatches));
 router.post("/tournament/:tournamentId/matches", expressAdapter(tournamentManagementController.createTournamentMatches));
 router.get("/tournament/:tournamentId/matches", expressAdapter(tournamentManagementController.getTournamentMatches));
 router.get("/tournament/:tournamentId/fixture", expressAdapter(tournamentManagementController.getTournamentFixtures));
@@ -56,6 +59,7 @@ router.get("/tournament/:tournamentId/leaderboard", expressAdapter(tournamentMan
 router.get("/tournament/matches/:matchId/details", expressAdapter(matchController.getMatchDetails));
 router.get("/tournament/matches/:matchId/livescore", expressAdapter(matchController.getLiveScore));
 router.post("/tournament/matches/:matchId/save", expressAdapter(matchController.saveMatchData));
+router.post("/tournament/matches/start", expressAdapter(matchController.startMatchData));
 
 router.get("/financials/:managerId", expressAdapter(financialsController.getReport));
 

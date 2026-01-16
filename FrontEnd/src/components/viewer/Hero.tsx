@@ -1,67 +1,58 @@
-import { BsTrophy } from "react-icons/bs"
-import { TbPlayerPlay } from "react-icons/tb"
+import { Trophy, PlayCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+    const navigate = useNavigate();
+
     return (
-        <>
-            <section className="relative bg-gradient-to-br from-[var(--color-background)] to-[var(--color-background-secondary)] bg-cover bg-center text-center py-26 px-6">
-                <div className="max-w-4xl mx-auto">
-
-                    <h1 className="text-4xl md:text-5xl font-bold text-[var(--color-text-primary)] leading-snug flex flex-col">
-                        Master Your{" "}
-                        <span className="text-[var(--color-primary)]">
-                            Tournament Arena
-                        </span>
-                    </h1>
-
-                    <p className="mt-6 text-lg md:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-                        The ultimate platform for managing sports tournaments. Track live
-                        matches, organize competitions, and engage with players like never
-                        before.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
-                        <button className="flex items-center gap-2 bg-[var(--color-surface)] text-[var(--color-text-primary)] px-6 py-3 rounded-lg shadow-[var(--shadow-md)] hover:bg-[var(--color-surface-secondary)] hover:scale-105 transition-all duration-300 border border-[var(--color-border)]">
-                            <TbPlayerPlay className="text-xl text-[var(--color-primary)]" />
-                            Watch Live Matches
-                        </button>
-
-                        <button className="flex items-center gap-2 bg-[var(--color-primary)] text-[var(--color-text-inverse)] px-6 py-3 rounded-lg shadow-[var(--shadow-md)] hover:bg-[var(--color-primary-hover)] hover:scale-105 transition-all duration-300">
-                            <BsTrophy className="text-xl" />
-                            Browse Tournaments
-                        </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-16">
-                        <div className="bg-[var(--color-surface)] rounded-lg py-6 px-4 shadow-[var(--shadow-md)] border border-[var(--color-border)] hover:shadow-[var(--shadow-lg)] transition-all duration-300">
-                            <h2 className="text-2xl font-bold text-[var(--color-primary)]">
-                                50k+
-                            </h2>
-                            <p className="text-[var(--color-text-secondary)] mt-1">
-                                Active Players
-                            </p>
-                        </div>
-                        <div className="bg-[var(--color-surface)] rounded-lg py-6 px-4 shadow-[var(--shadow-md)] border border-[var(--color-border)] hover:shadow-[var(--shadow-lg)] transition-all duration-300">
-                            <h2 className="text-2xl font-bold text-[var(--color-primary)]">
-                                1,200+
-                            </h2>
-                            <p className="text-[var(--color-text-secondary)] mt-1">
-                                Tournaments
-                            </p>
-                        </div>
-                        <div className="bg-[var(--color-surface)] rounded-lg py-6 px-4 shadow-[var(--shadow-md)] border border-[var(--color-border)] hover:shadow-[var(--shadow-lg)] transition-all duration-300">
-                            <h2 className="text-2xl font-bold text-[var(--color-primary)]">
-                                24/7
-                            </h2>
-                            <p className="text-[var(--color-text-secondary)] mt-1">
-                                Live Support
-                            </p>
-                        </div>
-                    </div>
+        <section className="relative pt-22 pb-20 md:pt-28 md:pb-32 px-4 overflow-hidden bg-background">
+            
+            {/* Background Ambience */}
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
+            
+            <div className="max-w-5xl mx-auto text-center space-y-8">
+                
+                {/* Badge */}
+                <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
+                    The Ultimate Sports Platform
                 </div>
-            </section>
-        </>
-    )
-}
 
-export default Hero
+                {/* Heading */}
+                <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground leading-tight animate-in fade-in slide-in-from-bottom-5 duration-700">
+                    Master Your <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+                        Tournament Arena
+                    </span>
+                </h1>
+
+                {/* Subheading */}
+                <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-6 duration-700">
+                    Effortlessly organize competitions, track live matches in real-time, and engage with a global community of athletes like never before.
+                </p>
+
+                {/* CTAs */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-7 duration-1000">
+                    <button 
+                        onClick={() => navigate('/tournaments')}
+                        className="h-12 px-8 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/25 flex items-center gap-2 active:scale-95"
+                    >
+                        <Trophy size={18} />
+                        Browse Tournaments
+                    </button>
+                    
+                    <button 
+                        onClick={() => navigate('/live')}
+                        className="h-12 px-8 rounded-full bg-background border border-input text-foreground font-semibold hover:bg-muted hover:text-primary transition-all flex items-center gap-2 group active:scale-95"
+                    >
+                        <PlayCircle size={18} className="text-muted-foreground group-hover:text-primary transition-colors" />
+                        Watch Live Matches
+                    </button>
+                </div>
+
+            </div>
+        </section>
+    );
+};
+
+export default Hero;

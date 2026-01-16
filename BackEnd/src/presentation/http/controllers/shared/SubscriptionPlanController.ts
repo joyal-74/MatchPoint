@@ -1,7 +1,7 @@
 import { injectable, inject } from "tsyringe";
 import { DI_TOKENS } from "domain/constants/Identifiers";
 
-import { ICreatePaymentSession } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
+import { ICreatePaymentSession, IUpdateUserDirectlyPlan } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
 import { IGetPlansAndUserSubscription, ISubscriptionService } from "app/services/ISubscriptionServices";
 import { SubscriptionMessages } from "domain/constants/admin/AdminSubscriptionMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
@@ -15,6 +15,7 @@ export class SubscriptionController {
     constructor(
         @inject(DI_TOKENS.GetPlansAndUserSubscription) private _getPlansAndUserSubscription: IGetPlansAndUserSubscription,
         @inject(DI_TOKENS.CreatePaymentSession) private _createPaymentSessionUseCase: ICreatePaymentSession,
+        @inject(DI_TOKENS.UpdateUserDirectlyPlan) private _updatePlanDirectUseCase: IUpdateUserDirectlyPlan,
         @inject(DI_TOKENS.SubscriptionService) private _subscriptionPaymentService: ISubscriptionService,
     ) { }
 
@@ -54,5 +55,13 @@ export class SubscriptionController {
         }
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, message, result));
+    }
+
+    updatePlan = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { userId, planLevel, billingCycle } = httpRequest.body;
+
+        const plans = await this._updatePlanDirectUseCase.execute(userId, planLevel, billingCycle);
+
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Subscription plan changed successfully", plans));
     }
 }

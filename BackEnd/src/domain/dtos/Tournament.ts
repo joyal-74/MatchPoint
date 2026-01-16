@@ -13,6 +13,7 @@ export interface TournamentTeamData {
     status: TeamStatus;
     phase: TeamPhase;
     captain: string;
+    managerId: string;
     paymentStatus: paymentStatus;
     createdAt: Date;
 }

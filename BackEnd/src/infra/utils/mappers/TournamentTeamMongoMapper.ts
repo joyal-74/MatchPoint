@@ -14,6 +14,7 @@ export class TournamentTeamMongoMapper {
             phase: t.teamId.phase,
 
             captain: `${t.captainId.firstName} ${t.captainId.lastName}`,
+            managerId: t.managerId,
             paymentStatus: t.paymentStatus,
             createdAt: t.createdAt,
         };

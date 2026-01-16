@@ -10,7 +10,7 @@ const PlayerLayoutNavbar: React.FC<PlayerLayoutProps> = ({ children }) => {
         <div className="flex min-h-screen bg-[var(--color-background-primary)] md:pr-12">
             <div className="flex-1 flex flex-col">
                     <Navbar />
-                <main className="flex-1 px-6 ml-15 mt-14">{children}</main>
+                <main className="flex-1 px-6 ml-15">{children}</main>
             </div>
         </div>
     );

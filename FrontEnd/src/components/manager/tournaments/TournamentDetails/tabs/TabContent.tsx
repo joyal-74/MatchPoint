@@ -4,10 +4,11 @@ import GroupsTab from "./GroupsTab";
 import InfoTab from "./InfoTab";
 import LeaderboardTab from "./LeaderboardTab";
 import MatchesTab from "./MatchesTab";
+import PointsTableTab from "./PointsTableTab";
 import ResultsTab from "./ResultsTab";
 import TeamsTab from "./TeamsTab";
 
-export type TabType = "info" | "teams" | "fixtures" | "matches" | "results" | "groups" | "leaderboard";
+export type TabType = "info" | "teams" | "fixtures" | "matches" | "results" | "groups" | "leaderboard" | 'points';
 
 export interface RegisteredTeam {
     _id: string;
@@ -21,7 +22,7 @@ export interface RegisteredTeam {
 export const renderTabContent = (selectedTournament: Tournament, registeredTeams: RegisteredTeam[], activeTab: TabType, type : 'manage' | 'explore') => {
     switch (activeTab) {
         case "info":
-            return <InfoTab tournamentData={selectedTournament} registeredTeams={registeredTeams} />;
+            return <InfoTab tournamentData={selectedTournament}/>;
         case "teams":
             return <TeamsTab registeredTeams={registeredTeams} />;
         case "fixtures":
@@ -32,9 +33,11 @@ export const renderTabContent = (selectedTournament: Tournament, registeredTeams
             return <ResultsTab />;
         case "groups":
             return <GroupsTab />;
+        case "points":
+            return <PointsTableTab format={selectedTournament.format} />;
         case "leaderboard":
             return <LeaderboardTab />;
         default:
-            return <InfoTab tournamentData={selectedTournament} registeredTeams={registeredTeams} />;
+            return <InfoTab tournamentData={selectedTournament} />;
     }
 };

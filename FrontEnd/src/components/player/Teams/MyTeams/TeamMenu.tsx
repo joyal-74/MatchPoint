@@ -1,25 +1,23 @@
 import { useState, useRef, useEffect } from "react";
-import type { ColorScheme } from "../../../manager/teams/TeamCard/teamColors";
-import { menuItems } from "./TeamMenuItems";
+import { MoreVertical, LogOut } from "lucide-react";
 
 export type MenuAction = 'leave';
 
 export interface TeamMenuProps {
     teamId: string;
-    colorScheme?: ColorScheme;
-    className?: string;
     onLeaveRequest: (teamId: string) => void;
+    className?: string;
 }
 
 export default function TeamMenu({
     teamId,
-    colorScheme,
     onLeaveRequest,
     className = ""
 }: TeamMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
+    // Close menu when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -30,57 +28,52 @@ export default function TeamMenu({
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const handleMenuAction = (action: MenuAction) => {
+    const handleAction = () => {
         setIsOpen(false);
-        if (action === 'leave') {
-            onLeaveRequest(teamId)
-        }
+        onLeaveRequest(teamId);
     };
 
     return (
-        <div className={`relative flex-shrink-0 ${className}`} ref={menuRef}>
+        <div className={`relative ${className}`} ref={menuRef}>
+            
+            {/* Trigger Button */}
             <button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setIsOpen(!isOpen);
+                }}
                 className={`
-                    p-1 rounded-lg transition-all duration-200
-                    ${colorScheme
-                        ? `${colorScheme.buttonBg} ${colorScheme.buttonHoverBg}`
-                        : 'hover:bg-neutral-700/50'
-                    }
+                    p-1.5 rounded-lg transition-colors duration-200
+                    text-muted-foreground hover:text-foreground hover:bg-muted
+                    focus:outline-none focus:ring-2 focus:ring-primary/20
+                    ${isOpen ? 'bg-muted text-foreground' : ''}
                 `}
                 aria-label="Team options"
             >
-                <svg
-                    className={`w-5 h-5 ${colorScheme ? colorScheme.text : 'text-neutral-400'}`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                >
-                    <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                </svg>
+                <MoreVertical size={18} />
             </button>
 
+            {/* Dropdown Menu */}
             {isOpen && (
-                <div className={`
-                    absolute right-0 w-28 rounded-lg shadow-xl z-50 
-                    border backdrop-blur-md overflow-hidden
-                    ${colorScheme ? `bg-neutral-900/95 ${colorScheme.border}` : 'bg-neutral-800/95 border-neutral-700'}
-                `}>
-                    {menuItems.map((item) => (
+                <div className="absolute right-0 top-full mt-2 w-40 z-50 origin-top-right">
+                    <div className="bg-popover border border-border rounded-xl shadow-lg p-1.5 animate-in fade-in zoom-in-95 duration-200">
+                        
                         <button
-                            key={item.action}
-                            onClick={() => handleMenuAction(item.action)}
-                            className={`
-                                w-full text-left text-[13px] px-2 py-2 flex items-center gap-1
-                                transition-all duration-200
-                                ${colorScheme
-                                    ? `hover:bg-white/10 ${item.action === 'leave' ? 'text-red-400 hover:text-red-300 hover:bg-red-500/10' : `${colorScheme.text} ${colorScheme.hoverText}`}`
-                                    : item.className
-                                }
-                            `}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleAction();
+                            }}
+                            className="
+                                w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg
+                                text-destructive hover:bg-destructive/10 hover:text-destructive
+                                transition-colors group
+                            "
                         >
-                            {item.icon(colorScheme)}{item.label}
+                            <LogOut size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+                            Leave Team
                         </button>
-                    ))}
+                        
+                    </div>
                 </div>
             )}
         </div>

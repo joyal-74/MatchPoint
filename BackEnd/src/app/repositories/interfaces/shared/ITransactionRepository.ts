@@ -1,3 +1,4 @@
+import { RevenueChartPoint } from "domain/dtos/Analytics.dto";
 import { AdminFilters } from "domain/dtos/Team.dto";
 import { TransactionCheckDTO, TransactionCreateDTO } from "domain/dtos/Transaction.dto";
 import { Transaction } from "domain/entities/Transaction";
@@ -21,4 +22,5 @@ export interface ITransactionRepository {
     findAll(filters: AdminFilters): Promise<{ data: Transaction[]; total: number }>;
     exists(data: TransactionCheckDTO, ctx?: unknown): Promise<boolean>;
     getStats(): Promise<TransactionStats>;
+    getMonthlyStats(walletId: string, months: number): Promise<RevenueChartPoint[]>;
 }

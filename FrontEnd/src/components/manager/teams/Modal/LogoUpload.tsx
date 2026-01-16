@@ -1,4 +1,4 @@
-import { X, Camera } from "lucide-react";
+import { X, Camera, Image as ImageIcon } from "lucide-react";
 import { useRef } from "react";
 
 interface LogoUploadProps {
@@ -25,15 +25,19 @@ export default function LogoUpload({
 
     return (
         <div className="flex items-center gap-4 mb-4">
-            <div className="relative">
-                <div className="w-16 h-16 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center overflow-hidden">
+            <div className="relative group">
+                {/* Avatar Circle */}
+                <div className="w-16 h-16 rounded-full bg-muted border border-border flex items-center justify-center overflow-hidden transition-colors">
                     {logoPreview ? (
                         <img src={logoPreview} alt="Team logo" className="w-full h-full object-cover" />
                     ) : (
-                        <div className="text-neutral-500 text-sm text-center">No Logo</div>
+                        <div className="flex flex-col items-center justify-center text-muted-foreground/50">
+                            <ImageIcon size={20} />
+                        </div>
                     )}
                 </div>
                 
+                {/* File Input */}
                 <input
                     ref={fileInputRef}
                     type="file"
@@ -43,27 +47,42 @@ export default function LogoUpload({
                     id="logo-upload"
                     disabled={disabled}
                 />
+
+                {/* Upload Button (Primary) */}
                 <label 
                     htmlFor="logo-upload" 
-                    className="absolute -bottom-1 -right-1 p-1 bg-green-600 rounded-full cursor-pointer hover:bg-green-700 transition-colors"
+                    className={`
+                        absolute -bottom-1 -right-1 p-1.5 rounded-full cursor-pointer transition-all shadow-sm border border-background
+                        bg-primary text-primary-foreground hover:bg-primary/90
+                        ${disabled ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}
+                    `}
+                    title="Upload Logo"
                 >
-                    <Camera size={14} className="text-white" />
+                    <Camera size={14} />
                 </label>
                 
+                {/* Remove Button (Destructive) */}
                 {logoPreview && (
                     <button 
                         type="button" 
                         onClick={onLogoRemove}
                         disabled={disabled}
-                        className="absolute -top-1 -right-1 p-1 bg-red-600 rounded-full hover:bg-red-700 transition-colors"
+                        className={`
+                            absolute -top-1 -right-1 p-1.5 rounded-full transition-all shadow-sm border border-background
+                            bg-destructive text-destructive-foreground hover:bg-destructive/90
+                            ${disabled ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}
+                        `}
+                        title="Remove Logo"
                     >
-                        <X size={12} className="text-white" />
+                        <X size={12} />
                     </button>
                 )}
             </div>
+
+            {/* Text Labels */}
             <div>
-                <p className="text-white text-sm">Team Logo</p>
-                <p className="text-neutral-400 text-xs">Required • Max 5MB</p>
+                <p className="text-foreground font-medium text-sm">Team Logo</p>
+                <p className="text-muted-foreground text-xs mt-0.5">Required • Max 5MB</p>
             </div>
         </div>
     );

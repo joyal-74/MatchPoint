@@ -2,14 +2,7 @@ import { injectable, inject } from "tsyringe";
 import { DI_TOKENS } from "domain/constants/Identifiers";
 
 import { ILogger } from "app/providers/ILogger";
-import {
-    IGetAllPlayerTeamsUseCase,
-    IGetAllTeamsUseCase,
-    IGetMyTeamDetailsUseCase,
-    IGetMyTeamsUseCase,
-    IJoinTeamUseCase,
-    IUpdatePlayerInviteStatus
-} from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
+import { IGetMyTeamDetailsUseCase, IGetPlayerJoinedTeamsUseCase, IGetPlayerTeamsUseCase, IJoinTeamUseCase, IUpdatePlayerInviteStatus } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 import { TeamMessages } from "domain/constants/TeamMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -21,11 +14,10 @@ import { IPlayerTeamController } from "presentation/http/interfaces/IPlayerTeamC
 @injectable()
 export class TeamsController implements IPlayerTeamController {
     constructor(
-        @inject(DI_TOKENS.GetAllTeamsPlayerUseCase) private _getAllTeamsUsecase: IGetAllTeamsUseCase,
         @inject(DI_TOKENS.JoinTeamUseCase) private _joinTeamsUsecase: IJoinTeamUseCase,
-        @inject(DI_TOKENS.GetMyTeamsUseCase) private _getmyTeamsUsecase: IGetMyTeamsUseCase,
-        @inject(DI_TOKENS.GetAllTeamsPlayerUseCase) private _getAllMyTeamsUsecase: IGetAllPlayerTeamsUseCase,
-        @inject(DI_TOKENS.GetmyTeamsDetailsUsecase) private _getmyTeamsDetailsUsecase: IGetMyTeamDetailsUseCase,
+        @inject(DI_TOKENS.GetPlayerTeamsUseCase) private _getplayerTeamsUsecase: IGetPlayerTeamsUseCase,
+        @inject(DI_TOKENS.GetPlayerJoinedTeamsUseCase) private _getPlayerJoinedTeamsUsecase: IGetPlayerJoinedTeamsUseCase,
+        @inject(DI_TOKENS.GetMyTeamDetailsUseCase) private _getmyTeamsDetailsUsecase: IGetMyTeamDetailsUseCase,
         @inject(DI_TOKENS.UpdatePlayerInviteStatus) private _updateInviteStatusUseCase: IUpdatePlayerInviteStatus,
         @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
@@ -36,11 +28,12 @@ export class TeamsController implements IPlayerTeamController {
      * @returns {Promise<IHttpResponse>} - Returns list of teams.
      */
     getAllTeams = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { filters } = httpRequest.params;
+        const { filters } = httpRequest.query;
+        console.log(filters)
 
         this._logger.info(`[TeamController] getAllTeams → filters=${filters}`);
 
-        const result = await this._getAllTeamsUsecase.execute(filters);
+        const result = await this._getplayerTeamsUsecase.execute(filters);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.TEAMS_FETCHED, result));
     };
@@ -73,31 +66,11 @@ export class TeamsController implements IPlayerTeamController {
 
         this._logger.info(`[TeamController] getMyTeams → playerId=${playerId}, status=${status}`);
 
-        const result = await this._getmyTeamsUsecase.execute(playerId, status);
+        const result = await this._getPlayerJoinedTeamsUsecase.execute(playerId, status);
 
-        return new HttpResponse(
-            HttpStatusCode.OK,
-            buildResponse(true, TeamMessages.TEAMS_FETCHED, result)
-        );
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.TEAMS_FETCHED, result));
     };
 
-    /**
-     * @description Get all teams related to the player (joined, requested, pending etc.).
-     * @param {IHttpRequest} httpRequest - The request containing playerId in params.
-     * @returns {Promise<IHttpResponse>} - Returns all player teams.
-     */
-    getAllMyTeams = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { playerId } = httpRequest.params;
-
-        this._logger.info(`[TeamController] getAllMyTeams → playerId=${playerId}`);
-
-        const result = await this._getAllMyTeamsUsecase.execute(playerId);
-
-        return new HttpResponse(
-            HttpStatusCode.OK,
-            buildResponse(true, TeamMessages.TEAMS_FETCHED, result)
-        );
-    };
 
     /**
      * @description Get detailed information of a specific team.

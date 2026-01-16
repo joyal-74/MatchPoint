@@ -1,6 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { Edit2, Save, X, Loader2, User, Trophy, Activity } from "lucide-react";
 import ProfileHeader from "../../components/shared/ProfileHeader";
-import ProfileActions from "../../components/shared/ProfileActions";
 import PremiumCard from "../../components/shared/PremiumCard";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
 import ProfileError from "../../components/player/profile/ProfileError";
@@ -28,20 +28,21 @@ const PlayerProfilePage: React.FC = () => {
 
     const [activeTab, setActiveTab] = useState<"user" | "sport">("user");
 
-    if (loading && !formData) return <LoadingOverlay show={loading} />;
-
+    if (loading && !formData) return <PlayerLayout><LoadingOverlay show={true} /></PlayerLayout>;
     if (error) return <ProfileError error={error} onAction={handleRetry} />;
-
+    
     if (!formData || !playerProfile) {
         return (
             <PlayerLayout>
-                <div className="min-h-60 flex items-center justify-center text-[var(--color-text-secondary)]">
-                    No profile data found.
+                <div className="min-h-[60vh] flex flex-col items-center justify-center text-muted-foreground">
+                    <Activity size={48} className="mb-4 opacity-20" />
+                    <p>No profile data found.</p>
                 </div>
             </PlayerLayout>
         );
     }
 
+    // Data prep
     const userProfile = {
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -55,66 +56,143 @@ const PlayerProfilePage: React.FC = () => {
 
     const playerProfileData = {
         sport: playerProfile.sport,
-        profile : playerProfile.profile
+        profile: playerProfile.profile
     };
 
     return (
         <PlayerLayout>
-            <div className="min-h-40 bg-[var(--color-background)] max-w-6xl rounded-xl">
-                <ProfileHeader
-                    profileData={formData}
-                    profileImage={profileImage || formData.profileImage}
-                    isEditing={isEditing}
-                    onEditToggle={() => setIsEditing((prev) => !prev)}
-                    onImageUpload={handleImageUpload}
-                />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                <div className="py-6">
-                    {loading ? <LoadingOverlay show={loading} /> : (
-                        <>
-                            <div className="flex gap-4 items-center justify-end pr-8">
+                    {/* Left Sidebar: Photo & Premium */}
+                    <div className="lg:col-span-1 space-y-6">
+                        <ProfileHeader
+                            profileData={formData}
+                            profileImage={profileImage || formData.profileImage}
+                            isEditing={isEditing}
+                            onEditToggle={() => setIsEditing((prev) => !prev)}
+                            onImageUpload={handleImageUpload}
+                        />
+                        <PremiumCard />
+                    </div>
+
+                    {/* Right Content: Forms */}
+                    <div className="lg:col-span-2">
+                        <div className={`
+                            bg-card border rounded-xl shadow-sm overflow-hidden transition-all duration-300 flex flex-col min-h-[600px]
+                            ${isEditing ? 'border-primary/50 ring-1 ring-primary/10' : 'border-border'}
+                        `}>
+
+                            {/* Header: Title & Actions */}
+                            <div className="px-6 py-4 border-b border-border bg-muted/20 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md">
+                                <div>
+                                    <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                                        {activeTab === 'user' ? (
+                                            <><User size={20} className="text-primary" /> Personal Details</>
+                                        ) : (
+                                            <><Trophy size={20} className="text-primary" /> Sports Profile</>
+                                        )}
+                                    </h2>
+                                    <p className="text-xs text-muted-foreground hidden sm:block">
+                                        {activeTab === 'user' 
+                                            ? "Manage your contact info and bio." 
+                                            : "Update your stats, position, and play style."}
+                                    </p>
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="flex items-center gap-2">
+                                    {isEditing ? (
+                                        <>
+                                            <button
+                                                onClick={handleCancel}
+                                                disabled={loading}
+                                                className="p-2 sm:px-3 sm:py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors flex items-center gap-2"
+                                                title="Cancel"
+                                            >
+                                                <X size={16} /> <span className="hidden sm:inline">Cancel</span>
+                                            </button>
+                                            <button
+                                                onClick={() => handleSave(activeTab)}
+                                                disabled={loading}
+                                                className="px-4 py-1.5 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg transition-all shadow-sm flex items-center gap-2"
+                                            >
+                                                {loading ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                                                <span>Save</span>
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <button
+                                            onClick={() => setIsEditing(true)}
+                                            className="px-4 py-1.5 text-sm font-medium text-foreground bg-background border border-border hover:bg-muted rounded-lg transition-colors flex items-center gap-2 shadow-sm"
+                                        >
+                                            <Edit2 size={14} />
+                                            <span>Edit Details</span>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Tab Switcher */}
+                            <div className="flex border-b border-border bg-card">
                                 <button
-                                    className={activeTab === "user" ? "font-bold text-purple-700" : ""}
                                     onClick={() => setActiveTab("user")}
+                                    className={`
+                                        flex-1 py-3 text-sm font-medium transition-all relative
+                                        ${activeTab === "user" 
+                                            ? "text-primary bg-primary/5" 
+                                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                        }
+                                    `}
                                 >
                                     User Info
+                                    {activeTab === "user" && (
+                                        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary" />
+                                    )}
                                 </button>
                                 <button
-                                    className={activeTab === "sport" ? "font-bold text-purple-700" : ""}
                                     onClick={() => setActiveTab("sport")}
+                                    className={`
+                                        flex-1 py-3 text-sm font-medium transition-all relative
+                                        ${activeTab === "sport" 
+                                            ? "text-primary bg-primary/5" 
+                                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                        }
+                                    `}
                                 >
-                                    Sport Info
+                                    Sports Info
+                                    {activeTab === "sport" && (
+                                        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary" />
+                                    )}
                                 </button>
                             </div>
 
-                            {activeTab === "user" && (
-                                <ProfileForm
-                                    isEditing={isEditing}
-                                    formData={userProfile}
-                                    onChange={(field, value) => handleInputChange(field, value)}
-                                />
-                            )}
-
-                            {activeTab === "sport" && (
-                                <SportsProfileForm
-                                    isEditing={isEditing}
-                                    formData={playerProfileData}
-                                    onChange={(field, val) => handlePlayerProfileChange(field, val)}
-
-                                />
-                            )}
-
-                            {isEditing && (
-                                <ProfileActions onSave={() => handleSave(activeTab)} onCancel={handleCancel} />
-                            )}
-
-                            {!isEditing && (
-                                <div className="mt-6 mx-8">
-                                    <PremiumCard />
-                                </div>
-                            )}
-                        </>
-                    )}
+                            {/* Form Body */}
+                            <div className="py-6 px-1">
+                                {loading ? (
+                                    <div className="flex justify-center items-center h-40">
+                                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                                    </div>
+                                ) : (
+                                    <div className="animate-in fade-in zoom-in-95 duration-300">
+                                        {activeTab === "user" ? (
+                                            <ProfileForm
+                                                isEditing={isEditing}
+                                                formData={userProfile}
+                                                onChange={(field, value) => handleInputChange(field, value)}
+                                            />
+                                        ) : (
+                                            <SportsProfileForm
+                                                isEditing={isEditing}
+                                                formData={playerProfileData}
+                                                onChange={(field, val) => handlePlayerProfileChange(field, val)}
+                                            />
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </PlayerLayout>
