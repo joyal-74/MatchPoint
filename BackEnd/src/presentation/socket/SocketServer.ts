@@ -18,6 +18,8 @@ import { MatchViewerHandler } from "./handlers/MatchViewerHandler";
 import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 import { LiveStreamHandler } from "./handlers/LiveStreamHandler";
 import { ILiveStreamService } from "app/repositories/interfaces/services/LiveStreamService";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+import { inject, injectable } from "tsyringe";
 
 export interface AuthenticatedSocket extends Socket {
     user: {
@@ -30,28 +32,29 @@ export interface AuthenticatedSocket extends Socket {
     };
 }
 
+@injectable()
 export class SocketServer {
     private io!: Server;
 
     constructor(
-        private matchRepo: IMatchStatsRepo,
-        private playerRepo: IPlayerRepository,
-        private liveStreamService: ILiveStreamService,
+        @inject(DI_TOKENS.MatchStatsRepository) private matchRepo: IMatchStatsRepo,
+        @inject(DI_TOKENS.PlayerRepository) private playerRepo: IPlayerRepository,
+        @inject(DI_TOKENS.LiveStreamService) private liveStreamService: ILiveStreamService,
 
-        private setStrikerUseCase: ISetStrikerUseCase,
-        private setNonStrikerUseCase: ISetNonStrikerUseCase,
-        private setBowlerUseCase: ISetBowlerUseCase,
-        private initInningsUseCase: IInitInningsUseCase,
-        private addRunsUseCase: IAddRunsUseCase,
-        private addWicketUseCase: IAddWicketUseCase,
-        private addExtrasUseCase: IAddExtrasUseCase,
-        private undoLastBallUseCase: IUndoLastBallUseCase,
-        private startSuperOverUseCase: IStartSuperOverUseCase,
-        private addPenaltyUseCase: IAddPenaltyUseCase,
-        private endInningsUseCase: IEndInningsUseCase,
-        private endOverUseCase: IEndOverUseCase,
-        private retireBatsmanUseCase: IRetireBatsmanUseCase,
-        private endMatchUseCase: IEndMatchUseCase,
+        @inject(DI_TOKENS.SetStrikerUseCase) private setStrikerUseCase: ISetStrikerUseCase,
+        @inject(DI_TOKENS.SetNonStrikerUseCase) private setNonStrikerUseCase: ISetNonStrikerUseCase,
+        @inject(DI_TOKENS.SetBowlerUseCase) private setBowlerUseCase: ISetBowlerUseCase,
+        @inject(DI_TOKENS.InitInningsUseCase) private initInningsUseCase: IInitInningsUseCase,
+        @inject(DI_TOKENS.AddRunsUseCase) private addRunsUseCase: IAddRunsUseCase,
+        @inject(DI_TOKENS.AddWicketUseCase) private addWicketUseCase: IAddWicketUseCase,
+        @inject(DI_TOKENS.AddExtrasUseCase) private addExtrasUseCase: IAddExtrasUseCase,
+        @inject(DI_TOKENS.UndoLastBallUseCase) private undoLastBallUseCase: IUndoLastBallUseCase,
+        @inject(DI_TOKENS.StartSuperOverUseCase) private startSuperOverUseCase: IStartSuperOverUseCase,
+        @inject(DI_TOKENS.AddPenaltyUseCase) private addPenaltyUseCase: IAddPenaltyUseCase,
+        @inject(DI_TOKENS.EndInningsUseCase) private endInningsUseCase: IEndInningsUseCase,
+        @inject(DI_TOKENS.EndOverUseCase) private endOverUseCase: IEndOverUseCase,
+        @inject(DI_TOKENS.RetireBatsmanUseCase) private retireBatsmanUseCase: IRetireBatsmanUseCase,
+        @inject(DI_TOKENS.EndMatchUseCase) private endMatchUseCase: IEndMatchUseCase,
     ) { }
 
     public init(server: http.Server) {

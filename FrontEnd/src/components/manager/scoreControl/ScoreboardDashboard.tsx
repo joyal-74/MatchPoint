@@ -30,8 +30,13 @@ const ScoreboardDashboard: React.FC = () => {
 
     const streamManagerData = useStreamManager(matchId);
     const [isStreamDrawerOpen, setIsStreamDrawerOpen] = useState(false);
+    
+    // --- End Match Logic States ---
     const [showEndMatchConfirm, setShowEndMatchConfirm] = useState(false);
     const [endReason, setEndReason] = useState<"RAIN" | "BAD_LIGHT" | "FORCE_END" | "COMPLETED" | "OTHER">("COMPLETED");
+    const [winnerId, setWinnerId] = useState<string>("");
+    const [winMargin, setWinMargin] = useState<string>("");
+    const [winType, setWinType] = useState<"runs" | "wickets">("runs");
 
     // --- 1. Initial Data Load ---
     useEffect(() => {
@@ -73,11 +78,36 @@ const ScoreboardDashboard: React.FC = () => {
         if (socket && matchId) socket.emit('score:update', payload);
     }, [matchId]);
 
-    // --- 3. Loading & Error States ---
+    // --- 3. Handle End Match ---
+    const handleConfirmEndMatch = () => {
+        const socket = getSocket();
+        if (!socket) return;
+
+        // Validation: If completed, ensure winner is selected (unless it's a tie)
+        if (endReason === 'COMPLETED' && !winnerId && winnerId !== 'TIE' && winnerId !== 'DRAW') {
+            alert("Please select a winner or declare a Tie/Draw.");
+            return;
+        }
+
+        const payload = {
+            matchId,
+            reason: endReason,
+            resultData: endReason === 'COMPLETED' ? {
+                winnerId: winnerId === 'TIE' || winnerId === 'DRAW' ? null : winnerId,
+                resultType: winnerId === 'TIE' ? 'TIE' : winnerId === 'DRAW' ? 'DRAW' : 'WIN',
+                winType: winType,
+                margin: winMargin
+            } : null
+        };
+
+        socket.emit("match:end", payload);
+        setShowEndMatchConfirm(false);
+    };
+
+    // --- 4. Loading & Error States ---
     if (loading) return <LoadingOverlay show={true} />;
     if (error || !match || !teamA || !teamB || !liveScore) return <div className="text-center p-10">Error loading match</div>;
 
-    // --- 4. Main Dashboard UI ---
     return (
         <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
             <Navbar />
@@ -214,7 +244,7 @@ const ScoreboardDashboard: React.FC = () => {
                 </div>
             </main>
 
-            {/* End Match Confirmation Modal */}
+            {/* === End Match Confirmation Modal === */}
             {showEndMatchConfirm && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
                     <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl relative animate-in zoom-in-95 duration-200">
@@ -223,21 +253,80 @@ const ScoreboardDashboard: React.FC = () => {
                             <h3 className="text-lg font-bold text-foreground">End Match?</h3>
                         </div>
                         <p className="text-sm text-muted-foreground mb-6">Are you sure you want to end this match? This action <strong>cannot be undone</strong>.</p>
-                        <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Reason</label>
-                        <select
-                            value={endReason}
-                            onChange={(e) => setEndReason(e.target.value as any)}
-                            className="w-full mb-8 px-3 py-2.5 rounded-lg bg-muted border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                        >
-                            <option value="COMPLETED">Match Completed</option>
-                            <option value="RAIN">Rain Delay / Washout</option>
-                            <option value="BAD_LIGHT">Bad Light</option>
-                            <option value="FORCE_END">Force End</option>
-                            <option value="OTHER">Other</option>
-                        </select>
-                        <div className="flex justify-end gap-3">
+                        
+                        {/* 1. Reason Selection */}
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Reason</label>
+                                <select
+                                    value={endReason}
+                                    onChange={(e) => setEndReason(e.target.value as any)}
+                                    className="w-full px-3 py-2.5 rounded-lg bg-muted border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                >
+                                    <option value="COMPLETED">Match Completed</option>
+                                    <option value="RAIN">Rain Delay / Washout</option>
+                                    <option value="BAD_LIGHT">Bad Light</option>
+                                    <option value="FORCE_END">Force End</option>
+                                    <option value="OTHER">Other</option>
+                                </select>
+                            </div>
+
+                            {/* 2. Result Configuration (Only if Completed) */}
+                            {endReason === 'COMPLETED' && (
+                                <div className="p-4 bg-muted/30 rounded-lg border border-border space-y-4 animate-in fade-in slide-in-from-top-2">
+                                    <div>
+                                        <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Winner</label>
+                                        <select
+                                            value={winnerId}
+                                            onChange={(e) => setWinnerId(e.target.value)}
+                                            className="w-full px-3 py-2.5 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                        >
+                                            <option value="">Select Winner...</option>
+                                            <option value={teamA._id}>{teamA.name}</option>
+                                            <option value={teamB._id}>{teamB.name}</option>
+                                            <option value="TIE">Tie Match</option>
+                                            <option value="DRAW">Draw</option>
+                                        </select>
+                                    </div>
+
+                                    {/* Margin Inputs (Hidden if Tie/Draw) */}
+                                    {winnerId && winnerId !== 'TIE' && winnerId !== 'DRAW' && (
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div>
+                                                <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Margin</label>
+                                                <input 
+                                                    type="number" 
+                                                    placeholder="e.g 10"
+                                                    value={winMargin}
+                                                    onChange={(e) => setWinMargin(e.target.value)}
+                                                    className="w-full px-3 py-2.5 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Type</label>
+                                                <select
+                                                    value={winType}
+                                                    onChange={(e) => setWinType(e.target.value as "runs" | "wickets")}
+                                                    className="w-full px-3 py-2.5 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                                >
+                                                    <option value="runs">Runs</option>
+                                                    <option value="wickets">Wickets</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="flex justify-end gap-3 mt-8">
                             <button onClick={() => setShowEndMatchConfirm(false)} className="px-4 py-2 rounded-lg text-sm font-medium bg-muted text-muted-foreground hover:bg-muted/80">Cancel</button>
-                            <button onClick={() => { const socket = getSocket(); socket?.emit("match:end", { matchId, reason: endReason }); setShowEndMatchConfirm(false); }} className="px-4 py-2 rounded-lg text-sm font-bold bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg shadow-destructive/20">Confirm End</button>
+                            <button 
+                                onClick={handleConfirmEndMatch} 
+                                className="px-4 py-2 rounded-lg text-sm font-bold bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg shadow-destructive/20"
+                            >
+                                Confirm End
+                            </button>
                         </div>
                     </div>
                 </div>

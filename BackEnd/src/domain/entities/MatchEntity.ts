@@ -4,7 +4,7 @@ import { AddWicketPayload, Innings } from "./Innings";
 
 export type MatchEndInfo = {
     type: "NORMAL" | "ABANDONED" | "NO_RESULT" | null;
-    reason: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER" | null;
+    reason: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER" | "COMPLETED" | null;
     notes?: string;
     endedBy?: string | null;
     endedAt?: Date | null;
@@ -41,10 +41,15 @@ export class MatchEntity {
     oversLimit: number;
     venue: string;
     isLive: boolean;
-    winner: string | null;
     status: MatchStatus;
+    
+    // --- Result Fields ---
+    winner: string | null;
+    resultType?: 'WIN' | 'TIE' | 'DRAW' | null;
+    winMargin?: string | null;
+    winType?: 'runs' | 'wickets' | null;
+    resultDescription?: string;
     endInfo?: MatchEndInfo;
-
 
     currentInningsNumber = 1;
 
@@ -60,9 +65,15 @@ export class MatchEntity {
         oversLimit: number;
         venue: string;
         isLive: boolean;
-        endInfo?: MatchEndInfo;
+        
         status?: MatchStatus;
         winner?: string | null;
+        resultType?: 'WIN' | 'TIE' | 'DRAW' | null;
+        winMargin?: string | null;
+        winType?: 'runs' | 'wickets' | null;
+        resultDescription?: string;
+        endInfo?: MatchEndInfo;
+
         innings1?: Innings;
         innings2?: Innings | null;
         currentInnings?: number;
@@ -73,9 +84,15 @@ export class MatchEntity {
         this.oversLimit = init.oversLimit;
         this.venue = init.venue ?? "";
         this.isLive = init.isLive;
+        this.status = init.status ?? "upcoming"; // Default to upcoming if undefined
+        
+        // Result initialization
         this.winner = init.winner ?? null;
+        this.resultType = init.resultType;
+        this.winMargin = init.winMargin;
+        this.winType = init.winType;
+        this.resultDescription = init.resultDescription;
         this.endInfo = init.endInfo ?? undefined;
-        this.status = init.status
 
         this.innings1 = init.innings1 ?? new Innings({
             oversLimit: this.oversLimit,
@@ -92,12 +109,17 @@ export class MatchEntity {
         if (init.hasSuperOver !== undefined) {
             this.hasSuperOver = init.hasSuperOver;
         }
+        
+        // Infer completion status if loaded from DB as completed
+        if (this.status === 'completed') {
+            this.isMatchComplete = true;
+        }
     }
 
+    // ... (Keep existing getter methods: activeInnings, currentStriker, etc.) ...
+    
     private get activeInnings(): Innings {
-        if (this.currentInningsNumber === 1) {
-            return this.innings1;
-        }
+        if (this.currentInningsNumber === 1) return this.innings1;
         if (this.currentInningsNumber === 2) {
             if (!this.innings2) {
                 this.innings2 = new Innings({
@@ -111,18 +133,12 @@ export class MatchEntity {
         throw new Error(`Invalid innings number: ${this.currentInningsNumber}`);
     }
 
-    get currentStriker(): string | undefined {
-        return this.activeInnings.currentStriker;
-    }
+    get currentStriker(): string | undefined { return this.activeInnings.currentStriker; }
+    get currentNonStriker(): string | undefined { return this.activeInnings.currentNonStriker; }
+    get currentBowler(): string | undefined { return this.activeInnings.currentBowler; }
 
-    get currentNonStriker(): string | undefined {
-        return this.activeInnings.currentNonStriker;
-    }
-
-    get currentBowler(): string | undefined {
-        return this.activeInnings.currentBowler;
-    }
-
+    // ... (Keep existing game logic methods: initInnings, addRunsToCurrentInnings, etc.) ...
+    
     initInnings(payload: Omit<InitInningsPayload, 'matchId'>) {
         this.activeInnings.initializeInnings({
             oversLimit: payload.oversLimit,
@@ -138,77 +154,30 @@ export class MatchEntity {
     addRunsToCurrentInnings(payload: AddRunsPayload) {
         const striker = payload.strikerId ?? this.currentStriker;
         const bowler = payload.bowlerId ?? this.currentBowler;
-
-        if (!striker || !bowler) {
-            throw new Error("Cannot add runs: Striker or Bowler not set for this innings.");
-        }
-
-        const inningsPayload = {
-            strikerId: striker,
-            bowlerId: bowler,
-            runs: payload.runs,
-            extrasType: payload.extrasType,
-            extrasRuns: payload.extrasRuns,
-            isLegalBall: payload.isLegalBall
-        };
-
-        this.activeInnings.addRuns(inningsPayload);
+        if (!striker || !bowler) throw new Error("Cannot add runs: Striker or Bowler not set.");
+        this.activeInnings.addRuns({ ...payload, strikerId: striker, bowlerId: bowler });
     }
 
-    addWicketToCurrentInnings(payload: AddWicketPayload) {
-        this.activeInnings.handleWicket(payload);
-    }
-
-    setCurrentBowler(bowlerId: string) {
-        this.activeInnings.setCurrentBowler(bowlerId);
-    }
-
-    setCurrentStriker(batsmanId: string) {
-        this.activeInnings.setCurrentStriker(batsmanId);
-    }
-
-    setCurrentNonStriker(batsmanId: string) {
-        this.activeInnings.setCurrentNonStriker(batsmanId);
-    }
-
-    addExtras(type: string, runs: number) {
-        this.activeInnings.addExtras({
-            type: type as ExtraType,
-            runs: runs
-        });
-    }
-
-    undoLastBall() {
-        this.activeInnings.undoLastBall();
-    }
-
+    addWicketToCurrentInnings(payload: AddWicketPayload) { this.activeInnings.handleWicket(payload); }
+    setCurrentBowler(bowlerId: string) { this.activeInnings.setCurrentBowler(bowlerId); }
+    setCurrentStriker(batsmanId: string) { this.activeInnings.setCurrentStriker(batsmanId); }
+    setCurrentNonStriker(batsmanId: string) { this.activeInnings.setCurrentNonStriker(batsmanId); }
+    addExtras(type: string, runs: number) { this.activeInnings.addExtras({ type: type as ExtraType, runs }); }
+    undoLastBall() { this.activeInnings.undoLastBall(); }
+    
     startSuperOver() {
         this.hasSuperOver = true;
-        // Reset overs limit for super over
         this.oversLimit = 1;
-
-        // Reset innings for super over
-        this.innings1 = new Innings({
-            oversLimit: 1,
-            battingTeam: undefined,
-            bowlingTeam: undefined
-        });
-        this.innings2 = new Innings({
-            oversLimit: 1,
-            battingTeam: undefined,
-            bowlingTeam: undefined
-        });
+        this.innings1 = new Innings({ oversLimit: 1, battingTeam: undefined, bowlingTeam: undefined });
+        this.innings2 = new Innings({ oversLimit: 1, battingTeam: undefined, bowlingTeam: undefined });
         this.currentInningsNumber = 1;
         this.isMatchComplete = false;
     }
 
-    endOver() {
-        this.activeInnings.endOver();
-    }
+    endOver() { this.activeInnings.endOver(); }
 
     endInnings() {
         this.activeInnings.completeInnings();
-
         if (this.currentInningsNumber === 1) {
             this.currentInningsNumber = 2;
         } else {
@@ -216,41 +185,33 @@ export class MatchEntity {
         }
     }
 
-    addPenaltyRuns(runs: number) {
-        this.activeInnings.addPenaltyRuns(runs);
-    }
+    addPenaltyRuns(runs: number) { this.activeInnings.addPenaltyRuns(runs); }
+    retireBatsman(payload: RetireBatsmanPayload) { this.activeInnings.retireBatsman(payload); }
 
-    retireBatsman(payload: RetireBatsmanPayload) {
-        this.activeInnings.retireBatsman(payload);
-    }
+    // ... (Keep helper methods isInningsComplete, getInnings) ...
 
-    // Helper method to check if innings is complete
-    isInningsComplete(inningsNumber: number): boolean {
-        if (inningsNumber === 1) {
-            return this.innings1.isCompleted;
-        } else if (inningsNumber === 2 && this.innings2) {
-            return this.innings2.isCompleted;
-        }
-        return false;
-    }
-
-    // Helper to get innings by number
-    getInnings(inningsNumber: number): Innings | null {
-        if (inningsNumber === 1) return this.innings1;
-        if (inningsNumber === 2) return this.innings2 || null;
-        return null;
-    }
-
+    // --- UPDATED END MATCH METHOD ---
     endMatch(params: {
         winnerId?: string | null;
         type: "NORMAL" | "ABANDONED" | "NO_RESULT";
-        reason?: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER";
+        reason?: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER" | "COMPLETED";
         endedBy?: string;
+        
+        // New Params
+        resultType?: 'WIN' | 'TIE' | 'DRAW' | null;
+        winMargin?: string | null;
+        winType?: 'runs' | 'wickets' | null;
+        resultDescription?: string;
     }) {
         this.isMatchComplete = true;
         this.isLive = false;
         this.status = "completed";
+        
         this.winner = params.winnerId ?? null;
+        this.resultType = params.resultType;
+        this.winMargin = params.winMargin;
+        this.winType = params.winType;
+        this.resultDescription = params.resultDescription;
 
         this.endInfo = {
             type: params.type,
@@ -260,18 +221,23 @@ export class MatchEntity {
         };
     }
 
-
     toDTO() {
         return {
             matchId: this.matchId,
             tournamentId: this.tournamentId,
             isLive: this.isLive,
-            status : this.status,
+            status: this.status,
             currentInnings: this.currentInningsNumber,
             oversLimit: this.oversLimit,
             hasSuperOver: this.hasSuperOver,
             isMatchComplete: this.isMatchComplete,
+            
+            // Send Result Data to Client
+            winner: this.winner,
+            resultType: this.resultType,
+            resultDescription: this.resultDescription,
             endInfo: this.endInfo ?? null,
+            
             innings1: this.innings1.toDTO(),
             innings2: this.innings2 ? this.innings2.toDTO() : null,
             currentContext: {

@@ -23,13 +23,13 @@ export interface LiveMatchCardDTO {
     matchId: string;
 
     teamA: {
-        id: string;
+        _id: string;
         name: string;
         logo: string;
     };
 
     teamB: {
-        id: string;
+        _id: string;
         name: string;
         logo: string;
     };

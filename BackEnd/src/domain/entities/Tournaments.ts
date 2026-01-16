@@ -1,7 +1,7 @@
 import { paymentStatus } from "./Payment";
 
 export type TourStatus = "upcoming" | "ongoing" | "ended" | "cancelled";
-export type Format = 'knockout' | 'league' | 'friendly';
+export type Format = 'knockout' | 'league' | 'friendly' | 'groups';
 
 export type Contact = {
     email: string;

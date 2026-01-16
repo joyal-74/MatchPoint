@@ -16,7 +16,7 @@ export class TournamentsController {
     constructor(
         @inject(DI_TOKENS.GetPlayerTournaments) private _getplayerTournaments: IGetPlayerTournaments,
         @inject(DI_TOKENS.GetPlayerTournamentDetails) private _getplayerTournamentDetails: ITournamentDetails,
-        @inject(DI_TOKENS.GetPlayerMatches) private _getplayerMatches: IGetPlayerMatches,
+        @inject(DI_TOKENS.FetchMatchesUseCase) private _getplayerMatches: IGetPlayerMatches,
         @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 

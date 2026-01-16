@@ -1,7 +1,9 @@
 import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentStatsModel";
 import { MatchEntity } from "domain/entities/MatchEntity";
 import { MatchStatsMapper } from "infra/utils/mappers/MatchStatsMapper";
-import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { IMatchStatsRepo, LiveMatchQuery } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { TournamentMatchStatsDocument } from "domain/types/match.types";
+import { LiveMatchDTO } from "domain/dtos/LiveMatchDTO";
 
 export class MatchRepoMongo implements IMatchStatsRepo {
     async findByMatchId(matchId: string): Promise<MatchEntity | null> {
@@ -11,7 +13,7 @@ export class MatchRepoMongo implements IMatchStatsRepo {
         return MatchStatsMapper.toDomain(doc);
     }
 
-    async findLiveMatches({limit = 10}) {
+    async findLiveMatches({ limit = 10 }) {
         return TournamentMatchStatsModel.aggregate([
             { $match: { status: "ongoing" } },
             { $sort: { updatedAt: -1 } },
@@ -55,10 +57,12 @@ export class MatchRepoMongo implements IMatchStatsRepo {
                     matchId: "$match._id",
 
                     teamA: {
+                        _id: "$teamA._id",
                         name: "$teamA.name",
                         logo: "$teamA.logo"
                     },
                     teamB: {
+                        _id: "$teamB._id",
                         name: "$teamB.name",
                         logo: "$teamB.logo"
                     },
@@ -111,7 +115,17 @@ export class MatchRepoMongo implements IMatchStatsRepo {
         ]);
     }
 
+    async findFullLiveMatches(query: LiveMatchQuery): Promise<TournamentMatchStatsDocument[]> {
+        const { limit = 10 } = query;
 
+        const docs = await TournamentMatchStatsModel
+            .find({ status: "ongoing" })
+            .sort({ updatedAt: -1 })
+            .limit(limit)
+            .lean();
+
+        return docs;
+    }
 
     async save(match: MatchEntity): Promise<MatchEntity> {
         const persistence = MatchStatsMapper.toPersistence(match);
@@ -139,5 +153,9 @@ export class MatchRepoMongo implements IMatchStatsRepo {
         );
 
         return !!doc;
+    }
+
+    async getMatchStats(matchId: string): Promise<TournamentMatchStatsDocument | null> {
+        return await TournamentMatchStatsModel.findOne({ matchId });
     }
 }

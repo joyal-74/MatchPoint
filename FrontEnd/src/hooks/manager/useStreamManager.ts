@@ -14,7 +14,8 @@ export const useStreamManager = (matchId: string | undefined) => {
     // UI State
     const [streamTitle, setStreamTitle] = useState("");
     const [streamDesc, setStreamDesc] = useState("");
-    const userId = useAppSelector((state) => state.auth.user?._id);
+
+    const userId = useAppSelector((state) => state.auth.user?._id)
 
     // Logic State
     const [status, setStatus] = useState<StreamStatus>('idle');
@@ -22,19 +23,11 @@ export const useStreamManager = (matchId: string | undefined) => {
     const [startTime, setStartTime] = useState<Date | null>(null);
     const [elapsedTime, setElapsedTime] = useState('00:00:00');
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
-    
-    // Media State
     const [localStream, setLocalStream] = useState<MediaStream | null>(null);
     const [isAudioEnabled, setIsAudioEnabled] = useState(true);
     const [isVideoEnabled, setIsVideoEnabled] = useState(true);
     const [isPaused, setIsPaused] = useState(false);
     const [stats, setStats] = useState({ videoBitrate: 0, rtt: 0, score: 0 });
-
-    // Device State
-    const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
-    const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
-    const [selectedVideoDeviceId, setSelectedVideoDeviceId] = useState<string>("");
-    const [selectedAudioDeviceId, setSelectedAudioDeviceId] = useState<string>("");
 
     // Refs
     const localVideoRef = useRef<HTMLVideoElement>(null);
@@ -48,73 +41,37 @@ export const useStreamManager = (matchId: string | undefined) => {
 
     const emitAsync = useSocketEmit();
 
-    /* --- Device Enumeration --- */
-    useEffect(() => {
-        const getDevices = async () => {
-            try {
-                // Request permission briefly to get labels, then stop tracks immediately
-                const tempStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                tempStream.getTracks().forEach(t => t.stop());
-
-                const devices = await navigator.mediaDevices.enumerateDevices();
-                const vDevs = devices.filter(d => d.kind === 'videoinput');
-                const aDevs = devices.filter(d => d.kind === 'audioinput');
-
-                setVideoDevices(vDevs);
-                setAudioDevices(aDevs);
-
-                // Default to first device if none selected
-                if (!selectedVideoDeviceId && vDevs.length > 0) setSelectedVideoDeviceId(vDevs[0].deviceId);
-                if (!selectedAudioDeviceId && aDevs.length > 0) setSelectedAudioDeviceId(aDevs[0].deviceId);
-            } catch (e) {
-                console.warn("Permissions not granted or error enumerating devices", e);
-            }
-        };
-
-        getDevices();
-        navigator.mediaDevices.ondevicechange = getDevices;
-        return () => { navigator.mediaDevices.ondevicechange = null; };
-    }, []);
-
-    /* --- Socket Listeners --- */
+    /* --- Logic Hooks (Socket & Stats) --- */
     useEffect(() => {
         if (!matchId) return;
         const socket = getSocket();
         if (!socket) return;
-        
         const join = () => setViewerCount(v => v + 1);
         const leave = () => setViewerCount(v => Math.max(0, v - 1));
-        
         socket.on("consumer-joined", join);
         socket.on("consumer-left", leave);
-        
         return () => {
             socket.off("consumer-joined", join);
             socket.off("consumer-left", leave);
         };
     }, [matchId]);
 
-    /* --- Stats Interval --- */
     useEffect(() => {
         if (status !== 'live' || !startTime || !videoProducerRef.current) return;
-        
         const interval = setInterval(async () => {
             if (!videoProducerRef.current || videoProducerRef.current.closed) return;
-            
-            // Timer
+            // Timer logic
             const diff = Date.now() - startTime.getTime();
             const h = Math.floor(diff / 3600000);
             const m = Math.floor((diff % 3600000) / 60000);
             const s = Math.floor((diff % 60000) / 1000);
             setElapsedTime(`${h > 0 ? h + ':' : ''}${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`);
-            
-            // Stats
+            // Stats logic
             try {
                 const statsReport = await videoProducerRef.current.getStats();
                 let newBitrate = stats.videoBitrate;
                 let newRtt = stats.rtt;
                 let newScore = stats.score;
-                
                 statsReport.forEach((r) => {
                     if (r.type === 'outbound-rtp' && r.bytesSent !== undefined) {
                         const dt = r.timestamp - lastTimestampRef.current;
@@ -134,49 +91,8 @@ export const useStreamManager = (matchId: string | undefined) => {
                 setStats({ videoBitrate: newBitrate, rtt: newRtt, score: newScore });
             } catch { /* ignore */ }
         }, 1000);
-
         return () => clearInterval(interval);
     }, [status, startTime, stats]);
-
-    /* --- Helper: Switch Device --- */
-    const switchDevice = async (kind: 'video' | 'audio', deviceId: string) => {
-        // 1. Update State
-        if (kind === 'video') setSelectedVideoDeviceId(deviceId);
-        else setSelectedAudioDeviceId(deviceId);
-
-        // 2. If stream is active/previewing, swap the tracks
-        if (localStream) {
-            try {
-                const constraints = kind === 'video' 
-                    ? { video: { deviceId: { exact: deviceId }, width: 1280, height: 720 }, audio: false }
-                    : { video: false, audio: { deviceId: { exact: deviceId } } };
-
-                const newStream = await navigator.mediaDevices.getUserMedia(constraints);
-                const newTrack = kind === 'video' ? newStream.getVideoTracks()[0] : newStream.getAudioTracks()[0];
-                const oldTrack = kind === 'video' ? localStream.getVideoTracks()[0] : localStream.getAudioTracks()[0];
-
-                // Replace in Local Stream (UI)
-                if (oldTrack) {
-                    localStream.removeTrack(oldTrack);
-                    oldTrack.stop();
-                }
-                localStream.addTrack(newTrack);
-                
-                // Force video element update
-                if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
-                setLocalStream(new MediaStream(localStream.getTracks())); // Trigger React re-render
-
-                // Replace in Producer (Server) if live
-                const producer = kind === 'video' ? videoProducerRef.current : audioProducerRef.current;
-                if (producer && !producer.closed) {
-                    await producer.replaceTrack({ track: newTrack });
-                }
-            } catch (err) {
-                console.error(`Failed to switch ${kind} device`, err);
-                setErrorMsg(`Could not switch ${kind} device`);
-            }
-        }
-    };
 
     const cleanupLocal = useCallback(() => {
         try {
@@ -194,7 +110,6 @@ export const useStreamManager = (matchId: string | undefined) => {
         sendTransportRef.current = null;
         recvTransportRef.current = null;
         deviceRef.current = null;
-        
         setLocalStream(null);
         setElapsedTime("00:00:00");
         setIsPaused(false);
@@ -212,22 +127,19 @@ export const useStreamManager = (matchId: string | undefined) => {
             setStatus("connecting");
             setErrorMsg(null);
 
-            // Signal Start
             await emitAsync(socket, "live:start", { 
-                matchId, title: streamTitle, description: streamDesc, userId 
+                matchId, 
+                title: streamTitle, 
+                description: streamDesc ,
+                userId
             });
             
-            // Get Media (using selected devices)
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { 
-                    deviceId: selectedVideoDeviceId ? { exact: selectedVideoDeviceId } : undefined,
-                    width: 1280, height: 720, frameRate: 30 
-                },
-                audio: { 
-                    deviceId: selectedAudioDeviceId ? { exact: selectedAudioDeviceId } : undefined 
-                }
-            });
+            cleanupLocal();
 
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { width: 1280, height: 720, frameRate: 30 },
+                audio: true
+            });
             setLocalStream(stream);
             if (localVideoRef.current) {
                 localVideoRef.current.srcObject = stream;
@@ -235,7 +147,6 @@ export const useStreamManager = (matchId: string | undefined) => {
                 await localVideoRef.current.play();
             }
 
-            // Init Mediasoup
             const device = new Device();
             deviceRef.current = device;
 
@@ -244,7 +155,7 @@ export const useStreamManager = (matchId: string | undefined) => {
             );
             await device.load({ routerRtpCapabilities: routerCaps });
 
-            // Send Transport
+            // 1. Create SEND Transport
             const transportParams = await emitAsync<TransportOptions, CreateTransportReq>(
                 socket, "live:create-transport", { matchId, direction: "send" }
             );
@@ -267,12 +178,13 @@ export const useStreamManager = (matchId: string | undefined) => {
                 } catch (e) { eb(e as Error); }
             });
 
-            // Recv Transport (Loopback Fix)
+            // 2. ✅ Fix: Create RECV Transport (This makes the 'loopback' valid on server)
             const recvTransportParams = await emitAsync<TransportOptions, CreateTransportReq>(
                 socket, "live:create-transport", { matchId, direction: "recv" }
             );
             const recvTransport = device.createRecvTransport(recvTransportParams);
             recvTransportRef.current = recvTransport;
+
             recvTransport.on("connect", async ({ dtlsParameters }, cb, eb) => {
                 try {
                     await emitAsync(socket, "transport:connect", { matchId, transportId: recvTransport.id, dtlsParameters });
@@ -280,7 +192,6 @@ export const useStreamManager = (matchId: string | undefined) => {
                 } catch (e) { eb(e as Error); }
             });
 
-            // Produce
             const videoTrack = stream.getVideoTracks()[0];
             const audioTrack = stream.getAudioTracks()[0];
             if (videoTrack) videoProducerRef.current = await sendTransport.produce({ track: videoTrack });
@@ -290,6 +201,7 @@ export const useStreamManager = (matchId: string | undefined) => {
             setStatus("live");
         } catch (e: unknown) {
             setErrorMsg((e as Error).message || "Stream failed to initialize");
+            cleanupLocal();
             setStatus("idle");
         }
     };
@@ -297,7 +209,9 @@ export const useStreamManager = (matchId: string | undefined) => {
     const handleEndStream = useCallback(() => {
         setStatus("ending");
         const socket = getSocket();
+        // ✅ Fix: Only emit 'stream:end' when user EXPLICITLY clicks End
         if (socket && matchId) socket.emit("stream:end", { matchId });
+        
         cleanupLocal();
         setStatus("idle");
     }, [cleanupLocal, matchId]);
@@ -323,8 +237,11 @@ export const useStreamManager = (matchId: string | undefined) => {
         if (t) {
             t.enabled = !t.enabled;
             setIsAudioEnabled(t.enabled);
-            if (t.enabled) audioProducerRef.current?.resume();
-            else audioProducerRef.current?.pause();
+            if (t.enabled) {
+                audioProducerRef.current?.resume()
+            } else {
+                audioProducerRef.current?.pause();
+            }
         }
     };
 
@@ -333,20 +250,37 @@ export const useStreamManager = (matchId: string | undefined) => {
         if (t) {
             t.enabled = !t.enabled;
             setIsVideoEnabled(t.enabled);
-            if (t.enabled) videoProducerRef.current?.resume();
-            else videoProducerRef.current?.pause();
+            if (t.enabled) {
+                videoProducerRef.current?.resume()
+            } else {
+                videoProducerRef.current?.pause();
+            }
         }
     };
 
     return {
-        // UI
-        streamTitle, setStreamTitle, streamDesc, setStreamDesc,
-        status, viewerCount, elapsedTime, errorMsg, localStream,
-        isAudioEnabled, isVideoEnabled, isPaused, stats, localVideoRef,
-        // Devices (NEW)
-        videoDevices, audioDevices, selectedVideoDeviceId, selectedAudioDeviceId,
-        // Actions
-        handleStartStream, handleEndStream, pauseStream, resumeStream, 
-        toggleAudio, toggleVideo, switchDevice
+        // UI State
+        streamTitle,
+        setStreamTitle,
+        streamDesc,
+        setStreamDesc,
+        // Logic State
+        status,
+        viewerCount,
+        elapsedTime,
+        errorMsg,
+        localStream,
+        isAudioEnabled,
+        isVideoEnabled,
+        isPaused,
+        stats,
+        localVideoRef,
+        // Handlers
+        handleStartStream,
+        handleEndStream,
+        pauseStream,
+        resumeStream,
+        toggleAudio,
+        toggleVideo,
     };
 };

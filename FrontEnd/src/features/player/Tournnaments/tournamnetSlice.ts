@@ -98,7 +98,7 @@ const tournamentSlice = createSlice({
             })
             .addCase(fetchLiveMatches.fulfilled, (state, action) => {
                 state.loading = false;
-                state.liveMatches = action.payload; // Assuming it populates liveMatches
+                state.liveMatches = action.payload;
             })
             .addCase(fetchLiveMatches.rejected, (state, action) => {
                 state.loading = false;

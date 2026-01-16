@@ -1,5 +1,5 @@
 import { combineReducers, type UnknownAction } from "@reduxjs/toolkit";
-import authReducer from "../features/auth/authSlice";
+import authReducer, { resetAuthState } from "../features/auth/authSlice";
 import usersReducer from "../features/admin/users/userSlice";
 import managerReducer from "../features/manager/managerSlice";
 import playerReducer from "../features/player/playerSlice";
@@ -19,6 +19,7 @@ import adminTournamnetReducer from "../features/admin/tournament/tournamentSlice
 import dashboardStatsReducer from "../features/admin/dashboard/dashboardSlice";
 import financialReducer from "../features/manager/financials/financialSlice";
 import adminTransactionReducer from "../features/admin/transaction/transactionSlice";
+import { logoutUser } from "../features/auth";
 
 
 const appReducer = combineReducers({
@@ -47,9 +48,14 @@ const appReducer = combineReducers({
 export type RootState = ReturnType<typeof appReducer>;
 
 const rootReducer = (state: RootState | undefined, action: UnknownAction) => {
-    if (action.type.toLowerCase().includes('logout')) {
+    if (action.type === logoutUser.fulfilled.type) {
         return appReducer(undefined, action);
     }
+
+    if (action.type === resetAuthState.type) {
+        return appReducer(undefined, action);
+    }
+
     return appReducer(state, action);
 };
 

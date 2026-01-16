@@ -21,4 +21,6 @@ export interface IPlayerRepository {
     getPlayersExcluding(ids: string[]): Promise<PlayerEntity[]> ;
 
     findAllPlayers(): Promise<PlayerEntity[]>;
+
+    bulkUpdateStats(ops: any[]): Promise<void>;
 }

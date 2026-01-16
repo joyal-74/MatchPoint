@@ -128,6 +128,8 @@ import { GetPlayerTeamsUseCase } from "app/usecases/player/GetMyTeams";
 import { GetPlayerJoinedTeamsUseCase } from "app/usecases/player/GetAllMyTeams"; 
 import { GetAllTeams } from "app/usecases/admin/GetAllTeams";
 import { StartMatchUseCase } from "app/usecases/manager/match/StartMatchUseCase";
+import { GetLeaderboard } from "app/usecases/shared/GetLeaderboard";
+import { GetPointsTableUseCase } from "app/usecases/manager/tournaments/GetPointsTable";
 
 
 // Registrations
@@ -233,6 +235,7 @@ container.register(DI_TOKENS.EntryFeePaymentUsecase, { useClass: InitiateTournam
 container.register(DI_TOKENS.UpdateTournamenTeamUsecase, { useClass: UpdateTournamentTeam });
 container.register(DI_TOKENS.TournamentTeamsUsecase, { useClass: GetRegisteredTeams });
 container.register(DI_TOKENS.SaveMatchData, { useClass: SaveMatchData });
+container.register(DI_TOKENS.GetTourLeaderboard, { useClass: GetTourLeaderboard });
 container.register(DI_TOKENS.GetDashboardAnalytics, { useClass: GetDashboardAnalytics });
 
 // --- Manager Fixtures & Matches ---
@@ -241,8 +244,9 @@ container.register(DI_TOKENS.CreateFixturesUsecase, { useClass: CreateFixtureUse
 container.register(DI_TOKENS.CreateMatchesUsecase, { useClass: CreateMatchesUseCase });
 container.register(DI_TOKENS.GetMatchesUsecase, { useClass: GetTournamentMatches });
 container.register(DI_TOKENS.StartMatchUseCase, { useClass: StartMatchUseCase });
-container.register(DI_TOKENS.GetLeaderBoardUsecase, { useClass: GetTourLeaderboard });
+container.register(DI_TOKENS.GetLeaderBoardUsecase, { useClass: GetLeaderboard });
 container.register(DI_TOKENS.GetLiveScoreUseCase, { useClass: GetLiveScoreUseCase });
+container.register(DI_TOKENS.GetPointsTableUseCase, { useClass: GetPointsTableUseCase });
 
 // --- Player Use Cases ---
 container.register(DI_TOKENS.GetChatsUseCase, { useClass: GetChatsUseCase });
@@ -263,7 +267,7 @@ container.register(DI_TOKENS.GetPlayerJoinedTeamsUseCase, { useClass: GetPlayerJ
 container.register(DI_TOKENS.GetMyTeamDetailsUseCase, { useClass: GetMyTeamDetails });
 container.register(DI_TOKENS.GetPlayerTournaments, { useClass: FetchTournamentsUseCase });
 container.register(DI_TOKENS.GetPlayerTournamentDetails, { useClass: PlayerTournamentDetails });
-container.register(DI_TOKENS.GetPlayerMatches, { useClass: FetchMatchesUseCase });
+container.register(DI_TOKENS.FetchMatchesUseCase, { useClass: FetchMatchesUseCase });
 
 // --- Shared Use Cases ---
 container.register(DI_TOKENS.VerifyPaymentUseCase, { useClass: VerifyPaymentUseCase });

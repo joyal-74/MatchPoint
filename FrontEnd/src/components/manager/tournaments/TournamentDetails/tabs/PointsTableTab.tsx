@@ -1,35 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { 
     Activity, Search, GitGraph, 
     Handshake, Users, ArrowRight, History, 
-    Trophy
+    Trophy, RefreshCcw, AlertCircle
 } from "lucide-react";
 import EmptyState from "../shared/EmptyState"; 
+import type { PointsRow } from "../../../../../features/manager/Tournaments/tournamentTypes";
+import { useAppDispatch, useAppSelector } from "../../../../../hooks/hooks";
+import { fetchTournamentPointsTable } from "../../../../../features/manager/Tournaments/tournamentThunks"; 
+import { clearPointsTableError } from "../../../../../features/manager/Tournaments/tournamentSlice";
 
-// --- TYPES ---
-interface PointsRow {
-    _id: string;
-    rank: number;
-    team: string;
-    p: number;
-    w: number;
-    l: number;
-    t: number;
-    nrr: string;
-    pts: number;
-    form: string[];
-}
-
-interface GroupData {
-    groupName: string;
-    rows: PointsRow[];
-}
-
-// --- SUB-COMPONENT: The Table ---
+// --- SUB-COMPONENT: The Table (Unchanged) ---
 const TableView = ({ data }: { data: PointsRow[] }) => {
     if (!data || data.length === 0) return (
         <div className="p-12 text-center border-2 border-dashed border-border rounded-xl bg-muted/20">
-            <p className="text-muted-foreground font-medium">No matches played in this group yet.</p>
+            <p className="text-muted-foreground font-medium">No matches played yet.</p>
         </div>
     );
 
@@ -58,7 +43,12 @@ const TableView = ({ data }: { data: PointsRow[] }) => {
                                         {row.rank}
                                     </span>
                                 </td>
-                                <td className="px-6 py-4 font-semibold text-foreground">{row.team}</td>
+                                <td className="px-6 py-4 font-semibold text-foreground flex items-center gap-3">
+                                    {row.teamLogo && (
+                                        <img src={row.teamLogo} alt={row.team} className="w-6 h-6 rounded-full object-cover bg-muted" />
+                                    )}
+                                    {row.team}
+                                </td>
                                 <td className="px-4 py-4 text-center text-muted-foreground">{row.p}</td>
                                 <td className="px-4 py-4 text-center font-bold text-green-600 dark:text-green-400 bg-green-500/5">{row.w}</td>
                                 <td className="px-4 py-4 text-center font-bold text-red-600 dark:text-red-400 bg-red-500/5">{row.l}</td>
@@ -76,62 +66,81 @@ const TableView = ({ data }: { data: PointsRow[] }) => {
 // --- MAIN COMPONENT ---
 
 interface PointsTableTabProps {
+    tournamentId: string;
     format: 'league' | 'knockout' | 'groups' | 'friendly'; 
     onNavigate?: (tab: string) => void;
 }
 
-export default function PointsTableTab({ format, onNavigate }: PointsTableTabProps) {
-    const [loading, setLoading] = useState(true);
-    const [activeGroup, setActiveGroup] = useState<string>("Group A");
-    const [groupData, setGroupData] = useState<GroupData[]>([]);
-    const [leagueData, setLeagueData] = useState<PointsRow[]>([]);
+export default function PointsTableTab({ tournamentId, format, onNavigate }: PointsTableTabProps) {
+    const dispatch = useAppDispatch();
+    
+    // ✅ FIX 1: Destructure correctly from state.pointsTable
+    const { 
+        data: pointsData, // Rename 'data' to 'pointsData' for clarity
+        loading, 
+        error 
+    } = useAppSelector((state) => state.managerTournaments.pointsTable); 
 
+    const [activeGroup, setActiveGroup] = useState<string>("");
+
+    const loadData = useCallback(() => {
+        if (format !== 'knockout' && format !== 'friendly') {
+            dispatch(fetchTournamentPointsTable(tournamentId));
+        }
+    }, [dispatch, tournamentId, format]);
 
     useEffect(() => {
-        // SIMULATE API FETCH
-        setTimeout(() => {
-            if (format === 'league') {
-                setLeagueData([
-                    { _id: '1', rank: 1, team: 'Royal Strikers', p: 5, w: 4, l: 1, t: 0, nrr: '+1.204', pts: 8, form: [] },
-                    { _id: '2', rank: 2, team: 'Galaxy Warriors', p: 5, w: 3, l: 2, t: 0, nrr: '+0.850', pts: 6, form: [] },
-                ]);
-            } else if (format === 'groups') {
-                setGroupData([
-                    {
-                        groupName: "Group A",
-                        rows: [
-                            { _id: '1', rank: 1, team: 'Team Alpha', p: 3, w: 3, l: 0, t: 0, nrr: '+2.100', pts: 6, form: [] },
-                            { _id: '2', rank: 2, team: 'Team Beta', p: 3, w: 1, l: 2, t: 0, nrr: '-0.500', pts: 2, form: [] },
-                        ]
-                    },
-                    {
-                        groupName: "Group B",
-                        rows: [] // Empty group test
-                    }
-                ]);
-            }
-            setLoading(false);
-        }, 600);
-    }, [format]);
+        loadData();
+        return () => {
+            dispatch(clearPointsTableError());
+        };
+    }, [loadData, dispatch]);
 
+    // ✅ FIX 2: Access 'pointsData.groups' instead of 'pointsTable.groups'
+    useEffect(() => {
+        if (format === 'groups' && pointsData?.groups && pointsData.groups.length > 0 && !activeGroup) {
+            setActiveGroup(pointsData.groups[0].groupName);
+        }
+    }, [format, pointsData, activeGroup]);
+
+    // --- LOADING STATE ---
     if (loading) return (
         <div className="h-64 flex flex-col items-center justify-center gap-3 animate-pulse">
             <div className="w-12 h-12 bg-muted rounded-full" />
             <div className="h-4 w-32 bg-muted rounded" />
+            <p className="text-xs text-muted-foreground">Calculating standings...</p>
         </div>
     );
 
-    // --- CASE 1: KNOCKOUT (Better Action Button) ---
+    // --- ERROR STATE ---
+    if (error) return (
+        <div className="h-64 flex flex-col items-center justify-center gap-4 text-center">
+            <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
+                <AlertCircle size={24} />
+            </div>
+            <div className="space-y-1">
+                <p className="font-medium text-foreground">Something went wrong</p>
+                <p className="text-sm text-muted-foreground">{error}</p>
+            </div>
+            <button 
+                onClick={loadData}
+                className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+            >
+                <RefreshCcw size={12} /> Try Again
+            </button>
+        </div>
+    );
+
+    // --- CASE 1: KNOCKOUT ---
     if (format === 'knockout') {
         return (
             <div className="py-12 animate-in zoom-in-95 duration-500">
                 <EmptyState
                     icon={<GitGraph size={56} className="mx-auto mb-6 text-orange-500 opacity-80" />}
                     title="Knockout Format"
-                    message="Points are not tracked in knockout tournaments. Teams advance by winning elimination matches."
+                    message="Points are not tracked in knockout tournaments."
                     subtitle="Check the bracket to see the road to the finals."
                 />
-                
                 <div className="flex justify-center mt-8">
                     <button 
                         onClick={() => onNavigate?.('matches')}
@@ -146,20 +155,19 @@ export default function PointsTableTab({ format, onNavigate }: PointsTableTabPro
         );
     }
 
-    // --- CASE 2: FRIENDLY (Better Action Button) ---
+    // --- CASE 2: FRIENDLY ---
     if (format === 'friendly') {
         return (
             <div className="py-12 animate-in zoom-in-95 duration-500">
                 <EmptyState
                     icon={<Handshake size={56} className="mx-auto mb-6 text-blue-500 opacity-80" />}
                     title="Exhibition Matches"
-                    message="Friendly matches are played for practice or exhibition. No official points table is maintained."
+                    message="Friendly matches don't have an official points table."
                     subtitle="You can still view the history of all matches played."
                 />
-                
                 <div className="flex justify-center mt-8">
                     <button 
-                        onClick={() => onNavigate?.('results')} // Switch to Results tab
+                        onClick={() => onNavigate?.('results')}
                         className="group relative inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-card border border-border hover:border-blue-500/50 hover:bg-muted/50 text-foreground font-bold text-sm shadow-lg hover:shadow-blue-500/10 transition-all duration-300"
                     >
                         <History size={18} className="text-blue-500" />
@@ -173,7 +181,9 @@ export default function PointsTableTab({ format, onNavigate }: PointsTableTabPro
 
     // --- CASE 3: GROUPS ---
     if (format === 'groups') {
-        const currentRows = groupData.find(g => g.groupName === activeGroup)?.rows || [];
+        // ✅ FIX 3: Check pointsData.groups
+        const groups = pointsData?.groups || [];
+        const currentRows = groups.find((g: any) => g.groupName === activeGroup)?.rows || [];
 
         return (
             <div className="space-y-6">
@@ -184,22 +194,25 @@ export default function PointsTableTab({ format, onNavigate }: PointsTableTabPro
                         </h2>
                     </div>
 
-                    {/* Styled Group Selector */}
-                    <div className="flex p-1 bg-background rounded-lg border border-border shadow-sm">
-                        {groupData.map((group) => (
-                            <button
-                                key={group.groupName}
-                                onClick={() => setActiveGroup(group.groupName)}
-                                className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${
-                                    activeGroup === group.groupName 
-                                    ? "bg-primary text-primary-foreground shadow-md" 
-                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                                }`}
-                            >
-                                {group.groupName}
-                            </button>
-                        ))}
-                    </div>
+                    {groups.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                            {groups.map((group: any) => (
+                                <button
+                                    key={group.groupName}
+                                    onClick={() => setActiveGroup(group.groupName)}
+                                    className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${
+                                        activeGroup === group.groupName 
+                                        ? "bg-primary text-primary-foreground shadow-md" 
+                                        : "bg-background border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                                    }`}
+                                >
+                                    {group.groupName}
+                                </button>
+                            ))}
+                        </div>
+                    ) : (
+                        <span className="text-xs text-muted-foreground italic">No groups found</span>
+                    )}
                 </div>
 
                 <TableView data={currentRows} />
@@ -218,7 +231,6 @@ export default function PointsTableTab({ format, onNavigate }: PointsTableTabPro
                     <p className="text-xs text-muted-foreground mt-1">Top teams qualify for finals</p>
                 </div>
                 
-                {/* Search Input */}
                 <div className="hidden sm:block relative">
                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
                      <input 
@@ -229,7 +241,7 @@ export default function PointsTableTab({ format, onNavigate }: PointsTableTabPro
                 </div>
             </div>
             
-            <TableView data={leagueData} />
+            <TableView data={pointsData?.table || []} />
         </div>
     );
 }

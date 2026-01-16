@@ -20,7 +20,6 @@ export class GetRegisteredTeams implements IGetRegisteredTeams {
         }
 
         const registeredTeams = await this._registeredTeamRepo.getTeamsByTournament(tournamentId);
-        console.log(registeredTeams)
 
         // Log the action
         this._logger.info(`Fetched ${registeredTeams.length} teams for tournament ${tournamentId}`);

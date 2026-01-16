@@ -1,36 +1,56 @@
 import { LiveMatchDTO } from "domain/dtos/LiveMatchDTO";
-import { TeamEntity } from "domain/entities/Match";
-import { MatchEntity } from "domain/entities/MatchEntity";
-import { Tournament } from "domain/entities/Tournaments";
+import { TournamentMatchStatsDocument } from "domain/types/match.types";
 
 export class LiveMatchMapper {
-    static toDTO(match: MatchEntity, teamA: TeamEntity, teamB: TeamEntity, tournament: Tournament): LiveMatchDTO {
+    static toDTO(stats: TournamentMatchStatsDocument, battingTeam: any, bowlingTeam: any, tournament: any): LiveMatchDTO {
 
-        const innings = match.currentInningsNumber === 1
-            ? match.innings1
-            : match.innings2;
+        const currentInningsNo = stats.currentInnings || 1;
+        const currentInnings = currentInningsNo === 2 ? stats.innings2 : stats.innings1;
 
-        if (!innings) throw new Error('')
+        if (!currentInnings) {
+            console.error(`[LiveMatchMapper] Missing innings data for match ${stats.matchId}`);
+            // Return a safe default instead of crashing
+            return {
+                matchId: stats.matchId.toString(),
+                tournamentId: stats.tournamentId.toString(),
+                tournamentName: tournament?.name || "Unknown Tournament",
+                teamA: battingTeam?.name || "Team A",
+                teamB: bowlingTeam?.name || "Team B",
+                teamAId: battingTeam?._id.toString() || "",
+                teamBId: bowlingTeam?._id.toString() || "",
+                runs: 0, wickets: 0, overs: 0,
+                status: stats.status || "ongoing",
+                venue: stats.venue || "",
+                type: "Limited Overs",
+                currentInningsNumber: 1,
+                isMatchComplete: false
+            };
+        }
 
+        const balls = currentInnings.legalBalls || 0;
+        const overs = Math.floor(balls / 6) + (balls % 6) / 10;
+
+        // 3. Map Data
         return {
-            matchId: match.matchId,
-            tournamentId: match.tournamentId,
-            tournamentName: tournament.title,
+            matchId: stats.matchId.toString(),
+            tournamentId: stats.tournamentId.toString(),
+            tournamentName: tournament?.name || "",
 
-            teamA: teamA.name,
-            teamB: teamB.name,
-            teamAId: teamA._id,
-            teamBId: teamB._id,
+            teamA: battingTeam.name,
+            teamB: bowlingTeam.name,
+            teamAId: battingTeam._id.toString(),
+            teamBId: bowlingTeam._id.toString(),
 
-            runs: innings.runs,
-            wickets: innings.wickets,
-            overs: match.oversLimit,
-            status: `Over ${match.oversLimit}`,
-            venue: tournament.location,
-            type: match.isLive ? 'LIVE' : '',
+            runs: currentInnings.runs || 0,
+            wickets: currentInnings.wickets || 0,
+            overs: overs,
 
-            currentInningsNumber: match.currentInningsNumber,
-            isMatchComplete: match.isMatchComplete
+            status: stats.status || "ongoing",
+            venue: stats.venue || "",
+            type: `${stats.oversLimit || 20} Overs`, 
+
+            currentInningsNumber: currentInningsNo,
+            isMatchComplete: stats.status === 'completed'
         };
     }
 }

@@ -43,7 +43,7 @@ const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        logout(state) {
+        resetAuthState(state) {
             state.user = null;
             state.error = null;
             state.signupSuccess = false;
@@ -310,5 +310,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { logout, clearError, resetPasswordFlow, resetSignupState, clearResetEmail, setUser, setResetData, clearTempToken, clearAuthProvider } = authSlice.actions;
+export const { resetAuthState, clearError, resetPasswordFlow, resetSignupState, clearResetEmail, setUser, setResetData, clearTempToken, clearAuthProvider } = authSlice.actions;
 export default authSlice.reducer;

@@ -84,4 +84,10 @@ export class PlayerRepositoryMongo implements IPlayerRepository {
 
         return PlayerDetailsMapper.toEntityList(docs);
     }
+
+    async bulkUpdateStats(ops: any[]): Promise<void> {
+        if (ops.length > 0) {
+            await PlayerModel.bulkWrite(ops);
+        }
+    }
 }

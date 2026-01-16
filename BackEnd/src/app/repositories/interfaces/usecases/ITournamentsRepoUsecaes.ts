@@ -1,4 +1,5 @@
 import { LiveMatchCardDTO } from "domain/dtos/LiveMatchDTO";
+import { PointsTableResponse } from "domain/entities/PointsTable";
 import { Leaderboard, Tournament } from "domain/entities/Tournaments";
 
 export interface IGetPlayerTournaments {
@@ -15,4 +16,8 @@ export interface IGetTourLeaderboard {
 
 export interface IStartTournament {
     execute(tournamentId: string): Promise<void>;
+}
+
+export interface IGetPointsTableUseCase {
+    execute(tournamentId: string):Promise<PointsTableResponse>;
 }

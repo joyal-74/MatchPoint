@@ -2,12 +2,15 @@ import { Server } from "socket.io";
 import { AuthenticatedSocket } from "../SocketServer";
 import { ILiveStreamService } from "app/repositories/interfaces/services/LiveStreamService";
 import { ConnectTransportData, CreateTransportData, ConsumeData, ProduceData, Callback } from "../utils/liveStream.types";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class LiveStreamHandler {
     constructor(
         private io: Server,
         private socket: AuthenticatedSocket,
-        private liveStreamService: ILiveStreamService
+        @inject(DI_TOKENS.LiveStreamService) private liveStreamService: ILiveStreamService
     ) {
         this.register();
     }

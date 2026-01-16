@@ -19,7 +19,7 @@ export const PlayerDashboard: React.FC = () => {
         dispatch(fetchLiveMatches({ limit: 3, status: 'ongoing' }))
     }, [dispatch])
 
-    const { allTournaments: tournaments, matches: liveMatches, loading } = useAppSelector((state) => state.playerTournaments);
+    const { allTournaments: tournaments, liveMatches, loading } = useAppSelector((state) => state.playerTournaments);
 
     console.log(liveMatches, " kjksjkfjksfdsfs")
 

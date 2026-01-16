@@ -11,10 +11,15 @@ export type AddRunsPayload = {
 
 export interface EndMatchUseCaseInput {
     matchId: string;
-    type: "NORMAL" | "ABANDONED" | "NO_RESULT";
-    reason?: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER";
-    notes?: string;
+    reason: string; // "COMPLETED", "RAIN", "BAD_LIGHT", etc.
     endedBy?: string;
+    // New: The Result Data
+    resultData?: {
+        winnerId: string | null; // null if TIE/DRAW
+        resultType: 'WIN' | 'TIE' | 'DRAW';
+        winType?: 'runs' | 'wickets';
+        margin?: string;
+    } | null;
 }
 
 export interface IGetMatchDetails {

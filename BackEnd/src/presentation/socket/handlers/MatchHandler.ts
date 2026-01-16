@@ -25,6 +25,8 @@ import {
 import { NotFoundError } from "domain/errors";
 import { DismissalType } from "domain/entities/Innings";
 import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+import { inject, injectable } from "tsyringe";
 
 export interface MatchUseCases {
     setStriker: ISetStrikerUseCase;
@@ -43,6 +45,7 @@ export interface MatchUseCases {
     endMatch: IEndMatchUseCase
 }
 
+@injectable()
 export class MatchHandler {
     private currentMatchId: string | null = null;
     private playerCache: Map<string, string> = new Map();
@@ -51,8 +54,8 @@ export class MatchHandler {
         private io: Server,
         private socket: AuthenticatedSocket,
         private useCases: MatchUseCases,
-        private matchRepo: IMatchStatsRepo,
-        private playerRepo: IPlayerRepository
+        @inject(DI_TOKENS.MatchStatsRepository) private matchRepo: IMatchStatsRepo,
+        @inject(DI_TOKENS.PlayerRepository) private playerRepo: IPlayerRepository
     ) {
         this.setupEvents();
     }

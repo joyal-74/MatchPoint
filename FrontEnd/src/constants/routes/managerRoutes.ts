@@ -28,6 +28,7 @@ export const MANAGER_ROUTES = {
     CREATE_MATCHES: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/matches`,
     GET_MATCHES: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/matches`,
     GET_LEADERBOARD: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/leaderboard`,
+    GET_POINTS_TABLE: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/points-table`,
     CREATE_FIXTURE: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/fixture`,
     GET_FIXTURES: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/fixture`,
     GET_AVAILABLE_PLAYERS: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/available-players`,

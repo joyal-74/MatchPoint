@@ -14,4 +14,5 @@ export const TournamentMessages = {
     LEADERBOARD_FETCHED: "Leaderboard fetched successfully",
     TOURNAMENT_STARTED: "Tournament started successfully",
     DASHBOARD_ANALYTICS: "Dashboard fetched successfully",
+    POINTS_TABLE_FETCHED: "POINTS TABLE FETCHED fetched successfully",
 };

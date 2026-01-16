@@ -1,4 +1,4 @@
-import { EndMatchData, IMatchesRepository, MatchStreamData } from "app/repositories/interfaces/manager/IMatchesRepository";
+import { EndMatchDTO, IMatchesRepository, MatchStreamData } from "app/repositories/interfaces/manager/IMatchesRepository";
 import { MatchResponseDTO } from "domain/dtos/MatchDTO";
 import { Extras } from "domain/entities/Extra";
 import { Innings } from "domain/entities/Innings";
@@ -178,7 +178,7 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
         return match;
     }
 
-    async endMatch(matchId: string, data: EndMatchData): Promise<MatchEntity> {
+    async endMatch(matchId: string, data: EndMatchDTO): Promise<MatchEntity> {
         const match = await MatchModel.findOne({ _id: matchId });
 
         if (!match) {
@@ -189,20 +189,36 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
             throw new BadRequestError("Match already ended");
         }
 
-
+        // 1. Set End Info (Meta data)
         match.endInfo = {
-            type: data.type,
+            type: data.type || "NORMAL",
             reason: data.reason ?? null,
             notes: data.notes ?? "",
             endedBy: data.endedBy ? new Types.ObjectId(data.endedBy) : null,
             endedAt: new Date()
         };
 
-        if (data.type !== "NORMAL") {
+
+        if (data.winnerId) {
+            match.winner = new Types.ObjectId(data.winnerId);
+        }
+        else if (data.reason === 'COMPLETED' && !data.winnerId) {
+            match.winner = null;
+        }
+        else if (data.type && data.type !== "NORMAL") {
             match.winner = null;
         }
 
+        if (data.winMargin) match.winMargin = data.winMargin;
+        if (data.winType) match.winType = data.winType;
+
+        // Important: Save the result type (WIN/TIE/DRAW) and the text description
+        if (data.resultType) match.resultType = data.resultType;
+        if (data.resultDescription) match.resultDescription = data.resultDescription;
+
+        // 4. Finalize Status
         match.status = "completed";
+
         await match.save();
 
         return MatchMongoMapper.toEntity(match);

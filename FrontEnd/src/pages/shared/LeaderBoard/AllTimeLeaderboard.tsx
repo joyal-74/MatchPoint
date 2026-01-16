@@ -8,8 +8,7 @@ import type { RootState } from "../../../app/rootReducer";
 import { fetchLeaderboardData } from "../../../features/shared/leaderboard/leaderboardThunks";
 import { useDebounce } from "../../../hooks/useDebounce";
 import LoadingOverlay from "../../../components/shared/LoadingOverlay";
-import Navbar from "../../../components/viewer/Navbar";
-import RoleLayoutWrapper from "../RoleLayoutWrapper";
+
 
 const roleOptions: PlayerRole[] = ["Batter", "Bowler", "Allrounder"];
 const timePeriodOptions: TimePeriod[] = ["All Time", "2024", "2023", "2022", "2021", "2020"];
@@ -37,6 +36,8 @@ const AllTimeLeaderboard: React.FC = () => {
     const [selectedTimePeriod, setSelectedTimePeriod] = useState<TimePeriod>("All Time");
     const [page, setPage] = useState<number>(1);
     const [search, setSearch] = useState<string>("");
+
+    console.log(leaderboard, topPlayers)
 
     const debouncedSearch = useDebounce(search, 1000);
 
@@ -168,7 +169,7 @@ const AllTimeLeaderboard: React.FC = () => {
                                                 let value;
 
                                                 if (header === "Rank") {
-                                                    value = (page - 1) * 10 + idx + 1;
+                                                    value = (page - 1) * 10 + idx + 5;
                                                     return (
                                                         <td key={header} className="px-6 py-4 whitespace-nowrap">
                                                             <span className={`

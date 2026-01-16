@@ -15,16 +15,22 @@ import {
     getTournamentMatches,
     fetchLeaderboard,
     getDashboardAnalytics,
+    fetchTournamentPointsTable,
 } from "./tournamentThunks";
 import type { Fixture, Leaderboard, Match, Tournament } from "../managerTypes";
 import type { RegisteredTeam } from "../../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
-import type { AnalyticsData } from "./tournamentTypes";
+import type { AnalyticsData, PointsTableData } from "./tournamentTypes";
 
 interface ManagerTournamentState {
     myTournaments: Tournament[];
     exploreTournaments: Tournament[];
     analyticsData: AnalyticsData | null;
     selectedTournament: Tournament | null;
+    pointsTable: {
+        data: PointsTableData | null,
+        loading: boolean,
+        error: string | null
+    }
     registeredTeams: RegisteredTeam[],
     fixtures: Fixture | null,
     matches: Match[] | null,
@@ -40,6 +46,11 @@ const initialState: ManagerTournamentState = {
     exploreTournaments: [],
     analyticsData: null,
     selectedTournament: null,
+    pointsTable: {
+        data: null,
+        loading: false,
+        error: null
+    },
     fixtures: null,
     matches: null,
     leaderboard: {
@@ -65,6 +76,9 @@ const managerTournamentSlice = createSlice({
 
         clearSelectedTournament: (state) => {
             state.selectedTournament = null;
+        },
+        clearPointsTableError(state) {
+            state.pointsTable.error = null;
         },
     },
     extraReducers: (builder) => {
@@ -294,10 +308,23 @@ const managerTournamentSlice = createSlice({
             .addCase(getDashboardAnalytics.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
+            })
+
+            .addCase(fetchTournamentPointsTable.pending, (state) => {
+                state.pointsTable.loading = true;
+                state.pointsTable.error = null;
+            })
+            .addCase(fetchTournamentPointsTable.fulfilled, (state, action) => {
+                state.pointsTable.loading = false;
+                state.pointsTable.data = action.payload;
+            })
+            .addCase(fetchTournamentPointsTable.rejected, (state, action) => {
+                state.pointsTable.loading = false;
+                state.pointsTable.error = action.payload as string;
             });
     },
 });
 
 
-export const { setSelectedTournament, clearSelectedTournament } = managerTournamentSlice.actions;
+export const { setSelectedTournament, clearSelectedTournament, clearPointsTableError } = managerTournamentSlice.actions;
 export default managerTournamentSlice.reducer;

@@ -51,6 +51,7 @@ router.post("/tournament/start", expressAdapter(tournamentManagementController.s
 router.post("/tournament/:tournamentId/matches", expressAdapter(tournamentManagementController.createTournamentMatches));
 router.post("/tournament/:tournamentId/matches", expressAdapter(tournamentManagementController.createTournamentMatches));
 router.get("/tournament/:tournamentId/matches", expressAdapter(tournamentManagementController.getTournamentMatches));
+router.get("/tournament/:tournamentId/points-table", expressAdapter(tournamentManagementController.getPointsTable));
 router.get("/tournament/:tournamentId/fixture", expressAdapter(tournamentManagementController.getTournamentFixtures));
 router.post("/tournament/:tournamentId/fixture", expressAdapter(tournamentManagementController.createTournamentFixtures));
 

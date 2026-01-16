@@ -11,11 +11,18 @@ export interface MatchStreamData {
     managerId?: string;
 }
 
-export interface EndMatchData {
-    type: "NORMAL" | "ABANDONED" | "NO_RESULT";
-    reason?: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER";
+export interface EndMatchDTO {
+    status?: string;
+    type?: string;
+    reason: string; 
     notes?: string;
     endedBy: string | null;
+    
+    winnerId?: string | null;
+    resultType?: string | null;
+    winMargin?: string | null;
+    winType?: string | null;
+    resultDescription?: string;
 }
 
 
@@ -30,6 +37,6 @@ export interface IMatchesRepository {
     getStreamMetadata(matchId: string,): Promise<MatchStreamData>;
     updateStreamMetadata(matchId: string, data: MatchStreamData): Promise<void>;
     updateStreamStatus(matchId: string, isLive: boolean): Promise<void>;
-    endMatch(matchId: string, data: EndMatchData): Promise<MatchEntity>;
+    endMatch(matchId: string, data: EndMatchDTO): Promise<MatchEntity>;
     updateTossDetails(matchId: string, tossWinnerId: string, tossDecision: string): Promise<MatchEntity | null>;
 }

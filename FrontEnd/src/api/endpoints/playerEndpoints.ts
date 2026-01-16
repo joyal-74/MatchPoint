@@ -75,6 +75,8 @@ export const playerEndpoints = {
             params: { status, page, limit }
         });
 
+        console.log(data.data)
+
         return data.data;
     },
 

@@ -2,7 +2,7 @@ import { injectable, inject } from "tsyringe";
 import { DI_TOKENS } from "domain/constants/Identifiers";
 
 import { ILogger } from "app/providers/ILogger";
-import { IGetTourLeaderboard, IStartTournament } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
+import { IGetPointsTableUseCase, IGetTourLeaderboard, IStartTournament } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 import {
     IAddTournament,
     ICancelTournament,
@@ -43,8 +43,9 @@ export class TournamentController implements ITournamentController {
         @inject(DI_TOKENS.CreateFixturesUsecase) private _createFixturesUsecase: ICreateTournamentFixtures,
         @inject(DI_TOKENS.CreateMatchesUsecase) private _createMatchesUsecase: ICreateMatchesUseCase,
         @inject(DI_TOKENS.GetMatchesUsecase) private _getMatchesUsecase: IGetTournamentMatches,
-        @inject(DI_TOKENS.GetLeaderBoardUsecase) private _getLeaderBoardUsecase: IGetTourLeaderboard,
+        @inject(DI_TOKENS.GetTourLeaderboard) private _getLeaderBoardUsecase: IGetTourLeaderboard,
         @inject(DI_TOKENS.StartTournament) private _startTournamentService: IStartTournament,
+        @inject(DI_TOKENS.GetPointsTableUseCase) private _getPointsTableUseCase: IGetPointsTableUseCase,
         @inject(DI_TOKENS.GetDashboardAnalytics) private _getDashboardAnalytics: IGetDashboardAnalytics,
         @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
@@ -260,5 +261,13 @@ export class TournamentController implements ITournamentController {
         const result = await this._getDashboardAnalytics.execute(managerId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.DASHBOARD_ANALYTICS, result));
+    };
+
+    getPointsTable = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { tournamentId } = httpRequest.params;
+
+        const result = await this._getPointsTableUseCase.execute(tournamentId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.POINTS_TABLE_FETCHED, result));
     };
 }

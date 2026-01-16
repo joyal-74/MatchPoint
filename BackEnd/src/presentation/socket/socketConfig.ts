@@ -1,10 +1,18 @@
-import http from "http";
-import { SocketServer } from "presentation/socket/SocketServer";
-
 import { container } from "tsyringe";
+import { SocketServer } from "./SocketServer";
+import http from "http";
 
+let instance: SocketServer | null = null;
 
-export const socketServer = container.resolve(SocketServer)
+// Lazy Getter: Only resolves when called
+export const getSocketServer = (): SocketServer => {
+    if (!instance) {
+        instance = container.resolve(SocketServer);
+    }
+    return instance;
+};
 
-export const initSocket = (server: http.Server) => socketServer.init(server);
-export const getIO = () => socketServer.getIO();
+export const initSocket = (server: http.Server) => {
+    const io = getSocketServer().init(server);
+    return io;
+};

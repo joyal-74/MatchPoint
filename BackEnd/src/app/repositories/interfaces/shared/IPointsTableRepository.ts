@@ -5,5 +5,5 @@ export interface IPointsTableRepository {
 
     initializeTable(rows: PointsRow[]): Promise<void>;
 
-    updateTeamStats(teamId: string, stats: Partial<PointsRow>): Promise<void>;
+    updateTeamStats(tournamentId: string, teamId: string, stats: Partial<PointsRow>): Promise<void>
 }

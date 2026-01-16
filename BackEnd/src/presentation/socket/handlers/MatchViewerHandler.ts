@@ -1,12 +1,14 @@
 import { Server } from "socket.io";
 import { AuthenticatedSocket } from "../SocketServer";
 import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { inject } from "tsyringe";
+import { DI_TOKENS } from "domain/constants/Identifiers";
 
 export class MatchViewerHandler {
     constructor(
         private io: Server,
         private socket: AuthenticatedSocket,
-        private matchRepo: IMatchStatsRepo
+        @inject(DI_TOKENS.MatchStatsRepository) private matchRepo: IMatchStatsRepo
     ) {
         this.setupEvents();
     }

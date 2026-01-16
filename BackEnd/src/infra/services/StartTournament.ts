@@ -4,7 +4,6 @@ import { DI_TOKENS } from "domain/constants/Identifiers";
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
 import { IPointsTableRepository } from "app/repositories/interfaces/shared/IPointsTableRepository";
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { PointsRow } from "domain/entities/Tournaments";
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { IStartTournament } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 
@@ -30,12 +29,12 @@ export class StartTournament implements IStartTournament {
         }
 
         // 3. Prepare Points Table Data
-        const initialRows: PointsRow[] = registrations.map((reg) => ({
+        const initialRows = registrations.map((reg) => ({
             tournamentId: tournamentId,
-            team: (reg.teamId).name,
+            teamId: reg.teamId,
+            team: reg.teamId.name,
             rank: 0, p: 0, w: 0, l: 0, t: 0, nrr: "0.000", pts: 0, form: []
         }));
-
        
         await this.pointsRepo.initializeTable(initialRows);
 

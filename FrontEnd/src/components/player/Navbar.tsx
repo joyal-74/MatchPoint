@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
 
     return (
         <>
-            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-20 py-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border transition-colors duration-300">
+            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-10 mx-auto py-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border transition-colors duration-300">
                 
                 <div className="flex items-center gap-12">
                     {/* Logo Section */}
