@@ -1,9 +1,10 @@
 import { ITransactionRepository, TransactionStats } from "app/repositories/interfaces/shared/ITransactionRepository";
+import { RevenueChartPoint } from "domain/dtos/Analytics.dto";
 import { AdminFilters } from "domain/dtos/Team.dto";
 import { TransactionCheckDTO, TransactionCreateDTO } from "domain/dtos/Transaction.dto";
 import { Transaction } from "domain/entities/Transaction";
 import { TransactionModel } from "infra/databases/mongo/models/TransactionModel";
-import { ClientSession, FilterQuery } from "mongoose";
+import mongoose, { ClientSession, FilterQuery } from "mongoose";
 
 
 export class TransactionRepository implements ITransactionRepository {
@@ -164,5 +165,49 @@ export class TransactionRepository implements ITransactionRepository {
             totalVolume: stats.volume[0]?.total || 0,
             pendingPayouts: stats.pendingPayouts[0]?.total || 0
         };
+    }
+
+    async getMonthlyStats(walletId: string, months: number): Promise<RevenueChartPoint[]> {
+        const objectId = new mongoose.Types.ObjectId(walletId);
+        const startDate = new Date();
+        startDate.setMonth(startDate.getMonth() - months);
+
+        return TransactionModel.aggregate([
+            {
+                $match: {
+                    $or: [{ fromWalletId: objectId }, { toWalletId: objectId }],
+                    createdAt: { $gte: startDate },
+                    status: 'SUCCESS'
+                }
+            },
+            {
+                $project: {
+                    month: { $month: "$createdAt" },
+                    year: { $year: "$createdAt" },
+                    amount: 1,
+                    // Determine direction
+                    isIncome: { 
+                        $and: [
+                            { $eq: ["$toWalletId", objectId] }, 
+                            { $in: ["$type", ["PRIZE", "REFUND"]] }
+                        ] 
+                    },
+                    isExpense: { 
+                        $and: [
+                            { $eq: ["$fromWalletId", objectId] },
+                            { $in: ["$type", ["ENTRY_FEE", "WITHDRAWAL", "SUBSCRIPTION"]] }
+                        ] 
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: { month: "$month", year: "$year" },
+                    income: { $sum: { $cond: ["$isIncome", "$amount", 0] } },
+                    expense: { $sum: { $cond: ["$isExpense", "$amount", 0] } }
+                }
+            },
+            { $sort: { "_id.year": 1, "_id.month": 1 } }
+        ]);
     }
 }

@@ -18,8 +18,8 @@ export default function NotificationsPage() {
     const unreadCount = notifications.filter(n => !n.isRead).length;
 
     return (
-        <div className="pt-10 px-4 pb-12 min-h-screen bg-background text-foreground">
-            <div className="max-w-4xl mx-auto space-y-8">
+        <div className="px-4 bg-background text-foreground ">
+            <div className="max-w-7xl mx-auto space-y-4 ">
 
                 {/* Header Section */}
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">

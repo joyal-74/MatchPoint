@@ -61,7 +61,7 @@ const PlayerProfilePage: React.FC = () => {
 
     return (
         <PlayerLayout>
-            <div className="max-w-7xl mx-auto mt-6 px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                     {/* Left Sidebar: Photo & Premium */}
@@ -168,7 +168,7 @@ const PlayerProfilePage: React.FC = () => {
                             </div>
 
                             {/* Form Body */}
-                            <div className="py-6 px-2">
+                            <div className="py-6 px-1">
                                 {loading ? (
                                     <div className="flex justify-center items-center h-40">
                                         <Loader2 className="w-8 h-8 animate-spin text-primary" />

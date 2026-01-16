@@ -19,6 +19,10 @@ export interface IUpdateUserPlan {
     execute(userId: string, level: PlanLevel, billingCycle?: BillingCycle) : Promise<UserSubscription>;
 }
 
+export interface IUpdateUserDirectlyPlan {
+    execute(userId: string, level: PlanLevel, billingCycle?: BillingCycle) : Promise<UserSubscription>;
+}
+
 export interface IGetAvailablePlansByRole {
     execute(role: string): Promise<Plan[]>
 }

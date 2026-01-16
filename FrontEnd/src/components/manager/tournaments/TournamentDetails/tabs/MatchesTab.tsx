@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks/hooks";
 import { Link, useParams } from "react-router-dom";
-import { Swords, Calendar, Clock, Trophy, Activity, LayoutDashboard } from "lucide-react";
+import { 
+    Swords, Calendar, Clock, Trophy, Activity, 
+    LayoutDashboard, Eye, ChevronRight 
+} from "lucide-react";
 import EmptyState from "../shared/EmptyState";
 import LoadingOverlay from "../../../../shared/LoadingOverlay";
 import { getTournamentMatches } from "../../../../../features/manager/Tournaments/tournamentThunks";
@@ -26,12 +29,12 @@ export default function MatchesTab() {
 
     if (!matches || matches.length === 0) {
         return (
-            <div className="py-12">
+            <div className="py-12 animate-in fade-in zoom-in-95 duration-500">
                 <EmptyState
                     icon={<Swords size={48} className="mx-auto mb-4 text-primary" />}
                     title="No Matches Scheduled"
-                    message="The fixture list is currently empty."
-                    subtitle="Generate fixtures in the 'Fixtures' tab to see matchups here."
+                    message="The match list is currently empty try create fixture."
+                    subtitle={isManager ? "Generate fixtures in the 'Fixtures' tab to see matchups here." : "Check back later for the match schedule."}
                 />
             </div>
         );
@@ -43,10 +46,11 @@ export default function MatchesTab() {
     const completedMatches = matches.filter(m => m.status === 'completed');
 
     return (
-        <div className="space-y-8 pb-12">
+        <div className="space-y-8 pb-12 animate-in fade-in duration-500">
+            
             {/* 1. LIVE MATCHES SECTION */}
             {liveMatches.length > 0 && (
-                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="space-y-4">
                     <div className="flex items-center gap-2 px-1">
                         <div className="relative flex h-3 w-3">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -54,7 +58,6 @@ export default function MatchesTab() {
                         </div>
                         <h2 className="text-lg font-bold text-foreground tracking-wide">Live Now</h2>
                     </div>
-                    {/* Grid Layout: 1 col on mobile, 2 cols on Large screens */}
                     <div className="grid grid-cols-1 gap-4">
                         {liveMatches.map(match => (
                             <MatchRow key={match._id} match={match} isLive isManager={isManager} />
@@ -178,24 +181,41 @@ function MatchRow({ match, isLive = false, isManager = false }: { match: Match; 
                 </div>
             </div>
 
-            {/* Right: Actions (Only visible if Manager) */}
-            {isManager && (
-                <div className="w-full sm:w-auto flex justify-end mt-2 sm:mt-0">
+            {/* Right: Actions (Dynamic based on Role) */}
+            <div className="w-full sm:w-auto flex justify-end mt-2 sm:mt-0">
+                {isManager ? (
+                    /*  */
                     <Link
                         to={`/manager/match/${match._id}/dashboard`}
                         className={`
-                            flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all
+                            flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all
                             ${isLive
                                 ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/20"
-                                : "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border"
+                                : "bg-background border border-border hover:bg-muted text-foreground"
                             }
                         `}
                     >
                         <LayoutDashboard size={14} />
                         <span className="hidden xl:inline">Dashboard</span>
+                        <span className="xl:hidden">Manage</span>
                     </Link>
-                </div>
-            )}
+                ) : (
+                    /*  */
+                    <Link
+                        to={`/match/${match._id}/view`}
+                        className={`
+                            flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all group/btn
+                            ${isLive
+                                ? "bg-red-500 text-white hover:bg-red-600 shadow-md shadow-red-500/20 animate-pulse-slow"
+                                : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                            }
+                        `}
+                    >
+                        {isLive ? <Eye size={14} /> : <ChevronRight size={14} />}
+                        <span>{isLive ? "Watch Live" : "View Match"}</span>
+                    </Link>
+                )}
+            </div>
         </div>
     );
 }

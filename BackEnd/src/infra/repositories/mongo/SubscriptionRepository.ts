@@ -1,56 +1,131 @@
+import { UpdateQuery } from "mongoose"; // Import this
 import { ISubscriptionRepository } from "app/repositories/interfaces/shared/ISubscriptionRepository";
-import { UserSubscriptionModel } from "infra/databases/mongo/models/SubscriptionModel";
+import { UserSubscriptionModel, UserSubscriptionDocument } from "infra/databases/mongo/models/SubscriptionModel";
 import { BillingCycle, PlanLevel, UserSubscription } from "domain/entities/Plan";
 import { SubscriptionMapper } from "infra/utils/mappers/SubscriptionMapper";
 import { BadRequestError, NotFoundError } from "domain/errors";
+
+const getPlanRank = (level: PlanLevel): number => {
+    const ranks: Record<PlanLevel, number> = { "Free": 0, "Super": 1, "Premium": 2 };
+    return ranks[level] || 0;
+};
 
 export class SubscriptionRepository implements ISubscriptionRepository {
 
     async updateUserPlan(userId: string, level: PlanLevel, billingCycle?: BillingCycle): Promise<UserSubscription> {
 
         const currentSub = await UserSubscriptionModel.findOne({ userId });
-
-        let expiryDate: Date | undefined;
         const now = new Date();
 
-        if (level !== "Free") {
-            if (!billingCycle) throw new BadRequestError("Billing cycle required");
+        const updates: Partial<UserSubscriptionDocument> = {};
+        
+        const removals: Record<string, 1> = {};
 
-            let startDate = now;
+        const hasActivePlan = 
+            currentSub && 
+            currentSub.level !== "Free" && 
+            currentSub.expiryDate && 
+            currentSub.expiryDate > now;
 
-            if (
-                currentSub &&
-                currentSub.level === level &&
-                currentSub.expiryDate &&
-                currentSub.expiryDate > now
-            ) {
-                startDate = new Date(currentSub.expiryDate);
-            }
-
-            expiryDate = new Date(startDate);
-
-            if (billingCycle === "Monthly") {
-                expiryDate.setMonth(startDate.getMonth() + 1);
+        // --- SCENARIO A: NEW SUBSCRIPTION ---
+        if (!hasActivePlan) {
+            if (level === "Free") {
+                updates.level = "Free";
+                updates.status = "active";
+                
+                // Mark fields for removal
+                removals.expiryDate = 1;
+                removals.billingCycle = 1;
+                removals.reservedPlan = 1;
+                removals.scheduledChange = 1;
             } else {
-                expiryDate.setFullYear(startDate.getFullYear() + 1);
+                if (!billingCycle) throw new BadRequestError("Billing cycle required");
+                
+                updates.level = level;
+                updates.billingCycle = billingCycle;
+                updates.expiryDate = this.calculateExpiry(now, billingCycle);
+                updates.status = "active";
+                updates.updatedAt = now;
+            }
+        } 
+        
+        // --- SCENARIO B: MODIFYING ACTIVE PLAN ---
+        else {
+            if (level === "Free") {
+                 updates.scheduledChange = {
+                    level: "Free",
+                    billingCycle: "Monthly",
+                    status: "pending_downgrade"
+                 };
+            } else {
+                if (!billingCycle) throw new BadRequestError("Billing cycle required");
+
+                const currentRank = getPlanRank(currentSub.level as PlanLevel);
+                const newRank = getPlanRank(level);
+
+                // UPGRADE
+                if (newRank > currentRank) {
+                    const msRemaining = currentSub.expiryDate!.getTime() - now.getTime();
+                    const daysRemaining = Math.ceil(msRemaining / (1000 * 60 * 60 * 24));
+                    
+                    if (daysRemaining > 0) {
+                        updates.reservedPlan = {
+                            level: currentSub.level,
+                            daysRemaining: daysRemaining
+                        };
+                    }
+
+                    updates.level = level;
+                    updates.billingCycle = billingCycle;
+                    updates.expiryDate = this.calculateExpiry(now, billingCycle);
+                    
+                    // Remove any pending downgrades
+                    removals.scheduledChange = 1; 
+                }
+
+                // DOWNGRADE (Queue it)
+                else if (newRank < currentRank) {
+                    updates.scheduledChange = {
+                        level: level,
+                        billingCycle: billingCycle,
+                        status: "pending_downgrade"
+                    };
+                }
+
+                // RENEWAL
+                else {
+                    const startDate = new Date(currentSub.expiryDate!);
+                    updates.expiryDate = this.calculateExpiry(startDate, billingCycle);
+                    updates.billingCycle = billingCycle; 
+                }
             }
         }
 
-        const updateData: Partial<UserSubscription> = {
-            level,
-            ...(billingCycle ? { billingCycle } : {}),
-            ...(expiryDate ? { expiryDate } : {})
+        // 2. Construct the Mongoose Query
+        const updateQuery: UpdateQuery<UserSubscriptionDocument> = { 
+            $set: updates, 
+            $unset: removals 
         };
 
         const doc = await UserSubscriptionModel.findOneAndUpdate(
             { userId },
-            updateData,
+            updateQuery,
             { upsert: true, new: true }
         );
 
         if (!doc) throw new NotFoundError("Update failed");
 
         return SubscriptionMapper.toDomain(doc);
+    }
+
+    private calculateExpiry(startDate: Date, cycle: BillingCycle): Date {
+        const date = new Date(startDate);
+        if (cycle === "Monthly") {
+            date.setMonth(date.getMonth() + 1);
+        } else {
+            date.setFullYear(date.getFullYear() + 1);
+        }
+        return date;
     }
 
     async getUserSubscription(userId: string): Promise<UserSubscription | null> {

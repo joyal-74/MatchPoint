@@ -11,15 +11,107 @@ export class MatchRepoMongo implements IMatchStatsRepo {
         return MatchStatsMapper.toDomain(doc);
     }
 
-    async findLiveMatches(): Promise<MatchEntity[]> {
-        const docs = await TournamentMatchStatsModel
-            .find({ status: 'ongoing' })
-            .lean();
+    async findLiveMatches({limit = 10}) {
+        return TournamentMatchStatsModel.aggregate([
+            { $match: { status: "ongoing" } },
+            { $sort: { updatedAt: -1 } },
+            { $limit: limit },
 
-        if (!docs || docs.length === 0) return [];
+            // Join Match
+            {
+                $lookup: {
+                    from: "matches",
+                    localField: "matchId",
+                    foreignField: "_id",
+                    as: "match"
+                }
+            },
+            { $unwind: "$match" },
 
-        return docs.map(doc => MatchStatsMapper.toDomain(doc));
+            // Join Team A
+            {
+                $lookup: {
+                    from: "teams",
+                    localField: "match.teamA",
+                    foreignField: "_id",
+                    as: "teamA"
+                }
+            },
+            { $unwind: "$teamA" },
+
+            // Join Team B
+            {
+                $lookup: {
+                    from: "teams",
+                    localField: "match.teamB",
+                    foreignField: "_id",
+                    as: "teamB"
+                }
+            },
+            { $unwind: "$teamB" },
+
+            {
+                $project: {
+                    matchId: "$match._id",
+
+                    teamA: {
+                        name: "$teamA.name",
+                        logo: "$teamA.logo"
+                    },
+                    teamB: {
+                        name: "$teamB.name",
+                        logo: "$teamB.logo"
+                    },
+
+                    scoreA: {
+                        $concat: [
+                            { $toString: "$innings1.runs" },
+                            "/",
+                            { $toString: "$innings1.wickets" }
+                        ]
+                    },
+                    oversA: {
+                        $concat: [
+                            { $toString: { $floor: { $divide: ["$innings1.legalBalls", 6] } } },
+                            ".",
+                            { $toString: { $mod: ["$innings1.legalBalls", 6] } }
+                        ]
+                    },
+
+                    scoreB: {
+                        $cond: [
+                            { $ifNull: ["$innings2", false] },
+                            {
+                                $concat: [
+                                    { $toString: "$innings2.runs" },
+                                    "/",
+                                    { $toString: "$innings2.wickets" }
+                                ]
+                            },
+                            "-"
+                        ]
+                    },
+                    oversB: {
+                        $cond: [
+                            { $ifNull: ["$innings2", false] },
+                            {
+                                $concat: [
+                                    { $toString: { $floor: { $divide: ["$innings2.legalBalls", 6] } } },
+                                    ".",
+                                    { $toString: { $mod: ["$innings2.legalBalls", 6] } }
+                                ]
+                            },
+                            "-"
+                        ]
+                    },
+
+                    isStreamLive: "$match.isStreamLive"
+                }
+            }
+        ]);
     }
+
+
 
     async save(match: MatchEntity): Promise<MatchEntity> {
         const persistence = MatchStatsMapper.toPersistence(match);

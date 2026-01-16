@@ -2,10 +2,10 @@ import { ArrowRight, Calendar, MapPin, Users, Trophy } from 'lucide-react';
 import type { Tournament } from '../../features/manager/managerTypes';
 
 interface TournamentsCardProps {
-    upcomingTournaments: Tournament[];
+    tournaments: Tournament[];
 }
 
-const TournamentsCard = ({ upcomingTournaments }: TournamentsCardProps) => {
+const TournamentsCard = ({ tournaments }: TournamentsCardProps) => {
     return (
         <section id="tournaments" className="py-16 bg-muted/30">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,7 +27,7 @@ const TournamentsCard = ({ upcomingTournaments }: TournamentsCardProps) => {
 
                 {/* Cards Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {upcomingTournaments.map((tournament, index) => (
+                    {tournaments.map((tournament, index) => (
                         <div
                             key={index}
                             className="bg-card text-card-foreground rounded-xl border border-border p-6 hover:shadow-lg hover:border-primary/50 transition-all duration-300 group flex flex-col h-full"

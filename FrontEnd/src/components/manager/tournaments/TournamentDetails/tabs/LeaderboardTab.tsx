@@ -6,8 +6,7 @@ import { useParams } from "react-router-dom";
 import LoadingOverlay from "../../../../shared/LoadingOverlay";
 import type { RootState } from "../../../../../app/store";
 
-// Helper for accent styles that work in both Light and Dark modes
-// We keep specific colors (Orange/Purple) for the "Cap" concepts, but align backgrounds/text to theme
+
 const ACCENT_STYLES = {
     orange: {
         border: "border-orange-500",

@@ -1,5 +1,5 @@
 import NavbarWrapper from '../components/shared/NavbarWrapper';
-import SettingsPage from '../components/shared/SettingsPage';
+import SettingsPage from '../pages/shared/SettingsPage';
 import AdminLoginPage from '../pages/auth/AdminLogin';
 import EnterAccountOtpPage from '../pages/auth/EnterAccountOtpPage';
 import EnterForgotOtpPage from '../pages/auth/EnterForgotOtpPage';

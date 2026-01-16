@@ -33,7 +33,7 @@ const TournamentsPage = () => {
         <div className="min-h-screen bg-background text-foreground flex flex-col">
             <Navbar />
 
-            <div className="flex-1 mt-16">
+            <div className="flex-1">
                 {/* --- Hero Section --- */}
                 <div className="relative bg-muted/20 border-b border-border py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-primary/5 rounded-full blur-3xl -z-10" />

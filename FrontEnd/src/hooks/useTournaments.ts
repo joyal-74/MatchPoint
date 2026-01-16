@@ -1,14 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
-import { useAppDispatch, useAppSelector } from "./hooks"; 
+import { useAppDispatch, useAppSelector } from "./hooks";
 import type { RootState } from "../app/store";
 import type { FilterStatus } from "../components/manager/tournaments/TournamentFilter";
 import { useDebounce } from "./useDebounce";
-import { getExploreTournaments, getMyTournaments } from "../features/manager/Tournaments/tournamentThunks";
+import { getDashboardAnalytics, getExploreTournaments, getMyTournaments } from "../features/manager/Tournaments/tournamentThunks";
 
 
 export const useTournaments = () => {
     const dispatch = useAppDispatch();
-    const { myTournaments, exploreTournaments, loading } = useAppSelector((state: RootState) => state.managerTournaments);
+    const { myTournaments, exploreTournaments, analyticsData, loading } = useAppSelector((state: RootState) => state.managerTournaments);
     const managerId = useAppSelector((state: RootState) => state.auth.user?._id);
 
     const [activeFilter, setActiveFilter] = useState<FilterStatus>("all");
@@ -28,6 +28,11 @@ export const useTournaments = () => {
     const loadMyTournaments = useCallback(() => {
         if (!managerId) return;
         dispatch(getMyTournaments(managerId));
+    }, [dispatch, managerId]);
+
+    const loadDashboardAnalytics = useCallback(() => {
+        if (!managerId) return;
+        dispatch(getDashboardAnalytics(managerId));
     }, [dispatch, managerId]);
 
     // Load Explore Tournaments
@@ -61,7 +66,8 @@ export const useTournaments = () => {
     // Effects
     useEffect(() => {
         loadMyTournaments();
-    }, [loadMyTournaments]);
+        loadDashboardAnalytics();
+    }, [loadMyTournaments, loadDashboardAnalytics]);
 
     // Reset explore page when search or filter changes
     useEffect(() => {
@@ -80,6 +86,7 @@ export const useTournaments = () => {
         searchQuery,
         showMyTournaments,
         exploreTournaments,
+        analyticsData,
         loading,
         exploreLoading,
         hasMoreMyTournaments,

@@ -43,14 +43,12 @@ export class SubscriptionPaymentService implements ISubscriptionService {
                         "active"
                     );
 
-                    const tran = await this.recordSubscriptionTransaction(
+                    await this.recordSubscriptionTransaction(
                         userId,
                         Number(amount),
                         verification.paymentId,
                         planLevel as string
                     );
-
-                    console.log(tran, 'kskjdfgsldgh')
 
                     return { status: "completed", subscription: updated };
                 }

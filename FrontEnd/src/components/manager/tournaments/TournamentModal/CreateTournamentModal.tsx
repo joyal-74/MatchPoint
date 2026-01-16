@@ -10,12 +10,7 @@ import MapPicker from "../../../shared/MapPicker";
 import { validateTournamentForm } from "../../../../validators/ValidateTournamentForm";
 import { Trophy, Calendar, Activity, FileText, Image as ImageIcon, MapPin, Watch } from "lucide-react";
 
-export default function CreateTournamentModal({
-    isOpen,
-    onClose,
-    managerId,
-    onShowPrizeInfo,
-}: CreateTournamentModalProps) {
+export default function CreateTournamentModal({ isOpen, onClose, managerId, onShowPrizeInfo, }: CreateTournamentModalProps) {
     const dispatch = useAppDispatch();
     const [formData, setFormData] = useState<TournamentFormData>(initialFormData(managerId));
     const [rulesText, setRulesText] = useState("");
@@ -295,10 +290,10 @@ export default function CreateTournamentModal({
                                         {/* Integrated Card Container */}
                                         <div className={`
                                             relative rounded-xl border transition-all duration-300 overflow-hidden group
-                                            ${errors.location 
-                                                ? 'border-destructive/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]' 
-                                                : formData.location 
-                                                    ? 'border-primary/30 shadow-[0_0_15px_rgba(var(--primary),0.05)]' 
+                                            ${errors.location
+                                                ? 'border-destructive/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]'
+                                                : formData.location
+                                                    ? 'border-primary/30 shadow-[0_0_15px_rgba(var(--primary),0.05)]'
                                                     : 'border-border bg-muted/20'
                                             }
                                         `}>

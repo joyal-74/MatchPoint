@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Award, RefreshCw } from 'lucide-react';
+import { AlertCircle, Award, CalendarClock, RefreshCw } from 'lucide-react';
 import type { AvailablePlan, PlanLevel } from './subscription/SubscriptionTypes';
 import { UserButton } from './subscription/UserButton';
 import { PlanCardUser } from './subscription/PlanCardUser';
@@ -7,14 +7,21 @@ import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import type { RootState } from '../../app/rootReducer';
 import LoadingOverlay from '../../components/shared/LoadingOverlay';
 import { PaymentModal } from './subscription/PaymentModal';
-import { fetchAvailablePlans } from '../../features/shared/subscription/subscriptionThunks';
+import { fetchAvailablePlans, updatePlanDirectly } from '../../features/shared/subscription/subscriptionThunks';
 import { useSubscribePlan } from '../../hooks/useSubscribePlan';
+
+// --- HELPER: Define Plan Hierarchy ---
+const getPlanRank = (level: PlanLevel | string): number => {
+    const ranks: Record<string, number> = { "Free": 0, "Basic": 1, "Super": 2, "Premium": 3 };
+    return ranks[level] || 0;
+};
 
 export default function UserSubscriptionPage() {
     const user = useAppSelector((state) => state.auth.user);
     const role = useAppSelector((state) => state.auth.user?.role);
     const userId = useAppSelector((state) => state.auth.user?._id);
     const dispatch = useAppDispatch();
+    
     const [selectedPlan, setSelectedPlan] = useState<AvailablePlan | null>(null);
     const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
@@ -22,6 +29,7 @@ export default function UserSubscriptionPage() {
         (state: RootState) => state.userSubscription
     );
 
+    // Hook for handling Razorpay/Stripe (only used for Upgrades)
     const { handleRazorpaySubscription } = useSubscribePlan({
         plan: selectedPlan,
         userId: user?._id,
@@ -36,7 +44,35 @@ export default function UserSubscriptionPage() {
         }
     }, [role, userId, dispatch]);
 
-    const handleChoosePlan = (plan: AvailablePlan) => {
+    // --- LOGIC: Handle Plan Selection ---
+    const handleChoosePlan = async (plan: AvailablePlan) => {
+        if (!userSubscription || !userId) return;
+
+        const currentRank = getPlanRank(userSubscription.level);
+        const targetRank = getPlanRank(plan.level);
+
+        // CASE 1: Downgrade (No Payment Required)
+        if (targetRank < currentRank) {
+            const confirmed = window.confirm(
+                `Are you sure you want to downgrade to ${plan.title}? \n\nThis change will take effect automatically on ${new Date(userSubscription.expiryDate).toLocaleDateString()} after your current plan expires.`
+            );
+
+            if (confirmed) {
+                // Dispatch the direct update thunk (Ensure this exists in your subscriptionThunks.ts)
+                await dispatch(updatePlanDirectly({ 
+                    userId, 
+                    level: plan.level, 
+                    billingCycle: plan.billingCycle 
+                }));
+                
+                // Refresh data to show the "Scheduled" alert
+                dispatch(fetchAvailablePlans({ userId, role: role! }));
+            }
+            return; 
+        }
+
+        // CASE 2: Upgrade (Payment Required)
+        // Opens the modal for Razorpay/Stripe
         setSelectedPlan(plan);
         setPaymentModalOpen(true);
     };
@@ -46,59 +82,26 @@ export default function UserSubscriptionPage() {
 
         if (method === "razorpay") {
             await handleRazorpaySubscription();
-            if (role && userId) {
-                dispatch(fetchAvailablePlans({ userId, role }));
-            }
+            // Refresh logic is usually handled inside the hook, but good to ensure:
+            if (role) dispatch(fetchAvailablePlans({ userId, role }));
         } else {
-            if (role && userId) {
-                dispatch(fetchAvailablePlans({ userId, role }));
-            }
+            // Placeholder for Stripe/Paypal
+            if (role) dispatch(fetchAvailablePlans({ userId, role }));
         }
         setPaymentModalOpen(false);
     };
 
     const handleManageSubscription = () => {
-        console.log("Navigate to billing portal…");
+        // Logic for Customer Portal (if using Stripe Billing Portal)
+        console.log("Navigate to billing portal...");
     };
 
+    // --- RENDER: Empty State ---
     if ((!loading && availablePlans.length === 0) || !userSubscription) {
         return (
             <div className="flex flex-col items-center justify-center py-40 text-muted-foreground">
-                {/* SVG Illustration - Adapted to use Primary Color */}
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-40 h-40 mb-6 opacity-80"
-                    fill="none"
-                    viewBox="0 0 200 200"
-                >
-                    <circle cx="100" cy="100" r="90" className="stroke-muted-foreground/30" strokeWidth="4" />
-                    <path
-                        d="M60 120c0-22 18-40 40-40s40 18 40 40"
-                        className="stroke-primary"
-                        strokeWidth="6"
-                        strokeLinecap="round"
-                    />
-                    <rect
-                        x="72"
-                        y="125"
-                        width="56"
-                        height="12"
-                        rx="6"
-                        className="fill-primary"
-                        fillOpacity="0.8"
-                    />
-                    <circle cx="100" cy="80" r="14" className="stroke-primary" strokeWidth="5" />
-                </svg>
-
-                {/* Text */}
-                <h2 className="text-2xl font-bold text-foreground mb-2">
-                    No Subscription Plans Available
-                </h2>
-
-                <p className="text-muted-foreground max-w-md text-center leading-relaxed">
-                    Looks like no plans are configured for your role yet.
-                    Please check back later or contact the platform admin for more details.
-                </p>
+                <h2 className="text-2xl font-bold text-foreground mb-2">No Plans Available</h2>
+                <p>Please check back later.</p>
             </div>
         );
     }
@@ -110,9 +113,37 @@ export default function UserSubscriptionPage() {
             <div className="text-foreground font-sans min-h-screen">
                 <div className="pt-10 max-w-7xl mx-auto px-4 sm:px-6">
 
-                    
+                    {/* --- ALERT 1: Pending Downgrade --- */}
+                    {userSubscription?.scheduledChange && (
+                        <div className="bg-yellow-50/50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-800 p-4 rounded-xl mb-6 flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
+                            <CalendarClock className="w-5 h-5 text-yellow-600 dark:text-yellow-500 mt-0.5" />
+                            <div>
+                                <h4 className="font-semibold text-yellow-800 dark:text-yellow-400">Subscription Change Scheduled</h4>
+                                <p className="text-sm text-yellow-700 dark:text-yellow-500/80 mt-1">
+                                    You have requested to switch to the <strong>{userSubscription.scheduledChange.level}</strong> plan. 
+                                    This change will happen automatically on <strong>{new Date(userSubscription.expiryDate).toLocaleDateString()}</strong>.
+                                    Until then, you retain your current benefits.
+                                </p>
+                            </div>
+                        </div>
+                    )}
 
-                    {/* CURRENT SUBSCRIPTION */}
+                    {/* --- ALERT 2: Reserved Balance (From previous upgrade) --- */}
+                    {userSubscription?.reservedPlan && userSubscription.reservedPlan.daysRemaining > 0 && (
+                        <div className="bg-blue-50/50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 p-4 rounded-xl mb-6 flex items-start gap-3">
+                            <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-500 mt-0.5" />
+                            <div>
+                                <h4 className="font-semibold text-blue-800 dark:text-blue-400">Reserved Plan Balance</h4>
+                                <p className="text-sm text-blue-700 dark:text-blue-500/80 mt-1">
+                                    You have <strong>{userSubscription.reservedPlan.daysRemaining} days</strong> of the 
+                                    <strong> {userSubscription.reservedPlan.level}</strong> plan remaining. 
+                                    These will be credited back to you if your current Premium plan expires.
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* --- SECTION: Current Subscription --- */}
                     <div className="bg-card p-4 sm:p-8 rounded-2xl shadow-xl border border-border mb-10 transition-colors duration-300">
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
 
@@ -131,11 +162,15 @@ export default function UserSubscriptionPage() {
                                 </div>
                                 <div>
                                     <p className="font-bold text-muted-foreground">Billing Cycle</p>
-                                    <p className="text-lg font-extrabold text-foreground capitalize">{userSubscription.billingCycle}</p>
+                                    <p className="text-lg font-extrabold text-foreground capitalize">{userSubscription.billingCycle || "Monthly"}</p>
                                 </div>
                                 <div>
                                     <p className="font-bold text-muted-foreground">Renewal Date</p>
-                                    <p className="text-lg font-extrabold text-foreground">{new Date(userSubscription.expiryDate).toLocaleDateString()}</p>
+                                    <p className="text-lg font-extrabold text-foreground">
+                                        {userSubscription.expiryDate 
+                                            ? new Date(userSubscription.expiryDate).toLocaleDateString() 
+                                            : "N/A"}
+                                    </p>
                                 </div>
 
                                 <UserButton
@@ -150,13 +185,13 @@ export default function UserSubscriptionPage() {
                         </div>
                     </div>
 
-                    {/* AVAILABLE PLANS */}
+                    {/* --- SECTION: Available Plans --- */}
                     <header className="mb-8">
                         <h2 className="text-2xl font-extrabold text-foreground tracking-tight mb-2">
                             Available Plan Tiers
                         </h2>
                         <p className="text-muted-foreground">
-                            Upgrade or change your subscription to access new features.
+                            Upgrade immediately or schedule a plan change.
                         </p>
                     </header>
 
@@ -167,11 +202,14 @@ export default function UserSubscriptionPage() {
                                 plan={plan}
                                 currentLevel={userSubscription.level as PlanLevel}
                                 onChoosePlan={handleChoosePlan}
+                                // Pass the scheduled downgrade level (if any) to the card
+                                pendingDowngrade={userSubscription.scheduledChange?.level as PlanLevel} 
                             />
                         ))}
                     </div>
                 </div>
 
+                {/* --- MODAL: Payments (Only used for Upgrades) --- */}
                 <PaymentModal
                     open={paymentModalOpen}
                     planTitle={selectedPlan?.title || ""}

@@ -66,4 +66,37 @@ export const playerEndpoints = {
 
         return data.data;
     },
+
+    tournamentDetails: async (tournamentId: string) => {
+        const { data } = await axiosClient.post(PLAYER_ROUTES.GET_TOURNAMENT_DETAILS, { tournamentId })
+
+        return data.data;
+    },
+
+    fetchLiveMatches: async (filters?: { status?: string; page?: number; limit?: number; }) => {
+        const { status, page = 1, limit = 10 } = filters || {};
+        const { data } = await axiosClient.get(PLAYER_ROUTES.GET_MATCHES, {
+            params: { status, page, limit }
+        });
+
+        return data.data;
+    },
+
+    fetchTournamentMatches: async (tournamentId: string) => {
+        const { data } = await axiosClient.post(PLAYER_ROUTES.GET_TOURNAMENT_MATCHES, { tournamentId });
+
+        return data.data;
+    },
+
+    fetchTournamentPointsTable: async (tournamentId: string) => {
+        const { data } = await axiosClient.post(PLAYER_ROUTES.GET_TOURNAMENT_TABLE, { tournamentId });
+
+        return data.data;
+    },
+
+    fetchTournamentStats: async (tournamentId: string) => {
+        const { data } = await axiosClient.post(PLAYER_ROUTES.GET_TOURNAMENT_STATS, { tournamentId });
+
+        return data.data;
+    },
 };

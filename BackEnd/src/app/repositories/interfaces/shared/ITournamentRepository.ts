@@ -1,3 +1,4 @@
+import { FormatStatPoint, TopTournamentPoint } from "domain/dtos/Analytics.dto";
 import { Tournament, TournamentRegister, TournamentTeam } from "domain/entities/Tournaments";
 
 export interface ITournamentRepository {
@@ -13,4 +14,7 @@ export interface ITournamentRepository {
     cancel(teamId: string, reason: string): Promise<Tournament>;
     findManyByIds(ids: string[], page: number, limit: number): Promise<{ tournaments: Tournament[]; total: number }>;
     findByManagerId(managerId : string) : Promise<Tournament[]>
+    getFormatDistribution(managerId: string): Promise<FormatStatPoint[]>;
+    getTopPerforming(managerId: string, limit: number): Promise<TopTournamentPoint[]>;
+    getIdsByManager(managerId: string): Promise<string[]>
 }

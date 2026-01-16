@@ -24,7 +24,7 @@ export default function EmptyState({
     subtitleSize = "text-sm text-muted-foreground"
 }: EmptyStateProps) {
     return (
-        <div className="bg-card/50 rounded-2xl border border-dashed border-border p-8 text-center py-12 flex flex-col items-center justify-center transition-colors duration-300">
+        <div className="bg-card/50 rounded-2xl  border-border p-8 text-center py-12 flex flex-col items-center justify-center transition-colors duration-300">
             {icon && <div className="mb-4">{icon}</div>}
 
             <h2 className={`${titleSize} font-semibold mb-2 text-foreground`}>

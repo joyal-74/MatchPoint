@@ -2,7 +2,7 @@ import { injectable, inject } from "tsyringe";
 import { DI_TOKENS } from "domain/constants/Identifiers";
 
 import { ILogger } from "app/providers/ILogger";
-import { IGetTourLeaderboard } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
+import { IGetTourLeaderboard, IStartTournament } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 import {
     IAddTournament,
     ICancelTournament,
@@ -16,7 +16,8 @@ import {
     IGetTournamentFixtures,
     ICreateTournamentFixtures,
     ICreateMatchesUseCase,
-    IGetTournamentMatches
+    IGetTournamentMatches,
+    IGetDashboardAnalytics
 } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { TournamentMessages } from "domain/constants/TournamentMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
@@ -43,6 +44,8 @@ export class TournamentController implements ITournamentController {
         @inject(DI_TOKENS.CreateMatchesUsecase) private _createMatchesUsecase: ICreateMatchesUseCase,
         @inject(DI_TOKENS.GetMatchesUsecase) private _getMatchesUsecase: IGetTournamentMatches,
         @inject(DI_TOKENS.GetLeaderBoardUsecase) private _getLeaderBoardUsecase: IGetTourLeaderboard,
+        @inject(DI_TOKENS.StartTournament) private _startTournamentService: IStartTournament,
+        @inject(DI_TOKENS.GetDashboardAnalytics) private _getDashboardAnalytics: IGetDashboardAnalytics,
         @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
@@ -241,5 +244,21 @@ export class TournamentController implements ITournamentController {
         const result = await this._getLeaderBoardUsecase.execute(tournamentId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.LEADERBOARD_FETCHED, result));
+    };
+
+    startTournament = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { tournamentId } = httpRequest.body;
+
+        const result = await this._startTournamentService.execute(tournamentId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TOURNAMENT_STARTED, result));
+    };
+
+    getDashboardAnalytics = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { managerId } = httpRequest.params;
+
+        const result = await this._getDashboardAnalytics.execute(managerId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.DASHBOARD_ANALYTICS, result));
     };
 }

@@ -24,6 +24,7 @@ export interface IMatchesRepository {
     updateMatchStats(matchId: string, stats: Record<string, string | number>): Promise<Match>;
     updateStatus(matchId: string, status: string): Promise<void>;
     getMatchesByTournament(tournamentId: string): Promise<Match[]>;
+    getMatchesFilters(filters: { status?: string; page?: number; limit?: number }): Promise<{matches : Match[], total : number}>;
     getMatchById(matchId: string): Promise<Match | null>;
     getMatchDetails(matchId: string): Promise<MatchResponseDTO | null>;
     getStreamMetadata(matchId: string,): Promise<MatchStreamData>;

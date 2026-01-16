@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L from "leaflet";
+import { Search, MapPin, Loader2 } from "lucide-react"; // Using Lucide icons for consistency
 
 interface MapPickerProps {
     onSelectLocation: (data: { address: string; lat: number; lng: number }) => void;
@@ -8,16 +9,24 @@ interface MapPickerProps {
     initialLocation?: { lat: number; lng: number; address: string };
 }
 
+// Leaflet Default Icon Fix
 const defaultIcon = new L.Icon({
     iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
     iconSize: [25, 41],
     iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+    shadowSize: [41, 41]
 });
 
+// Current Location Icon (Blue)
 const currentLocationIcon = new L.Icon({
     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
     iconSize: [25, 41],
     iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+    shadowSize: [41, 41]
 });
 
 function LocationMarker({
@@ -183,12 +192,12 @@ export default function MapPicker({ onSelectLocation, defaultCenter, initialLoca
                         }}
                         onKeyPress={handleKeyPress}
                         placeholder="Search location..."
-                        className="w-full p-2 text-sm rounded-md bg-neutral-800 border border-neutral-600 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full p-2.5 text-sm rounded-lg bg-background border border-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
                         disabled={isSearching}
                     />
                     {isSearching && (
-                        <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                            <div className="animate-spin rounded-full h-3 w-3 border-2 border-blue-500 border-t-transparent"></div>
+                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary">
+                            <Loader2 className="animate-spin w-4 h-4" />
                         </div>
                     )}
                 </div>
@@ -197,15 +206,17 @@ export default function MapPicker({ onSelectLocation, defaultCenter, initialLoca
                     type="button"
                     onClick={handleSearch}
                     disabled={isSearching}
-                    className="px-3 py-2 text-sm bg-green-600 text-white rounded-md hover:bg-green-500 disabled:bg-blue-800 disabled:cursor-not-allowed transition-colors flex items-center gap-1 min-w-[80px] justify-center"
+                    className="px-4 py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 justify-center"
                 >
                     {isSearching ? (
                         <>
-                            <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent"></div>
-                            <span className="text-xs">Searching</span>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Finding</span>
                         </>
                     ) : (
-                        "Search"
+                        <>
+                            <Search className="w-4 h-4" />
+                        </>
                     )}
                 </button>
 
@@ -213,41 +224,38 @@ export default function MapPicker({ onSelectLocation, defaultCenter, initialLoca
                     type="button"
                     onClick={getCurrentLocation}
                     disabled={isLocating}
-                    className="px-3 py-3 text-sm bg-gray-700 text-white rounded-md hover:bg-green-500 disabled:bg-green-800 disabled:cursor-not-allowed transition-colors flex items-center gap-1 min-w-4 justify-center"
+                    className="px-3 py-2.5 text-sm bg-secondary text-secondary-foreground border border-input rounded-lg hover:bg-secondary/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center min-w-[40px]"
                     title="Use current location"
                 >
                     {isLocating ? (
-                        <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent"></div>
+                        <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
+                        <MapPin className="w-4 h-4" />
                     )}
                 </button>
             </div>
 
             {/* Error Message */}
             {error && (
-                <div className="p-2 text-xs bg-red-900/50 border border-red-700 rounded-md text-red-200">
+                <div className="p-2 text-xs bg-destructive/10 border border-destructive/20 text-destructive rounded-md font-medium">
                     {error}
                 </div>
             )}
 
             {/* Instructions */}
-            <div className="text-xs text-neutral-400 text-center">
+            <div className="text-xs text-muted-foreground text-center">
                 Click anywhere on the map to select a location
                 {currentLocation && " • Blue marker shows your current location"}
             </div>
 
             {/* Map Container */}
-            <div className="rounded-lg overflow-hidden border border-neutral-600">
+            <div className="rounded-xl overflow-hidden border border-border shadow-sm">
                 <MapContainer
                     center={defaultCenter || { lat: 20.5937, lng: 78.9629 }}
                     zoom={5}
                     style={{ height: "300px", width: "100%" }}
                     ref={mapRef}
-                    className="rounded-lg"
+                    className="z-0" // Ensure map stays below dropdowns if they overlap
                 >
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
@@ -260,7 +268,7 @@ export default function MapPicker({ onSelectLocation, defaultCenter, initialLoca
                 </MapContainer>
             </div>
 
-            <div className="text-xs text-neutral-500 text-center">
+            <div className="text-[10px] text-muted-foreground/60 text-center">
                 💡 Tip: Use Ctrl + Scroll to zoom, click and drag to pan
             </div>
         </div>

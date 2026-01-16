@@ -12,4 +12,6 @@ export const TournamentMessages = {
     MATCHES_CREATED: "Matches created successfully",
     FIXTURES_CREATED: "Fixtures created successfully",
     LEADERBOARD_FETCHED: "Leaderboard fetched successfully",
+    TOURNAMENT_STARTED: "Tournament started successfully",
+    DASHBOARD_ANALYTICS: "Dashboard fetched successfully",
 };

@@ -88,7 +88,7 @@ const TeamFinderPage = () => {
             <Navbar />
             
             {/* Header Section */}
-            <header className="pt-24 pb-12 px-6 border-b border-border bg-card/50">
+            <header className="pt-2 pb-12 px-6 border-b border-border bg-card/50">
                 <div className="max-w-7xl mx-auto text-center space-y-4">
                     <div className="inline-flex items-center justify-center p-3 rounded-full bg-primary/10 text-primary mb-2">
                         <Users size={32} />

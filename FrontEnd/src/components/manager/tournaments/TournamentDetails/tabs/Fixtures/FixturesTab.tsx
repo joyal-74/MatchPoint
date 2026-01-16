@@ -3,7 +3,10 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../../../../hooks/hooks";
 import { toast } from 'react-hot-toast';
 import LoadingOverlay from "../../../../../shared/LoadingOverlay";
-import { Swords, Trophy, Calendar, MapPin, Sparkles, Settings2, Plus } from "lucide-react";
+import { 
+    Swords, Trophy, Calendar, MapPin, Sparkles, 
+    Settings2, Plus, Clock, AlertCircle 
+} from "lucide-react";
 import {
     generateKnockoutFixtures,
     generateLeagueFixtures,
@@ -77,7 +80,6 @@ export default function FixturesTab({ type }: FixtureTabProp) {
 
         let matches;
         try {
-            // 1. Generate the local match structure (contains ObjectIds for teams)
             switch (selectedTournament.format) {
                 case "knockout":
                     matches = generateKnockoutFixtures(registeredTeams, confirmedSettings.location, confirmedSettings.startDate, confirmedSettings.matchesPerDay);
@@ -92,13 +94,11 @@ export default function FixturesTab({ type }: FixtureTabProp) {
                     return toast.error("Unknown tournament format");
             }
 
-            // 2. Save Matches to DB
             const createdMatches = await dispatch(createTournamentMatches({
                 tournamentId: selectedTournament._id,
                 matchesData: matches,
             })).unwrap();
 
-            // 3. Save Fixture structure to DB
             const fixtureMatches = createdMatches.map((m) => ({
                 matchId: m._id,
                 round: m.round,
@@ -108,13 +108,11 @@ export default function FixturesTab({ type }: FixtureTabProp) {
                 tournamentId: selectedTournament._id,
                 matchIds: fixtureMatches,
                 format: selectedTournament.format,
-            })).unwrap(); // Ensure this completes before fetching
+            })).unwrap();
 
             toast.success("Fixtures generated successfully!");
             setShowConfirmModal(false);
 
-            // 4. THE FIX: Refetch fresh data from server
-            // This ensures we get the populated team names/logos instead of raw ObjectIds
             const freshFixtures = await dispatch(getTournamentFixtures(id)).unwrap();
             setFixtures(freshFixtures);
 
@@ -126,64 +124,79 @@ export default function FixturesTab({ type }: FixtureTabProp) {
 
     if (loading) return <LoadingOverlay show />;
 
+    // --- EMPTY STATE DESIGN ---
     if (!fixtures?.matches?.length) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[500px] animate-in fade-in zoom-in-95 duration-500">
-                <div className="relative group max-w-lg w-full">
-                    
-                    {/* Background glow effect using Primary color */}
-                    <div className="absolute -inset-1 bg-primary/20 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-                    
-                    <div className="relative bg-card border border-border rounded-2xl p-8 text-center space-y-6 shadow-sm">
-                        <div className="mx-auto w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6 border border-primary/20">
-                            <Swords size={40} className="text-primary" />
-                        </div>
-                        
-                        <div className="space-y-2">
-                            <h2 className="text-2xl font-bold text-foreground">Tournament Fixtures</h2>
-                            <p className="text-muted-foreground max-w-sm mx-auto">
-                                The bracket is empty. Generate matches based on the {registeredTeams.length} registered teams to officially kick off the tournament.
-                            </p>
-                        </div>
-                        
-                        
+            <div className="relative w-full min-h-[600px] flex flex-col items-center justify-center p-6 animate-in fade-in duration-700">
+                
+                {/* 1. Cinematic Background Elements */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+                    {/* Giant blurred icon in background */}
+                    <Swords 
+                        strokeWidth={0.5} 
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] text-foreground/5 dark:text-foreground/5 rotate-12" 
+                    />
+                    {/* Gradient blob for depth */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px]" />
+                </div>
 
-                        {type === 'manage' ? (
-                            <div className="pt-4">
-                                <button
-                                    onClick={handleOpenModal}
-                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 font-semibold shadow-lg shadow-primary/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
-                                >
-                                    <Sparkles size={18} />
-                                    Generate {selectedTournament?.format ? selectedTournament.format.charAt(0).toUpperCase() + selectedTournament.format.slice(1) : ''} Bracket
-                                </button>
-                                
-                                <p className="text-xs text-muted-foreground mt-4 flex items-center justify-center gap-2">
-                                    <Settings2 size={12} />
-                                    You can customize dates & location before confirming
-                                </p>
-
-                                <ConfirmFixtureModal
-                                    isOpen={showConfirmModal}
-                                    onClose={() => setShowConfirmModal(false)}
-                                    onConfirm={handleGenerateFixtures}
-                                    settings={matchSettings}
-                                    setSettings={setMatchSettings}
-                                />
-                            </div>
-                        ) : (
-                            <div className="pt-4 px-4 py-2 bg-muted/50 rounded-lg inline-block border border-border">
-                                <p className="text-sm text-muted-foreground italic">
-                                    Waiting for tournament organizer to publish fixtures.
-                                </p>
-                            </div>
-                        )}
+                {/* 2. Main Content Wrapper */}
+                <div className="relative z-10 flex flex-col items-center max-w-2xl w-full text-center space-y-8">
+                    
+                    {/* Header Text */}
+                    <div className="space-y-4">
+                        <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-background/50 backdrop-blur-sm border border-border shadow-sm mb-2">
+                            <Trophy size={32} className="text-primary" />
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
+                            {type === 'manage' ? "Ready to Kick Off?" : "Schedule Pending"}
+                        </h2>
+                        <p className="text-muted-foreground text-lg max-w-lg mx-auto leading-relaxed">
+                            {type === 'manage' 
+                                ? "The teams are registered and the stage is set. Generate the official match schedule to launch the tournament."
+                                : "The tournament organizer hasn't published the official match schedule yet. Please check back soon."
+                            }
+                        </p>
                     </div>
+
+
+
+                    {/* Action Area */}
+                    {type === 'manage' ? (
+                        <div className="flex flex-col items-center gap-4 w-full pt-4">
+                            <button
+                                onClick={handleOpenModal}
+                                className="group relative w-full sm:w-auto px-8 py-4 rounded-xl bg-primary text-primary-foreground font-bold text-base shadow-xl shadow-primary/20 hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-3"
+                            >
+                                <Sparkles size={20} className="group-hover:animate-pulse" />
+                                <span>Generate {selectedTournament?.format ? selectedTournament.format.charAt(0).toUpperCase() + selectedTournament.format.slice(1) : ''} Fixtures</span>
+                            </button>
+                            
+                            <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground bg-background/50 px-4 py-2 rounded-full border border-border/50">
+                                <Settings2 size={12} />
+                                <span>You can customize dates & rules in the next step</span>
+                            </div>
+
+                            <ConfirmFixtureModal
+                                isOpen={showConfirmModal}
+                                onClose={() => setShowConfirmModal(false)}
+                                onConfirm={handleGenerateFixtures}
+                                settings={matchSettings}
+                                setSettings={setMatchSettings}
+                            />
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-2 px-5 py-3 rounded-full bg-muted/30 border border-border/50 text-sm text-muted-foreground">
+                            <Clock size={16} />
+                            <span>Waiting for updates...</span>
+                        </div>
+                    )}
                 </div>
             </div>
         );
     }
 
+    // --- POPULATED STATE DESIGN ---
     return (
         <div className="space-y-6">
             {/* Fixture Control Bar */}
@@ -208,10 +221,10 @@ export default function FixturesTab({ type }: FixtureTabProp) {
 
                 {type === 'manage' && (
                      <div className="flex gap-2">
-                        <button className="px-4 py-2 text-xs font-medium bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors border border-border">
-                            Reset Fixtures
+                        <button className="px-4 py-2 text-xs font-medium bg-background hover:bg-muted text-muted-foreground hover:text-foreground rounded-lg transition-colors border border-border flex items-center gap-2">
+                            <AlertCircle size={14} /> Reset
                         </button>
-                        <button className="px-4 py-2 text-xs font-medium bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors border border-primary/20 flex items-center gap-2">
+                        <button className="px-4 py-2 text-xs font-bold bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors border border-primary/20 flex items-center gap-2">
                             <Plus size={14} /> Add Match
                         </button>
                     </div>
@@ -224,7 +237,9 @@ export default function FixturesTab({ type }: FixtureTabProp) {
                 {fixtures.format === "league" && <LeagueFixtures matches={fixtures.matches} />}
                 {fixtures.format === "friendly" && <FriendlyFixture matches={fixtures.matches} />}
                 {!["knockout", "league", "friendly"].includes(fixtures.format) && (
-                     <div className="text-center p-8 text-muted-foreground">Invalid fixture format loaded.</div>
+                     <div className="text-center p-8 text-muted-foreground bg-muted/20 rounded-xl border border-dashed border-border">
+                        Invalid fixture format loaded.
+                    </div>
                 )}
             </div>
         </div>

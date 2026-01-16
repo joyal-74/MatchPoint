@@ -71,11 +71,12 @@ const Navbar: React.FC = () => {
     const menuItems = [
         { name: "Home", path: "/manager/dashboard" },
         { name: "Tournaments", path: "/manager/tournaments" },
+        { name: "Explore", path: "/manager/explore" },
     ];
 
     return (
         <>
-            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-20 py-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border transition-colors duration-300">
+            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-10 mx-auto py-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border transition-colors duration-300">
                 <div className="flex items-center justify-between w-1/3">
                     {/* Logo Section */}
                     <h1 className="text-foreground text-2xl font-rowdies cursor-pointer" onClick={() => navigate('/manager/dashboard')}>

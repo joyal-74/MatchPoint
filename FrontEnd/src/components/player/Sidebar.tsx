@@ -20,7 +20,7 @@ const Sidebar: React.FC = () => {
     const menuItems: MenuItem[] = [
         { name: "Profile", path: "/player/profile", icon: <User size={20} /> },
         { name: "My Teams", path: "/player/myteams/approved", icon: <Users2 size={20} /> },
-        { name: "Tournaments", path: "/player/tournaments", icon: <Trophy size={20} /> },
+        { name: "Tournaments", path: "/player/mytournaments", icon: <Trophy size={20} /> },
         { name: "My Statistics", path: "/player/statistics", icon: <BarChart3 size={20} /> },
         { name: "Subscription", path: "/player/subscription", icon: <CreditCard size={20} /> },
         { name: "Settings", path: "/player/settings", icon: <Settings size={20} /> },

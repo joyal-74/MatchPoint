@@ -27,7 +27,7 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
 
     async updateStatus(matchId: string, status: string): Promise<void> {
         await MatchModel.findByIdAndUpdate(matchId,
-            { $set: { status : status } },
+            { $set: { status: status } },
             { new: true }
         );
     }
@@ -189,7 +189,7 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
             throw new BadRequestError("Match already ended");
         }
 
-        
+
         match.endInfo = {
             type: data.type,
             reason: data.reason ?? null,
@@ -197,14 +197,44 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
             endedBy: data.endedBy ? new Types.ObjectId(data.endedBy) : null,
             endedAt: new Date()
         };
-        
+
         if (data.type !== "NORMAL") {
             match.winner = null;
         }
-        
+
         match.status = "completed";
         await match.save();
 
         return MatchMongoMapper.toEntity(match);
+    }
+
+    async getMatchesFilters(filters: { status?: string; page?: number; limit?: number; }): Promise<{ matches: Match[]; total: number }> {
+
+        const { status, page = 1, limit = 3 } = filters;
+
+        const query: any = {};
+
+        if (status && status !== "all") {
+            query.status = status;
+        }
+
+        const skip = (page - 1) * limit;
+
+        const [matches, total] = await Promise.all([
+            MatchModel.find(query)
+                .populate("teamA", "name logo")
+                .populate("teamB", "name logo")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .lean(),
+
+            MatchModel.countDocuments(query)
+        ]);
+
+        return {
+            matches: MatchMongoMapper.toMatchResponseArray(matches),
+            total
+        };
     }
 }

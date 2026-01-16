@@ -11,7 +11,7 @@ interface ConfirmModalProps {
     confirmText?: string;
 }
 
-const defaultReasons = ["No longer needed", "Found a better alternative", "Mistake", "Other"];
+const defaultReasons = ["Min teams not reached", "No longer needed", "Found a better alternative", "Mistake", "Other"];
 
 const ConfirmModal = ({ 
     isOpen, 

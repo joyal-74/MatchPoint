@@ -24,6 +24,12 @@ export const subscriptionEndpoints = {
         return data.data;
     },
 
+    updatePlanDirectly: async ({ id, newData }: { id: string, newData: Omit<Plan, "_id"> }): Promise<Plan> => {
+        const { data } = await axiosClient.put(SUBSCRIPTION_ROUTES.UPDATE_PLAN, { id, newData });
+        console.log(data.data)
+        return data.data;
+    },
+
     deletePlan: async (id: string): Promise<string> => {
         await axiosClient.delete(SUBSCRIPTION_ROUTES.DELETE_PLAN(id));
         return id;

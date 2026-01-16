@@ -1,9 +1,10 @@
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
+import { FormatStatPoint, TopTournamentPoint } from "domain/dtos/Analytics.dto";
 import { TournamentRegister, Tournament, TournamentTeam } from "domain/entities/Tournaments";
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { TournamentModel } from "infra/databases/mongo/models/TournamentModel";
 import { TournamentMongoMapper } from "infra/utils/mappers/TournamentMongoMapper";
-import { FilterQuery } from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 
 interface QueryType {
     status?: string;
@@ -63,7 +64,6 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
 
         return TournamentMongoMapper.toDomainArray(data);
     }
-
 
     async update(tournamentId: string, updates: Partial<Tournament>): Promise<Tournament> {
         const updated = await TournamentModel.findByIdAndUpdate(
@@ -156,5 +156,42 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
     async findByManagerId(managerId: string): Promise<Tournament[]> {
         const tournaments = await TournamentModel.find({ managerId })
         return TournamentMongoMapper.toDomainArray(tournaments);
+    }
+
+    async getFormatDistribution(managerId: string): Promise<FormatStatPoint[]> {
+        return TournamentModel.aggregate([
+            { $match: { managerId: new mongoose.Types.ObjectId(managerId) } },
+            { $group: { _id: "$format", value: { $count: {} } } },
+            { $project: { name: "$_id", value: 1, _id: 0 } }
+        ]);
+    }
+
+    async getTopPerforming(managerId: string, limit: number): Promise<TopTournamentPoint[]> {
+        return TournamentModel.aggregate([
+            { $match: { managerId: new mongoose.Types.ObjectId(managerId) } },
+            {
+                $project: {
+                    title: 1,
+                    status: 1,
+                    currTeams: 1,
+                    maxTeams: 1,
+                    // Calculate Volume dynamically
+                    volume: {
+                        $multiply: [
+                            { $toDouble: "$entryFee" },
+                            { $toInt: "$currTeams" }
+                        ]
+                    }
+                }
+            },
+            { $sort: { volume: -1 } },
+            { $limit: limit }
+        ]);
+    }
+
+    async getIdsByManager(managerId: string): Promise<string[]> {
+        const objectId = new mongoose.Types.ObjectId(managerId);
+        const docs = await TournamentModel.find({ managerId: objectId }).select('_id');
+        return docs.map(d => d._id.toString());
     }
 }

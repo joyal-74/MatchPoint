@@ -49,3 +49,28 @@ export interface Filters {
 }
 
 export type playerJoinStatus = 'pending' | 'approved';
+
+export interface Match {
+    matchNumber: number;
+    _id: string;
+    teamA: {
+        logo : string;
+        name : string;
+    };
+    teamB: {
+        logo : string;
+        name : string;
+    };
+    round: number;
+    oversA: string;
+    oversB: string;
+    scoreA: string;
+    scoreB: string;
+    status: "ongoing" | "completed" | "upcoming" | "bye";
+    winner: string | null;
+    venue?: string;
+    tossDecision?: string;
+    tossWinner?: string;
+    date?: Date;
+    stats: Record<string, unknown>;
+}

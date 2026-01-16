@@ -46,6 +46,7 @@ const RepositoryTokens = {
     NotificationRepository: "NotificationRepository",
     WalletRepository: "WalletRepository",
     OtpRepository: "OtpRepository",
+    PointsTableRepository: "PointsTableRepository",
 }
 
 // services
@@ -65,6 +66,8 @@ const ServiceTokens = {
     TransactionService: "TransactionService",
     SubscriptionPaymentService: "SubscriptionPaymentService",
     GetPlansAndUserSubscription: "GetPlansAndUserSubscription",
+    StartTournament: "StartTournament",
+    TournamentRefundService: "TournamentRefundService",
 }
 
 // usecases
@@ -165,6 +168,8 @@ const ManagerUsecaseTokens = {
     CreateMatchesUsecase : 'CreateMatchesUsecase',
     GetMatchesUsecase : 'GetMatchesUsecase',
     GetLeaderBoardUsecase : 'GetLeaderBoardUsecase',
+
+    GetDashboardAnalytics : 'GetDashboardAnalytics',
 }
 
 const MatchUsecaseTokens = {
@@ -202,6 +207,8 @@ const PlayerUsecaseTokens = {
     GetMyTeamDetailsUseCase : 'GetMyTeamDetailsUseCase',
     UpdatePlayerInviteStatus : 'UpdatePlayerInviteStatus',
     GetPlayerTournaments : 'GetPlayerTournaments',
+    GetPlayerTournamentDetails : 'GetPlayerTournamentDetails',
+    GetPlayerMatches : 'GetPlayerMatches',
 }
 
 const ViewerUsecaseTokens = {

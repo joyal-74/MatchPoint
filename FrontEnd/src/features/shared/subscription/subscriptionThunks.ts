@@ -8,6 +8,11 @@ export const fetchAvailablePlans = createAsyncThunk(
     createApiThunk(subscriptionEndpoints.fetchAvailablePlans)
 );
 
+export const updatePlanDirectly = createAsyncThunk(
+    "subscription/updatePlanDirectly",
+    createApiThunk(subscriptionEndpoints.updatePlanDirectly)
+);
+
 export const initiateSubscriptionOrder = createAsyncThunk(
     "subscription/initiateSubscriptionOrder",
     createApiThunk(subscriptionEndpoints.initiateOrder)

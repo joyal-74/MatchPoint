@@ -1,24 +1,36 @@
-import type { BillingCycle } from "../../../pages/shared/subscription/SubscriptionTypes";
-import type { PlanLevel } from "../../admin/subscription/subscriptionTypes";
+import type { BillingCycle } from "../../../pages/admin/shared/subscription/SubscriptionTypes";
 
-export interface AvailablePlan {
-  _id: string;
-  level: "Free" | "Premium" | "Super";
-  title: string;
-  description: string;
-  price: number;
-  billingCycle: "Monthly" | "Yearly";
-  features: string[];
-  isPopular?: boolean;
+export type PlanLevel = "Free" | "Basic" | "Super" | "Premium";
+
+export interface ScheduledChange {
+    level: PlanLevel;
+    billingCycle: "Monthly" | "Yearly";
+    status: "pending_downgrade" | "pending_upgrade";
 }
 
 export interface UserSubscription {
-  planId: string;
-  level: string;
-  price: number;
-  billingCycle: string;
-  expiryDate: string;
-  status: string;
+    _id: string;
+    userId: string;
+    level: PlanLevel;
+    billingCycle: "Monthly" | "Yearly";
+    expiryDate: string; 
+    status: "active" | "pending" | "expired";
+    
+    reservedPlan?: {
+        level: PlanLevel;
+        daysRemaining: number;
+    };
+    scheduledChange?: ScheduledChange;
+}
+
+export interface AvailablePlan {
+    _id: string;
+    title: string;
+    description: string;
+    price: number;
+    level: PlanLevel;
+    features: string[];
+    billingCycle: "Monthly" | "Yearly";
 }
 
 

@@ -122,6 +122,9 @@ import { GetMatchUpdates } from "app/usecases/viewer/GetMatchUpdateData";
 import { GetViewerProfile } from "app/usecases/viewer/GetViewerProfile";
 import { UpdateViewerProfile } from "app/usecases/viewer/UpdateViewerProfile";
 import { LogoutUser } from "app/usecases/auth/Logout"; 
+import { FetchMatchesUseCase } from "app/usecases/player/FetchPlayerMatches";
+import { PlayerTournamentDetails } from "app/usecases/player/TournamentDetails";
+import { GetDashboardAnalytics } from "app/usecases/manager/GetDashboardAnalytics";
 
 
 // Registrations
@@ -226,6 +229,7 @@ container.register(DI_TOKENS.EntryFeePaymentUsecase, { useClass: InitiateTournam
 container.register(DI_TOKENS.UpdateTournamenTeamUsecase, { useClass: UpdateTournamentTeam });
 container.register(DI_TOKENS.TournamentTeamsUsecase, { useClass: GetRegisteredTeams });
 container.register(DI_TOKENS.SaveMatchData, { useClass: SaveMatchData });
+container.register(DI_TOKENS.GetDashboardAnalytics, { useClass: GetDashboardAnalytics });
 
 // --- Manager Fixtures & Matches ---
 container.register(DI_TOKENS.GetFixturesUsecase, { useClass: GetTournamentFixtures });
@@ -252,6 +256,8 @@ container.register(DI_TOKENS.GetMatchUpdates, { useClass: GetMatchUpdates });
 container.register(DI_TOKENS.JoinTeamUseCase, { useClass: JoinTeamUseCase });
 container.register(DI_TOKENS.GetMyTeamsUseCase, { useClass: GetAllPlayerTeamsUseCase });
 container.register(DI_TOKENS.GetPlayerTournaments, { useClass: FetchTournamentsUseCase });
+container.register(DI_TOKENS.GetPlayerTournamentDetails, { useClass: PlayerTournamentDetails });
+container.register(DI_TOKENS.GetPlayerMatches, { useClass: FetchMatchesUseCase });
 
 // --- Shared Use Cases ---
 container.register(DI_TOKENS.VerifyPaymentUseCase, { useClass: VerifyPaymentUseCase });

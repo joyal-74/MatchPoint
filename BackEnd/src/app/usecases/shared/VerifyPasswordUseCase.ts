@@ -1,8 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
 
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { ISettingsRepository } from "app/repositories/interfaces/shared/ISettingsRepo";
+import { DI_TOKENS } from "domain/constants/Identifiers";
+import { NotFoundError } from "domain/errors";
 
 @injectable()
 export class VerifyPasswordUseCase {
@@ -16,7 +17,7 @@ export class VerifyPasswordUseCase {
         const user = await this._settingsRepo.findById(userId);
         
         if (!user) {
-            throw new Error("User not found");
+            throw new NotFoundError("User not found");
         }
 
         const isMatch = await this._passwordHasher.comparePasswords(passwordAttempt, user.password);

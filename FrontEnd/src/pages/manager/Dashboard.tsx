@@ -5,11 +5,13 @@ import Footer from "../../components/viewer/Footer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { useEffect } from "react";
 import { getExploreTournaments } from "../../features/manager/Tournaments/tournamentThunks";
+import { useNavigate } from "react-router-dom";
 
 export default function ManagerDashboard() {
     const activeTournaments = useAppSelector(state => state.managerTournaments.exploreTournaments);
     const managerId = useAppSelector(state => state.auth.user?._id);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (activeTournaments.length === 0 && managerId) {
@@ -110,14 +112,13 @@ export default function ManagerDashboard() {
 
                                 {/* Quick Actions */}
                                 <div className="flex flex-col sm:flex-row gap-4">
-                                    <button className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg shadow-primary/20">
+                                    <button
+                                        onClick={() => navigate('/manager/tournaments')}
+                                        className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg shadow-primary/20">
                                         <Calendar className="w-5 h-5" />
                                         <span>Create Tournament</span>
                                     </button>
-                                    <button className="border-2 border-input bg-background hover:bg-accent hover:text-accent-foreground text-foreground px-8 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center space-x-2">
-                                        <BarChart3 className="w-5 h-5" />
-                                        <span>View Analytics</span>
-                                    </button>
+                                    
                                 </div>
 
                                 {/* Stats */}
@@ -274,7 +275,9 @@ export default function ManagerDashboard() {
                                                             </span>
                                                         </div>
                                                     </div>
-                                                    <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-lg font-semibold transition-colors duration-200">
+                                                    <button
+                                                    onClick={()=> navigate(`/manager/tournaments/${tournament._id}/explore`)}
+                                                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-lg font-semibold transition-colors duration-200">
                                                         View Details
                                                     </button>
                                                 </div>

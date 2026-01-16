@@ -3,6 +3,7 @@ import type { RegisteredTeam } from "../../components/manager/tournaments/Tourna
 import type { PaymentInitiateResponse } from "../../components/manager/tournaments/Types";
 import { MANAGER_ROUTES } from "../../constants/routes/managerRoutes";
 import type { Fixture, Leaderboard, Match, Tournament } from "../../features/manager/managerTypes";
+import type { AnalyticsData } from "../../features/manager/Tournaments/tournamentTypes";
 import type { TeamPlayer } from "../../types/Player";
 import type { User } from "../../types/User";
 import axiosClient from "../http/axiosClient";
@@ -163,6 +164,16 @@ export const managerEndpoints = {
 
     addPlayerToTeam: async ({ teamId, userId, playerId }: { teamId: string, userId: string, playerId: string }): Promise<{ message: string }> => {
         const { data } = await axiosClient.post(MANAGER_ROUTES.ADD_PLAYER(playerId), { teamId, userId });
+        return data.data;
+    },
+
+    startTournament: async (tournamentId: string): Promise<{ message: string }> => {
+        const { data } = await axiosClient.post(MANAGER_ROUTES.START_TOURNAMENT, { tournamentId });
+        return data.data;
+    },
+
+    getDashboardAnalytics: async (managerId : string): Promise<AnalyticsData> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.GET_DASHBOARD_ANALYTICS(managerId));
         return data.data;
     },
 }

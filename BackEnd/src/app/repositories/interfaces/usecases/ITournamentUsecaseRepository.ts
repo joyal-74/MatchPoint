@@ -3,6 +3,7 @@ import { Fixture } from "domain/entities/Fixture";
 import { Match } from "domain/entities/Match";
 import { Tournament } from "domain/entities/Tournaments";
 import type { File } from "domain/entities/File";
+import { DashboardAnalyticsDTO } from "domain/dtos/Analytics.dto";
 
 
 export interface IGetMyTournaments {
@@ -71,4 +72,8 @@ export interface ICreateMatchesUseCase {
 
 export interface ITournamentRegistrationValidator {
     execute(tournamentId: string, teamId: string): Promise<void>;
+}
+
+export interface IGetDashboardAnalytics {
+    execute(managerId: string): Promise<DashboardAnalyticsDTO>
 }

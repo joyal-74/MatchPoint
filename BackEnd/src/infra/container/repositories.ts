@@ -22,6 +22,7 @@ import { FinancialRepository } from "../repositories/mongo/FinancialRepository";
 import { WalletRepository } from "../repositories/mongo/WalletRepository";
 import { container } from ".";
 import { DI_TOKENS } from "domain/constants/Identifiers";
+import { PointsTableRepository } from "infra/repositories/mongo/PointsTableRepository";
 
 
 
@@ -48,3 +49,4 @@ container.register(DI_TOKENS.TransactionRepository, { useClass: TransactionRepos
 container.register(DI_TOKENS.DashboardRepository, { useClass: DashboardRepository });
 container.register(DI_TOKENS.FinancialRepository, { useClass: FinancialRepository });
 container.register(DI_TOKENS.WalletRepository, { useClass: WalletRepository });
+container.register(DI_TOKENS.PointsTableRepository, { useClass: PointsTableRepository });

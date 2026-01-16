@@ -7,14 +7,7 @@ import { Types } from "mongoose";
 
 
 export class LeaderboardRepository implements ILeaderboardRepository {
-
-    async getLeaderboard(
-        role: string,
-        search: string,
-        timePeriod: string,
-        page: number,
-        limit: number
-    ): Promise<{ topPlayers: LeaderBoardPlayer[]; leaderboard: LeaderBoardPlayer[] }> {
+    async getLeaderboard(role: string, search: string, timePeriod: string, page: number, limit: number): Promise<{ topPlayers: LeaderBoardPlayer[]; leaderboard: LeaderBoardPlayer[] }> {
 
         const pipeline: any[] = [
             { $match: { sport: { $regex: /^cricket$/i } } },
