@@ -1,5 +1,5 @@
 import { Trophy, Calendar, Target } from 'lucide-react';
-import type { Team } from '../../features/player/playerTypes';
+import type { Team } from '../../components/player/Teams/Types';
 
 const TeamStats = ({ team }: { team: Team }) => {
     return (

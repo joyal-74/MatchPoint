@@ -1,10 +1,8 @@
 import React, { useCallback } from "react";
-
-import { Play, Sword, Zap } from "lucide-react";
+import { Play, Sword, Zap, CheckCircle2, Lock } from "lucide-react";
 import { CoinFlip } from "./CoinFlip";
 import type { TeamId, TossDecision } from "./matchTypes";
 import type { Team } from "../../../features/manager/Matches/matchTypes";
-
 
 const COIN_FLIP_TIME_MS = 2500;
 
@@ -27,13 +25,10 @@ export const TossSection: React.FC<TossSectionProps> = React.memo((props) => {
     } = props;
 
     const teams = [team1, team2];
-
     const tossWinner = teams.find(t => t._id === tossWinnerId);
 
-    // Coin Flip Logic
     const handleCoinFlip = useCallback(() => {
         if (isFlipping) return;
-
         setTossDecision(null);
         setIsFlipping(true);
 
@@ -44,134 +39,113 @@ export const TossSection: React.FC<TossSectionProps> = React.memo((props) => {
         }, COIN_FLIP_TIME_MS + 200);
     }, [isFlipping, team1._id, team2._id, setTossWinnerId, setTossDecision, setIsFlipping]);
 
-    // Manual Selection Logic
     const handleManualTossSelect = useCallback((teamId: TeamId) => {
         setTossWinnerId(teamId);
         setTossDecision(null);
     }, [setTossWinnerId, setTossDecision]);
 
-    // Decision Logic
     const handleDecision = useCallback((decision: TossDecision) => {
         setTossDecision(decision);
     }, [setTossDecision]);
 
+    // Locked State View
     if (isTossLocked && tossWinner) {
         return (
-            <div className="mb-8">
-                <h2 className="text-xl font-bold text-green-400 mb-4">Toss Details</h2>
-
-                <div className="bg-neutral-800 p-4 rounded-xl border border-neutral-700 shadow-lg">
-                    <p className="text-neutral-300 mb-2">
-                        Toss Winner:
-                        <span className="text-yellow-400 font-bold ml-2">{tossWinner.name}</span>
-                    </p>
-
-                    <p className="text-neutral-300">
-                        Decision:
-                        <span className="text-green-400 font-bold ml-2">{tossDecision}</span>
-                    </p>
-
-                    <p className="text-neutral-500 text-xs mt-2">
-                        Toss has been finalized. No further changes allowed.
-                    </p>
+            <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+                <div className="p-4 bg-primary/5 border-b border-primary/10">
+                    <h2 className="text-lg font-bold text-primary flex items-center gap-2">
+                        <CheckCircle2 size={18} /> Toss Complete
+                    </h2>
+                </div>
+                <div className="p-5 space-y-4">
+                    <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg border border-border">
+                        <span className="text-muted-foreground text-sm">Winner</span>
+                        <span className="font-bold text-foreground">{tossWinner.name}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg border border-border">
+                        <span className="text-muted-foreground text-sm">Decision</span>
+                        <span className="font-bold text-primary flex items-center gap-2">
+                            {tossDecision === "Batting" ? <Sword size={14} /> : <Zap size={14} />}
+                            {tossDecision}
+                        </span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground pt-2">
+                        <Lock size={12} /> Selection locked
+                    </div>
                 </div>
             </div>
         );
     }
 
+    // Active Selection View
     return (
-        <div className="mb-8">
-            <h2 className="text-xl font-bold text-green-400 mb-4 flex items-center space-x-2">
-                <span>Toss Details</span>
-            </h2>
-
-            <div className="bg-neutral-800 p-4 rounded-xl shadow-lg border border-neutral-700">
-                <p className="text-neutral-300 text-sm mb-4 font-medium">Select Toss Winning Team or Flip Coin</p>
-
-                <div className="flex flex-col space-y-3 mb-5">
-                    {teams.map((team) => (
-                        <button
-                            key={team._id}
-
-                            onClick={() => handleManualTossSelect(team._id as TeamId)}
-                            className={`
-                        w-full py-2 px-4 rounded-lg font-bold text-md transition duration-200 ease-in-out
-                        ${tossWinnerId === team._id
-                                    ? 'bg-green-600 text-white shadow-lg shadow-green-700/50'
-                                    : 'bg-neutral-600 text-neutral-200 hover:bg-neutral-600'
-                                }
-                    `}
-                            disabled={isTossLocked || isFlipping}
-                        >
-                            {team.name}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="flex items-center space-x-2">
-                    <div className="flex-1 border-t border-neutral-700"></div>
-                    <span className="text-neutral-400 text-sm">OR</span>
-                    <div className="flex-1 border-t border-neutral-700"></div>
-                </div>
-
-                <button
-                    onClick={handleCoinFlip}
-                    disabled={isTossLocked || isFlipping}
-                    className="mt-5 w-full bg-purple-600 text-white py-3 rounded-lg font-bold flex items-center justify-center space-x-2 shadow-lg shadow-purple-700/50 hover:bg-purple-700 transition duration-200 disabled:opacity-50"
-                >
-                    <Play size={20} />
-                    {isFlipping ? 'Flipping...' : 'Toss & Pick'}
-                </button>
-
-                <div className="mt-5">
-                    {isFlipping ? (
-                        <CoinFlip isFlipping={isFlipping} />
-                    ) : tossWinner ? (
-                        <p className="text-center text-md font-extrabold text-yellow-400 mt-2">
-                            {tossWinner.name} won the toss!
-                        </p>
-                    ) : (
-                        <p className="text-center text-neutral-500 mt-2 text-sm">
-                            Click 'Toss & Pick' to see the animation.
-                        </p>
-                    )}
-                </div>
+        <div className="bg-card border border-border rounded-xl shadow-sm p-5 relative overflow-hidden">
+            <h2 className="text-lg font-bold text-card-foreground mb-4">Toss Control</h2>
+            
+            <p className="text-sm text-muted-foreground mb-4">Who won the toss?</p>
+            <div className="grid grid-cols-2 gap-3 mb-6">
+                {teams.map((team) => (
+                    <button
+                        key={team._id}
+                        onClick={() => handleManualTossSelect(team._id as TeamId)}
+                        disabled={isTossLocked || isFlipping}
+                        className={`
+                            py-3 px-2 rounded-lg text-sm font-semibold transition-all duration-200 border
+                            ${tossWinnerId === team._id
+                                ? 'bg-primary text-primary-foreground border-primary ring-2 ring-primary/20 shadow-md'
+                                : 'bg-muted text-muted-foreground border-transparent hover:bg-muted/80 hover:text-foreground'
+                            }
+                        `}
+                    >
+                        {team.name}
+                    </button>
+                ))}
             </div>
 
-            {tossWinner && (
-                <div className="mt-6">
-                    <p className="text-neutral-300 font-medium mb-3">Toss Decision</p>
-                    <div className="flex space-x-4">
-                        <button
-                            onClick={() => handleDecision('Batting')}
-                            disabled={isTossLocked}
-                            className={`flex-1 py-3 rounded-lg font-bold text-sm transition duration-200 flex items-center justify-center space-x-2 ${tossDecision === 'Batting'
-                                ? 'bg-green-600 text-white shadow-lg shadow-green-700/50'
-                                : 'bg-neutral-700 text-neutral-200 hover:bg-neutral-600'
-                                }`}
-                        >
-                            <Sword size={20} />
-                            <span>Batting</span>
-                        </button>
-                        <button
-                            onClick={() => handleDecision('Bowling')}
-                            disabled={isTossLocked}
-                            className={`flex-1 py-3 rounded-lg font-bold text-sm transition duration-200 flex items-center justify-center space-x-2 ${tossDecision === 'Bowling'
-                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-700/50'
-                                : 'bg-neutral-700 text-neutral-200 hover:bg-neutral-600'
-                                }`}
-                        >
-                            <Zap size={20} />
-                            <span>Bowling</span>
-                        </button>
+            <div className="relative flex py-2 items-center">
+                <div className="flex-grow border-t border-border"></div>
+                <span className="flex-shrink-0 mx-4 text-xs font-medium text-muted-foreground uppercase tracking-widest">or</span>
+                <div className="flex-grow border-t border-border"></div>
+            </div>
+
+            <button
+                onClick={handleCoinFlip}
+                disabled={isTossLocked || isFlipping}
+                className="w-full mt-4 bg-gradient-to-r from-primary to-primary/80 hover:to-primary text-primary-foreground py-3 rounded-lg font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] disabled:opacity-50"
+            >
+                <Play size={18} className={isFlipping ? "animate-spin" : ""} />
+                {isFlipping ? 'Flipping...' : 'Auto Flip Coin'}
+            </button>
+
+            {/* Animation Area */}
+            <div className="mt-6 min-h-[60px] flex items-center justify-center">
+                {isFlipping ? (
+                    <CoinFlip isFlipping={isFlipping} />
+                ) : tossWinner ? (
+                    <div className="animate-in fade-in slide-in-from-bottom-2">
+                         <p className="text-sm font-medium text-muted-foreground mb-3 text-center">
+                             <span className="text-foreground font-bold">{tossWinner.name}</span> won! Choose decision:
+                         </p>
+                         <div className="flex gap-3">
+                             {['Batting', 'Bowling'].map((choice) => (
+                                 <button
+                                     key={choice}
+                                     onClick={() => handleDecision(choice as TossDecision)}
+                                     className={`flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-wide border transition-all
+                                        ${tossDecision === choice 
+                                            ? 'bg-primary/10 text-primary border-primary' 
+                                            : 'bg-card border-border text-muted-foreground hover:border-primary/50 hover:text-primary'}
+                                     `}
+                                 >
+                                     {choice}
+                                 </button>
+                             ))}
+                         </div>
                     </div>
-                    {tossDecision && (
-                        <p className="text-center text-sm text-green-400 mt-3">
-                            {tossWinner.name} chose to <span className="font-bold">{tossDecision}</span>.
-                        </p>
-                    )}
-                </div>
-            )}
+                ) : (
+                    <p className="text-xs text-muted-foreground italic">Result will appear here</p>
+                )}
+            </div>
         </div>
     );
 });

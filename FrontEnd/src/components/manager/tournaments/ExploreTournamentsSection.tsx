@@ -60,7 +60,7 @@ export default function ExploreTournamentsSection({
                             <TournamentCard
                                 key={tournament._id}
                                 tournament={tournament}
-                                onAction={() => navigate(`/manager/tournament/${tournament._id}/explore`)}
+                                onAction={() => navigate(`/manager/tournaments/${tournament._id}/explore`)}
                                 type="explore"
                                 index={index}
                             />

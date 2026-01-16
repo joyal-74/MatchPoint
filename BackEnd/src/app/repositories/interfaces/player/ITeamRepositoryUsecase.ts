@@ -4,12 +4,12 @@ export interface IGetAllTeamsUseCase {
     execute(filters: Filters): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
 }
 
-export interface IGetMyTeamsUseCase {
-    execute(playerId: string, status: string): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
+export interface IGetPlayerTeamsUseCase {
+    execute(filters: Filters): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
 }
 
-export interface IGetAllPlayerTeamsUseCase {
-    execute(playerId: string): Promise<PlayerTeamResponseDTO>;
+export interface IGetPlayerJoinedTeamsUseCase {
+    execute(playerId: string, status : string): Promise<PlayerTeamResponseDTO>;
 }
 
 export interface IGetMyTeamDetailsUseCase {

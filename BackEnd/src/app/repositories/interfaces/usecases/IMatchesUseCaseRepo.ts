@@ -24,6 +24,11 @@ export interface IGetMatchDetails {
 export interface ISaveMatchData {
     execute(matchId: string, tossWinnerId: string, tossDecision: string): Promise<MatchDetails>
 }
+
+export interface IStartMatchUseCase {
+    execute(matchId: string): Promise<void>;
+}
+
 export interface IGetLiveScoreUseCase {
     execute(matchId: string): Promise<LiveScoreDto>;
 }

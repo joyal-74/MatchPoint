@@ -43,7 +43,7 @@ const statsSections: StatsSectionData[] = [
 const MyStatisticsPage: React.FC = () => {
     return (
         <PlayerLayout>
-            <div className="pt-10">
+            <div className="">
 
                 <h1 className="text-2xl font-bold text-white mb-4">My Statistics</h1>
 

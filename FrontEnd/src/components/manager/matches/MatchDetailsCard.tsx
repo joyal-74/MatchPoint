@@ -1,23 +1,22 @@
-import { Zap } from "lucide-react";
-import { MatchDetailItem } from "./MatchDetailItem";
-import type { MatchData } from "./matchTypes";
 import React from "react";
+import { Info } from "lucide-react";
+import type { MatchData } from "./matchTypes";
+import { MatchDetailItem } from "./MatchDetailItem";
 
 export const MatchDetailsCard: React.FC<{ data: MatchData }> = React.memo(({ data }) => {
-
     return (
-        <div className="mt-8 pt-6 border-t border-neutral-700/40">
-            <h2 className="text-Md font-semibold text-green-400 mb-3 flex items-center gap-2">
-                <Zap size={18} />
-                Match Details
-            </h2>
-
-            <div className="bg-neutral-900/40 backdrop-blur-md rounded-xl p-4 border border-neutral-700/30">
-                <MatchDetailItem label="Match No" value={data.matchNo} />
+        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+            <div className="p-4 border-b border-border bg-muted/30">
+                <h2 className="text-md font-semibold text-foreground flex items-center gap-2">
+                    <Info size={16} className="text-primary" />
+                    Details
+                </h2>
+            </div>
+            <div className="p-0">
+                <MatchDetailItem label="Overs" value={data.overs} />
                 <MatchDetailItem label="Venue" value={data.venue} />
                 <MatchDetailItem label="Date" value={data.date} />
                 <MatchDetailItem label="Time" value={data.time} />
-                <MatchDetailItem label="Overs" value={data.overs} />
             </div>
         </div>
     );

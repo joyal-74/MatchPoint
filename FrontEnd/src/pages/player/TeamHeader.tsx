@@ -1,5 +1,5 @@
 import { MapPin } from 'lucide-react';
-import type { Team } from '../../features/player/playerTypes'; 
+import type { Team } from '../../components/player/Teams/Types';
 
 const TeamHeader = ({ team }: { team: Team }) => {
     return (

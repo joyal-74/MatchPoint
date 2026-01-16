@@ -15,7 +15,7 @@ export class SubscriptionController {
     constructor(
         @inject(DI_TOKENS.GetPlansAndUserSubscription) private _getPlansAndUserSubscription: IGetPlansAndUserSubscription,
         @inject(DI_TOKENS.CreatePaymentSession) private _createPaymentSessionUseCase: ICreatePaymentSession,
-        @inject(DI_TOKENS.CreatePaymentSession) private _updatePlanDirectUseCase: IUpdateUserDirectlyPlan,
+        @inject(DI_TOKENS.UpdateUserDirectlyPlan) private _updatePlanDirectUseCase: IUpdateUserDirectlyPlan,
         @inject(DI_TOKENS.SubscriptionService) private _subscriptionPaymentService: ISubscriptionService,
     ) { }
 
@@ -58,9 +58,9 @@ export class SubscriptionController {
     }
 
     updatePlan = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { userId, level, billingCycle } = httpRequest.body;
+        const { userId, planLevel, billingCycle } = httpRequest.body;
 
-        const plans = await this._updatePlanDirectUseCase.execute(userId, level, billingCycle);
+        const plans = await this._updatePlanDirectUseCase.execute(userId, planLevel, billingCycle);
 
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Subscription plan changed successfully", plans));
     }

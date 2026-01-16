@@ -170,6 +170,7 @@ const ManagerUsecaseTokens = {
     GetLeaderBoardUsecase : 'GetLeaderBoardUsecase',
 
     GetDashboardAnalytics : 'GetDashboardAnalytics',
+    UpdateUserDirectlyPlan : 'UpdateUserDirectlyPlan',
 }
 
 const MatchUsecaseTokens = {
@@ -187,6 +188,7 @@ const MatchUsecaseTokens = {
     EndInningsUseCase: "EndInningsUseCase",
     AddPenaltyUseCase: "AddPenaltyUseCase",
     RetireBatsmanUseCase: "RetireBatsmanUseCase",
+    StartMatchUseCase: "StartMatchUseCase",
     EndMatchUseCase: "EndMatchUseCase",
 }
 
@@ -200,10 +202,9 @@ const PlayerUsecaseTokens = {
     GetPlayerProfile : 'GetPlayerProfile',
     UpdatePlayerProfile : 'UpdatePlayerProfile',
     UpdatePlayerFields : 'UpdatePlayerFields',
-    GetAllTeamsPlayerUseCase : 'GetAllTeamsPlayerUseCase',
+    GetPlayerJoinedTeamsUseCase : 'GetPlayerJoinedTeamsUseCase',
+    GetPlayerTeamsUseCase : 'GetPlayerTeamsUseCase',
     JoinTeamUseCase : 'JoinTeamUseCase',
-    GetMyTeamsUseCase : 'GetMyTeamsUseCase',
-    GetAllMyTeamsUseCase : 'GetAllMyTeamsUseCase',
     GetMyTeamDetailsUseCase : 'GetMyTeamDetailsUseCase',
     UpdatePlayerInviteStatus : 'UpdatePlayerInviteStatus',
     GetPlayerTournaments : 'GetPlayerTournaments',

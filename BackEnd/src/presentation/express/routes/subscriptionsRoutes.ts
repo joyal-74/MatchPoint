@@ -11,7 +11,7 @@ router.get("/roles/:role/:userId/plans", expressAdapter(subscriptionController.g
 
 router.post("/plan/order", expressAdapter(subscriptionController.initiateOrder));
 
-router.post("/plan/update-plan", expressAdapter(subscriptionController.updatePlan));
+router.put("/plan/update-plan", expressAdapter(subscriptionController.updatePlan));
 
 router.post("/plan/verify", expressAdapter(subscriptionController.finalizeOrder));
 

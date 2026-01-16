@@ -63,7 +63,7 @@ const ViewTeam = () => {
             <LoadingOverlay show={loading} />
             
             {team && (
-                <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="mx-auto px-4 sm:px-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     
                     {/* Navigation */}
                     <button

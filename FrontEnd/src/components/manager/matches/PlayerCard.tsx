@@ -1,51 +1,62 @@
 import React from "react";
-import type { Player } from "../../../features/manager/Matches/matchTypes";
+import { User } from "lucide-react";
+import type { Player} from "./matchTypes";
+
 
 export const PlayerCard: React.FC<{ player: Player }> = React.memo(({ player }) => {
     const { role, stats } = player;
 
+    console.log(stats, "stats")
+
     let selectedStats;
     if (role === "Batter") {
-        selectedStats = { M: stats.batting.matches, Runs: stats.batting.runs, Avg: stats.batting.average };
+        selectedStats = { Mat: stats.batting.matches, Runs: stats.batting.runs, Avg: stats.batting.average };
     } else if (role === "Bowler") {
-        selectedStats = { M: stats.bowling.matches, Wkts: stats.bowling.wickets, Eco: stats.bowling.economy };
+        selectedStats = { Mat: stats.bowling.matches, Wkts: stats.bowling.wickets, Eco: stats.bowling.economy };
     } else {
-        selectedStats = { M: stats.batting.matches, Runs: stats.batting.runs, Avg: stats.batting.average };
+        selectedStats = { Mat: stats.batting.matches, Runs: stats.batting.runs, Avg: stats.batting.average };
     }
 
     return (
         <div className="
-            flex flex-col rounded-2xl bg-[#0f0f11] border border-[#27272a] 
-            hover:border-purple-500/30 hover:bg-[#131316] hover:shadow-xl hover:shadow-purple-900/10 
-            transition-all duration-300 p-3
+            group relative flex flex-col bg-card border border-border rounded-xl p-3
+            hover:border-primary/50 hover:shadow-lg hover:-translate-y-1 
+            transition-all duration-300 cursor-default overflow-hidden
         ">
-            {/* Header: Image & Name */}
-            <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3 overflow-hidden">
-                    <img
-                        className="w-9 h-9 rounded-full object-cover ring-2 ring-[#1f1f22]"
-                        src={player.profileImage}
-                        alt={player.name}
-                        onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://placehold.co/40x40/1f1f22/ffffff?text=P';
-                        }}
-                    />
-                    <div className="flex flex-col truncate">
-                        <span className="text-sm font-semibold text-gray-200 truncate">{player.name}</span>
-                        <span className="text-[10px] text-purple-400 font-medium tracking-wide uppercase">{player.role}</span>
-                    </div>
+            {/* Top Section */}
+            <div className="flex items-center gap-3 mb-3 z-10">
+                <div className="relative">
+                    {player.profileImage ? (
+                        <img
+                            className="w-10 h-10 rounded-full object-cover ring-2 ring-border group-hover:ring-primary/50 transition-all"
+                            src={player.profileImage}
+                            alt={player.name}
+                            onError={(e) => (e.target as HTMLImageElement).src = 'https://placehold.co/40x40/222/fff?text=P'}
+                        />
+                    ) : (
+                        <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center ring-2 ring-border">
+                            <User size={18} className="text-muted-foreground" />
+                        </div>
+                    )}
+                </div>
+                <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-bold text-card-foreground truncate">{player.name}</span>
+                    <span className="text-[10px] uppercase tracking-wider font-semibold text-primary">{role}</span>
                 </div>
             </div>
 
-            {/* Stats: Pill Design */}
-            <div className="flex items-center justify-between bg-[#18181b] rounded-lg p-2 mt-auto">
+            {/* Stats Grid */}
+            <div className="mt-auto grid grid-cols-3 gap-1 bg-muted/40 rounded-lg p-2 border border-border/50">
                 {Object.entries(selectedStats).map(([label, value]) => (
-                    <div key={label} className="flex flex-col items-center min-w-[30%]">
-                        <span className="text-xs font-bold text-gray-100">{value ?? 0}</span>
-                        <span className="text-[9px] text-gray-500 uppercase">{label}</span>
+                    <div key={label} className="flex flex-col items-center justify-center">
+                        <span className="text-xs font-bold text-foreground">{value ?? 0}</span>
+                        <span className="text-[9px] text-muted-foreground uppercase">{label}</span>
                     </div>
                 ))}
             </div>
+            
+            {/* Hover Decorator */}
+            <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-bl-3xl pointer-events-none" />
         </div>
     );
 });

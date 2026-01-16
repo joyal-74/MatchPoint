@@ -1,5 +1,5 @@
 import React from 'react';
-import { Target, CircleDot } from 'lucide-react';
+import { Target, CircleDot} from 'lucide-react';
 import type { Match, LiveScoreState, Team } from '../../../features/manager/Matches/matchTypes';
 
 interface CurrentMatchStateProps {
@@ -11,33 +11,28 @@ interface CurrentMatchStateProps {
 
 const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, teamB, liveScore }) => {
 
-    // --- Loading State ---
+    // --- Loading State (Themed) ---
     if (!liveScore) {
         return (
-            <div className="w-full bg-neutral-950 rounded-2xl border border-neutral-800 overflow-hidden shadow-2xl p-6">
+            <div className="w-full bg-card rounded-2xl border border-border overflow-hidden shadow-sm p-6">
                 <div className="animate-pulse space-y-4">
                     <div className="flex justify-between items-center">
-                        <div className="h-6 bg-neutral-900 rounded w-1/3"></div>
-                        <div className="h-6 bg-neutral-900 rounded w-16"></div>
+                        <div className="h-6 bg-muted rounded w-1/3"></div>
+                        <div className="h-6 bg-muted rounded w-16"></div>
                     </div>
-                    <div className="h-20 bg-neutral-900/50 rounded-xl w-full"></div>
-                    <div className="h-12 bg-neutral-900 rounded w-full"></div>
+                    <div className="h-24 bg-muted/50 rounded-xl w-full"></div>
+                    <div className="h-12 bg-muted rounded w-full"></div>
                 </div>
             </div>
         );
     }
 
-    // console.log(liveScore)
-
     // --- Data Preparation ---
     const currentInnings = liveScore.currentInnings === 1 ? liveScore.innings1 : liveScore.innings2;
-    if (!currentInnings) return <div className="text-neutral-500 text-center italic p-6">Waiting for match data...</div>;
+    if (!currentInnings) return <div className="p-8 text-center bg-card border border-border rounded-xl text-muted-foreground italic">Waiting for innings data...</div>;
 
-    const getBattingTeam = (): Team => match.teamA._id === currentInnings.battingTeamId ? match.teamA : match.teamB;
-    const getBowlingTeam = (): Team => match.teamA._id === currentInnings.bowlingTeamId ? match.teamA : match.teamB;
-
-    const battingTeam = getBattingTeam();
-    const bowlingTeam = getBowlingTeam();
+    const battingTeam = match.teamA._id === currentInnings.battingTeam ? match.teamA : match.teamB;
+    const bowlingTeam = match.teamA._id === currentInnings.bowlingTeam ? match.teamA : match.teamB;
 
     const getPlayerName = (playerId: string | null): string => {
         if (!playerId) return '-';
@@ -45,7 +40,7 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
         return player?.name || 'Unknown';
     };
 
-    const toArray = (data : unknown) => {
+    const toArray = (data : any) => {
         if (Array.isArray(data)) return data;
         if (data && typeof data === "object") return Object.values(data);
         return [];
@@ -54,9 +49,9 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
     const battingStatsArray = toArray(currentInnings.battingStats);
     const bowlingStatsArray = toArray(currentInnings.bowlingStats);
 
-    const strikerStats = battingStatsArray.find(s => s.playerId === currentInnings.currentStriker) || { runs: 0, balls: 0, fours: 0, sixes: 0 };
-    const nonStrikerStats = battingStatsArray.find(s => s.playerId === currentInnings.currentNonStriker) || { runs: 0, balls: 0, fours: 0, sixes: 0 };
-    const bowlerStats = bowlingStatsArray.find(s => s.playerId === currentInnings.currentBowler) || { overs: 0, maidens: 0, wickets: 0, runsConceded: 0 };
+    const strikerStats = battingStatsArray.find((s: any) => s.playerId === currentInnings.currentStriker) || { runs: 0, balls: 0, fours: 0, sixes: 0 };
+    const nonStrikerStats = battingStatsArray.find((s: any) => s.playerId === currentInnings.currentNonStriker) || { runs: 0, balls: 0, fours: 0, sixes: 0 };
+    const bowlerStats = bowlingStatsArray.find((s: any) => s.playerId === currentInnings.currentBowler) || { overs: 0, maidens: 0, wickets: 0, runsConceded: 0 };
 
     const calculateOversDisplay = (overs: number): string => {
         const fullOvers = Math.floor(overs);
@@ -74,53 +69,60 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
     };
     const matchInfo = getMatchInfo();
 
-    const StatPill = ({ label, value, colorClass = "text-white" }: { label: string, value: string | number, colorClass?: string }) => (
-        <div className="flex flex-col items-center px-3 min-w-[60px]">
-            <span className="text-[10px] uppercase tracking-wider text-neutral-500 font-semibold">{label}</span>
-            <span className={`text-sm font-bold  ${colorClass}`}>{value}</span>
+    const StatPill = ({ label, value, highlight = false }: { label: string, value: string | number, highlight?: boolean }) => (
+        <div className="flex flex-col items-center px-4 min-w-[60px]">
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-0.5">{label}</span>
+            <span className={`text-sm font-bold ${highlight ? 'text-destructive' : 'text-foreground'}`}>{value}</span>
         </div>
     );
 
     return (
-        <div className="w-full mx-auto bg-neutral-950 rounded-2xl border border-neutral-800 shadow-2xl overflow-hidden font-sans">
+        <div className="w-full mx-auto bg-card rounded-2xl border border-border shadow-sm overflow-hidden font-sans">
 
             {/* 1. Header & Toss Info */}
-            <div className="bg-neutral-900/50 px-4 py-2 border-b border-neutral-800 flex justify-between items-center text-xs text-neutral-400">
-                <div className="flex items-center gap-2">
-                    <span className="bg-red-600 text-white px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wider animate-pulse">LIVE</span>
-                    <span>{matchInfo ? `${matchInfo.tossWinner.name} chose to ${matchInfo.decision}` : `Match #${match.matchNumber}`}</span>
+            <div className="bg-muted/30 px-5 py-3 border-b border-border flex justify-between items-center text-xs text-muted-foreground">
+                <div className="flex items-center gap-3">
+                    <span className="bg-destructive text-destructive-foreground px-2 py-0.5 rounded text-[10px] font-bold tracking-wider animate-pulse shadow-sm">LIVE</span>
+                    <span className="font-medium">
+                        {matchInfo ? (
+                            <>
+                                <span className="text-foreground font-bold">{matchInfo.tossWinner.name}</span> elected to {matchInfo.decision}
+                            </>
+                        ) : `Match #${match.matchNumber}`}
+                    </span>
                 </div>
-                <div>
+                <div className="font-mono bg-background/50 px-2 py-0.5 rounded border border-border/50">
                     Innings {liveScore.currentInnings}
                 </div>
             </div>
 
             {/* 2. Main Scoreboard */}
-            <div className="relative p-8 bg-gradient-to-br from-neutral-900 to-neutral-950">
-                <div className="flex justify-between items-end mb-1">
+            <div className="relative p-6 md:p-8 bg-gradient-to-br from-card via-card to-muted/20">
+                <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-2">
                     <div>
-                        <div className="text-neutral-400 text-md font-medium mb-1 flex items-center gap-1.5">
-                            {battingTeam.name} <span className="w-1 h-1 rounded-full bg-neutral-600"></span> Batting
+                        <div className="text-muted-foreground text-sm font-medium mb-2 flex items-center gap-2">
+                            <span className="text-foreground font-bold text-lg">{battingTeam.name}</span> 
+                            <span className="px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">Batting</span>
                         </div>
-                        <div className="flex items-baseline gap-3">
-                            <span className="text-5xl font-bold tracking-tighter text-white tabular-nums">
+                        <div className="flex items-baseline gap-4">
+                            <span className="text-6xl font-black tracking-tighter text-foreground tabular-nums drop-shadow-sm">
                                 {currentInnings.runs}/{currentInnings.wickets}
                             </span>
-                            <span className="text-xl text-neutral-400 font-light">
-                                in {currentInnings.overs} ov
+                            <span className="text-xl text-muted-foreground font-light">
+                                in <span className="text-foreground font-medium">{currentInnings.overs}</span> ov
                             </span>
                         </div>
                     </div>
 
-                    <div className="text-right flex items-center gap-3">
+                    <div className="flex items-center gap-6 bg-muted/30 p-3 rounded-xl border border-border/50">
                         <div className="text-right">
-                            <div className="text-xs text-neutral-500 uppercase">CRR</div>
-                            <div className="text-lg font-bold text-blue-400">{currentInnings.currentRunRate}</div>
+                            <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mb-0.5">CRR</div>
+                            <div className="text-xl font-bold text-primary">{currentInnings.currentRunRate}</div>
                         </div>
                         {liveScore.currentInnings === 2 && (
-                            <div className="text-right border-l border-neutral-800 pl-3">
-                                <div className="text-xs text-neutral-500 uppercase">Req</div>
-                                <div className="text-lg  font-bold text-yellow-500">{liveScore.requiredRunRate.toFixed(2)}</div>
+                            <div className="text-right border-l border-border pl-6">
+                                <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mb-0.5">Req. RR</div>
+                                <div className="text-xl font-bold text-orange-500">{liveScore.requiredRunRate.toFixed(2)}</div>
                             </div>
                         )}
                     </div>
@@ -128,14 +130,19 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
 
                 {/* Target Progress Bar (Only 2nd Innings) */}
                 {liveScore.currentInnings === 2 && (
-                    <div className="mt-4 pt-4 border-t border-neutral-800/50">
-                        <div className="flex justify-between text-xs text-neutral-400 mb-1.5">
-                            <span className="flex items-center gap-1"><Target size={12} /> Target: {liveScore.target}</span>
-                            <span className="text-yellow-500 font-medium">Need {liveScore.requiredRuns} off {match.overs * 6 - currentInnings.overs * 6} balls</span>
+                    <div className="mt-6 pt-4 border-t border-border">
+                        <div className="flex justify-between text-xs text-muted-foreground mb-2">
+                            <span className="flex items-center gap-1.5 font-medium">
+                                <Target size={14} className="text-primary" /> 
+                                Target: <span className="text-foreground font-bold">{liveScore.target}</span>
+                            </span>
+                            <span className="text-orange-500 font-medium bg-orange-500/10 px-2 py-0.5 rounded">
+                                Need <span className="font-bold">{liveScore.requiredRuns}</span> runs off <span className="font-bold">{match.overs * 6 - currentInnings.overs * 6}</span> balls
+                            </span>
                         </div>
-                        <div className="w-full h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+                        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
                             <div
-                                className="h-full bg-gradient-to-r from-blue-500 to-blue-400"
+                                className="h-full bg-primary transition-all duration-1000 ease-out"
                                 style={{ width: `${Math.min(((currentInnings.runs / liveScore.target) * 100), 100)}%` }}
                             ></div>
                         </div>
@@ -144,82 +151,83 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
             </div>
 
             {/* 3. The Pitch: Players Table */}
-            <div className="border-t border-neutral-800">
+            <div className="border-t border-border">
                 {/* Headers */}
-                <div className="grid grid-cols-[1fr_repeat(3,auto)] gap-4 px-6 py-2 bg-neutral-900/30 text-[10px] uppercase tracking-wider text-neutral-500 font-semibold">
+                <div className="grid grid-cols-[1fr_repeat(3,auto)] gap-4 px-6 py-2.5 bg-muted/40 text-[10px] uppercase tracking-wider text-muted-foreground font-bold border-b border-border">
                     <div>Batter</div>
-                    <div className="w-12 text-center">R (B)</div>
-                    <div className="w-8 text-center">4s</div>
-                    <div className="w-8 text-center">6s</div>
+                    <div className="w-16 text-center">R (B)</div>
+                    <div className="w-10 text-center">4s</div>
+                    <div className="w-10 text-center">6s</div>
                 </div>
 
                 {/* Striker */}
-                <div className="grid grid-cols-[1fr_repeat(3,auto)] gap-4 px-6 py-4 border-b border-neutral-800/50 items-center hover:bg-neutral-900/20 transition-colors bg-blue-900/5 border-l-2 border-l-blue-500">
-                    <div className="flex items-center gap-2">
-                        <span className="font-bold text-white text-md">{getPlayerName(currentInnings.currentStriker)}</span>
-                        <CircleDot size={12} className="text-blue-500 animate-pulse" fill="currentColor" />
+                <div className="grid grid-cols-[1fr_repeat(3,auto)] gap-4 px-6 py-4 border-b border-border/50 items-center hover:bg-muted/30 transition-colors bg-primary/5 border-l-4 border-l-primary relative">
+                    <div className="flex items-center gap-2.5">
+                        <span className="font-bold text-foreground text-sm">{getPlayerName(currentInnings.currentStriker)}</span>
+                        <CircleDot size={14} className="text-primary animate-pulse" fill="currentColor" fillOpacity={0.2} />
                     </div>
-                    <div className="w-15 text-center  text-white font-bold">
-                        {strikerStats.runs} <span className="text-neutral-500 font-normal">({strikerStats.balls})</span>
+                    <div className="w-16 text-center text-foreground font-bold text-sm">
+                        {strikerStats.runs} <span className="text-muted-foreground font-normal text-xs">({strikerStats.balls})</span>
                     </div>
-                    <div className="w-8 text-center text-sm text-neutral-400">{strikerStats.fours}</div>
-                    <div className="w-8 text-center text-sm text-neutral-400">{strikerStats.sixes}</div>
+                    <div className="w-10 text-center text-xs text-muted-foreground">{strikerStats.fours}</div>
+                    <div className="w-10 text-center text-xs text-muted-foreground">{strikerStats.sixes}</div>
                 </div>
 
                 {/* Non-Striker */}
-                <div className="grid grid-cols-[1fr_repeat(3,auto)] gap-4 px-6 py-4 items-center hover:bg-neutral-900/20 transition-colors">
-                    <div className="text-neutral-300 text-md">{getPlayerName(currentInnings.currentNonStriker)}</div>
-                    <div className="w-15 text-center  text-neutral-300">
-                        {nonStrikerStats.runs} <span className="text-neutral-500 font-normal">({nonStrikerStats.balls})</span>
+                <div className="grid grid-cols-[1fr_repeat(3,auto)] gap-4 px-6 py-4 items-center hover:bg-muted/30 transition-colors">
+                    <div className="text-muted-foreground text-sm font-medium">{getPlayerName(currentInnings.currentNonStriker)}</div>
+                    <div className="w-16 text-center text-muted-foreground font-medium text-sm">
+                        {nonStrikerStats.runs} <span className="text-muted-foreground/60 font-normal text-xs">({nonStrikerStats.balls})</span>
                     </div>
-                    <div className="w-8 text-center text-sm text-neutral-500">{nonStrikerStats.fours}</div>
-                    <div className="w-8 text-center text-sm text-neutral-500">{nonStrikerStats.sixes}</div>
+                    <div className="w-10 text-center text-xs text-muted-foreground/60">{nonStrikerStats.fours}</div>
+                    <div className="w-10 text-center text-xs text-muted-foreground/60">{nonStrikerStats.sixes}</div>
                 </div>
             </div>
 
             {/* 4. Bowler Section */}
-            <div className="bg-neutral-900/30 border-t border-neutral-800">
+            <div className="bg-muted/10 border-t border-border">
                 <div className="grid grid-cols-[1fr_auto] gap-4 px-6 py-5 items-center">
                     <div>
-                        <div className="text-[10px] uppercase text-neutral-500 font-semibold mb-0.5">Current Bowler</div>
-                        <div className="text-md font-bold text-white">{getPlayerName(currentInnings.currentBowler)}</div>
+                        <div className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider mb-1">Current Bowler</div>
+                        <div className="text-sm font-bold text-foreground">{getPlayerName(currentInnings.currentBowler)}</div>
                     </div>
-                    <div className="flex items-center divide-x divide-neutral-800">
+                    <div className="flex items-center divide-x divide-border bg-card rounded-lg border border-border py-1">
                         <StatPill label="Ov" value={bowlerOversDisplay} />
                         <StatPill label="Runs" value={bowlerStats.runsConceded} />
-                        <StatPill label="Wkts" value={bowlerStats.wickets} colorClass="text-red-400" />
-                        <StatPill label="Eco" value={economy} colorClass="text-neutral-400" />
+                        <StatPill label="Wkts" value={bowlerStats.wickets} highlight />
+                        <StatPill label="Eco" value={economy} />
                     </div>
                 </div>
             </div>
 
             {/* 5. Footer: Extras */}
-            <div className="px-6 py-5 bg-neutral-950 border-t border-neutral-800 flex justify-between items-center text-xs text-neutral-400">
-                <div className="flex gap-4 text-sm items-center">
-                    <span>
-                        Extras:{" "}
-                        <strong className="text-white">
+            <div className="px-6 py-4 bg-muted/40 border-t border-border flex justify-between items-center text-xs text-muted-foreground font-medium">
+                <div className="flex gap-4 items-center">
+                    <span className="flex items-center gap-1.5 bg-card px-2 py-1 rounded border border-border">
+                        Extras 
+                        <span className="text-foreground font-bold ml-1">
                             {currentInnings.extras?.total ??
                                 ((currentInnings.extras?.wides || 0) +
                                     (currentInnings.extras?.noBalls || 0) +
                                     (currentInnings.extras?.legByes || 0) +
                                     (currentInnings.extras?.byes || 0) +
                                     (currentInnings.extras?.penalty || 0))}
-                        </strong>
+                        </span>
                     </span>
 
-                    <span className="text-neutral-600">|</span>
-
-                    <span>Wd: {currentInnings.extras?.wides || 0}</span>
-                    <span>Nb: {currentInnings.extras?.noBalls || 0}</span>
-                    <span>Lb: {currentInnings.extras?.legByes || 0}</span>
-                    <span>B: {currentInnings.extras?.byes || 0}</span>
-                    {currentInnings.extras?.penalty > 0 && (
-                        <span>P: {currentInnings.extras.penalty}</span>
-                    )}
+                    <div className="hidden sm:flex gap-3 text-[10px] uppercase tracking-wide">
+                        <span>Wd: <b className="text-foreground">{currentInnings.extras?.wides || 0}</b></span>
+                        <span>Nb: <b className="text-foreground">{currentInnings.extras?.noBalls || 0}</b></span>
+                        <span>Lb: <b className="text-foreground">{currentInnings.extras?.legByes || 0}</b></span>
+                        <span>B: <b className="text-foreground">{currentInnings.extras?.byes || 0}</b></span>
+                        {currentInnings.extras?.penalty > 0 && (
+                            <span className="text-destructive">Pen: <b>{currentInnings.extras.penalty}</b></span>
+                        )}
+                    </div>
                 </div>
-                <div className="flex items-center gap-1 text-neutral-500">
-                    <span className="uppercase text-[10px] tracking-wider font-semibold">{bowlingTeam.name}</span>
+                <div className="flex items-center gap-2 text-muted-foreground/70">
+                    <span className="uppercase text-[10px] tracking-wider font-bold">Bowling</span>
+                    <span className="font-semibold text-foreground">{bowlingTeam.name}</span>
                 </div>
             </div>
         </div>

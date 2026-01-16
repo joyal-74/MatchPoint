@@ -4,6 +4,7 @@ import LoadingOverlay from "../components/shared/LoadingOverlay";
 import MyStatisticsPage from "../pages/player/MyStats/MyStatisticsPage";
 import MyTournamentsPage from "../pages/player/MyTournamentsPage";
 import TournamentDetailsPage from "../components/player/TournamentDetailsPage";
+import LiveMatchPage from "../pages/viewer/match/LiveMatchPage";
 
 const PlayerDashboard = lazy(() => import("../pages/player/LandingPage"));
 const ViewTeam = lazy(() => import("../pages/player/TeamDetailsPage"));
@@ -26,10 +27,11 @@ export const playerRoutes = [
     { path: "/player/profile", element: withPlayerProtection(<PlayerProfilePage />) },
     { path: "/player/tournaments", element: withPlayerProtection(<TournamentsPage />) },
     { path: "/player/mytournaments", element: withPlayerProtection(<MyTournamentsPage />) },
+    { path: "/player/live", element: withPlayerProtection(<LiveMatchPage />) },
     { path: "/player/tournaments/:id", element: withPlayerProtection(<TournamentDetailsPage />) },
     { path: "/player/teams", element: withPlayerProtection(<TeamFinderPage />) },
     { path: "/player/myteams/:status", element: withPlayerProtection(<TeamsListPage />) },
     { path: "/player/myteam/:teamId", element: withPlayerProtection(<ViewTeam />) },
-    { path: "/player/mystats", element: withPlayerProtection(<MyStatisticsPage />) },
+    { path: "/player/statistics", element: withPlayerProtection(<MyStatisticsPage />) },
     { path: "/player/chat", element: withPlayerProtection(<TeamChat />) },
 ];

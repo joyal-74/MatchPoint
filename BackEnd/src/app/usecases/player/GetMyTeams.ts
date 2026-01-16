@@ -3,11 +3,11 @@ import { DI_TOKENS } from "domain/constants/Identifiers";
 
 import { ILogger } from "app/providers/ILogger";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { IGetMyTeamsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
+import { IGetPlayerTeamsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 import { TeamDataSummary } from "domain/dtos/Team.dto";
 
 @injectable()
-export class GetMyTeamsUseCase implements IGetMyTeamsUseCase {
+export class GetPlayerTeamsUseCase implements IGetPlayerTeamsUseCase {
     constructor(
         @inject(DI_TOKENS.TeamRepository) private _teamRepo: ITeamRepository,
         @inject(DI_TOKENS.Logger) private _logger: ILogger

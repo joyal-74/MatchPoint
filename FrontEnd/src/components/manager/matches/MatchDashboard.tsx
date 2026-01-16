@@ -1,13 +1,14 @@
-import { MatchDetailsCard } from "./MatchDetailsCard";
-import { TossSection } from "./TossSection";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { loadMatchDashboard } from "../../../features/manager/Matches/matchThunks";
 import type { MatchData, TeamId, TossDecision } from "./matchTypes";
+import { MatchDetailsCard } from "./MatchDetailsCard";
+import { TossSection } from "./TossSection";
 import { TeamDetailsPanel } from "./TeamDetailsPanel";
 import Navbar from "../Navbar";
-import { useParams } from "react-router-dom";
 import LoadingOverlay from "../../shared/LoadingOverlay";
+import { Calendar, MapPin, Clock } from "lucide-react";
 
 export const MatchDashboard: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -35,20 +36,13 @@ export const MatchDashboard: React.FC = () => {
     const [isFlipping, setIsFlipping] = useState(false);
 
     useEffect(() => {
-        if (teamA?._id) {
-            setActiveTeamId(teamA._id);
-        }
+        if (teamA?._id) setActiveTeamId(teamA._id);
     }, [teamA]);
 
     useEffect(() => {
-        if (match?.tossWinner) {
-            setTossWinnerId(match.tossWinner as TeamId);
-        }
-        if (match?.tossDecision) {
-            setTossDecision(match.tossDecision as TossDecision);
-        }
+        if (match?.tossWinner) setTossWinnerId(match.tossWinner as TeamId);
+        if (match?.tossDecision) setTossDecision(match.tossDecision as TossDecision);
     }, [match]);
-
 
     const activeTeam = teamMap[activeTeamId];
 
@@ -56,10 +50,12 @@ export const MatchDashboard: React.FC = () => {
         setActiveTeamId(teamId);
     }, []);
 
-
-
     if (error || !match || !teamA || !teamB || !activeTeam) {
-        return <div className="text-red-500 text-center mt-20 text-xl">Failed: {error}</div>;
+        return (
+            <div className="min-h-screen bg-background flex items-center justify-center">
+                <div className="text-destructive text-xl font-medium">Error: {error || "Failed to load match data"}</div>
+            </div>
+        );
     }
 
     const matchData: MatchData = {
@@ -73,19 +69,35 @@ export const MatchDashboard: React.FC = () => {
     };
 
     return (
-        <>
+        <div className="min-h-screen bg-background text-foreground font-sans">
             <Navbar />
             <LoadingOverlay show={loading} />
-            <div className="text-white font-inter p-y md:p-8 mx-12 mt-12">
-
-                {/* Header */}
-                <header className="flex justify-between items-center mb-6 pb-4 border-b border-neutral-800">
-                    <h1 className="text-2xl font-bold text-white">Match Dashboard</h1>
+            
+            <div className="max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+                {/* Header Section */}
+                <header className="mb-8">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h1 className="text-3xl font-bold tracking-tight text-foreground">Match Dashboard</h1>
+                            <div className="flex items-center gap-4 mt-2 text-muted-foreground text-sm">
+                                <span className="flex items-center gap-1"><Calendar size={14} /> {matchData.date}</span>
+                                <span className="flex items-center gap-1"><Clock size={14} /> {matchData.time}</span>
+                                <span className="flex items-center gap-1"><MapPin size={14} /> {matchData.venue}</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                             <div className="px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full text-xs font-semibold uppercase tracking-wider">
+                                Match #{matchData.matchNo}
+                             </div>
+                        </div>
+                    </div>
                 </header>
 
-                <main className="flex flex-col lg:flex-row gap-8">
-
-                    <div className="lg:w-1/3 xl:w-1/4 p-4 bg-neutral-800 rounded-xl shadow-2xl border border-neutral-700/50">
+                {/* Main Grid Layout */}
+                <main className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    
+                    {/* Left Sidebar: Match Info & Toss */}
+                    <aside className="lg:col-span-4 xl:col-span-3 flex flex-col gap-6">
                         <TossSection
                             team1={teamA}
                             team2={teamB}
@@ -97,24 +109,25 @@ export const MatchDashboard: React.FC = () => {
                             setIsFlipping={setIsFlipping}
                             isTossLocked={!!tossWinnerId && !!tossDecision}
                         />
-
-
                         <MatchDetailsCard data={matchData} />
-                    </div>
+                    </aside>
 
-                    <TeamDetailsPanel
-                        matchId={matchId!}
-                        team={activeTeam!}
-                        team1={teamA}
-                        team2={teamB}
-                        activeTeamId={activeTeamId}
-                        handleTeamSwitch={handleTeamSwitch}
-                        tossWinnerId={tossWinnerId}
-                        tossDecision={tossDecision}
-                    />
+                    {/* Right Panel: Team Management */}
+                    <section className="lg:col-span-8 xl:col-span-9 h-full">
+                        <TeamDetailsPanel
+                            matchId={matchId!}
+                            team={activeTeam!}
+                            team1={teamA}
+                            team2={teamB}
+                            activeTeamId={activeTeamId}
+                            handleTeamSwitch={handleTeamSwitch}
+                            tossWinnerId={tossWinnerId}
+                            tossDecision={tossDecision}
+                        />
+                    </section>
                 </main>
             </div>
-        </>
+        </div>
     );
 };
 

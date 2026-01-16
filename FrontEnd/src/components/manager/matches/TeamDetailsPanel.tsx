@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { PlayerCard } from "./PlayerCard";
-import type { TeamId, TossDecision } from "./matchTypes";
-import { Play, Save, Settings } from "lucide-react";
-import { ActionButton } from "./ActionButton";
-import type { Team, Player } from "../../../features/manager/Matches/matchTypes";
+import { useNavigate } from "react-router-dom";
+import { Play, Save, Users } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAppDispatch } from "../../../hooks/hooks";
-import { saveMatchData } from "../../../features/manager/Matches/matchThunks";
-import { useNavigate } from "react-router-dom";
+import { saveMatchData, startMatch } from "../../../features/manager/Matches/matchThunks";
+import type { TeamId, TossDecision } from "./matchTypes";
+import type { Team, Player } from "../../../features/manager/Matches/matchTypes";
+import { PlayerCard } from "./PlayerCard";
+import { ActionButton } from "./ActionButton";
+
 
 interface TeamDetailsPanelProps {
     matchId: string;
@@ -23,83 +24,77 @@ interface TeamDetailsPanelProps {
 export const TeamDetailsPanel: React.FC<TeamDetailsPanelProps> = React.memo(
     ({ matchId, team, team1, team2, activeTeamId, handleTeamSwitch, tossWinnerId, tossDecision }) => {
 
-        const [isSaved, setIsSaved] = useState(() => {
-            return !!(tossWinnerId && tossDecision);
-        });
-
+        const [isSaved, setIsSaved] = useState(() => !!(tossWinnerId && tossDecision));
+        const [isStarting, setIsStarting] = useState(false);
         const dispatch = useAppDispatch();
         const navigate = useNavigate();
-
-        const renderPlayerSection = (title: string, players: Player[]) => (
-            <div className="mb-10">
-                <h3 className="text-lg font-semibold text-neutral-200 mb-3">
-                    {title}
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {players.map((p) => (
-                        <PlayerCard key={p._id} player={p} />
-                    ))}
-                </div>
-            </div>
-        );
-
         const teams = [team1, team2];
-
         const playingXI = team.members.filter((p: Player) => p.status === "playing");
         const substitutions = team.members.filter((p: Player) => p.status !== "playing");
-
 
         const handleSaveData = async () => {
             if (!tossWinnerId || !tossDecision) {
                 toast.error("Please update toss details.");
                 return;
             }
-
-            const result = await dispatch(
-                saveMatchData({
-                    matchId,
-                    tossWinnerId,
-                    tossDecision,
-                })
-            );
-
+            const result = await dispatch(saveMatchData({ matchId, tossWinnerId, tossDecision }));
             if (saveMatchData.fulfilled.match(result)) {
-                toast.success("Match data saved + Match started");
+                toast.success("Match data saved successfully");
             } else {
                 toast.error("Failed to save match");
             }
             setIsSaved(true);
         };
 
-        const handleStartMatch = () => {
+        const handleStartMatch = async () => {
             if (!isSaved) {
-                toast.error("Please save match data before starting the match.");
-                return;
-            } else {
-                navigate(`/manager/match/${matchId}/control`)
+                return toast.error("Please save toss data first.");
             }
 
+            setIsStarting(true);
+
+            try {
+                // 1. Dispatch the Thunk to update DB
+                await dispatch(startMatch(matchId)).unwrap();
+
+                toast.success("Match Started Successfully!");
+
+                // 2. Navigate ONLY after success
+                navigate(`/manager/match/${matchId}/control`);
+
+            } catch (error) {
+                console.error(error);
+                toast.error("Failed to start match. Try again.");
+            } finally {
+                setIsStarting(false);
+            }
         };
 
-        const handleStreamSettings = () => navigate(`/manager/match/${matchId}/control/stream`);
-
         return (
-            <div className="lg:flex-1 p-5 bg-neutral-900/40 backdrop-blur-md rounded-xl border border-neutral-700/30 shadow-lg">
+            <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col h-full overflow-hidden">
 
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-bold text-purple-300">
-                        {team.name} – Team Details
-                    </h2>
+                {/* Panel Header & Team Switcher */}
+                <div className="p-6 border-b border-border flex flex-col md:flex-row justify-between items-center gap-4 bg-background/50">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <Users size={20} />
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-bold text-foreground leading-none">{team.name}</h2>
+                            <p className="text-sm text-muted-foreground mt-1">Squad Management</p>
+                        </div>
+                    </div>
 
-                    <div className="flex bg-neutral-800/60 rounded-full p-1">
+                    {/* Segmented Control */}
+                    <div className="flex p-1 bg-muted rounded-lg w-full md:w-auto">
                         {teams.map((t) => (
                             <button
                                 key={t._id}
                                 onClick={() => handleTeamSwitch(t._id as TeamId)}
-                                className={`px-4 py-2 text-sm rounded-full transition-all
+                                className={`flex-1 md:flex-none px-6 py-2 text-sm font-medium rounded-md transition-all duration-200
                                     ${activeTeamId === t._id
-                                        ? "bg-white text-neutral-900 shadow-sm"
-                                        : "text-neutral-300 hover:bg-neutral-700"
+                                        ? "bg-background text-foreground shadow-sm ring-1 ring-border"
+                                        : "text-muted-foreground hover:text-foreground"
                                     }`}
                             >
                                 {t.name}
@@ -108,16 +103,38 @@ export const TeamDetailsPanel: React.FC<TeamDetailsPanelProps> = React.memo(
                     </div>
                 </div>
 
-                {/* Content */}
-                <div className="space-y-8">
-                    {renderPlayerSection("Playing XI", playingXI)}
-                    {renderPlayerSection("Substitutions", substitutions)}
+                {/* Scrollable Content */}
+                <div className="flex-1 p-6 overflow-y-auto bg-muted/5 custom-scrollbar">
+                    <div className="space-y-8">
+                        <div>
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-md font-semibold text-foreground flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-green-500"></span> Playing XI
+                                </h3>
+                                <span className="text-xs font-mono bg-muted px-2 py-1 rounded text-muted-foreground">{playingXI.length} Players</span>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                {playingXI.map((p) => <PlayerCard key={p._id} player={p} />)}
+                            </div>
+                        </div>
+
+                        {substitutions.length > 0 && (
+                            <div>
+                                <h3 className="text-md font-semibold text-foreground mb-4 flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-yellow-500"></span> Bench
+                                </h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                    {substitutions.map((p) => <PlayerCard key={p._id} player={p} />)}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-gray-700 flex flex-col sm:flex-row gap-4 justify-end">
-                    <ActionButton icon={<Save size={20} />} label="Save Data" color="yellow" onClick={handleSaveData} />
-                    <ActionButton icon={<Play size={20} />} label="Start Match" color="green" onClick={handleStartMatch} disabled={!isSaved} />
-                    <ActionButton icon={<Settings size={20} />} label="Stream Settings" color="indigo" onClick={handleStreamSettings} />
+                {/* Footer Actions */}
+                <div className="p-4 border-t border-border bg-background flex flex-wrap gap-3 justify-end items-center">
+                    <ActionButton variant="secondary" icon={<Save size={18} />} label="Save Data" onClick={handleSaveData} />
+                    <ActionButton variant="primary" icon={<Play size={18} />} label={isStarting ? "Starting..." : "Start Match"} onClick={handleStartMatch} disabled={!isSaved}  />
                 </div>
             </div>
         );

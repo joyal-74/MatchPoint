@@ -2,7 +2,6 @@ import { Play, RotateCw, Settings, MoreHorizontal, AlertCircle, MinusCircle, Plu
 import { Modal, SelectInput } from './SharedComponents';
 import type { InningsState, Player } from '../../../../features/manager/Matches/matchTypes';
 
-
 type FormsState = {
     striker: string;
     nonStriker: string;
@@ -56,7 +55,7 @@ export const InitialSetupModal = ({ isOpen, onClose, forms, updateForm, actions,
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateForm('nonStriker', e.target.value)}
                 options={battingTeam.members.map((p: Player) => ({ value: p._id, label: p.name }))}
             />
-            <div className="h-px bg-neutral-800 my-4" />
+            <div className="h-px bg-border my-4" />
             <SelectInput
                 label="Opening Bowler"
                 value={forms.bowler}
@@ -66,7 +65,7 @@ export const InitialSetupModal = ({ isOpen, onClose, forms, updateForm, actions,
             <button
                 onClick={actions.handleStartInnings}
                 disabled={isStartDisabled}
-                className={`w-full py-3 mt-2 rounded-xl font-bold text-sm transition-all ${isStartDisabled ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' : 'bg-white text-black hover:bg-neutral-200'}`}
+                className={`w-full py-3 mt-4 rounded-xl font-bold text-sm transition-all ${isStartDisabled ? 'bg-muted text-muted-foreground cursor-not-allowed' : 'bg-primary text-primary-foreground hover:opacity-90 shadow-md shadow-primary/20'}`}
             >
                 Start Match
             </button>
@@ -86,12 +85,11 @@ interface BowlerChangeModalProps {
 }
 
 export const BowlerChangeModal = ({ isOpen, onClose, forms, updateForm, actions, bowlingTeam, currentInnings, ballsInOver }: BowlerChangeModalProps) => {
-    console.log(bowlingTeam);
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Change Bowler" icon={RotateCw}>
-            <div className="bg-neutral-900 rounded-lg p-3 mb-4 border border-neutral-800 flex justify-between items-center">
-                <div className="text-xs text-neutral-500 uppercase tracking-wider font-semibold">Current Over</div>
-                <div className="font-mono font-bold text-white">{Math.floor(ballsInOver / 6)}.{ballsInOver % 6}</div>
+            <div className="bg-muted/30 rounded-lg p-3 mb-4 border border-border flex justify-between items-center">
+                <div className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Current Over Progress</div>
+                <div className="font-mono font-bold text-foreground">{Math.floor(ballsInOver / 6)}.{ballsInOver % 6}</div>
             </div>
             <SelectInput
                 label="New Bowler"
@@ -102,7 +100,7 @@ export const BowlerChangeModal = ({ isOpen, onClose, forms, updateForm, actions,
             <button
                 onClick={actions.handleBowlerChange}
                 disabled={!forms.newBowlerId}
-                className={`w-full py-3 mt-2 rounded-xl font-bold text-sm transition-all ${!forms.newBowlerId ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' : 'bg-white text-black hover:bg-neutral-200'}`}
+                className={`w-full py-3 mt-4 rounded-xl font-bold text-sm transition-all ${!forms.newBowlerId ? 'bg-muted text-muted-foreground cursor-not-allowed' : 'bg-primary text-primary-foreground hover:opacity-90 shadow-md shadow-primary/20'}`}
             >
                 {ballsInOver >= 6 ? 'End Over & Change Bowler' : 'Change Bowler'}
             </button>
@@ -137,7 +135,7 @@ export const ChangeStrikerModal = ({ isOpen, onClose, forms, updateForm, actions
             <button
                 onClick={actions.handleSetStriker}
                 disabled={!forms.newStrikerId}
-                className={`w-full py-3 mt-2 rounded-xl font-bold text-sm transition-all ${!forms.newStrikerId ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' : 'bg-white text-black hover:bg-neutral-200'}`}
+                className={`w-full py-3 mt-4 rounded-xl font-bold text-sm transition-all ${!forms.newStrikerId ? 'bg-muted text-muted-foreground cursor-not-allowed' : 'bg-primary text-primary-foreground hover:opacity-90'}`}
             >
                 Change Striker
             </button>
@@ -166,7 +164,7 @@ export const ChangeNonStrikerModal = ({ isOpen, onClose, forms, updateForm, acti
             <button
                 onClick={actions.handleSetNonStriker}
                 disabled={!forms.newNonStrikerId}
-                className={`w-full py-3 mt-2 rounded-xl font-bold text-sm transition-all ${!forms.newNonStrikerId ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' : 'bg-white text-black hover:bg-neutral-200'}`}
+                className={`w-full py-3 mt-4 rounded-xl font-bold text-sm transition-all ${!forms.newNonStrikerId ? 'bg-muted text-muted-foreground cursor-not-allowed' : 'bg-primary text-primary-foreground hover:opacity-90'}`}
             >
                 Change Non-Striker
             </button>
@@ -189,37 +187,38 @@ export const SpecialModal = ({ isOpen, onClose, forms, updateForm, actions, curr
     <Modal isOpen={isOpen} onClose={onClose} title="Special Events" icon={MoreHorizontal}>
         <div className="space-y-6">
             {/* Penalty Runs */}
-            <div className="bg-neutral-900/50 p-4 rounded-xl border border-neutral-800">
-                <h4 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+            <div className="bg-card border border-border p-4 rounded-xl shadow-sm">
+                <h4 className="text-sm font-bold text-card-foreground mb-3 flex items-center gap-2">
                     <AlertCircle size={14} className="text-yellow-500" /> Penalty Runs
                 </h4>
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => updateForm('penaltyRuns', Math.max(0, forms.penaltyRuns - 1))}
-                        className="p-2 bg-neutral-800 rounded-lg hover:bg-neutral-700 text-neutral-300 disabled:opacity-50"
+                        className="p-2 bg-muted rounded-lg hover:bg-muted/80 text-muted-foreground hover:text-foreground disabled:opacity-50 transition-colors"
                         disabled={forms.penaltyRuns <= 0}
                     >
                         <MinusCircle size={18} />
                     </button>
-                    <div className="flex-1 text-center font-mono font-bold text-xl text-white">
+                    <div className="flex-1 text-center font-mono font-bold text-xl text-foreground">
                         {forms.penaltyRuns > 0 ? `+${forms.penaltyRuns}` : forms.penaltyRuns}
                     </div>
-                    <button onClick={() => updateForm('penaltyRuns', forms.penaltyRuns + 1)} className="p-2 bg-neutral-800 rounded-lg hover:bg-neutral-700 text-neutral-300">
+                    <button onClick={() => updateForm('penaltyRuns', forms.penaltyRuns + 1)} className="p-2 bg-muted rounded-lg hover:bg-muted/80 text-muted-foreground hover:text-foreground transition-colors">
                         <PlusCircle size={18} />
                     </button>
                 </div>
                 <button
                     onClick={actions.handlePenalty}
                     disabled={forms.penaltyRuns <= 0}
-                    className="w-full mt-3 py-2 bg-yellow-600/20 text-yellow-500 border border-yellow-600/50 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-yellow-600/30 disabled:opacity-50"
+                    className="w-full mt-3 py-2 bg-yellow-500/10 text-yellow-600 border border-yellow-500/20 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                     Apply Penalty
                 </button>
             </div>
+            
             {/* Retire */}
-            <div className="bg-neutral-900/50 p-4 rounded-xl border border-neutral-800">
-                <h4 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
-                    <LogOut size={14} className="text-red-400" /> Retire Batsman
+            <div className="bg-card border border-border p-4 rounded-xl shadow-sm">
+                <h4 className="text-sm font-bold text-card-foreground mb-3 flex items-center gap-2">
+                    <LogOut size={14} className="text-destructive" /> Retire Batsman
                 </h4>
                 <SelectInput
                     label="Batsman to Retire"
@@ -231,8 +230,8 @@ export const SpecialModal = ({ isOpen, onClose, forms, updateForm, actions, curr
                     ]}
                 />
                 <div className="grid grid-cols-2 gap-2 mb-4">
-                    <button onClick={() => updateForm('retireType', 'hurt')} className={`py-2 rounded-lg text-xs font-bold border transition-colors ${forms.retireType === 'hurt' ? 'bg-blue-600 border-blue-600 text-white' : 'bg-neutral-900 border-neutral-700 text-neutral-400'}`}>Retired Hurt</button>
-                    <button onClick={() => updateForm('retireType', 'out')} className={`py-2 rounded-lg text-xs font-bold border transition-colors ${forms.retireType === 'out' ? 'bg-red-600 border-red-600 text-white' : 'bg-neutral-900 border-neutral-700 text-neutral-400'}`}>Retired Out</button>
+                    <button onClick={() => updateForm('retireType', 'hurt')} className={`py-2 rounded-lg text-xs font-bold border transition-colors ${forms.retireType === 'hurt' ? 'bg-blue-500/10 border-blue-500 text-blue-500' : 'bg-muted border-border text-muted-foreground'}`}>Retired Hurt</button>
+                    <button onClick={() => updateForm('retireType', 'out')} className={`py-2 rounded-lg text-xs font-bold border transition-colors ${forms.retireType === 'out' ? 'bg-destructive/10 border-destructive text-destructive' : 'bg-muted border-border text-muted-foreground'}`}>Retired Out</button>
                 </div>
                 <SelectInput
                     label="New Batsman"
@@ -243,7 +242,7 @@ export const SpecialModal = ({ isOpen, onClose, forms, updateForm, actions, curr
                 <button
                     disabled={!forms.retirePlayerId || !forms.newRetireBatsmanId}
                     onClick={actions.handleRetire}
-                    className="w-full py-2 bg-red-600 text-white rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="w-full py-2 bg-destructive text-destructive-foreground rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
                 >
                     Confirm Retirement
                 </button>

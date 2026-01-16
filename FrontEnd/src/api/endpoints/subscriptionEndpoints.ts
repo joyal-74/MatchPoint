@@ -1,6 +1,7 @@
 import { SUBSCRIPTION_ROUTES } from "../../constants/routes/SubscriptionRoutes";
 import type { Plan } from "../../features/admin/subscription/subscriptionTypes";
-import type { UserSubscription, AvailablePlan, InitiateOrderPayload, InitiateOrderResponse, FinalizePaymentPayload, FinalizePaymentResponse } from "../../features/shared/subscription/subscriptionTypes";
+import type { UserSubscription, AvailablePlan, InitiateOrderPayload, InitiateOrderResponse, FinalizePaymentPayload, FinalizePaymentResponse, PlanLevel } from "../../features/shared/subscription/subscriptionTypes";
+import type { BillingCycle } from "../../pages/admin/shared/subscription/SubscriptionTypes";
 import axiosClient from "../http/axiosClient";
 
 export const subscriptionEndpoints = {
@@ -20,12 +21,11 @@ export const subscriptionEndpoints = {
 
     updatePlan: async ({ id, newData }: { id: string, newData: Omit<Plan, "_id"> }): Promise<Plan> => {
         const { data } = await axiosClient.put(SUBSCRIPTION_ROUTES.EDIT_PLAN, { id, newData });
-        console.log(data.data)
         return data.data;
     },
 
-    updatePlanDirectly: async ({ id, newData }: { id: string, newData: Omit<Plan, "_id"> }): Promise<Plan> => {
-        const { data } = await axiosClient.put(SUBSCRIPTION_ROUTES.UPDATE_PLAN, { id, newData });
+    updatePlanDirectly: async ({userId, planLevel, billingCycle }: { userId: string, planLevel: PlanLevel, billingCycle: BillingCycle }): Promise<Plan> => {
+        const { data } = await axiosClient.put(SUBSCRIPTION_ROUTES.UPDATE_PLAN, { userId, planLevel, billingCycle });
         console.log(data.data)
         return data.data;
     },

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { AlertCircle, Award, CalendarClock, RefreshCw } from 'lucide-react';
+import { AlertCircle, Award,  } from 'lucide-react';
+// import { CalendarClock, RefreshCw  } from 'lucide-react';
+// import { UserButton } from './subscription/UserButton';
 import type { AvailablePlan, PlanLevel } from './subscription/SubscriptionTypes';
-import { UserButton } from './subscription/UserButton';
 import { PlanCardUser } from './subscription/PlanCardUser';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import type { RootState } from '../../app/rootReducer';
@@ -61,7 +62,7 @@ export default function UserSubscriptionPage() {
                 // Dispatch the direct update thunk (Ensure this exists in your subscriptionThunks.ts)
                 await dispatch(updatePlanDirectly({ 
                     userId, 
-                    level: plan.level, 
+                    planLevel: plan.level, 
                     billingCycle: plan.billingCycle 
                 }));
                 
@@ -91,10 +92,10 @@ export default function UserSubscriptionPage() {
         setPaymentModalOpen(false);
     };
 
-    const handleManageSubscription = () => {
-        // Logic for Customer Portal (if using Stripe Billing Portal)
-        console.log("Navigate to billing portal...");
-    };
+    // const handleManageSubscription = () => {
+    //     // Logic for Customer Portal (if using Stripe Billing Portal)
+    //     console.log("Navigate to billing portal...");
+    // };
 
     // --- RENDER: Empty State ---
     if ((!loading && availablePlans.length === 0) || !userSubscription) {
@@ -112,21 +113,6 @@ export default function UserSubscriptionPage() {
 
             <div className="text-foreground font-sans min-h-screen">
                 <div className="pt-10 max-w-7xl mx-auto px-4 sm:px-6">
-
-                    {/* --- ALERT 1: Pending Downgrade --- */}
-                    {userSubscription?.scheduledChange && (
-                        <div className="bg-yellow-50/50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-800 p-4 rounded-xl mb-6 flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
-                            <CalendarClock className="w-5 h-5 text-yellow-600 dark:text-yellow-500 mt-0.5" />
-                            <div>
-                                <h4 className="font-semibold text-yellow-800 dark:text-yellow-400">Subscription Change Scheduled</h4>
-                                <p className="text-sm text-yellow-700 dark:text-yellow-500/80 mt-1">
-                                    You have requested to switch to the <strong>{userSubscription.scheduledChange.level}</strong> plan. 
-                                    This change will happen automatically on <strong>{new Date(userSubscription.expiryDate).toLocaleDateString()}</strong>.
-                                    Until then, you retain your current benefits.
-                                </p>
-                            </div>
-                        </div>
-                    )}
 
                     {/* --- ALERT 2: Reserved Balance (From previous upgrade) --- */}
                     {userSubscription?.reservedPlan && userSubscription.reservedPlan.daysRemaining > 0 && (
@@ -173,14 +159,14 @@ export default function UserSubscriptionPage() {
                                     </p>
                                 </div>
 
-                                <UserButton
+                                {/* <UserButton
                                     variant="secondary"
                                     icon={<RefreshCw className="w-4 h-4" />}
                                     className="!py-2 !px-4 !shadow-sm hover:shadow-md transition-all !w-auto bg-secondary text-secondary-foreground hover:bg-secondary/80"
                                     onClick={handleManageSubscription}
                                 >
                                     Manage
-                                </UserButton>
+                                </UserButton> */}
                             </div>
                         </div>
                     </div>

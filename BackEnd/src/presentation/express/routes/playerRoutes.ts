@@ -23,9 +23,7 @@ router.get('/:playerId/profile', expressAdapter(playerProfileController.getProfi
 
 router.get('/teams', expressAdapter(playerTeamController.getAllTeams))
 
-router.get('/teams/:playerId/:status', expressAdapter(playerTeamController.getMyTeams))
-
-router.get('/teams/:playerId', expressAdapter(playerTeamController.getAllMyTeams))
+router.get('/teams/:playerId', expressAdapter(playerTeamController.getMyTeams))
 
 router.post('/team/:playerId/invite/status', expressAdapter(playerTeamController.updateStatus))
 
