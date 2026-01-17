@@ -62,14 +62,34 @@ export class TeamRepositoryMongo implements ITeamRepository {
     }
 
     async findAllWithFilters(filters: Filters): Promise<{ teams: TeamDataSummary[], totalTeams: number }> {
-        // For Summary, we usually only need Manager info, not deep member info
-        const result = await TeamModel.find(filters)
+        const { page = 1, limit = 10, search, sport, city, state, ...otherFilters } = filters;
+
+        const skip = (Number(page) - 1) * Number(limit);
+
+        const query: mongoose.FilterQuery<InstanceType<typeof TeamModel>> = { ...otherFilters };
+
+        if (search) {
+            query.$or = [
+                { name: { $regex: search, $options: "i" } },
+                { city: { $regex: search, $options: "i" } }
+            ];
+        }
+
+        if (sport) query.sport = { $regex: sport, $options: "i" };
+        if (city) query.city = { $regex: city, $options: "i" };
+        if (state) query.state = { $regex: state, $options: "i" };
+
+        const result = await TeamModel.find(query)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(Number(limit))
             .populate({
                 path: "managerId",
                 select: "_id firstName lastName",
             });
 
-        const totalTeams = await TeamModel.countDocuments(filters);
+        const totalTeams = await TeamModel.countDocuments(query);
+
         const teams = TeamMongoMapper.toDomainSummaryArray(result as unknown as TeamSummaryPopulatedDocument[]);
 
         return { teams, totalTeams };
@@ -78,7 +98,7 @@ export class TeamRepositoryMongo implements ITeamRepository {
     async findAllTeams(filters: AdminFilters): Promise<{ teams: TeamDataFull[]; totalCount: number; }> {
         const { page, limit, filter, search } = filters;
         const skip = (page - 1) * limit;
-        const query: any = {};
+        const query: mongoose.FilterQuery<InstanceType<typeof TeamModel>> = {};
 
         if (filter && filter !== 'All') {
             query.status = filter.toLowerCase();

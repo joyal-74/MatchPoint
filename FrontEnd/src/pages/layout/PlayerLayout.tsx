@@ -16,7 +16,7 @@ const PlayerLayout: React.FC<PlayerLayoutProps> = ({ children }) => {
                     <Navbar />
                 </div>
 
-                <main className="flex-1 px-6 ml-15 lg:ml-70 mt-8">{children}</main>
+                <main className="flex-1 px-2 ml-15 lg:ml-70 mt-8">{children}</main>
             </div>
         </div>
     );

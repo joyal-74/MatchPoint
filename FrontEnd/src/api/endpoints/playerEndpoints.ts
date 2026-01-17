@@ -27,6 +27,7 @@ export const playerEndpoints = {
         const { data } = await axiosClient.get(PLAYER_ROUTES.GET_TEAMS, {
             params: filters,
         });
+
         return data.data;
     },
 

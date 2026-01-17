@@ -1,9 +1,5 @@
 import { Filters, PlayerTeamResponseDTO, TeamData, TeamDataFull, TeamDataSummary } from "domain/dtos/Team.dto";
 
-export interface IGetAllTeamsUseCase {
-    execute(filters: Filters): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
-}
-
 export interface IGetPlayerTeamsUseCase {
     execute(filters: Filters): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
 }

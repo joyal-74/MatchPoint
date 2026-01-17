@@ -124,7 +124,7 @@ import { FetchMatchesUseCase } from "app/usecases/player/FetchPlayerMatches";
 import { PlayerTournamentDetails } from "app/usecases/player/TournamentDetails";
 import { GetDashboardAnalytics } from "app/usecases/manager/GetDashboardAnalytics";
 import { UpdateUserDirectlyPlan } from "app/usecases/shared/UpdatPlanDirectly";
-import { GetPlayerTeamsUseCase } from "app/usecases/player/GetMyTeams"; 
+import { GetPlayerTeamsUseCase } from "app/usecases/player/GetPlayerTeams"; 
 import { GetPlayerJoinedTeamsUseCase } from "app/usecases/player/GetAllMyTeams"; 
 import { GetAllTeams } from "app/usecases/admin/GetAllTeams";
 import { StartMatchUseCase } from "app/usecases/manager/match/StartMatchUseCase";

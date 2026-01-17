@@ -47,7 +47,6 @@ const teamsSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchTeams.fulfilled, (state, action) => {
-                console.log(action.payload)
                 state.loading = false;
                 state.allTeams = action.payload.teams;
                 state.totalPages = action.payload.totalTeams;
@@ -67,7 +66,6 @@ const teamsSlice = createSlice({
                 state.allTeams = state.allTeams.map(t => t._id === action.payload._id ? action.payload : t);
             })
             .addCase(joinTeam.rejected, (state, action) => {
-                console.log(action.payload)
                 state.loading = false;
                 state.error = action.payload || "Failed to join team";
             });

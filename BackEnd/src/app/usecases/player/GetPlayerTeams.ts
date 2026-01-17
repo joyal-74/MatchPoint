@@ -4,7 +4,7 @@ import { DI_TOKENS } from "domain/constants/Identifiers";
 import { ILogger } from "app/providers/ILogger";
 import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import { IGetPlayerTeamsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
-import { TeamDataSummary } from "domain/dtos/Team.dto";
+import { Filters, TeamDataSummary } from "domain/dtos/Team.dto";
 
 @injectable()
 export class GetPlayerTeamsUseCase implements IGetPlayerTeamsUseCase {
@@ -13,13 +13,12 @@ export class GetPlayerTeamsUseCase implements IGetPlayerTeamsUseCase {
         @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
-    async execute(userId: string, status: string): Promise<{ teams: TeamDataSummary[]; totalTeams: number; }> {
-        this._logger.info(`Fetching teams with Id: ${userId}`);
-
-        const { teams, totalTeams } = await this._teamRepo.findAllWithUserId(userId, status);
+    async execute(filters: Filters): Promise<{ teams: TeamDataSummary[], totalTeams: number }> {
+        this._logger.info(`Fetching teams with filters: ${JSON.stringify(filters)}`);
+        const { teams, totalTeams } = await this._teamRepo.findAllWithFilters(filters);
 
         this._logger.info(`Fetched ${teams.length} teams`);
 
         return { teams, totalTeams };
     }
-};
+} 

@@ -5,23 +5,23 @@ import type { UpdateUserDataPayload } from "../manager/managerTypes";
 import { setUser } from "../auth";
 
 export const fetchViewerData = createAsyncThunk(
-    "manager/fetchViewerData",
+    "viewer/fetchViewerData",
     createApiThunk(viewerEndpoints.fetchViewerData)
 );
 
 
 export const fetchLiveMatches  = createAsyncThunk(
-    "manager/fetchLiveMatches ",
+    "viewer/fetchLiveMatches ",
     createApiThunk(viewerEndpoints.fetchLiveMatches )
 );
 
 export const fetchMatchUpdates  = createAsyncThunk(
-    "manager/fetchMatchUpdates ",
+    "viewer/fetchMatchUpdates ",
     createApiThunk(viewerEndpoints.fetchMatchUpdates )
 );
 
 export const updateViewerData = createAsyncThunk(
-    "manager/updateViewerData",
+    "viewer/updateViewerData",
     createApiThunk(async (data: UpdateUserDataPayload, dispatch) => {
         const response = await viewerEndpoints.updateViewerData(data);
         dispatch(setUser(response));

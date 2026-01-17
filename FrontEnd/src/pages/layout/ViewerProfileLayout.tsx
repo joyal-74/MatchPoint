@@ -8,7 +8,7 @@ interface AdminLayoutProps {
 
 const ViewerProfileLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     return (
-        <div className="flex h-screen bg-[var(--color-background-primary)] md:pr-12">
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
             <Sidebar />
 
             <div className="flex-1 flex flex-col">

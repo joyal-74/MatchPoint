@@ -1,5 +1,5 @@
 import { TeamsController } from 'presentation/http/controllers/player/TeamsController';
-import { FetchAllTeams } from 'app/usecases/player/FetchPlayerTeams';
+import { FetchAllTeams } from 'app/usecases/player/GetPlayerTeams';
 import { JoinTeamUseCase } from 'app/usecases/player/JoinTeams';
 import { GetMyTeamsUseCase } from 'app/usecases/player/GetPlayerTeamsUseCase';
 import { GetMyTeamDetails } from 'app/usecases/player/GetMyTeamDetails';

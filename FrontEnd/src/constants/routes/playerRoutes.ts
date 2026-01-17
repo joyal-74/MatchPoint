@@ -4,7 +4,7 @@ export const PLAYER_ROUTES = {
     GET_DETAILS: (playerId: string) => `${API_PREFIX}/player/${playerId}/profile`,
     EDIT_DETAILS: (playerId: string) => `${API_PREFIX}/player/${playerId}/profile`,
     EDIT_PROFILE_DETAILS: (playerId: string) => `${API_PREFIX}/player/${playerId}/profile/sports`,
-    GET_TEAMS: `/player/teams`,
+    GET_TEAMS: `${API_PREFIX}/player/teams`,
     GET_MY_TEAMS: (playerId: string, status: string) => `${API_PREFIX}/player/teams/${playerId}/${status}`,
     GET_MY_All_TEAMS: (playerId: string) => `${API_PREFIX}/player/teams/${playerId}`,
     GET_MY_TEAM: (teamId: string) => `${API_PREFIX}/player/team/${teamId}/details`,

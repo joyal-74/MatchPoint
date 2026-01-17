@@ -95,6 +95,9 @@ export interface TeamData extends TeamRegister {
 export interface Filters {
     sport?: string;
     state?: string;
+    search?: string;
+    page?: number;
+    limit?: number;
     city?: string;
     phase?: "recruiting" | "active" | "completed";
     maxPlayers?: number;

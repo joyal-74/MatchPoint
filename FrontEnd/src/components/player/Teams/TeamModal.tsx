@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, MapPin, Users, Trophy, Calendar, Target, Shield, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { X, MapPin, Users, Trophy, Calendar, Target, Shield, CheckCircle2, Clock, ArrowRight } from 'lucide-react';
 import type { Team } from './Types';
 import { useAppSelector } from '../../../hooks/hooks';
 
@@ -19,170 +19,185 @@ const TeamModal: React.FC<TeamModalProps> = ({ team, isOpen, onClose, onSubmit }
 
     if (!isOpen) return null;
 
-    // Phase Color Logic
-    const getPhaseColor = () => {
+    // Phase Configuration
+    const getPhaseConfig = () => {
         switch(team.phase) {
-            case 'recruiting': return 'bg-blue-500';
-            case 'active': return 'bg-green-500';
-            default: return 'bg-muted-foreground';
+            case 'recruiting': return { 
+                badge: 'bg-blue-500 text-white', 
+                gradient: 'from-blue-600/20 to-indigo-600/20',
+                border: 'border-blue-500/20'
+            };
+            case 'active': return { 
+                badge: 'bg-green-500 text-white', 
+                gradient: 'from-green-600/20 to-emerald-600/20',
+                border: 'border-green-500/20'
+            };
+            default: return { 
+                badge: 'bg-zinc-500 text-white', 
+                gradient: 'from-zinc-600/20 to-stone-600/20',
+                border: 'border-zinc-500/20'
+            };
         }
     };
+    const phaseConfig = getPhaseConfig();
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            {/* Backdrop */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+            
+            {/* 1. Backdrop */}
             <div 
-                className="absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity" 
+                className="absolute inset-0 bg-background/60 backdrop-blur-md transition-all duration-300" 
                 onClick={onClose}
             />
 
-            {/* Modal Content */}
-            <div className="relative z-10 bg-card border border-border w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+            {/* 2. Modal Container */}
+            <div className="relative z-10 w-full max-w-xl bg-card border border-border/50 rounded-2xl shadow-2xl flex flex-col max-h-[85vh] animate-in zoom-in-95 fade-in duration-300 overflow-hidden">
                 
-                {/* Header Accent Line */}
-                <div className={`h-1.5 w-full ${getPhaseColor()}`} />
-
-                {/* Header Section */}
-                <div className="px-6 pt-6 pb-4 border-b border-border flex justify-between items-start">
-                    <div className="flex gap-4">
-                        <div className="relative shrink-0">
-                            <div className="w-16 h-16 rounded-xl bg-muted border border-border flex items-center justify-center overflow-hidden">
-                                {team.logo ? (
-                                    <img src={team.logo} alt={team.name} className="w-full h-full object-cover" />
-                                ) : (
-                                    <Shield className="w-8 h-8 text-muted-foreground/50" />
-                                )}
-                            </div>
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-bold text-foreground leading-tight mb-1">{team.name}</h2>
-                            <div className="flex flex-wrap gap-2">
-                                <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-md text-xs font-semibold border border-primary/20 flex items-center gap-1">
-                                    <Trophy size={10} /> {team.sport}
-                                </span>
-                                <span className={`px-2 py-0.5 rounded-md text-xs font-semibold border capitalize ${
-                                    team.phase === 'recruiting' ? 'bg-blue-500/10 text-blue-600 border-blue-500/20' : 
-                                    team.phase === 'active' ? 'bg-green-500/10 text-green-600 border-green-500/20' : 
-                                    'bg-muted text-muted-foreground border-border'
-                                }`}>
-                                    {team.phase}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                {/* --- HEADER BANNER --- */}
+                <div className={`relative h-32 bg-gradient-to-r ${phaseConfig.gradient} flex items-start justify-between p-4`}>
+                    {/* Abstract Pattern */}
+                    <div className="absolute inset-0 opacity-10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
                     
-                    <button
+                    {/* Status Badge (Top Left) */}
+                    <div className={`relative px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm ${phaseConfig.badge}`}>
+                        {team.phase}
+                    </div>
+
+                    {/* Close Button */}
+                    <button 
                         onClick={onClose}
-                        className="p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors"
+                        className="relative p-2 rounded-full bg-black/10 hover:bg-black/20 text-foreground/80 hover:text-foreground transition-colors backdrop-blur-sm"
                     >
                         <X size={20} />
                     </button>
                 </div>
 
-                {/* Body Content (Scrollable) */}
-                <div className="p-6 overflow-y-auto">
-                    
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                        <MapPin size={16} className="text-primary" />
-                        <span>{team.city}, {team.state}</span>
+                {/* --- FLOATING IDENTITY --- */}
+                <div className="px-6 sm:px-8 -mt-10 mb-2 flex items-end justify-between relative z-20">
+                    <div className="flex items-end gap-4">
+                        {/* Logo */}
+                        <div className="w-24 h-24 rounded-2xl bg-card p-1.5 shadow-xl border border-border">
+                            <div className="w-full h-full rounded-xl bg-muted flex items-center justify-center overflow-hidden">
+                                {team.logo ? (
+                                    <img src={team.logo} alt={team.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    <Shield className="w-10 h-10 text-muted-foreground/30" />
+                                )}
+                            </div>
+                        </div>
+                        
+                        {/* Title Block (Mobile: Moves below, Desktop: Stays side) */}
+                        <div className="pb-1 hidden sm:block">
+                            <h2 className="text-2xl font-bold text-foreground leading-none mb-1.5">{team.name}</h2>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium">
+                                <Trophy size={14} className="text-primary" /> {team.sport}
+                                <span className="w-1 h-1 rounded-full bg-border" />
+                                <MapPin size={14} /> {team.city}
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <div className="mb-6">
-                        <h4 className="text-sm font-semibold text-foreground mb-2">About the Team</h4>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            {team.description || "No description provided."}
+                {/* Mobile Title Block (Visible only on small screens) */}
+                <div className="px-6 sm:hidden mb-6 mt-2">
+                    <h2 className="text-2xl font-bold text-foreground leading-tight mb-1">{team.name}</h2>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Trophy size={14} className="text-primary" /> {team.sport}
+                        <span className="w-1 h-1 rounded-full bg-border" />
+                        <MapPin size={14} /> {team.city}
+                    </div>
+                </div>
+
+                {/* --- BODY SCROLLABLE --- */}
+                <div className="flex-1 overflow-y-auto px-6 sm:px-8 py-2">
+                    
+                    {/* Description */}
+                    <div className="mb-8">
+                        <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                            About the Team
+                        </h3>
+                        <p className="text-sm text-muted-foreground/90 leading-relaxed">
+                            {team.description || "This team hasn't added a description yet. Join them to find out more about their goals and playstyle."}
                         </p>
                     </div>
 
                     {/* Stats Grid */}
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                        <div className="bg-muted/30 p-3 rounded-xl border border-border flex items-center gap-3">
-                            <div className="p-2 bg-background rounded-lg shadow-sm text-blue-500">
-                                <Users size={18} />
-                            </div>
-                            <div>
-                                <p className="text-xs text-muted-foreground font-medium uppercase">Roster</p>
-                                <p className="text-sm font-bold text-foreground">
-                                    {team.membersCount} / {team.maxPlayers}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="bg-muted/30 p-3 rounded-xl border border-border flex items-center gap-3">
-                            <div className="p-2 bg-background rounded-lg shadow-sm text-amber-500">
-                                <Trophy size={18} />
-                            </div>
-                            <div>
-                                <p className="text-xs text-muted-foreground font-medium uppercase">Win Rate</p>
-                                <p className="text-sm font-bold text-foreground">
-                                    {team.stats?.winRate || 0}%
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="bg-muted/30 p-3 rounded-xl border border-border flex items-center gap-3">
-                            <div className="p-2 bg-background rounded-lg shadow-sm text-red-500">
-                                <Target size={18} />
-                            </div>
-                            <div>
-                                <p className="text-xs text-muted-foreground font-medium uppercase">Matches</p>
-                                <p className="text-sm font-bold text-foreground">
-                                    {team.stats?.totalMatches || 0}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="bg-muted/30 p-3 rounded-xl border border-border flex items-center gap-3">
-                            <div className="p-2 bg-background rounded-lg shadow-sm text-purple-500">
-                                <Calendar size={18} />
-                            </div>
-                            <div>
-                                <p className="text-xs text-muted-foreground font-medium uppercase">Created</p>
-                                <p className="text-sm font-bold text-foreground">
-                                    {new Date(team.createdAt).getFullYear()}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Capacity Bar */}
-                    <div className="space-y-1.5 mb-2">
-                        <div className="flex justify-between text-xs">
-                            <span className="text-muted-foreground font-medium">Team Capacity</span>
-                            <span className="text-foreground font-bold">{Math.round((team.membersCount / team.maxPlayers) * 100)}% Full</span>
-                        </div>
-                        <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
-                            <div 
-                                className="bg-primary h-full rounded-full" 
-                                style={{ width: `${Math.min((team.membersCount / team.maxPlayers) * 100, 100)}%` }}
-                            />
-                        </div>
+                    <div className="grid grid-cols-2 gap-3 mb-8">
+                        <StatBox 
+                            icon={<Users size={16} />} 
+                            label="Roster" 
+                            value={`${team.membersCount} / ${team.maxPlayers}`} 
+                            subtext={`${Math.round((team.membersCount/team.maxPlayers)*100)}% Full`}
+                        />
+                        <StatBox 
+                            icon={<Trophy size={16} />} 
+                            label="Win Rate" 
+                            value={`${team.stats?.winRate || 0}%`} 
+                            color="text-amber-500"
+                        />
+                        <StatBox 
+                            icon={<Target size={16} />} 
+                            label="Matches" 
+                            value={team.stats?.totalMatches || 0} 
+                            color="text-blue-500"
+                        />
+                        <StatBox 
+                            icon={<Calendar size={16} />} 
+                            label="Founded" 
+                            value={new Date(team.createdAt).getFullYear()} 
+                            color="text-purple-500"
+                        />
                     </div>
                 </div>
 
-                {/* Footer Action */}
-                <div className="p-4 border-t border-border bg-muted/10">
+                {/* --- FOOTER ACTION --- */}
+                <div className="p-6 border-t border-border bg-muted/5">
                     <button
                         onClick={onSubmit}
                         disabled={status !== 'none'}
                         className={`
-                            w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold transition-all shadow-sm
+                            group w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl font-semibold text-sm transition-all shadow-sm
                             ${status === 'joined'
                                 ? "bg-muted text-muted-foreground cursor-not-allowed border border-border"
                                 : status === 'pending'
-                                    ? "bg-amber-500/10 text-amber-600 border border-amber-500/20 cursor-not-allowed"
-                                    : "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-md"
+                                ? "bg-amber-500/10 text-amber-600 border border-amber-500/20 cursor-not-allowed"
+                                : "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0"
                             }
                         `}
                     >
                         {status === 'joined' && <CheckCircle2 size={18} />}
-                        {status === 'pending' && <AlertCircle size={18} />}
-                        {status === 'joined' ? 'Already Joined' : status === 'pending' ? 'Request Pending' : 'Join Team'}
+                        {status === 'pending' && <Clock size={18} />}
+                        {status === 'none' && <span className="bg-white/20 p-1 rounded-full"><ArrowRight size={14} /></span>}
+                        
+                        <span className="tracking-wide">
+                            {status === 'joined' ? 'Already a Member' : status === 'pending' ? 'Request Pending' : 'Send Join Request'}
+                        </span>
                     </button>
+                    {status === 'none' && (
+                        <p className="text-center text-xs text-muted-foreground mt-3">
+                            The team manager will review your request shortly.
+                        </p>
+                    )}
                 </div>
             </div>
-        </div>
+        </div> 
     );
 };
+
+// Helper Component for Stats
+const StatBox = ({ icon, label, value, subtext, color = "text-foreground" }: any) => (
+    <div className="bg-secondary/30 p-3 rounded-xl border border-border/50 flex items-center gap-3 hover:bg-secondary/50 transition-colors">
+        <div className={`p-2 bg-background rounded-lg shadow-sm ${color}`}>
+            {icon}
+        </div>
+        <div>
+            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{label}</p>
+            <div className="flex items-baseline gap-1.5">
+                <p className="text-sm font-bold text-foreground">{value}</p>
+                {subtext && <span className="text-[10px] text-muted-foreground font-medium">{subtext}</span>}
+            </div>
+        </div>
+    </div>
+);
 
 export default TeamModal;

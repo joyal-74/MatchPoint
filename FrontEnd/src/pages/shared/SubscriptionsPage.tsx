@@ -11,7 +11,6 @@ import { PaymentModal } from './subscription/PaymentModal';
 import { fetchAvailablePlans, updatePlanDirectly } from '../../features/shared/subscription/subscriptionThunks';
 import { useSubscribePlan } from '../../hooks/useSubscribePlan';
 
-// --- HELPER: Define Plan Hierarchy ---
 const getPlanRank = (level: PlanLevel | string): number => {
     const ranks: Record<string, number> = { "Free": 0, "Basic": 1, "Super": 2, "Premium": 3 };
     return ranks[level] || 0;
@@ -30,7 +29,8 @@ export default function UserSubscriptionPage() {
         (state: RootState) => state.userSubscription
     );
 
-    // Hook for handling Razorpay/Stripe (only used for Upgrades)
+    console.log(availablePlans, "hh")
+
     const { handleRazorpaySubscription } = useSubscribePlan({
         plan: selectedPlan,
         userId: user?._id,
@@ -45,35 +45,29 @@ export default function UserSubscriptionPage() {
         }
     }, [role, userId, dispatch]);
 
-    // --- LOGIC: Handle Plan Selection ---
     const handleChoosePlan = async (plan: AvailablePlan) => {
         if (!userSubscription || !userId) return;
 
         const currentRank = getPlanRank(userSubscription.level);
         const targetRank = getPlanRank(plan.level);
 
-        // CASE 1: Downgrade (No Payment Required)
         if (targetRank < currentRank) {
             const confirmed = window.confirm(
                 `Are you sure you want to downgrade to ${plan.title}? \n\nThis change will take effect automatically on ${new Date(userSubscription.expiryDate).toLocaleDateString()} after your current plan expires.`
             );
 
             if (confirmed) {
-                // Dispatch the direct update thunk (Ensure this exists in your subscriptionThunks.ts)
                 await dispatch(updatePlanDirectly({ 
                     userId, 
                     planLevel: plan.level, 
                     billingCycle: plan.billingCycle 
                 }));
                 
-                // Refresh data to show the "Scheduled" alert
                 dispatch(fetchAvailablePlans({ userId, role: role! }));
             }
             return; 
         }
 
-        // CASE 2: Upgrade (Payment Required)
-        // Opens the modal for Razorpay/Stripe
         setSelectedPlan(plan);
         setPaymentModalOpen(true);
     };
@@ -111,8 +105,8 @@ export default function UserSubscriptionPage() {
         <>
             <LoadingOverlay show={loading || updating} />
 
-            <div className="text-foreground font-sans min-h-screen">
-                <div className="pt-10 max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-foreground">
+                <div className="mx-auto md:mx-3">
 
                     {/* --- ALERT 2: Reserved Balance (From previous upgrade) --- */}
                     {userSubscription?.reservedPlan && userSubscription.reservedPlan.daysRemaining > 0 && (

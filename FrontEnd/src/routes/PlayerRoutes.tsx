@@ -4,7 +4,7 @@ import LoadingOverlay from "../components/shared/LoadingOverlay";
 import MyStatisticsPage from "../pages/player/MyStats/MyStatisticsPage";
 import MyTournamentsPage from "../pages/player/MyTournamentsPage";
 import TournamentDetailsPage from "../components/player/TournamentDetailsPage";
-import LiveMatchPage from "../pages/viewer/match/LiveMatchPage";
+import LiveMatchesPage from "../pages/player/LiveMatchPage";
 
 const PlayerDashboard = lazy(() => import("../pages/player/LandingPage"));
 const ViewTeam = lazy(() => import("../pages/player/TeamDetailsPage"));
@@ -13,6 +13,7 @@ const TournamentsPage = lazy(() => import("../pages/player/Tournaments"));
 const PlayerProfilePage = lazy(() => import("../pages/player/ProfilePage"));
 const TeamFinderPage = lazy(() => import("../pages/player/TeamsPage"));
 const TeamChat = lazy(() => import("../pages/player/TeamChat/TeamChat"));
+const LiveMatchDetails = lazy(() => import("../pages/player/LiveMatchDetails"));
 
 const withPlayerProtection = (component: JSX.Element) => (
     <ProtectedRoute allowedRoles={["player"]}>
@@ -27,7 +28,8 @@ export const playerRoutes = [
     { path: "/player/profile", element: withPlayerProtection(<PlayerProfilePage />) },
     { path: "/player/tournaments", element: withPlayerProtection(<TournamentsPage />) },
     { path: "/player/mytournaments", element: withPlayerProtection(<MyTournamentsPage />) },
-    { path: "/player/live", element: withPlayerProtection(<LiveMatchPage />) },
+    { path: "/player/live", element: withPlayerProtection(<LiveMatchesPage />) },
+    { path: "/player/live/:matchId/details", element: withPlayerProtection(<LiveMatchDetails />) },
     { path: "/player/tournaments/:id", element: withPlayerProtection(<TournamentDetailsPage />) },
     { path: "/player/teams", element: withPlayerProtection(<TeamFinderPage />) },
     { path: "/player/myteams/:status", element: withPlayerProtection(<TeamsListPage />) },
