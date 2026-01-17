@@ -18,4 +18,6 @@ export interface IManagerRepository {
     addTeamToManager(managerId: string, teamId: string): Promise<void>;
 
     deleteByUserId(userId: string): Promise<void>;
+
+    deleteManyByUserIds(userIds: string[]): Promise<number>;
 }

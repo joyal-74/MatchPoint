@@ -8,7 +8,7 @@ import {
     fetchTournamentPointsTable,
     fetchTournamentStats
 } from "./tournamentThunks";
-import type { Match } from "../playerTypes";
+import type { Match, TournamentMatch } from "../playerTypes";
 import type { PointsRow, TournamentStats } from "./tournamentType";
 
 
@@ -16,7 +16,7 @@ interface TournamentState {
     allTournaments: Tournament[];
     selectedTournament: Tournament | null;
     liveMatches: Match[];
-    matches: Match[];
+    matches: TournamentMatch[];
     pointsTable: PointsRow[];
     stats: TournamentStats;
     loading: boolean;

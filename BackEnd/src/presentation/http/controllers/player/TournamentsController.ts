@@ -2,7 +2,7 @@ import { injectable, inject } from "tsyringe";
 import { DI_TOKENS } from "domain/constants/Identifiers";
 
 import { ILogger } from "app/providers/ILogger";
-import { IGetPlayerMatches, IGetPlayerTournaments } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
+import { IGetPlayerMatches, IGetPlayerTournamentMatches, IGetPlayerTournaments, IGetTournamentPointsTable, IGetTournamentStats } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 import { TournamentMessages } from "domain/constants/TournamentMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
 import { buildResponse } from "infra/utils/responseBuilder";
@@ -17,6 +17,9 @@ export class TournamentsController {
         @inject(DI_TOKENS.GetPlayerTournaments) private _getplayerTournaments: IGetPlayerTournaments,
         @inject(DI_TOKENS.GetPlayerTournamentDetails) private _getplayerTournamentDetails: ITournamentDetails,
         @inject(DI_TOKENS.FetchMatchesUseCase) private _getplayerMatches: IGetPlayerMatches,
+        @inject(DI_TOKENS.GetPlayerTournamentMatches) private _getplayerTournamentMatches: IGetPlayerTournamentMatches,
+        @inject(DI_TOKENS.GetTournamentPointsTable) private _getTournamentPointsTable: IGetTournamentPointsTable,
+        @inject(DI_TOKENS.GetTournamentStats) private _getTournamentstats: IGetTournamentStats,
         @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
@@ -49,6 +52,18 @@ export class TournamentsController {
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TOURNAMENTS_FETCHED, result));
     };
 
+    getplayerTournamentMatches = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { tournamentId } = httpRequest.body;
+
+        this._logger.info(
+            `[TournamentsController] Fetching matches → ${tournamentId} , `
+        );
+
+        const result = await this._getplayerTournamentMatches.execute(tournamentId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TOURNAMENTS_FETCHED, result));
+    };
+
     getplayerMatches = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { status, page = 1, limit = 10 } = httpRequest.query;
 
@@ -57,6 +72,30 @@ export class TournamentsController {
         );
 
         const result = await this._getplayerMatches.execute(status, page, Number(limit));
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TOURNAMENTS_FETCHED, result));
+    };
+
+    getTournamentPointsTable = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { tournamentId } = httpRequest.body;
+
+        this._logger.info(
+            `[TournamentsController] Fetching points table for ${tournamentId}`
+        );
+
+        const result = await this._getTournamentPointsTable.execute(tournamentId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TOURNAMENTS_FETCHED, result));
+    };
+
+    getTournamentStats = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { tournamentId } = httpRequest.body;
+
+        this._logger.info(
+            `[TournamentsController] Fetching points table for ${tournamentId}`
+        );
+
+        const result = await this._getTournamentstats.execute(tournamentId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.TOURNAMENTS_FETCHED, result));
     };

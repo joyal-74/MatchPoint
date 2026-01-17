@@ -7,6 +7,8 @@ export type ValidationErrors = Partial<Record<string, string>>;
 export const validateSignup = (payload: SignUpForm): ValidationErrors => {
     const errors: ValidationErrors = {};
 
+    console.log(payload, 'payload')
+
     if (!payload.firstName.trim()) errors.firstName = AuthMessages.FIRST_NAME_REQUIRED;
     if (!payload.lastName.trim()) errors.lastName = AuthMessages.LAST_NAME_REQUIRED;
 

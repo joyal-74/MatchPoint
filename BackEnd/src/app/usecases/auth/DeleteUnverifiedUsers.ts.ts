@@ -19,7 +19,7 @@ export class DeleteUnverifiedUsers {
         const threshold = new Date(Date.now() - 24 * 60 * 60 * 1000);
         this._logger.info("Deleting unverified users older than 24 hours", { threshold });
 
-        const unverifiedUsers = await this._userRepository.findUnverifiedUsers(threshold);
+        const unverifiedUsers = await this._userRepository.findUnverifiedUsersForDeletion(threshold);
         this._logger.info(`Found ${unverifiedUsers.length} unverified users to delete`);
 
         for (const user of unverifiedUsers) {

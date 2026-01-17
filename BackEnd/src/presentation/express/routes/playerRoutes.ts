@@ -35,6 +35,12 @@ router.get('/tournaments', expressAdapter(playerTournamentController.getplayerTo
 
 router.post('/tournaments/details', expressAdapter(playerTournamentController.getPlayerTournamentDetails))
 
+router.post('/tournaments/details/matches', expressAdapter(playerTournamentController.getplayerTournamentMatches))
+
+router.post('/tournaments/details/pointstable', expressAdapter(playerTournamentController.getTournamentPointsTable))
+
+router.post('/tournaments/details/stats', expressAdapter(playerTournamentController.getTournamentPointsTable))
+
 router.get('/tournament/matches', expressAdapter(playerTournamentController.getplayerMatches))
 
 export default router;

@@ -20,6 +20,7 @@ const ProviderTokens = {
     UnitOfWork: "UnitOfWork",
     GoogleAuthService: "GoogleAuthService",
     FacebookServices: "FacebookServices",
+    Scheduler: "Scheduler",
 }
 
 // repository
@@ -210,7 +211,10 @@ const PlayerUsecaseTokens = {
     UpdatePlayerInviteStatus: 'UpdatePlayerInviteStatus',
     GetPlayerTournaments: 'GetPlayerTournaments',
     GetPlayerTournamentDetails: 'GetPlayerTournamentDetails',
-    FetchMatchesUseCase: 'FetchMatchesUseCase'
+    FetchMatchesUseCase: 'FetchMatchesUseCase',
+    GetPlayerTournamentMatches: 'GetPlayerTournamentMatches',
+    GetTournamentPointsTable: 'GetTournamentPointsTable',
+    GetTournamentStats: 'GetTournamentStats',
 }
 
 const ViewerUsecaseTokens = {

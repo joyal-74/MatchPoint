@@ -6,7 +6,9 @@ import { IBaseRepository } from "app/repositories/IBaseRepository";
 
 export interface IUserRepository extends IBaseRepository<UserDocument, UserResponse> {
 
-    findUnverifiedUsers(date: Date): Promise<UserResponse[]>;
+    findUnverifiedUsersForDeletion(date: Date): Promise<{ _id: string; role: string }[]>
+
+    deleteManyById(ids: string[]): Promise<number>;
 
     findAllManagers(params: GetAllUsersParams): Promise<{ users: UserResponseDTO[], totalCount: number }>;
 
@@ -15,6 +17,4 @@ export interface IUserRepository extends IBaseRepository<UserDocument, UserRespo
     findAllViewers(params: GetAllUsersParams): Promise<{ users: UserResponseDTO[], totalCount: number }>;
 
     deleteById(id: string): Promise<void>;
-
-    deleteUnverifiedUsers(date: Date): Promise<number>;
 }

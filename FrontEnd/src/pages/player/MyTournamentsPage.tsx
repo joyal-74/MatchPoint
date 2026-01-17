@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CalendarClock, Trophy } from "lucide-react";
 
-// Shared/Layout Components
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
 import PlayerLayout from "../layout/PlayerLayout";
 
@@ -10,7 +9,6 @@ import { usePlayerTournaments } from "../../hooks/player/usePlayerTournaments";
 import { EmptyTournaments } from "../../components/player/EmptyTournaments"; 
 import { TournamentsGrid } from "../../components/player/TournamentsGrid"; 
 
-// Define the status type for tournaments
 export type TournamentListStatus = "upcoming" | "completed";
 
 const MyTournamentsPage: React.FC = () => {
@@ -43,7 +41,6 @@ const MyTournamentsPage: React.FC = () => {
                         </p>
                     </div>
 
-                    {/* Tab Switcher (Pill Style) */}
                     <div className="flex p-1 bg-muted rounded-xl border border-border">
                         <button
                             onClick={() => handleStatusChange("upcoming")}

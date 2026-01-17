@@ -1,15 +1,39 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../hooks/hooks";
-import { loginUserGoogle, signupUser } from "../features/auth/authThunks";
+import toast from "react-hot-toast";
+
+// Redux Types
+import type { PayloadAction, SerializedError } from "@reduxjs/toolkit";
+
+// Actions
+import { signupUser, loginUserGoogle } from "../features/auth/authThunks";
+
+// Types & Validators
 import { UserRole, type Gender } from "../types/UserRoles";
 import { validateSignup } from "../validators/SignpValidators";
 import type { SignUpForm } from "../utils/helpers/SignupFields";
 
-type ValidationErrors = Partial<Record<keyof SignUpForm | "global", string>>;
+// 1. Define Strict Action Types for the two different operations
+// Signup returns specific data needed for OTP
+interface SignupSuccessPayload {
+    expiresAt: string;
+    email: string;
+    message?: string;
+}
+
+// Google Login returns user/token data
+interface GoogleSuccessPayload {
+    user?: { role: UserRole };
+    token?: string;
+    message?: string;
+}
 
 export const useSignup = () => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
+    // Form State
     const [formData, setFormData] = useState<SignUpForm>({
         firstName: "",
         lastName: "",
@@ -21,95 +45,101 @@ export const useSignup = () => {
         role: UserRole.Player,
         sport: "",
     });
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [errors, setErrors] = useState<ValidationErrors>({});
+
+    const [errors, setErrors] = useState<Partial<SignUpForm> & { global?: string }>({});
     const [loading, setLoading] = useState(false);
 
-    const validateForm = (payload: SignUpForm): ValidationErrors => {
-        return validateSignup(payload);
-    };
-
+    // --- Helpers ---
     const handleFieldChange = (field: keyof SignUpForm, value: string) => {
-        setFormData({ ...formData, [field]: value });
-
-        const fieldError = validateForm({ ...formData, [field]: value })[field];
-        setErrors((prevErrors) => ({
-            ...prevErrors,
-            [field]: fieldError,
+        setFormData((prev) => ({ ...prev, [field]: value }));
+        
+        // Dynamic Validation on change
+        // We validate just this field to clear errors
+        const currentErrors = validateSignup({ ...formData, [field]: value });
+        setErrors((prev) => ({
+             ...prev, 
+             [field]: currentErrors[field] ? currentErrors[field] : undefined 
         }));
     };
 
-    const handleConfirmPasswordChange = (value: string) => {
-        setConfirmPassword(value);
-        const confirmError = formData.password !== value ? "Passwords do not match" : undefined;
-        setErrors((prev) => ({ ...prev, confirmPassword: confirmError }));
-    };
-
-    const handleSubmit = async () => {
+    // --- Handler: Standard Signup ---
+    const handleSignupSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         setErrors({});
-        setLoading(true);
-
-        const validationErrors = validateForm(formData);
-        console.log(validationErrors, "validationErrors")
+        
+        // 1. Validate
+        const validationErrors = validateSignup(formData);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
-            setLoading(false);
-            return { success: false, errors: validationErrors };
+            return;
         }
 
-        try {
-            const resultAction = await dispatch(signupUser(formData));
+        setLoading(true);
 
-            setLoading(false);
+        // 2. Dispatch
+        // We cast the result to a specific PayloadAction type to avoid 'any'
+        const resultAction = await dispatch(signupUser(formData)) as PayloadAction<
+            SignupSuccessPayload | string, // Payload
+            string,                        // Type
+            { requestStatus: "fulfilled" | "rejected" },
+            SerializedError                // Error
+        >;
 
-            if (signupUser.fulfilled.match(resultAction)) {
-                return {
-                    success: true,
-                    message: "Signup successful! Verify your account via email.",
-                    expiresAt: resultAction.payload.expiresAt,
-                    email: formData.email,
-                };
-            } else {
-                const backendError = resultAction.payload || "Signup failed";
-                return { success: false, errors: { global: backendError } };
-            }
-        } catch (err) {
-            console.error(err);
-            setLoading(false);
-            return { success: false, errors: { global: "Something went wrong" } };
+        setLoading(false);
+
+        // 3. Handle Result
+        if (resultAction.meta.requestStatus === 'fulfilled') {
+            const payload = resultAction.payload as SignupSuccessPayload;
+            
+            toast.success(payload.message || "Signup successful! Verify your account.");
+            
+            // Navigate to OTP page with necessary state
+            navigate("/otp-verify", { 
+                state: { 
+                    expiresAt: payload.expiresAt, 
+                    email: formData.email // or payload.email
+                } 
+            });
+        } else {
+            const backendError = (resultAction.payload as string) || "Signup failed";
+            toast.error(backendError);
+            setErrors({ global: backendError });
         }
     };
 
+    // --- Handler: Google Signup ---
     const handleGoogleSignUp = async (token: string) => {
         setLoading(true);
-        try {
-            const resultAction = await dispatch(loginUserGoogle(token));
+        
+        const resultAction = await dispatch(loginUserGoogle(token)) as PayloadAction<
+            GoogleSuccessPayload | string,
+            string,
+            { requestStatus: "fulfilled" | "rejected" },
+            SerializedError
+        >;
 
-            if (loginUserGoogle.fulfilled.match(resultAction)) {
-                const role = resultAction.payload.user?.role;
-                setLoading(false);
-                return { success: true, message: "Google signup successful!", role };
-            } else {
-                const backendError = resultAction.payload || "Google login failed";
-                setLoading(false);
-                return { success: false, errors: { global: backendError } };
-            }
-        } catch (err) {
-            console.error(err);
-            setLoading(false);
-            return { success: false, errors: { global: "Something went wrong" } };
+        setLoading(false);
+
+        if (resultAction.meta.requestStatus === 'fulfilled') {
+            const payload = resultAction.payload as GoogleSuccessPayload;
+            toast.success("Google signup successful!");
+            // Google usually logs you in directly, so go to dashboard
+            navigate('/dashboard');
+            return { success: true, role: payload.user?.role };
+        } else {
+            const backendError = (resultAction.payload as string) || "Google signup failed";
+            toast.error(backendError);
+            setErrors({ global: backendError });
+            return { success: false };
         }
     };
 
     return {
         formData,
-        confirmPassword,
-        setFormData,
-        handleFieldChange,
-        handleConfirmPasswordChange,
-        handleSubmit,
-        handleGoogleSignUp,
         errors,
         loading,
+        handleFieldChange,
+        handleSignupSubmit,
+        handleGoogleSignUp,
     };
 };

@@ -1,26 +1,31 @@
+import { inject, singleton } from "tsyringe";
 import { IScheduler } from "app/repositories/interfaces/providers/IScheduler";
 import { DeleteUnverifiedUsers } from "app/usecases/auth/DeleteUnverifiedUsers.ts";
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
-import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
 import { ILogger } from "app/providers/ILogger";
+import { DI_TOKENS } from "domain/constants/Identifiers";
 
-export const deleteUnverifiedUsersCron = (
-    scheduler: IScheduler,
-    userRepo: IUserRepository,
-    playerRepo: IPlayerRepository,
-    managerRepo: IManagerRepository,
-    logger: ILogger
-) => {
-    const deleteUnverifiedUsers = new DeleteUnverifiedUsers(
-        userRepo,
-        playerRepo,
-        managerRepo,
-        logger
-    );
+@singleton()
+export class DeleteUnverifiedUsersCronJob {
+    constructor(
+        @inject(DI_TOKENS.Scheduler) private scheduler: IScheduler,
+        @inject(DI_TOKENS.Logger) private _logger: ILogger,
+        private _deleteUnverifiedUsers: DeleteUnverifiedUsers,
+    ) { }
 
-    scheduler.schedule("0 * * * *", async () => {
-        const count = await deleteUnverifiedUsers.execute();
-        console.log(`Deleted ${count} unverified users`);
-    });
-};
+    public start(): void {
+        const cronSchedule = process.env.CRON_DELETE_UNVERIFIED_USERS || "0 * * * *";
+
+        this._logger.info(`Job [DeleteUnverifiedUsers] scheduled with: "${cronSchedule}"`);
+
+        this.scheduler.schedule(cronSchedule, async () => {
+            try {
+                const count = await this._deleteUnverifiedUsers.execute();
+                if (count > 0) {
+                    this._logger.info(`Deleted ${count} unverified users`);
+                }
+            } catch (error: unknown) {
+                this._logger.error("Error running DeleteUnverifiedUsers cron job", { error: String(error) });
+            }
+        });
+    }
+}

@@ -20,15 +20,6 @@ export class UserRepositoryMongo extends MongoBaseRepository<UserDocument, UserR
         await UserModel.findByIdAndDelete(id).exec();
     }
 
-    async findUnverifiedUsers(date: Date): Promise<UserResponse[]> {
-        const docs = await UserModel.find({
-            isVerified: false,
-            createdAt: { $lt: date }
-        }).lean<UserDocument[]>();
-
-        return docs.map((doc) => this.toResponse(doc));
-    }
-
     async findAllManagers(params: GetAllUsersParams): Promise<{ users: UserResponseDTO[], totalCount: number }> {
         return this.filterUsersByRole("manager", params);
     }
@@ -41,11 +32,17 @@ export class UserRepositoryMongo extends MongoBaseRepository<UserDocument, UserR
         return this.filterUsersByRole("viewer", params);
     }
 
-    async deleteUnverifiedUsers(date: Date): Promise<number> {
-        const result = await UserModel.deleteMany({
+    async findUnverifiedUsersForDeletion(date: Date): Promise<{ _id: string; role: string }[]> {
+        return UserModel.find({
             isVerified: false,
             createdAt: { $lt: date }
-        });
+        })
+            .select('_id role')
+            .lean<{ _id: string; role: string }[]>();
+    }
+
+    async deleteManyById(ids: string[]): Promise<number> {
+        const result = await UserModel.deleteMany({ _id: { $in: ids } });
         return result.deletedCount || 0;
     }
 

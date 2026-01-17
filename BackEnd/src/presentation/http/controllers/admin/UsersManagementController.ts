@@ -17,7 +17,7 @@ export class UsersManagementController implements IUsersManagementController {
         @inject(DI_TOKENS.GetAllManagersUseCase) private _getAllManagersUseCase: IGetManagersUsecase,
         @inject(DI_TOKENS.GetAllPlayersUseCase) private _getAllPlayersUseCase: IGetPlayersUsecase,
         @inject(DI_TOKENS.GetAllViewersUseCase) private _getAllViewersUseCase: IGetViewersUsecase,
-        @inject(DI_TOKENS.ChangeUserStatusUseCase) private _changeUserStatus: IUserManagementService,
+        @inject(DI_TOKENS.UserManagementService) private _changeUserStatus: IUserManagementService,
         @inject(DI_TOKENS.GetManagerDetailsUseCase) private _getManagerDetails: IGetManagerDetails,
         @inject(DI_TOKENS.GetPlayerDetailsUseCase) private _getPlayerDetails: IGetPlayerDetails,
         @inject(DI_TOKENS.GetViewerDetailsUseCase) private _getViewerDetails: IGetViewerDetails,

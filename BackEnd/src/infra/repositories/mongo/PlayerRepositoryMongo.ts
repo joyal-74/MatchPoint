@@ -73,7 +73,7 @@ export class PlayerRepositoryMongo implements IPlayerRepository {
         const docs = await PlayerModel.find({ _id: { $nin: ids } })
             .populate("userId", "firstName lastName")
             .lean();
-            
+
         return PlayerDetailsMapper.toEntityList(docs);
     }
 
@@ -89,5 +89,10 @@ export class PlayerRepositoryMongo implements IPlayerRepository {
         if (ops.length > 0) {
             await PlayerModel.bulkWrite(ops);
         }
+    }
+
+    async deleteManyByUserIds(userIds: string[]): Promise<number> {
+        const result = await PlayerModel.deleteMany({ userId: { $in: userIds } });
+        return result.deletedCount || 0;
     }
 }

@@ -11,8 +11,6 @@ export async function runNightlySubscriptionCheck() {
 
     for (const sub of expiredSubs) {
         
-        // PRIORITY 1: Is there a Scheduled Downgrade?
-        // (e.g., User was Premium, set to go to Basic today)
         if (sub.scheduledChange && sub.scheduledChange.status === 'pending_downgrade') {
              const nextCycle = sub.scheduledChange.billingCycle;
              const nextLevel = sub.scheduledChange.level;

@@ -14,7 +14,8 @@ export class UserManagementService implements IUserManagementService {
     ) { }
 
     async changeStatusAndFetch(role: string, userId: string, isActive: boolean, params: GetAllUsersParams) : Promise<{ users: RoleResponseDTO[], totalCount: number }>{
-        await this._changeUserStatus.execute(role, userId, isActive, params);
+        const result = await this._changeUserStatus.execute(role, userId, isActive, params);
+        console.log(result, 'jjj')
         const { users, totalCount } = await this._getUsersByRole.execute(role, params);
         return { users, totalCount };
     }

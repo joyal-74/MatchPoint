@@ -13,6 +13,7 @@ import { RoomRegistry } from "../livestream/mediasoup/RoomRegistry";
 import { MongoUnitOfWork } from "../repositories/mongo/MongoUnitOfWork";
 import { container } from ".";
 import { DI_TOKENS } from "domain/constants/Identifiers";
+import { NodeCronScheduler } from "infra/services/NodeCronScheduler";
 
 
 
@@ -25,6 +26,7 @@ container.register(DI_TOKENS.FileStorage, { useClass: ImageKitFileStorage });
 container.register(DI_TOKENS.ConfigProvider, { useClass: EnvConfigProvider });
 container.register(DI_TOKENS.RoomRegistry, { useClass: RoomRegistry });
 container.register(DI_TOKENS.UnitOfWork, { useClass: MongoUnitOfWork });
+container.register(DI_TOKENS.Scheduler, { useClass: NodeCronScheduler });
 
 
 // ID Generators

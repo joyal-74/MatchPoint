@@ -5,7 +5,6 @@ import { useResetPassword } from "../../hooks/useResetPassword";
 import { resetPassFields } from "../../utils/helpers/ResetPassFields";
 import { useSmoothLoading } from "../../hooks/ui/useSmoothLoading";
 
-// Components
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
 import FormFieldGroup from "../../components/shared/FormFieldGroup";
 import FormFooter from "../../components/shared/FormFooter";
@@ -15,7 +14,6 @@ const ResetPasswordPage: React.FC = () => {
     const navigate = useNavigate();
     const { formData, errors, loading, handleFieldChange, handleSubmit } = useResetPassword();
     
-    // Smooth loader hook for better UX
     const showLoader = useSmoothLoading(loading);
 
     const onSubmit = async (e: React.FormEvent) => {

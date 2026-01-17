@@ -3,7 +3,6 @@ import { MatchEntity } from "domain/entities/MatchEntity";
 import { MatchStatsMapper } from "infra/utils/mappers/MatchStatsMapper";
 import { IMatchStatsRepo, LiveMatchQuery } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { TournamentMatchStatsDocument } from "domain/types/match.types";
-import { LiveMatchDTO } from "domain/dtos/LiveMatchDTO";
 
 export class MatchRepoMongo implements IMatchStatsRepo {
     async findByMatchId(matchId: string): Promise<MatchEntity | null> {

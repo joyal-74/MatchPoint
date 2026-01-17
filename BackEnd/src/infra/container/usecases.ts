@@ -130,6 +130,9 @@ import { GetAllTeams } from "app/usecases/admin/GetAllTeams";
 import { StartMatchUseCase } from "app/usecases/manager/match/StartMatchUseCase";
 import { GetLeaderboard } from "app/usecases/shared/GetLeaderboard";
 import { GetPointsTableUseCase } from "app/usecases/manager/tournaments/GetPointsTable";
+import { GetPlayerTournamentMatches } from "app/usecases/player/PlayerTournamentMatches";
+import { GetTournamentPointsTable } from "app/usecases/player/TournamentPointsTable";
+import { GetTournamentStats } from "app/usecases/player/GetTournamentStats";
 
 
 // Registrations
@@ -268,6 +271,9 @@ container.register(DI_TOKENS.GetMyTeamDetailsUseCase, { useClass: GetMyTeamDetai
 container.register(DI_TOKENS.GetPlayerTournaments, { useClass: FetchTournamentsUseCase });
 container.register(DI_TOKENS.GetPlayerTournamentDetails, { useClass: PlayerTournamentDetails });
 container.register(DI_TOKENS.FetchMatchesUseCase, { useClass: FetchMatchesUseCase });
+container.register(DI_TOKENS.GetPlayerTournamentMatches, { useClass: GetPlayerTournamentMatches });
+container.register(DI_TOKENS.GetTournamentPointsTable, { useClass: GetTournamentPointsTable });
+container.register(DI_TOKENS.GetTournamentStats, { useClass: GetTournamentStats });
 
 // --- Shared Use Cases ---
 container.register(DI_TOKENS.VerifyPaymentUseCase, { useClass: VerifyPaymentUseCase });

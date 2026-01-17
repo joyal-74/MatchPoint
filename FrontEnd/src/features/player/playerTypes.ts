@@ -74,3 +74,26 @@ export interface Match {
     date?: Date;
     stats: Record<string, unknown>;
 }
+
+export interface TournamentMatch {
+  _id: string;
+  tournamentId: string;
+  
+  teamA: string;
+  teamB: string;
+  teamLogoA: string;
+  teamLogoB: string;
+  
+  round: number;
+  matchNumber: string;
+  date: string;
+  venue: string;
+  status: 'upcoming' | 'ongoing' | 'completed' | 'canceled';
+  winner: string | null;
+  
+  isStreamLive: boolean;
+  streamerId?: string;
+  streamTitle?: string;
+  streamDescription?: string;
+  streamStartedAt?: string;
+}

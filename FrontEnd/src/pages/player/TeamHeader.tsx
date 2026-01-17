@@ -5,7 +5,6 @@ const TeamHeader = ({ team }: { team: Team }) => {
     return (
         <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
             
-            {/* Cover Banner (could be dynamic later) */}
             <div className="h-24 bg-gradient-to-r from-primary/20 via-primary/10 to-background" />
 
             <div className="px-6 pb-6 relative">

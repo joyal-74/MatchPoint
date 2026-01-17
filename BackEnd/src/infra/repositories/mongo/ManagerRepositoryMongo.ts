@@ -86,4 +86,9 @@ export class ManagerRepositoryMongo implements IManagerRepository {
     async deleteByUserId(userId: string): Promise<void> {
         await ManagerModel.deleteMany({ userId });
     }
+
+    async deleteManyByUserIds(userIds: string[]): Promise<number> {
+        const result = await ManagerModel.deleteMany({ userId: { $in: userIds } });
+        return result.deletedCount || 0;
+    }
 }

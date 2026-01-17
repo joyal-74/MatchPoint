@@ -18,16 +18,10 @@ interface FormFieldGroupProps<FormType> {
     formData: FormType;
     errors: Partial<Record<keyof FormType, string>>;
     handleFieldChange: (field: keyof FormType, value: string) => void;
-    className?: string; // Allow overriding group layout
+    className?: string;
 }
 
-function FormFieldGroup<FormType extends Record<string, string>>({
-    fields,
-    formData,
-    errors,
-    handleFieldChange,
-    className = "",
-}: FormFieldGroupProps<FormType>) {
+function FormFieldGroup<FormType extends Record<string, string>>({ fields, formData, errors, handleFieldChange, className = "", }: FormFieldGroupProps<FormType>) {
     return (
         <div className={`flex w-full gap-4 ${className}`}>
             {fields.map((field) => {
@@ -39,8 +33,8 @@ function FormFieldGroup<FormType extends Record<string, string>>({
 
                 // 3. Resolve dynamic class names
                 const fieldClassName =
-                    typeof field.className === "function" 
-                        ? field.className(formData) 
+                    typeof field.className === "function"
+                        ? field.className(formData)
                         : field.className;
 
                 return (

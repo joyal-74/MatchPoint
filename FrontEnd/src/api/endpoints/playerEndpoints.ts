@@ -82,7 +82,7 @@ export const playerEndpoints = {
 
     fetchTournamentMatches: async (tournamentId: string) => {
         const { data } = await axiosClient.post(PLAYER_ROUTES.GET_TOURNAMENT_MATCHES, { tournamentId });
-
+        console.log(data.data, '90')
         return data.data;
     },
 

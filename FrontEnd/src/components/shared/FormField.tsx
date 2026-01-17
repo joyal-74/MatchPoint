@@ -4,21 +4,21 @@ interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement | HT
     id: string;
     label: string;
     as?: "input" | "select" | "textarea";
-    options?: string[]; // Simple array for select
+    options?: string[];
     error?: string;
     helperText?: string;
-    startIcon?: React.ReactNode; // NEW: For the Lock icon
-    endIcon?: React.ReactNode;   // NEW: For the Eye icon or Loader
-    className?: string;          // Container class
-    inputClassName?: string;     // Specific input class overrides
+    startIcon?: React.ReactNode;
+    endIcon?: React.ReactNode;
+    className?: string;
+    inputClassName?: string;
 }
 
 const FormField: React.FC<FormFieldProps> = ({
     id, label, as = "input", options = [], error, helperText,
-    startIcon, endIcon, className = "w-full", inputClassName = "", 
-    disabled, required, ...props 
+    startIcon, endIcon, className = "w-full", inputClassName = "",
+    disabled, required, ...props
 }) => {
-    
+
     // Base styles + Conditional styles
     const baseInputClasses = `
         w-full bg-background border rounded-xl py-3 text-sm text-foreground 
@@ -34,8 +34,8 @@ const FormField: React.FC<FormFieldProps> = ({
     `;
 
     // State-based borders
-    const stateClasses = error 
-        ? "border-destructive focus:border-destructive focus:ring-1 focus:ring-destructive" 
+    const stateClasses = error
+        ? "border-destructive focus:border-destructive focus:ring-1 focus:ring-destructive"
         : "border-input focus:border-primary focus:ring-1 focus:ring-primary";
 
     // Merge all classes
@@ -68,6 +68,11 @@ const FormField: React.FC<FormFieldProps> = ({
                     />
                 ) : as === "select" ? (
                     <select id={id} disabled={disabled} className={`${finalInputClasses} appearance-none`} {...props}>
+                        {props.placeholder && (
+                            <option value="" disabled className="text-muted-foreground">
+                                {props.placeholder}
+                            </option>
+                        )}
                         {options.map((opt) => (
                             <option key={opt} value={opt}>{opt}</option>
                         ))}

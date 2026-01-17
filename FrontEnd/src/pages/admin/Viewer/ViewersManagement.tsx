@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import AdminLayout from "../../layout/AdminLayout";
 import DataTable from "../../../components/admin/DataTable";
 
-import { fetchManagers, userStatusChange } from "../../../features/admin/users/userThunks";
+import { fetchViewers, userStatusChange } from "../../../features/admin/users/userThunks";
 import type { RootState, AppDispatch } from "../../../app/store";
 
 import { useDebounce } from "../../../hooks/useDebounce";
@@ -22,17 +22,13 @@ const ManagersManagement = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const { managers, totalCount } = useSelector((state: RootState) => state.users);
-
-    /* -------------------- URL → STATE -------------------- */
+    const { viewers, totalCount } = useSelector((state: RootState) => state.users);
 
     const currentPage = Number(searchParams.get("page")) || 1;
     const currentFilter = searchParams.get("filter") || "All";
     const searchTerm = searchParams.get("search") || "";
 
     const debouncedSearch = useDebounce(searchTerm, 1000);
-
-    /* -------------------- API PARAMS -------------------- */
 
     const params: GetAllUsersParams = useMemo(() => ({
         page: currentPage,
@@ -41,13 +37,11 @@ const ManagersManagement = () => {
         search: debouncedSearch || undefined,
     }), [currentPage, currentFilter, debouncedSearch]);
 
-    /* -------------------- FETCH -------------------- */
 
     useEffect(() => {
-        dispatch(fetchManagers(params));
+        dispatch(fetchViewers(params));
     }, [dispatch, params]);
 
-    /* -------------------- HANDLERS -------------------- */
 
     const handlePageChange = (page: number) => {
         setSearchParams(prev => {
@@ -72,28 +66,16 @@ const ManagersManagement = () => {
         });
     };
 
-    const handleStatusChange = (
-        role: SignupRole,
-        userId: string,
-        newStatus: boolean
-    ) => {
-        dispatch(
-            userStatusChange({
-                role,
-                userId,
-                isActive: newStatus,
-                params,
-            })
-        );
+    const handleStatusChange = (role: SignupRole, userId: string, newStatus: boolean) => {
+        dispatch(userStatusChange({ role, userId, isActive: newStatus, params, }));
     };
 
-    /* -------------------- RENDER -------------------- */
 
     return (
         <AdminLayout>
             <DataTable<User>
-                title="Managers Management"
-                data={managers}
+                title="Viewers Management"
+                data={viewers}
                 totalCount={totalCount}
                 currentPage={currentPage}
                 itemsPerPage={ITEMS_PER_PAGE}
