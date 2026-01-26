@@ -9,13 +9,16 @@ import { UserRoles } from "domain/enums";
 import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 import { PlayerRegister } from "domain/entities/Player";
 import { validatePlayerInput } from "domain/validators/PlayerValidators";
-import { getDefaultCareerStats, getDefaultProfile } from "infra/utils/playerDefaults";
+import { getDefaultCareerStats } from "infra/utils/playerDefaults";
 import { IPasswordHasher } from "app/providers/IPasswordHasher";
 import { IOtpGenerator } from "app/providers/IOtpGenerator";
 import { OtpContext } from "domain/enums/OtpContext";
 import { IPlayerSignupUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 import { IPlayerIdGenerator } from "app/providers/IIdGenerator";
 import { UserMapper } from "app/mappers/UserMapper";
+import { IFileStorage } from "app/providers/IFileStorage";
+import { File } from "domain/entities/File";
+
 
 
 @injectable()
@@ -28,10 +31,16 @@ export class SignupPlayer implements IPlayerSignupUseCase {
         @inject(DI_TOKENS.PasswordHasher) private _passwordHasher: IPasswordHasher,
         @inject(DI_TOKENS.OtpGenerator) private _otpGenerator: IOtpGenerator,
         @inject(DI_TOKENS.PlayerIdGenerator) private _idGenerator: IPlayerIdGenerator,
+        @inject(DI_TOKENS.FileStorage) private _fileStorage: IFileStorage,
     ) { }
 
-    async execute(userData: PlayerRegister) {
+    async execute(userData: PlayerRegister, file?: File) {
         const validData = validatePlayerInput(userData);
+
+        if (file) {
+            const fileKey = await this._fileStorage.upload(file);
+            validData.profileImage = fileKey;
+        }
 
         const existingUser = await this._userRepository.findByEmail(validData.email);
         if (existingUser) throw new BadRequestError("User with this email already exists");
@@ -63,10 +72,17 @@ export class SignupPlayer implements IPlayerSignupUseCase {
             }
         });
 
+        const profile = {
+            battingStyle :  validData.battingStyle,
+            bowlingStyle :  validData.bowlingStyle,
+            position :  validData.playingPosition,
+            jerseyNumber : validData.jerseyNumber,
+        }
+
         await this._playerRepository.create({
             userId: newUser._id,
             sport: userData.sport,
-            profile: getDefaultProfile(userData.sport),
+            profile: profile,
             stats: getDefaultCareerStats(userData.sport),
         });
 

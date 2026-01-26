@@ -21,7 +21,7 @@ export class UpdatePlayerProfile implements IUpdatePlayerProfile {
 
     async execute(updateData: PlayerUpdateDTO, file?: File): Promise<PlayerProfileResponse> {
 
-        const validData = validateManagerUpdate(updateData, file);
+        const validData = validateManagerUpdate(updateData, file); 
 
         if (!validData.userId) {
             this._logger.warn("[UpdatePlayerProfile] Missing user ID in update data");

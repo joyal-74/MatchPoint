@@ -3,6 +3,9 @@ import { DI_TOKENS } from "domain/constants/Identifiers";
 
 import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
 import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
+import { IWalletRepository } from "app/repositories/interfaces/shared/IWalletRepository";
+import { ISubscriptionRepository } from "app/repositories/interfaces/shared/ISubscriptionRepository";
+
 import { BadRequestError, NotFoundError } from "domain/errors";
 import { OtpContext } from "domain/enums/OtpContext";
 import { IVerifyOtpUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
@@ -12,10 +15,13 @@ export class VerifyOtp implements IVerifyOtpUseCase {
     constructor(
         @inject(DI_TOKENS.UserRepository) private _userRepository: IUserRepository,
         @inject(DI_TOKENS.OtpRepository) private _otpRepository: IOtpRepository,
+        @inject(DI_TOKENS.WalletRepository) private _walletRepository: IWalletRepository,
+        @inject(DI_TOKENS.SubscriptionRepository) private _subscriptionRepository: ISubscriptionRepository,
     ) { }
 
     async execute(email: string, otp: string, context: OtpContext) {
         const otpRecord = await this._otpRepository.findOtpByEmail(email);
+        
         if (!otpRecord) {
             throw new NotFoundError("OTP not found or expired");
         }
@@ -26,13 +32,31 @@ export class VerifyOtp implements IVerifyOtpUseCase {
 
         if (context === OtpContext.VerifyEmail) {
             await this._userRepository.update(otpRecord.userId, { isVerified: true });
+
+            await this._walletRepository.create({
+                ownerId: otpRecord.userId,
+                ownerType: 'USER',
+                balance: 0,
+                currency: 'INR',
+                isFrozen : false
+            });
+
+
+            await this._subscriptionRepository.create({
+                userId: otpRecord.userId,
+                level: 'Free',
+                status: 'active',
+            });
         }
 
+        // Clean up the OTP
         await this._otpRepository.deleteOtp(otpRecord.userId, context);
 
         return {
             success: true,
-            message: context === OtpContext.VerifyEmail ? "Email verified successfully" : "OTP verified, proceed with password reset",
+            message: context === OtpContext.VerifyEmail 
+                ? "Email verified, wallet created, and subscription initialized." 
+                : "OTP verified, proceed with password reset",
         };
     }
 }

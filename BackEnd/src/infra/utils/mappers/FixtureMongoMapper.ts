@@ -16,7 +16,7 @@ export class FixtureMongoMapper {
                     teamLogoB : match.teamB.logo || '',
                     round: m.round,
                     status: match?.status || "upcoming",
-                    winner: match?.winner || "",
+                    winner: match?.winner || null,
                     stats: match?.stats || {},
                     venue: match?.venue || "",
                     date: match?.date || "",

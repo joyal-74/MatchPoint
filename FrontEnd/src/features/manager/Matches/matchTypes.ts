@@ -3,7 +3,7 @@ export interface Player {
     userId: string;
     name: string;
     role: string;
-    status: string;
+    status?: "playing" | "bench";
     profileImage?: string;
     battingStyle?: string;
     bowlingStyle?: string;

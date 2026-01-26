@@ -133,6 +133,10 @@ import { GetPointsTableUseCase } from "app/usecases/manager/tournaments/GetPoint
 import { GetPlayerTournamentMatches } from "app/usecases/player/PlayerTournamentMatches";
 import { GetTournamentPointsTable } from "app/usecases/player/TournamentPointsTable";
 import { GetTournamentStats } from "app/usecases/player/GetTournamentStats";
+import { MarkNotificationRead } from "app/usecases/shared/MarkNotificationAsRead";
+import { MarkAllNotificationRead } from "app/usecases/shared/MarkAllNotificationRead";
+import { GetMyTournamentMatchResult } from "app/usecases/manager/tournaments/GetMatchResults";
+import { SignupUmpire } from "app/usecases/auth/SignupUmpire";
 
 
 // Registrations
@@ -140,6 +144,7 @@ container.register(DI_TOKENS.LoginUserUseCase, { useClass: LoginUser });
 container.register(DI_TOKENS.LoginAdminUseCase, { useClass: LoginAdmin });
 container.register(DI_TOKENS.SignupViewerUseCase, { useClass: SignupViewer });
 container.register(DI_TOKENS.SignupPlayerUseCase, { useClass: SignupPlayer });
+container.register(DI_TOKENS.SignupUmpireUseCase, { useClass: SignupUmpire });
 container.register(DI_TOKENS.LogoutUseCase, { useClass: LogoutUser });
 
 // --- Added Registrations ---
@@ -250,6 +255,7 @@ container.register(DI_TOKENS.StartMatchUseCase, { useClass: StartMatchUseCase })
 container.register(DI_TOKENS.GetLeaderBoardUsecase, { useClass: GetLeaderboard });
 container.register(DI_TOKENS.GetLiveScoreUseCase, { useClass: GetLiveScoreUseCase });
 container.register(DI_TOKENS.GetPointsTableUseCase, { useClass: GetPointsTableUseCase });
+container.register(DI_TOKENS.GetMyTournamentMatchResult, { useClass: GetMyTournamentMatchResult });
 
 // --- Player Use Cases ---
 container.register(DI_TOKENS.GetChatsUseCase, { useClass: GetChatsUseCase });
@@ -285,6 +291,8 @@ container.register(DI_TOKENS.UpdatePrivacyUseCase, { useClass: UpdatePrivacyUseC
 container.register(DI_TOKENS.GetPlansAndUserSubscription, { useClass: GetPlansAndUserSubscription });
 container.register(DI_TOKENS.CreatePaymentSession, { useClass: CreatePaymentSession });
 container.register(DI_TOKENS.SubscriptionService, { useClass: SubscriptionPaymentService });
+container.register(DI_TOKENS.MarkNotificationRead, { useClass: MarkNotificationRead });
+container.register(DI_TOKENS.MarkAllNotificationRead, { useClass: MarkAllNotificationRead });
 
 // --- Viewer ---
 container.register(DI_TOKENS.GetViewerProfile, { useClass: GetViewerProfile });

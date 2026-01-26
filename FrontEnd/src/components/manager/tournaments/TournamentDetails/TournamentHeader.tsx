@@ -1,4 +1,4 @@
-import { Trophy, Calendar, Share2, Edit3, Ticket, CheckCircle2, Users, MapPin } from "lucide-react";
+import { Trophy, Calendar, Edit3, Ticket, CheckCircle2, Users, MapPin } from "lucide-react";
 import type { Tournament } from "../../../../features/manager/managerTypes";
 
 interface TournamentHeaderProps {
@@ -69,10 +69,6 @@ export default function TournamentHeader({ tournamentData, type, onClick, isRegi
 
                     {/* --- RIGHT SIDE: ACTIONS --- */}
                     <div className="flex items-center gap-3 pb-1">
-                        <button className="h-12 w-12 rounded-2xl bg-background/40 hover:bg-background/80 border border-border/50 text-muted-foreground hover:text-foreground backdrop-blur-md transition-all flex items-center justify-center">
-                            <Share2 size={20} />
-                        </button>
-
                         {type === "manage" ? (
                             <button
                                 onClick={onClick}

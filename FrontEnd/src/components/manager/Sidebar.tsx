@@ -25,7 +25,7 @@ const Sidebar: React.FC = () => {
     ];
 
     return (
-        <aside className="fixed top-[60px] left-0 h-[calc(100vh-60px)] w-16 lg:w-64 bg-background border-r border-border text-foreground transition-colors duration-300 z-40 hidden md:flex flex-col">
+        <aside className="fixed top-[60px] left-0 h-[calc(100vh-60px)] w-16 lg:w-60 bg-background border-r border-border text-foreground transition-colors duration-300 z-40 hidden md:flex flex-col">
             <nav className="flex-1 mt-6 px-3 space-y-1">
                 {menuItems.map((item) => (
                     <NavLink
@@ -51,9 +51,8 @@ const Sidebar: React.FC = () => {
                 ))}
             </nav>
             
-            {/* Optional: Footer or User Info could go here */}
             <div className="p-4 border-t border-border mt-auto hidden lg:block">
-                <p className="text-xs text-muted-foreground">© 2024 MatchPoint</p>
+                <p className="text-xs text-muted-foreground">© 2026 MatchPoint</p>
             </div>
         </aside>
     );

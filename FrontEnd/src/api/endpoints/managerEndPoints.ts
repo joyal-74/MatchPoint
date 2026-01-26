@@ -1,9 +1,9 @@
 import type { Team } from "../../components/manager/teams/Types";
 import type { RegisteredTeam } from "../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
-import type { PaymentInitiateResponse } from "../../components/manager/tournaments/Types";
+import type { PaymentInitiateResponse, TeamResultSummary } from "../../components/manager/tournaments/Types";
 import { MANAGER_ROUTES } from "../../constants/routes/managerRoutes";
 import type { Fixture, Leaderboard, Match, Tournament } from "../../features/manager/managerTypes";
-import type { AnalyticsData, PointsRow, PointsTableData } from "../../features/manager/Tournaments/tournamentTypes";
+import type { AnalyticsData, PointsTableData } from "../../features/manager/Tournaments/tournamentTypes";
 import type { TeamPlayer } from "../../types/Player";
 import type { User } from "../../types/User";
 import axiosClient from "../http/axiosClient";
@@ -17,7 +17,7 @@ export const managerEndpoints = {
 
     updateManagerData: async ({ userData, userId }: { userData: FormData; userId: string }): Promise<User> => {
         const { data } = await axiosClient.put(MANAGER_ROUTES.EDIT_DETAILS(userId),
-            userData, { headers: { "Content-Type": "multipart/form-data" } });
+            userData);
 
         return data.data;
     },
@@ -156,7 +156,6 @@ export const managerEndpoints = {
         return data.data
     },
 
-
     getAvailablePlayers: async (teamId: string): Promise<TeamPlayer[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_AVAILABLE_PLAYERS(teamId));
         return data.data
@@ -179,6 +178,11 @@ export const managerEndpoints = {
 
     fetchTournamentPointsTable: async (tournamentId : string): Promise<PointsTableData[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_POINTS_TABLE(tournamentId));
+        return data.data;
+    },
+
+    getTournamentMatchesResult: async (tournamentId : string): Promise<TeamResultSummary[]> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.GET_MATCH_RESULT(tournamentId));
         return data.data;
     },
 }

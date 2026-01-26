@@ -4,6 +4,7 @@ import LiveMatches from "../pages/viewer/LiveMatches";
 import ProfilePage from "../pages/viewer/ProfilePage";
 import ProtectedRoute from "./ProtectedRoute";
 import LiveStreamViewer from "../pages/viewer/LiveStreamViewer";
+import WalletPage from "../pages/viewer/WalletPage";
 
 export const viewerRoutes = [
     { path: "/profile", element: <ProtectedRoute allowedRoles={['viewer']}><ProfilePage /></ProtectedRoute> },
@@ -11,4 +12,5 @@ export const viewerRoutes = [
     { path: "/live", element: <ProtectedRoute allowedRoles={['viewer', 'admin', 'player', 'manager']}><LiveMatches /></ProtectedRoute> },
     { path: "/live/:matchId/details", element: <ProtectedRoute allowedRoles={['viewer', 'admin', 'player', 'manager']}><LiveMatchPage /></ProtectedRoute> },
     { path: "/live/:matchId/details/stream", element: <ProtectedRoute allowedRoles={['viewer', 'admin', 'player', 'manager']}><LiveStreamViewer /></ProtectedRoute> },
+    { path: "/wallet", element: <ProtectedRoute allowedRoles={['viewer', 'admin', 'player', 'manager']}><WalletPage /></ProtectedRoute> },
 ];

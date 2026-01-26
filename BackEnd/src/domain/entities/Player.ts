@@ -17,6 +17,19 @@ export interface PlayerResponse extends Omit<Player, "stats"> {
     _id: string;
 }
 
+interface UserDetails {
+    firstName : string;
+    lastName : string;
+}
+
+export interface PopulatedPLayer {
+    _id: string;
+    userId: UserDetails;
+    sport: string;
+    profile: Record<string, string | number | boolean | null>;
+    stats: Record<string, number>;
+}
+
 
 export interface LeaderBoardPlayer {
     name: string;

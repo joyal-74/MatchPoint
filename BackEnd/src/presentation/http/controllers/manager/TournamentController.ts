@@ -17,7 +17,8 @@ import {
     ICreateTournamentFixtures,
     ICreateMatchesUseCase,
     IGetTournamentMatches,
-    IGetDashboardAnalytics
+    IGetDashboardAnalytics,
+    IGetMyTournamentMatchResult
 } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 import { TournamentMessages } from "domain/constants/TournamentMessages";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
@@ -45,6 +46,7 @@ export class TournamentController implements ITournamentController {
         @inject(DI_TOKENS.GetMatchesUsecase) private _getMatchesUsecase: IGetTournamentMatches,
         @inject(DI_TOKENS.GetTourLeaderboard) private _getLeaderBoardUsecase: IGetTourLeaderboard,
         @inject(DI_TOKENS.StartTournament) private _startTournamentService: IStartTournament,
+        @inject(DI_TOKENS.GetMyTournamentMatchResult) private _getTournamentMatchResults: IGetMyTournamentMatchResult,
         @inject(DI_TOKENS.GetPointsTableUseCase) private _getPointsTableUseCase: IGetPointsTableUseCase,
         @inject(DI_TOKENS.GetDashboardAnalytics) private _getDashboardAnalytics: IGetDashboardAnalytics,
         @inject(DI_TOKENS.Logger) private _logger: ILogger
@@ -267,6 +269,14 @@ export class TournamentController implements ITournamentController {
         const { tournamentId } = httpRequest.params;
 
         const result = await this._getPointsTableUseCase.execute(tournamentId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.POINTS_TABLE_FETCHED, result));
+    };
+
+    getTournamentMatchResults = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { tournamentId } = httpRequest.params;
+
+        const result = await this._getTournamentMatchResults.execute(tournamentId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.POINTS_TABLE_FETCHED, result));
     };

@@ -3,10 +3,7 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../../../../hooks/hooks";
 import { toast } from 'react-hot-toast';
 import LoadingOverlay from "../../../../../shared/LoadingOverlay";
-import { 
-    Swords, Trophy, Calendar, MapPin, Sparkles, 
-    Settings2, Plus, Clock, AlertCircle 
-} from "lucide-react";
+import { Trophy, Calendar, MapPin, Sparkles, Clock } from "lucide-react";
 import {
     generateKnockoutFixtures,
     generateLeagueFixtures,
@@ -52,7 +49,7 @@ export default function FixturesTab({ type }: FixtureTabProp) {
             dispatch(getTournamentFixtures(id))
                 .unwrap()
                 .then(setFixtures)
-                .catch(() => setFixtures(null)); 
+                .catch(() => setFixtures(null));
         }
     }, [id, selectedTournament, dispatch, fixtures]);
 
@@ -127,55 +124,37 @@ export default function FixturesTab({ type }: FixtureTabProp) {
     // --- EMPTY STATE DESIGN ---
     if (!fixtures?.matches?.length) {
         return (
-            <div className="relative w-full min-h-[600px] flex flex-col items-center justify-center p-6 animate-in fade-in duration-700">
+            <div className="w-full flex flex-col items-center justify-center p-8 md:p-12 animate-in fade-in duration-500 bg-muted/10 border border-dashed border-border rounded-xl">
                 
-                {/* 1. Cinematic Background Elements */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-                    {/* Giant blurred icon in background */}
-                    <Swords 
-                        strokeWidth={0.5} 
-                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] text-foreground/5 dark:text-foreground/5 rotate-12" 
-                    />
-                    {/* Gradient blob for depth */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px]" />
+                {/* Icon Circle */}
+                <div className="bg-background p-4 rounded-full shadow-sm mb-4 ring-1 ring-border/50">
+                    <Trophy className="w-8 h-8 text-muted-foreground" strokeWidth={1.5} />
                 </div>
 
-                {/* 2. Main Content Wrapper */}
-                <div className="relative z-10 flex flex-col items-center max-w-2xl w-full text-center space-y-8">
-                    
-                    {/* Header Text */}
-                    <div className="space-y-4">
-                        <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-background/50 backdrop-blur-sm border border-border shadow-sm mb-2">
-                            <Trophy size={32} className="text-primary" />
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
-                            {type === 'manage' ? "Ready to Kick Off?" : "Schedule Pending"}
-                        </h2>
-                        <p className="text-muted-foreground text-lg max-w-lg mx-auto leading-relaxed">
-                            {type === 'manage' 
-                                ? "The teams are registered and the stage is set. Generate the official match schedule to launch the tournament."
-                                : "The tournament organizer hasn't published the official match schedule yet. Please check back soon."
-                            }
-                        </p>
-                    </div>
+                {/* Text Content */}
+                <div className="text-center space-y-2 max-w-md">
+                    <h3 className="text-lg font-semibold text-foreground">
+                        {type === 'manage' ? "No Matches Scheduled" : "Schedule Pending"}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                        {type === 'manage'
+                            ? "Generate the official match schedule to launch the tournament."
+                            : "The organizer hasn't published the match schedule yet."
+                        }
+                    </p>
+                </div>
 
-
-
-                    {/* Action Area */}
+                {/* Action Area */}
+                <div className="mt-6">
                     {type === 'manage' ? (
-                        <div className="flex flex-col items-center gap-4 w-full pt-4">
+                        <div className="flex flex-col items-center gap-3">
                             <button
                                 onClick={handleOpenModal}
-                                className="group relative w-full sm:w-auto px-8 py-4 rounded-xl bg-primary text-primary-foreground font-bold text-base shadow-xl shadow-primary/20 hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-3"
+                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium shadow hover:bg-primary/90 transition-all"
                             >
-                                <Sparkles size={20} className="group-hover:animate-pulse" />
+                                <Sparkles size={16} />
                                 <span>Generate {selectedTournament?.format ? selectedTournament.format.charAt(0).toUpperCase() + selectedTournament.format.slice(1) : ''} Fixtures</span>
                             </button>
-                            
-                            <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground bg-background/50 px-4 py-2 rounded-full border border-border/50">
-                                <Settings2 size={12} />
-                                <span>You can customize dates & rules in the next step</span>
-                            </div>
 
                             <ConfirmFixtureModal
                                 isOpen={showConfirmModal}
@@ -186,9 +165,9 @@ export default function FixturesTab({ type }: FixtureTabProp) {
                             />
                         </div>
                     ) : (
-                        <div className="flex items-center gap-2 px-5 py-3 rounded-full bg-muted/30 border border-border/50 text-sm text-muted-foreground">
-                            <Clock size={16} />
-                            <span>Waiting for updates...</span>
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-background border border-border text-xs text-muted-foreground">
+                            <Clock size={14} />
+                            <span>Check back later</span>
                         </div>
                     )}
                 </div>
@@ -203,8 +182,7 @@ export default function FixturesTab({ type }: FixtureTabProp) {
             <div className="border-b border-border pb-4 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
-                        <Trophy className="text-primary" size={20} />
-                        {selectedTournament?.format === 'knockout' ? 'Tournament Bracket' : 'League Schedule'}
+                        <Trophy className="text-primary" size={20} /> Tournament Fixtures
                     </h2>
                     <p className="text-sm text-muted-foreground flex items-center gap-4 mt-1">
                         <span className="flex items-center gap-1.5">
@@ -217,18 +195,6 @@ export default function FixturesTab({ type }: FixtureTabProp) {
                         </span>
                     </p>
                 </div>
-                
-
-                {type === 'manage' && (
-                     <div className="flex gap-2">
-                        <button className="px-4 py-2 text-xs font-medium bg-background hover:bg-muted text-muted-foreground hover:text-foreground rounded-lg transition-colors border border-border flex items-center gap-2">
-                            <AlertCircle size={14} /> Reset
-                        </button>
-                        <button className="px-4 py-2 text-xs font-bold bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors border border-primary/20 flex items-center gap-2">
-                            <Plus size={14} /> Add Match
-                        </button>
-                    </div>
-                )}
             </div>
 
             {/* Render Specific View based on Format */}
@@ -237,7 +203,7 @@ export default function FixturesTab({ type }: FixtureTabProp) {
                 {fixtures.format === "league" && <LeagueFixtures matches={fixtures.matches} />}
                 {fixtures.format === "friendly" && <FriendlyFixture matches={fixtures.matches} />}
                 {!["knockout", "league", "friendly"].includes(fixtures.format) && (
-                     <div className="text-center p-8 text-muted-foreground bg-muted/20 rounded-xl border border-dashed border-border">
+                    <div className="text-center p-8 text-muted-foreground bg-muted/20 rounded-xl border border-dashed border-border">
                         Invalid fixture format loaded.
                     </div>
                 )}

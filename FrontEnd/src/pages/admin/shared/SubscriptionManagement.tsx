@@ -90,7 +90,7 @@ export default function SubscriptionManagement() {
             <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto min-h-[85vh]">
 
                 {/* Header */}
-                <header className="mb-8">
+                <header className="mb-3">
                     <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
                         Subscription Management
                     </h1>
@@ -100,7 +100,7 @@ export default function SubscriptionManagement() {
                 </header>
 
                 {/* Tabs */}
-                <div className="mb-8 border-b border-border">
+                <div className="mb-4 border-b border-border">
                     <nav className="-mb-px flex space-x-6 overflow-x-auto scrollbar-hide">
                         {tabs.map((tab) => (
                             <button

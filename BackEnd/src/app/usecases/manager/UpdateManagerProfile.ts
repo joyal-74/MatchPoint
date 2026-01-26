@@ -30,6 +30,9 @@ export class UpdateManagerProfile implements IUpdateManagerProfile {
         }
 
         const manager = await this._userRepo.update(validData._id, validData);
+        if(!manager){
+            throw new NotFoundError('Manager not updated');
+        }
 
         return ManagerMapper.toProfileResponseDTO(manager);
     }

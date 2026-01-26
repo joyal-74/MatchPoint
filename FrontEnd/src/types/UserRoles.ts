@@ -3,6 +3,7 @@ export const UserRole = {
     Player: "player",
     Manager: "manager",
     Viewer: "viewer",
+    Umpire : 'umpire',
 } as const;
 
 export type UserRole = typeof UserRole[keyof typeof UserRole];
@@ -11,6 +12,7 @@ export const SignupRoles = {
     Player: "player",
     Manager: "manager",
     Viewer: "viewer",
+    Umpire : 'umpire',
 } as const;
 
 export type SignupRole = typeof SignupRoles[keyof typeof SignupRoles];

@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Edit2, Save, X, Loader2, User, Trophy, Activity } from "lucide-react";
+import { 
+    Edit2, Save, X, Loader2, User, Trophy, Activity, 
+    LogOut, Settings, ChevronRight 
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import ProfileHeader from "../../components/shared/ProfileHeader";
 import PremiumCard from "../../components/shared/PremiumCard";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
@@ -8,8 +12,14 @@ import PlayerLayout from "../layout/PlayerLayout";
 import ProfileForm from "../../components/player/profile/ProfileForm";
 import SportsProfileForm from "../../components/player/profile/SportsProfileForm";
 import { useProfile } from "../../hooks/player/useProfile";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { logoutUser } from "../../features/auth";
 
 const PlayerProfilePage: React.FC = () => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(s => s.auth.user);
+    
     const {
         isEditing,
         setIsEditing,
@@ -27,6 +37,16 @@ const PlayerProfilePage: React.FC = () => {
     } = useProfile();
 
     const [activeTab, setActiveTab] = useState<"user" | "sport">("user");
+
+    // --- Logout Logic ---
+    const handleLogout = async () => {
+        try {
+            await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
+            navigate("/login");
+        } catch (error) {
+            console.error("Logout failed", error);
+        }
+    };
 
     if (loading && !formData) return <PlayerLayout><LoadingOverlay show={true} /></PlayerLayout>;
     if (error) return <ProfileError error={error} onAction={handleRetry} />;
@@ -61,7 +81,7 @@ const PlayerProfilePage: React.FC = () => {
 
     return (
         <PlayerLayout>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                     {/* Left Sidebar: Photo & Premium */}
@@ -73,11 +93,13 @@ const PlayerProfilePage: React.FC = () => {
                             onEditToggle={() => setIsEditing((prev) => !prev)}
                             onImageUpload={handleImageUpload}
                         />
-                        <PremiumCard />
+                        <div className="hidden lg:block">
+                            <PremiumCard />
+                        </div>
                     </div>
 
                     {/* Right Content: Forms */}
-                    <div className="lg:col-span-2">
+                    <div className="lg:col-span-2 space-y-6">
                         <div className={`
                             bg-card border rounded-xl shadow-sm overflow-hidden transition-all duration-300 flex flex-col min-h-[600px]
                             ${isEditing ? 'border-primary/50 ring-1 ring-primary/10' : 'border-border'}
@@ -192,6 +214,44 @@ const PlayerProfilePage: React.FC = () => {
                                 )}
                             </div>
                         </div>
+
+
+                        <div className="md:hidden space-y-4 pt-4 border-t border-border">
+                            <h3 className="text-sm font-semibold text-muted-foreground px-1">Account</h3>
+                            
+                            <div className="bg-card border border-border rounded-xl overflow-hidden divide-y divide-border shadow-sm">
+                                <button 
+                                    onClick={() => navigate('/player/settings')}
+                                    className="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-colors"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-primary/10 rounded-full text-primary">
+                                            <Settings size={18} />
+                                        </div>
+                                        <span className="font-medium text-sm">Settings</span>
+                                    </div>
+                                    <ChevronRight size={16} className="text-muted-foreground" />
+                                </button>
+
+                                <button 
+                                    onClick={handleLogout}
+                                    className="w-full flex items-center justify-between p-4 hover:bg-red-50 hover:text-red-600 transition-colors group"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-muted rounded-full group-hover:bg-red-100 transition-colors">
+                                            <LogOut size={18} />
+                                        </div>
+                                        <span className="font-medium text-sm">Logout</span>
+                                    </div>
+                                    <ChevronRight size={16} className="text-muted-foreground group-hover:text-red-400" />
+                                </button>
+                            </div>
+
+                            <div className="pt-2">
+                                <PremiumCard />
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

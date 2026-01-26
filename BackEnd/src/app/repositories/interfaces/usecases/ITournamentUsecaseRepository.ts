@@ -74,6 +74,10 @@ export interface ITournamentRegistrationValidator {
     execute(tournamentId: string, teamId: string): Promise<void>;
 }
 
+export interface IGetMyTournamentMatchResult {
+    execute(tournamentId: string): Promise<TournamentResult[]>;
+}
+
 export interface IGetDashboardAnalytics {
     execute(managerId: string): Promise<DashboardAnalyticsDTO>
 }

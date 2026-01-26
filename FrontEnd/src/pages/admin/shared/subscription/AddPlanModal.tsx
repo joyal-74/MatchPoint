@@ -207,7 +207,7 @@ export const AddPlanModal: React.FC<{
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 className={getInputClass("title")}
-                                placeholder="e.g., Ultimate Pro Manager"
+                                placeholder="e.g., Ultimate super plan"
                             />
                             {errors.title && (
                                 <p className="text-xs text-destructive flex items-center gap-1 animate-in slide-in-from-top-1 font-medium">

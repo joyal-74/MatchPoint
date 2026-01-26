@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { BattingTable } from "./BattingTable";
 import { BowlingTable } from "./BowlingTable";
 import { Users, CircleDot } from "lucide-react";
-import type { BattingStats, BowlingStats, LiveScoreState, Match, Team } from "../../../features/manager/Matches/matchTypes";
+import type { BattingStats, BowlingStats, LiveScoreState, Match, Team }from "../../../../features/manager/Matches/matchTypes";
 
 interface ScorecardTabProps {
     match: Match;
@@ -60,8 +60,7 @@ export const ScorecardTab = ({ match, teamA, liveScore, teamB, getPlayerName, ge
                 type: 'batting' as const
             };
         } else {
-            // Show selected team's bowling
-            // Team A bowls during Team B's batting innings.
+
             const opponentBattingInnings = isTeamASelected
                 ? (firstBattingTeamId === teamB._id ? liveScore.innings1 : liveScore.innings2)
                 : (firstBattingTeamId === teamA._id ? liveScore.innings1 : liveScore.innings2);
@@ -76,6 +75,8 @@ export const ScorecardTab = ({ match, teamA, liveScore, teamB, getPlayerName, ge
     }
 
     const displayData = getDisplayData();
+
+    console.log(displayData, 'displaydta')
 
     return (
         <div className="space-y-6">

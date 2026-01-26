@@ -21,3 +21,13 @@ export const fetchUnreadCount = createAsyncThunk(
         return response;
     })
 );
+
+export const markNotificationRead = createAsyncThunk(
+    "user/markNotificationRead",
+    createApiThunk(notificationEndpoints.markNotificationRead)
+);
+
+export const markAllNotificationRead = createAsyncThunk(
+    "user/markAllNotificationRead",
+    createApiThunk(notificationEndpoints.markAllNotificationRead)
+);

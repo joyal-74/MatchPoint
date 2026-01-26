@@ -1,4 +1,4 @@
-import { IManagerIdGenerator, IPlayerIdGenerator, ITeamIdGenerator, ITournamentIdGenerator, IUserIdGenerator } from "app/providers/IIdGenerator";
+import { IManagerIdGenerator, IPlayerIdGenerator, ITeamIdGenerator, ITournamentIdGenerator, IUmpireIdGenerator, IUserIdGenerator } from "app/providers/IIdGenerator";
 import { nanoid } from 'nanoid';
 
 export class TeamIdGenerator implements ITeamIdGenerator {
@@ -28,5 +28,11 @@ export class PlayerIdGenerator implements IPlayerIdGenerator {
 export class ManagerIdGenerator implements IManagerIdGenerator {
     generate(): string {
         return `MNR-${nanoid(10)}`;
+    }
+}
+
+export class UmpireIdGenerator implements IUmpireIdGenerator {
+    generate(): string {
+        return `UPR-${nanoid(10)}`;
     }
 }

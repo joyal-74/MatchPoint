@@ -1,9 +1,12 @@
 import { Router } from 'express';
+import multer from 'multer';
 import { expressAdapter } from 'presentation/adaptors/ExpressAdaptor';
+import { expressFileUpdateHandler } from 'presentation/adaptors/ExpressFileAdaptor';
 import { AuthController } from 'presentation/http/controllers/authentication/AuthController';
 import { container } from 'tsyringe';
 
 const router = Router();
+const upload = multer();
 
 const authController = container.resolve(AuthController);
 
@@ -14,9 +17,10 @@ router.post('/facebook-login', expressAdapter(authController.loginFacebookUser))
 router.post('/social-complete', expressAdapter(authController.completeSocialAccount));
 router.get('/refresh', expressAdapter(authController.refreshToken));
 
-router.post('/signup/viewer', expressAdapter(authController.signupViewer));
-router.post('/signup/manager', expressAdapter(authController.signupManager));
-router.post('/signup/player', expressAdapter(authController.signupPlayer));
+router.post('/signup/viewer', upload.single("profileImage"), expressFileUpdateHandler(authController.signupViewer));
+router.post('/signup/manager', upload.single("profileImage"), expressFileUpdateHandler(authController.signupManager));
+router.post('/signup/player', upload.single("profileImage"), expressFileUpdateHandler(authController.signupPlayer));
+router.post('/signup/umpire', upload.single("profileImage"), expressFileUpdateHandler(authController.signupUmpire));
 
 router.post('/logout', expressAdapter(authController.logout));
 router.post('/resend-otp', expressAdapter(authController.resendOtp));

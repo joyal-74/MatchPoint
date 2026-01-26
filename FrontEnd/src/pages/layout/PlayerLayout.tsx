@@ -8,7 +8,7 @@ interface PlayerLayoutProps {
 
 const PlayerLayout: React.FC<PlayerLayoutProps> = ({ children }) => {
     return (
-        <div className="flex min-h-screen bg-[var(--color-background-primary)] md:pr-12">
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
             <Sidebar />
 
             <div className="flex-1 flex flex-col">
@@ -16,7 +16,7 @@ const PlayerLayout: React.FC<PlayerLayoutProps> = ({ children }) => {
                     <Navbar />
                 </div>
 
-                <main className="flex-1 px-2 ml-15 lg:ml-70 mt-8">{children}</main>
+                <main className="flex-1 px-2 md:ml-15 lg:ml-70 mt-8">{children}</main>
             </div>
         </div>
     );

@@ -28,11 +28,11 @@ const LiveMatchPage = () => {
     // --- Helper Functions (Passed down as props) ---
     const getPlayerName = (playerId: string): string => {
         if (teamA) {
-            const member = teamA.members.find((m) => m.userId === playerId);
+            const member = teamA.members.find((m) => m._id === playerId);
             if (member) return member.name;
         }
         if (teamB) {
-            const member = teamB.members.find((m) => m.userId === playerId);
+            const member = teamB.members.find((m) => m._id === playerId);
             if (member) return member.name;
         }
         return `Player ${playerId?.slice(-4) || '???'}`;
@@ -40,12 +40,12 @@ const LiveMatchPage = () => {
 
     const getPlayerRole = (playerId: string): string => {
         if (teamA) {
-            const memberInTeamA = teamA.members.find((member) => member.userId === playerId);
+            const memberInTeamA = teamA.members.find((member) => member._id === playerId);
             if (memberInTeamA) return memberInTeamA.role;
         }
 
         if (teamB) {
-            const memberInTeamB = teamB.members.find((member) => member.userId === playerId);
+            const memberInTeamB = teamB.members.find((member) => member._id === playerId);
             if (memberInTeamB) return memberInTeamB.role;
         }
 
@@ -92,7 +92,7 @@ const LiveMatchPage = () => {
                 />
 
                 {/* 3. Main Content Area */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     
                     {/* Tabs Navigation */}
                     <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-xl mb-8 w-full md:w-fit overflow-x-auto">

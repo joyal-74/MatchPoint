@@ -24,7 +24,7 @@ export interface INotificationRepository {
 
     findByUser(userId: string, options?: { limit?: number; skip?: number; unreadOnly?: boolean; }): Promise<NotificationResponse[]>;
 
-    markAsRead(notificationId: string, userId: string): Promise<void>;
+    markAsRead(notificationId: string, userId: string): Promise<NotificationResponse | null>;
 
     markAllAsRead(userId: string): Promise<void>;
 

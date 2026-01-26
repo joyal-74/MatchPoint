@@ -21,7 +21,6 @@ interface TournamentState {
     stats: TournamentStats;
     loading: boolean;
     error: string | null;
-    // Separate loading/error for tournament-specific data
     matchesLoading: boolean;
     matchesError: string | null;
     pointsTableLoading: boolean;
@@ -61,7 +60,6 @@ const tournamentSlice = createSlice({
         clearSelectedTournament: (state) => {
             state.selectedTournament = null;
         },
-        // Optional: Clear tournament-specific data
         clearTournamentData: (state) => {
             state.matches = [];
             state.pointsTable = [];
@@ -76,7 +74,6 @@ const tournamentSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // Existing: fetchTournaments
             .addCase(fetchTournaments.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -91,7 +88,6 @@ const tournamentSlice = createSlice({
                 state.error = action.payload || action.error.message || "Failed to fetch tournaments";
             })
 
-            // Existing: fetchLiveMatches
             .addCase(fetchLiveMatches.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -105,7 +101,6 @@ const tournamentSlice = createSlice({
                 state.error = action.payload || action.error.message || "Failed to fetch live matches";
             })
 
-            // Existing: tournamentDetails
             .addCase(tournamentDetails.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -119,7 +114,6 @@ const tournamentSlice = createSlice({
                 state.error = action.payload || action.error.message || "Failed to fetch tournament details";
             })
 
-            // New: fetchTournamentMatches
             .addCase(fetchTournamentMatches.pending, (state) => {
                 state.matchesLoading = true;
                 state.matchesError = null;
@@ -133,7 +127,6 @@ const tournamentSlice = createSlice({
                 state.matchesError = action.payload || action.error.message || "Failed to fetch tournament matches";
             })
 
-            // New: fetchTournamentPointsTable
             .addCase(fetchTournamentPointsTable.pending, (state) => {
                 state.pointsTableLoading = true;
                 state.pointsTableError = null;
@@ -147,7 +140,6 @@ const tournamentSlice = createSlice({
                 state.pointsTableError = action.payload || action.error.message || "Failed to fetch points table";
             })
 
-            // New: fetchTournamentStats
             .addCase(fetchTournamentStats.pending, (state) => {
                 state.statsLoading = true;
                 state.statsError = null;

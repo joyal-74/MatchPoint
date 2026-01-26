@@ -5,6 +5,7 @@ import type { Match } from "domain/entities/Match";
 import { ILogger } from "app/providers/ILogger";
 import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
 import { ICreateMatchesUseCase } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
+import { BadRequestError } from "domain/errors";
 
 @injectable()
 export class CreateMatchesUseCase implements ICreateMatchesUseCase {
@@ -17,7 +18,7 @@ export class CreateMatchesUseCase implements ICreateMatchesUseCase {
         console.log(matchesData, "createdMatches")
         if (!matchesData) {
             this._logger.warn("No matches data provided");
-            throw new Error("At least one match is required");
+            throw new BadRequestError("At least one match is required");
         }
 
         const createdMatches = await this._matchesRepo.createMatches(tournamentId, matchesData);

@@ -8,20 +8,22 @@ import ModalHeader from "../../../shared/modal/ModalHeader";
 import FormActions from "../../../shared/modal/FormActions";
 import MapPicker from "../../../shared/MapPicker";
 import { validateTournamentForm } from "../../../../validators/ValidateTournamentForm";
-import { Trophy, Calendar, Activity, FileText, Image as ImageIcon, MapPin, Watch } from "lucide-react";
+import { Trophy, Calendar, Activity, FileText, Image as ImageIcon, MapPin, Watch, AlertCircle } from "lucide-react";
+import PrizeInfoModal from "./PriceInfoModal";
 
 export default function EditTournamentModal({
     isOpen,
     onClose,
     tournament,
     managerId,
-    onShowPrizeInfo,
 }: EditTournamentModalProps) {
     const dispatch = useAppDispatch();
     const [formData, setFormData] = useState<updateTournamentFormData>(initialEditFormData(managerId, tournament._id));
     const [rulesText, setRulesText] = useState("");
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showPrizeInfo, setShowPrizeInfo] = useState(false);
+
 
     useEffect(() => {
         if (isOpen && tournament) {
@@ -70,10 +72,9 @@ export default function EditTournamentModal({
         fd.append("minTeams", String(formattedData.minTeams));
         fd.append("entryFee", String(formattedData.entryFee));
         fd.append("format", formattedData.format);
-        fd.append("prizePool", String(formattedData.prizePool)); // Allow manual override in Edit
+        fd.append("prizePool", String(formattedData.prizePool));
         fd.append("playersPerTeam", String(formattedData.playersPerTeam));
 
-        // Append conditional Overs if exists in type
         if (formattedData.sport === 'Cricket' && (formattedData).overs) {
             fd.append("overs", String((formattedData).overs));
         }
@@ -121,6 +122,12 @@ export default function EditTournamentModal({
         onClose();
     };
 
+    // Helper to safely format dates for inputs
+    const formatDateForInput = (date: Date | string) => {
+        if (!date) return '';
+        return new Date(date).toISOString().split('T')[0];
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -130,11 +137,16 @@ export default function EditTournamentModal({
                 onClick={handleClose}
             />
 
-            <div className="relative w-full max-w-4xl bg-card text-card-foreground rounded-2xl border border-border shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
-                <ModalHeader title="Edit Tournament" onClose={handleClose} disabled={isSubmitting} />
+            {/* Modal Container */}
+            <div className="relative w-full max-w-4xl bg-card text-card-foreground rounded-2xl border border-border shadow-2xl flex flex-col h-[90vh] animate-in fade-in zoom-in-95 duration-200">
 
-                <div className="flex-1 overflow-y-auto custom-scrollbar scrollbar-hide">
-                    {/* ID added to form to link with sticky footer button */}
+                {/* 1. Header (Fixed) */}
+                <div className="flex-none">
+                    <ModalHeader title="Edit Tournament" onClose={handleClose} disabled={isSubmitting} />
+                </div>
+
+                {/* 2. Scrollable Form Content */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar">
                     <form id="edit-tournament-form" onSubmit={handleSubmit} className="p-6 md:p-8 space-y-8">
 
                         {/* SECTION 1: Basic Information */}
@@ -154,7 +166,7 @@ export default function EditTournamentModal({
                                         onChange={handleChange}
                                         placeholder="e.g. Summer Championship"
                                     />
-                                    {errors.title && <p className="text-xs text-destructive mt-1">{errors.title}</p>}
+                                    {errors.title && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.title}</p>}
                                 </div>
 
                                 <div>
@@ -166,7 +178,7 @@ export default function EditTournamentModal({
                                         onChange={handleChange}
                                         options={sports}
                                     />
-                                    {errors.sport && <p className="text-xs text-destructive mt-1">{errors.sport}</p>}
+                                    {errors.sport && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.sport}</p>}
                                 </div>
 
                                 <div>
@@ -178,7 +190,7 @@ export default function EditTournamentModal({
                                         onChange={handleChange}
                                         options={formats}
                                     />
-                                    {errors.format && <p className="text-xs text-destructive mt-1">{errors.format}</p>}
+                                    {errors.format && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.format}</p>}
                                 </div>
                             </div>
                         </div>
@@ -190,41 +202,56 @@ export default function EditTournamentModal({
                                 Schedule & Logistics
                             </h3>
 
-                            {/* Dates */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div>
-                                    <FormInput label="Start Date" type="date" name="startDate" value={String(formData.startDate).split('T')[0]} onChange={handleChange} />
-                                    {errors.startDate && <p className="text-xs text-destructive mt-1">{errors.startDate}</p>}
+                                    <FormInput
+                                        label="Start Date"
+                                        type="date"
+                                        name="startDate"
+                                        value={formatDateForInput(formData.startDate)}
+                                        onChange={handleChange}
+                                    />
+                                    {errors.startDate && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.startDate}</p>}
                                 </div>
                                 <div>
-                                    <FormInput label="End Date" type="date" name="endDate" value={String(formData.endDate).split('T')[0]} onChange={handleChange} />
-                                    {errors.endDate && <p className="text-xs text-destructive mt-1">{errors.endDate}</p>}
+                                    <FormInput
+                                        label="End Date"
+                                        type="date"
+                                        name="endDate"
+                                        value={formatDateForInput(formData.endDate)}
+                                        onChange={handleChange}
+                                    />
+                                    {errors.endDate && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.endDate}</p>}
                                 </div>
                                 <div>
-                                    <FormInput label="Reg. Deadline" type="date" name="regDeadline" value={String(formData.regDeadline).split('T')[0]} onChange={handleChange} />
-                                    {errors.regDeadline && <p className="text-xs text-destructive mt-1">{errors.regDeadline}</p>}
+                                    <FormInput
+                                        label="Reg. Deadline"
+                                        type="date"
+                                        name="regDeadline"
+                                        value={formatDateForInput(formData.regDeadline)}
+                                        onChange={handleChange}
+                                    />
+                                    {errors.regDeadline && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.regDeadline}</p>}
                                 </div>
                             </div>
 
-                            {/* Logistics */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div>
                                     <FormInput label="Max Teams" type="number" name="maxTeams" value={formData.maxTeams} onChange={handleChange} min="2" />
-                                    {errors.maxTeams && <p className="text-xs text-destructive mt-1">{errors.maxTeams}</p>}
+                                    {errors.maxTeams && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.maxTeams}</p>}
                                 </div>
                                 <div>
                                     <FormInput label="Min Teams" type="number" name="minTeams" value={formData.minTeams} onChange={handleChange} min="2" />
-                                    {errors.minTeams && <p className="text-xs text-destructive mt-1">{errors.minTeams}</p>}
+                                    {errors.minTeams && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.minTeams}</p>}
                                 </div>
                                 <div>
                                     <FormInput label="Players / Team" type="number" name="playersPerTeam" value={formData.playersPerTeam} onChange={handleChange} min="2" />
-                                    {errors.playersPerTeam && <p className="text-xs text-destructive mt-1">{errors.playersPerTeam}</p>}
+                                    {errors.playersPerTeam && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.playersPerTeam}</p>}
                                 </div>
                             </div>
 
-                            {/* Cricket Overs (Conditional) */}
                             {formData.sport === 'cricket' && (
-                                <div className="mt-4 p-4 rounded-xl bg-primary/5 border border-primary/20">
+                                <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
                                     <div className="flex items-center gap-4">
                                         <div className="p-2 bg-primary/10 rounded-lg text-primary">
                                             <Watch size={18} />
@@ -256,11 +283,11 @@ export default function EditTournamentModal({
                                 <div className="space-y-4 bg-muted/30 p-4 rounded-xl border border-border h-fit">
                                     <div>
                                         <FormInput label="Entry Fee (per team)" type="number" name="entryFee" value={formData.entryFee} onChange={handleChange} min="0" />
-                                        {errors.entryFee && <p className="text-xs text-destructive mt-1">{errors.entryFee}</p>}
+                                        {errors.entryFee && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.entryFee}</p>}
                                     </div>
                                     <div>
                                         <FormInput label="Total Prize Pool" type="number" name="prizePool" value={formData.prizePool} onChange={handleChange} min="0" />
-                                        {errors.prizePool && <p className="text-xs text-destructive mt-1">{errors.prizePool}</p>}
+                                        {errors.prizePool && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.prizePool}</p>}
                                     </div>
 
                                     {/* Calculated Reference */}
@@ -270,17 +297,14 @@ export default function EditTournamentModal({
                                         </div>
                                         <div className="text-right">
                                             <span className="text-md font-mono text-primary font-semibold">₹{estimatedPrizePool.toLocaleString()}</span>
-                                            <button type="button" onClick={onShowPrizeInfo} className="text-[10px] text-blue-500 block hover:underline">Info</button>
+                                            <button type="button" onClick={() => setShowPrizeInfo(true)} className="text-[10px] text-blue-500 block hover:underline">Info</button>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Location */}
                                 <div className="space-y-2">
-                                    <div className={`
-                                        relative rounded-xl border transition-all duration-300 overflow-hidden group
-                                        ${errors.location ? 'border-destructive/50' : formData.location ? 'border-primary/50' : 'border-border bg-muted/20'}
-                                    `}>
+                                    <div className={`relative rounded-xl border transition-all duration-300 overflow-hidden group ${errors.location ? 'border-destructive/50' : formData.location ? 'border-primary/50' : 'border-border bg-muted/20'}`}>
                                         <div className="p-1.5 bg-card">
                                             <MapPicker
                                                 initialLocation={{
@@ -309,7 +333,7 @@ export default function EditTournamentModal({
                                             )}
                                         </div>
                                     </div>
-                                    {errors.location && <p className="text-xs text-destructive">{errors.location}</p>}
+                                    {errors.location && <p className="text-xs text-destructive flex items-center gap-1"><AlertCircle size={12} />{errors.location}</p>}
                                 </div>
                             </div>
                         </div>
@@ -345,7 +369,7 @@ export default function EditTournamentModal({
                                                 src={
                                                     formData.banner instanceof File
                                                         ? URL.createObjectURL(formData.banner)
-                                                        : formData.banner // Assume it's a string URL from backend
+                                                        : formData.banner
                                                 }
                                                 alt="Preview"
                                                 className="w-full h-48 object-cover rounded-lg shadow-md"
@@ -389,7 +413,7 @@ export default function EditTournamentModal({
                                         rows={4}
                                         className="w-full bg-background border border-input rounded-lg p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-input transition-all resize-none"
                                     />
-                                    {errors.description && <p className="text-xs text-destructive mt-1">{errors.description}</p>}
+                                    {errors.description && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.description}</p>}
                                 </div>
                                 <div>
                                     <label className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
@@ -407,19 +431,23 @@ export default function EditTournamentModal({
                                 </div>
                             </div>
                         </div>
-
-                        {/* Sticky Footer for Actions */}
-                        <div className="sticky bottom-0 -mx-6 -mb-6 p-4 bg-card border-t border-border z-10 md:-mx-8 md:-mb-8 rounded-b-2xl">
-                            <FormActions
-                                submitLabel="Save Changes"
-                                onCancel={handleClose}
-                                disabled={isSubmitting}
-                                loading={isSubmitting}
-                            />
-                        </div>
-
                     </form>
                 </div>
+
+                {/* 3. Sticky Footer (Fixed) */}
+                <div className="flex-none p-4 bg-card border-t border-border rounded-b-2xl">
+                    <FormActions
+                        submitLabel="Save Changes"
+                        onCancel={handleClose}
+                        disabled={isSubmitting}
+                        loading={isSubmitting}
+                    />
+                </div>
+
+                <PrizeInfoModal
+                    isOpen={showPrizeInfo}
+                    onClose={() => setShowPrizeInfo(false)}
+                />
             </div>
         </div>
     );

@@ -47,7 +47,7 @@ export const MatchHeader = ({
 
             {/* Top Bar: Navigation & Connection */}
             <div className="relative z-10 border-b border-border bg-background/50 backdrop-blur-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-between">
+                <div className="mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-between">
                     <button
                         onClick={onBack}
                         className="flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -65,7 +65,7 @@ export const MatchHeader = ({
             </div>
 
             {/* Main Header Content */}
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+            <div className="relative z-10 mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
                 <div className="flex flex-col lg:flex-row items-center lg:items-end justify-between gap-8">
 
                     {/* LEFT: Match Info & Teams */}

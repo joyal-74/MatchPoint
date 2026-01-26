@@ -12,6 +12,7 @@ const ProviderTokens = {
     ManagerIdGenerator: "ManagerIdGenerator",
     PlayerIdGenerator: "PlayerIdGenerator",
     UserIdGenerator: "UserIdGenerator",
+    UmpireIdGenerator: "UmpireIdGenerator",
     TeamIdGenerator: "TeamIdGenerator",
     TournamentIdGenerator: "TournamentIdGenerator",
     RoleIdGenerator: "RoleIdGenerator",
@@ -82,6 +83,7 @@ const AuthUsecaseTokens = {
     SignupViewerUseCase: "SignupViewerUseCase",
     SignupPlayerUseCase: "SignupPlayerUseCase",
     SignupManagerUseCase: "SignupManagerUseCase",
+    SignupUmpireUseCase: "SignupUmpireUseCase",
     RefreshTokenUseCase: "RefreshTokenUseCase",
     ForgotPasswordUseCase: "ForgotPasswordUseCase",
     VerifyOtpUseCase: "VerifyOtpUseCase",
@@ -172,6 +174,7 @@ const ManagerUsecaseTokens = {
 
     GetDashboardAnalytics: 'GetDashboardAnalytics',
     UpdateUserDirectlyPlan: 'UpdateUserDirectlyPlan',
+    GetMyTournamentMatchResult: 'GetMyTournamentMatchResult',
 }
 
 const MatchUsecaseTokens = {
@@ -225,6 +228,18 @@ const ViewerUsecaseTokens = {
     GetLeaderBoardUsecase: 'GetLeaderBoardUsecase',
 }
 
+const SharedUseCaseTokens = {
+    MarkNotificationRead : Symbol.for('MarkNotificationRead'),
+    MarkAllNotificationRead : Symbol.for('MarkAllNotificationRead'),
+    VerifyPaymentUseCase: "VerifyPaymentUseCase",
+    UpdateUserPlanUseCase: "UpdateUserPlanUseCase",
+    VerifyPasswordUseCase: "VerifyPasswordUseCase",
+    UpdatePasswordUseCase: "UpdatePasswordUseCase",
+    UpdatePrivacyUseCase: "UpdatePrivacyUseCase",
+    GetPlansAndUserSubscription: "GetPlansAndUserSubscription",
+    CreatePaymentSession: "CreatePaymentSession",
+    SubscriptionService: "SubscriptionService",
+}
 
 
 export const DI_TOKENS = {
@@ -237,14 +252,8 @@ export const DI_TOKENS = {
     ...MatchUsecaseTokens,
     ...PlayerUsecaseTokens,
     ...ViewerUsecaseTokens,
+    ...SharedUseCaseTokens,
 
     //user (shared)
-    VerifyPaymentUseCase: "VerifyPaymentUseCase",
-    UpdateUserPlanUseCase: "UpdateUserPlanUseCase",
-    VerifyPasswordUseCase: "VerifyPasswordUseCase",
-    UpdatePasswordUseCase: "UpdatePasswordUseCase",
-    UpdatePrivacyUseCase: "UpdatePrivacyUseCase",
-    GetPlansAndUserSubscription: "GetPlansAndUserSubscription",
-    CreatePaymentSession: "CreatePaymentSession",
-    SubscriptionService: "SubscriptionService",
+    
 };

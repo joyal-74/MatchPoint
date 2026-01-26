@@ -19,8 +19,6 @@ export class FetchMatchesUseCase implements IGetPlayerMatches {
 
         const result = await this._matchStatsRepo.findLiveMatches({ page, limit });
 
-        console.log(result)
-
         return result;
     }
 }

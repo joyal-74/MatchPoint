@@ -1,85 +1,75 @@
 import React from "react";
 import Select, { type StylesConfig, type Props as SelectProps } from "react-select";
 
+// 1. Export this so other components can use it
 export interface Option {
-    value: string;
+    value: string | number; // Allow numbers too for safety
     label: string;
 }
 
+// 2. Update interface: options should be Option[], not string[]
 interface CustomSelectProps extends Omit<SelectProps<Option, false>, "options"> {
-    options: string[];
+    options: Option[]; 
 }
 
 const customStyles: StylesConfig<Option, false> = {
     control: (base, state) => ({
         ...base,
-        // Use background color from theme
         backgroundColor: "hsl(var(--background))",
-        // Border color logic
-        borderColor: state.isFocused 
-            ? "hsl(var(--primary))" 
-            : "hsl(var(--input))",
+        borderColor: state.isFocused ? "hsl(var(--primary))" : "hsl(var(--input))",
         borderWidth: "1px",
-        borderRadius: "var(--radius)", // Use theme radius
+        borderRadius: "var(--radius)",
         padding: "2px",
         fontSize: "0.875rem",
         lineHeight: "1.25rem",
-        boxShadow: state.isFocused 
-            ? "0 0 0 1px hsl(var(--primary))" 
-            : "none",
+        boxShadow: state.isFocused ? "0 0 0 1px hsl(var(--primary))" : "none",
         transition: "all 0.2s",
         "&:hover": {
-            borderColor: state.isFocused 
-                ? "hsl(var(--primary))" 
-                : "hsl(var(--ring))", // Slightly darker/lighter border on hover
+            borderColor: state.isFocused ? "hsl(var(--primary))" : "hsl(var(--ring))",
         }
     }),
     menu: (base) => ({
         ...base,
-        backgroundColor: "hsl(var(--popover))", // Popover background
+        backgroundColor: "hsl(var(--popover))",
         border: "1px solid hsl(var(--border))",
         borderRadius: "var(--radius)",
-        boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)", // Tailwind shadow-md
+        boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
         zIndex: 50,
     }),
     option: (base, { isFocused, isSelected }) => ({
         ...base,
         cursor: "pointer",
         backgroundColor: isSelected
-            ? "hsl(var(--primary))" // Selected Item = Primary Color
+            ? "hsl(var(--primary))"
             : isFocused
-                ? "hsl(var(--accent))" // Hovered Item = Accent Color
+                ? "hsl(var(--accent))"
                 : "transparent",
         color: isSelected
-            ? "hsl(var(--primary-foreground))" // Text on Primary
-            : "hsl(var(--foreground))",       // Standard Text
+            ? "hsl(var(--primary-foreground))"
+            : "hsl(var(--foreground))",
         fontSize: "0.875rem",
         "&:active": {
-            backgroundColor: isSelected 
-                ? "hsl(var(--primary))" 
-                : "hsl(var(--accent))",
+            backgroundColor: isSelected ? "hsl(var(--primary))" : "hsl(var(--accent))",
         }
     }),
     singleValue: (base) => ({
         ...base,
-        color: "hsl(var(--foreground))", // Selected text in the input
+        color: "hsl(var(--foreground))",
     }),
     placeholder: (base) => ({
         ...base,
-        color: "hsl(var(--muted-foreground))", // Placeholder text
+        color: "hsl(var(--muted-foreground))",
     }),
     input: (base) => ({
         ...base,
-        color: "hsl(var(--foreground))", // Typing text
+        color: "hsl(var(--foreground))",
     }),
     dropdownIndicator: (base, state) => ({
         ...base,
         color: "hsl(var(--muted-foreground))",
         transition: "transform 0.2s",
         transform: state.selectProps.menuIsOpen ? "rotate(180deg)" : "none",
-        "&:hover": {
-            color: "hsl(var(--foreground))",
-        }
+        "&:hover": { color: "hsl(var(--foreground))" }
     }),
     indicatorSeparator: (base) => ({
         ...base,
@@ -88,7 +78,6 @@ const customStyles: StylesConfig<Option, false> = {
     menuList: (base) => ({
         ...base,
         padding: "4px",
-        borderRadius: "var(--radius)",
     }),
     noOptionsMessage: (base) => ({
         ...base,
@@ -97,20 +86,17 @@ const customStyles: StylesConfig<Option, false> = {
 };
 
 const CustomSelect: React.FC<CustomSelectProps> = ({ options, ...props }) => {
-    // Map string array to Option objects
-    const mappedOptions = options.map((opt) => ({
-        value: opt.toLowerCase(),
-        label: opt,
-    }));
-
+    // 3. REMOVED the mapping logic. 
+    // We now pass the options directly because they are already in the correct format.
+    
     return (
-        <Select<Option, false> 
-            options={mappedOptions} 
+        <Select<Option, false>
+            options={options} // Pass directly
             styles={customStyles}
             className="react-select-container"
             classNamePrefix="react-select"
-            isSearchable={true} // Usually good to have
-            {...props} 
+            isSearchable={true}
+            {...props}
         />
     );
 };

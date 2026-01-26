@@ -1,4 +1,4 @@
-import { ArrowUpCircle, ArrowDownCircle, Check, Tag, Clock } from "lucide-react";
+import { ArrowUpCircle, ArrowDownCircle, Check, Tag, Clock, X } from "lucide-react";
 import type { AvailablePlan, PlanLevel } from "./SubscriptionTypes";
 import { UserButton } from "./UserButton";
 
@@ -53,75 +53,95 @@ export const PlanCardUser: React.FC<{
     return (
         <div
             className={`
-                relative p-6 rounded-2xl flex flex-col h-full border transition-all duration-300
+                relative p-5 rounded-xl flex flex-col h-full border transition-all duration-300
                 ${isCurrent 
-                    ? "bg-primary/5 border-primary/50 shadow-[0_0_20px_rgba(var(--primary),0.1)]" 
+                    ? "bg-primary/5 border-primary/50 shadow-md" 
                     : "bg-card border-border hover:border-primary/30 hover:shadow-lg hover:-translate-y-1" 
                 }
             `}
         >
             {isPopular && !isCurrent && (
-                <div className="absolute -top-3 right-4 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                <div className="absolute -top-2.5 right-3 bg-primary text-primary-foreground text-[10px] uppercase font-bold px-2 py-0.5 rounded-full shadow-md">
                     Most Popular
                 </div>
             )}
 
             {isCurrent && (
-                <div className="absolute -top-3 right-4 bg-primary/10 text-primary border border-primary/20 text-xs font-bold px-3 py-1 rounded-full">
-                    Current Plan
+                <div className="absolute -top-2.5 right-3 bg-primary/10 text-primary border border-primary/20 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">
+                    Current
                 </div>
             )}
             
             {isPending && (
-                <div className="absolute -top-3 right-4 bg-yellow-100 text-yellow-700 border border-yellow-200 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                    <Clock size={12} /> Starts Next Cycle
+                <div className="absolute -top-2.5 right-3 bg-yellow-100 text-yellow-700 border border-yellow-200 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <Clock size={10} /> Next Cycle
                 </div>
             )}
 
             <div className="flex-grow">
-                <div className="mb-5">
-                    <div className="flex justify-between items-center mb-2">
-                        <h3 className={`text-xl font-bold ${isCurrent ? 'text-primary' : 'text-card-foreground'}`}>
+                {/* Header Section */}
+                <div className="mb-3">
+                    <div className="flex justify-between items-center mb-1">
+                        <h3 className={`text-lg font-bold ${isCurrent ? 'text-primary' : 'text-card-foreground'}`}>
                             {plan.title}
                         </h3>
                     </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                         {plan.description}
                     </p>
                 </div>
 
-                <div className="mb-6">
-                    <p className="text-4xl font-bold text-foreground flex items-end gap-1">
+                {/* Price Section */}
+                <div className="mb-4">
+                    <p className="text-3xl font-bold text-foreground flex items-end gap-0.5">
                         {plan.level === "Free" ? "Free" : `₹${plan.price}`}
                         {plan.level !== "Free" && plan.price > 0 && (
-                            <span className="text-sm font-medium text-muted-foreground mb-1.5 ml-1">
-                                /{plan.billingCycle?.toLowerCase() ?? "monthly"}
+                            <span className="text-xs font-medium text-muted-foreground mb-1.5 ml-1">
+                                /{plan.billingCycle?.toLowerCase() ?? "mo"}
                             </span>
                         )}
                     </p>
                 </div>
 
-                <div className="w-full h-px bg-border mb-6"></div>
+                <div className="w-full h-px bg-border mb-4"></div>
 
-                <ul className="space-y-3 mb-8">
-                    {plan.features.map((feature, index) => (
-                        <li key={index} className="flex items-start text-sm text-muted-foreground group">
-                            <div className={`mt-0.5 mr-3 flex-shrink-0 ${isCurrent ? 'text-primary' : 'text-muted-foreground/70 group-hover:text-primary transition-colors'}`}>
-                                <Check size={16} strokeWidth={3} />
-                            </div>
-                            <span className="leading-snug text-foreground/90" dangerouslySetInnerHTML={{ __html: feature }} />
-                        </li>
-                    ))}
+                {/* Features Section */}
+                <ul className="space-y-3 mb-5">
+                    {plan.features.map((feature, index) => {
+                        // Logic check for "No"
+                        const isNegative = feature.trim().toLowerCase().startsWith('no');
+
+                        return (
+                            <li key={index} className="flex items-start text-sm group">
+                                <div className="mt-0.5 mr-2.5 flex-shrink-0">
+                                    {isNegative ? (
+                                        <X size={15} className="text-red-500" strokeWidth={2.5} />
+                                    ) : (
+                                        <Check 
+                                            size={15} 
+                                            className={`${isCurrent ? 'text-primary' : 'text-primary/80'} transition-colors`} 
+                                            strokeWidth={2.5} 
+                                        />
+                                    )}
+                                </div>
+                                <span 
+                                    className={`leading-tight text-[13px] ${isNegative ? 'text-muted-foreground opacity-80' : 'text-foreground/90'}`}
+                                >
+                                    {feature}
+                                </span>
+                            </li>
+                        );
+                    })}
                 </ul>
             </div>
 
             <div className="mt-auto">
                 <UserButton
-                    variant={variant as any}
-                    icon={isDisabled ? undefined : <ButtonIcon className="w-4 h-4" />}
+                    variant={variant}
+                    icon={isDisabled ? undefined : <ButtonIcon className="w-3.5 h-3.5" />}
                     disabled={isDisabled}
                     onClick={() => !isDisabled && onChoosePlan(plan)}
-                    className="w-full justify-center"
+                    className="w-full justify-center text-sm py-2 h-9"
                 >
                     {buttonText}
                 </UserButton>

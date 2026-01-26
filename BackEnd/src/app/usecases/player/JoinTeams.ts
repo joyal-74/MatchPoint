@@ -27,6 +27,8 @@ export class JoinTeamUseCase implements IJoinTeamUseCase {
         const player = await this._playerRepo.findByUserId(userId);
         if (!player) throw new NotFoundError('player not found')
 
+        const playerName = `${player.userId?.firstName} ${player.userId?.lastName}`
+
         const alreadyMember = team.members.some(m => {
             return m.userId === userId;
         });
@@ -42,7 +44,7 @@ export class JoinTeamUseCase implements IJoinTeamUseCase {
             userId: team.managerId,
             type: "TEAM_JOIN_REQUEST",
             title: "New Join Request",
-            message: `${player.userId} requested to join your team`,
+            message: `${playerName} requested to join your team`,
             meta: {
                 teamId,
                 playerId: player._id,

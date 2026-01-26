@@ -11,4 +11,8 @@ router.get('/:playerId', expressAdapter(notificationsController.getNotifications
 
 router.get('/:playerId/unread', expressAdapter(notificationsController.getUnreadCount));
 
+router.patch('/mark-read', expressAdapter(notificationsController.markAsRead));
+
+router.patch('/mark-all-read', expressAdapter(notificationsController.markAllAsRead));
+
 export default router;

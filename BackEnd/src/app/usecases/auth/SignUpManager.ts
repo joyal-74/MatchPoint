@@ -15,6 +15,8 @@ import { OtpContext } from "domain/enums/OtpContext";
 import { IManagerSignupUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 import { IManagerIdGenerator } from "app/providers/IIdGenerator";
 import { UserMapper } from "app/mappers/UserMapper";
+import { IFileStorage } from "app/providers/IFileStorage";
+import { File } from "domain/entities/File";
 
 @injectable()
 export class SignupManager implements IManagerSignupUseCase {
@@ -26,10 +28,16 @@ export class SignupManager implements IManagerSignupUseCase {
         @inject(DI_TOKENS.PasswordHasher) private _passwordHasher: IPasswordHasher,
         @inject(DI_TOKENS.OtpGenerator) private _otpGenerator: IOtpGenerator,
         @inject(DI_TOKENS.ManagerIdGenerator) private _idGenerator: IManagerIdGenerator,
+        @inject(DI_TOKENS.FileStorage) private _fileStorage: IFileStorage,
     ) { }
 
-    async execute(userData: ManagerRegister) {
+    async execute(userData: ManagerRegister, file? :File) {
         const validData = validateUserInput(userData);
+
+        if (file) {
+            const fileKey = await this._fileStorage.upload(file);
+            validData.profileImage = fileKey;
+        }
 
         const existingUser = await this._userRepository.findByEmail(validData.email);
         if (existingUser) throw new BadRequestError("User with this email already exists");
@@ -47,9 +55,10 @@ export class SignupManager implements IManagerSignupUseCase {
             password: hashedPassword,
             username: `user-${Date.now()}`,
             wallet: 0,
-            phone : validData.phone,
+            phone: validData.phone,
             isActive: true,
             isVerified: false,
+            profileImage : validData.profileImage,
             settings: {
                 theme: validData.settings?.theme || "dark",
                 language: validData.settings?.language || "en",
@@ -66,12 +75,13 @@ export class SignupManager implements IManagerSignupUseCase {
         });
 
         const otp = this._otpGenerator.generateOtp();
+        console.log(otp, 'otp')
         const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
         await this._otpRepository.saveOtp(newUser._id, validData.email, otp, OtpContext.VerifyEmail);
 
         await this._mailRepository.sendVerificationEmail(newUser.email, otp);
 
-        const managerDTO  = UserMapper.toUserLoginResponseDTO(newUser)
+        const managerDTO = UserMapper.toUserLoginResponseDTO(newUser)
 
         return { success: true, message: "Manager Registered successfully", user: managerDTO, expiresAt };
     }

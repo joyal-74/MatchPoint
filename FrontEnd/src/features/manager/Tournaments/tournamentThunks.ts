@@ -73,6 +73,11 @@ export const getTournamentMatches  = createAsyncThunk(
     createApiThunk(managerEndpoints.getTournamentMatches )
 )
 
+export const getTournamentMatchesResult  = createAsyncThunk(
+    "manager/getTournamentMatchesResult",
+    createApiThunk(managerEndpoints.getTournamentMatchesResult )
+)
+
 export const fetchLeaderboard  = createAsyncThunk(
     "manager/fetchLeaderboard",
     createApiThunk(managerEndpoints.fetchLeaderboard )

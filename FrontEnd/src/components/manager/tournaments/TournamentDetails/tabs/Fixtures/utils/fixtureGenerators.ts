@@ -84,7 +84,7 @@ export function generateLeagueFixtures(teams: RegisteredTeam[], location: string
                 round: 1,
                 venue: location,
                 status: "upcoming",
-                winner: "",
+                winner: null,
                 stats: {},
             });
         }
@@ -105,7 +105,7 @@ export function generateFriendlyFixture(teams: RegisteredTeam[], location: strin
             venue: location,
             date: new Date(startDate),
             status: "upcoming",
-            winner: "",
+            winner: null,
             stats: {},
         },
     ];

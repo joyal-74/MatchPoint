@@ -18,6 +18,10 @@ export interface ITournamentIdGenerator {
     generate(): string;
 }
 
+export interface IUmpireIdGenerator {
+    generate(): string;
+}
+
 export interface IRoleIdGenerator {
     generate(role: string): string;
 }

@@ -1,5 +1,9 @@
 import React from "react";
-import { Edit2, Save, X, Loader2, UserCog } from "lucide-react";
+import { 
+    Edit2, Save, X, Loader2, UserCog, 
+    LogOut, Settings, ChevronRight 
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import ProfileHeader from "../../components/shared/ProfileHeader";
 import ProfileForm from "../../components/shared/ProfileForm";
 import PremiumCard from "../../components/shared/PremiumCard";
@@ -7,13 +11,29 @@ import ManagerLayout from "../layout/ManagerLayout";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
 import ProfileError from "../../components/manager/profile/ProfileError";
 import { useProfile } from "../../hooks/manager/useProfile";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { logoutUser } from "../../features/auth";
 
 const ProfilePage: React.FC = () => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(s => s.auth.user);
+
     const {
         isEditing, setIsEditing, profileImage, formData,
         loading, error, handleImageUpload, handleInputChange,
         handleSave, handleCancel, handleRetry
     } = useProfile();
+
+    // --- Logout Logic ---
+    const handleLogout = async () => {
+        try {
+            await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
+            navigate("/login");
+        } catch (error) {
+            console.error("Logout failed", error);
+        }
+    };
 
     if (loading && !formData) return <ManagerLayout><LoadingOverlay show={true} /></ManagerLayout>;
     if (error) return <ProfileError error={error} onAction={handleRetry} />;
@@ -21,8 +41,8 @@ const ProfilePage: React.FC = () => {
 
     return (
         <ManagerLayout>
-            <div className="max-w-7xl mx-auto mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+             <div className="mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     
                     {/* Left Sidebar */}
                     <div className="lg:col-span-1 space-y-6">
@@ -33,17 +53,20 @@ const ProfilePage: React.FC = () => {
                             onEditToggle={() => setIsEditing((prev) => !prev)}
                             onImageUpload={handleImageUpload}
                         />
-                        <PremiumCard />
+                        {/* Hide Premium Card on mobile, show at bottom instead */}
+                        <div className="hidden lg:block">
+                            <PremiumCard />
+                        </div>
                     </div>
 
                     {/* Right Content */}
-                    <div className="lg:col-span-2">
+                    <div className="lg:col-span-2 space-y-6">
                         <div className={`
                             bg-card border rounded-xl shadow-sm overflow-hidden transition-colors duration-300
                             ${isEditing ? 'border-primary/50 ring-1 ring-primary/10' : 'border-border'}
                         `}>
                             
-                            {/* --- THE NEW HEADER BAR --- */}
+                            {/* Header Bar */}
                             <div className="px-6 py-4 border-b border-border bg-muted/20 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md">
                                 <div>
                                     <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
@@ -97,6 +120,44 @@ const ProfilePage: React.FC = () => {
                                 />
                             </div>
                         </div>
+
+                        {/* --- Mobile Only: Account Actions --- */}
+                        <div className="md:hidden space-y-4 pt-4 border-t border-border">
+                            <h3 className="text-sm font-semibold text-muted-foreground px-1">Account</h3>
+                            
+                            <div className="bg-card border border-border rounded-xl overflow-hidden divide-y divide-border shadow-sm">
+                                <button 
+                                    onClick={() => navigate('/manager/settings')}
+                                    className="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-colors"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-primary/10 rounded-full text-primary">
+                                            <Settings size={18} />
+                                        </div>
+                                        <span className="font-medium text-sm">Settings</span>
+                                    </div>
+                                    <ChevronRight size={16} className="text-muted-foreground" />
+                                </button>
+
+                                <button 
+                                    onClick={handleLogout}
+                                    className="w-full flex items-center justify-between p-4 hover:bg-red-50 hover:text-red-600 transition-colors group"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-muted rounded-full group-hover:bg-red-100 transition-colors">
+                                            <LogOut size={18} />
+                                        </div>
+                                        <span className="font-medium text-sm">Logout</span>
+                                    </div>
+                                    <ChevronRight size={16} className="text-muted-foreground group-hover:text-red-400" />
+                                </button>
+                            </div>
+
+                            <div className="pt-2">
+                                <PremiumCard />
+                            </div>
+                        </div>
+
                     </div>
                     
                 </div>

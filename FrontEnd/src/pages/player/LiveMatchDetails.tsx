@@ -28,11 +28,11 @@ const LiveMatchDetails = () => {
     // --- Helper Functions (Passed down as props) ---
     const getPlayerName = (playerId: string): string => {
         if (teamA) {
-            const member = teamA.members.find((m) => m.userId === playerId);
+            const member = teamA.members.find((m) => m._id === playerId);
             if (member) return member.name;
         }
         if (teamB) {
-            const member = teamB.members.find((m) => m.userId === playerId);
+            const member = teamB.members.find((m) => m._id === playerId);
             if (member) return member.name;
         }
         return `Player ${playerId?.slice(-4) || '???'}`;

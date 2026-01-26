@@ -1,256 +1,149 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Device } from "mediasoup-client";
-import { getSocket } from "../../socket/socket";
+import { getSocket } from "../socket/socket"; 
 
 type StreamStatus = "idle" | "connecting" | "live" | "paused";
+type StreamMode = "webrtc" | "external";
 
 export const useStreamManager = (matchId: string) => {
-    // ============================================================
-    // 1. STREAM STATE
-    // ============================================================
+    // === 1. BROADCAST & METADATA ===
     const [status, setStatus] = useState<StreamStatus>("idle");
+    const [streamMode, setStreamMode] = useState<StreamMode>("webrtc");
     const [streamTitle, setStreamTitle] = useState("");
-    const [streamDesc, setStreamDesc] = useState("");
-    const [viewerCount] = useState(0);
+    const [streamDesc, setStreamDesc] = useState(""); // Re-added Description
+    const [viewerCount, setViewerCount] = useState(0);
     const [elapsedTime, setElapsedTime] = useState("00:00:00");
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [stats, setStats] = useState({ videoBitrate: 0, rtt: 0, score: 10 });
 
-    // ============================================================
-    // 2. MEDIA STATE
-    // ============================================================
+    // === 2. MEDIA & HARDWARE ===
     const [localStream, setLocalStream] = useState<MediaStream | null>(null);
     const [isAudioEnabled, setIsAudioEnabled] = useState(true);
     const [isVideoEnabled, setIsVideoEnabled] = useState(true);
-
-    // ============================================================
-    // 3. DEVICE STATE
-    // ============================================================
     const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
     const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
     const [selectedVideoDeviceId, setSelectedVideoDeviceId] = useState("");
     const [selectedAudioDeviceId, setSelectedAudioDeviceId] = useState("");
-    const [devicesReady, setDevicesReady] = useState(false);
 
-    // ============================================================
-    // 4. REFS
-    // ============================================================
+    // === 3. REFS ===
     const localVideoRef = useRef<HTMLVideoElement>(null);
     const transportRef = useRef<any>(null);
     const producerRef = useRef<any>(null);
     const audioProducerRef = useRef<any>(null);
     const socket = getSocket();
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
-    const initializedRef = useRef(false);
+    const lastBytesSentRef = useRef(0);
+    const lastTimestampRef = useRef(0);
 
-    // ============================================================
-    // A. DEVICE ENUMERATION
-    // ============================================================
+    // === 4. DEVICE DISCOVERY (Manual Selection) ===
     const fetchDevices = useCallback(async () => {
-        const devices = await navigator.mediaDevices.enumerateDevices();
+        try {
+            // We request a temporary stream just to trigger the permission prompt
+            const tempStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            
+            const vInputs = devices.filter(d => d.kind === "videoinput");
+            const aInputs = devices.filter(d => d.kind === "audioinput");
 
-        const videoInputs = devices.filter(d => d.kind === "videoinput");
-        const audioInputs = devices.filter(d => d.kind === "audioinput");
+            setVideoDevices(vInputs);
+            setAudioDevices(aInputs);
 
-        setVideoDevices(videoInputs);
-        setAudioDevices(audioInputs);
-        setDevicesReady(true);
+            if (vInputs.length) setSelectedVideoDeviceId(vInputs[0].deviceId);
+            if (aInputs.length) setSelectedAudioDeviceId(aInputs[0].deviceId);
 
-        if (!selectedVideoDeviceId && videoInputs.length) {
-            setSelectedVideoDeviceId(videoInputs[0].deviceId);
+            // Stop temp tracks immediately
+            tempStream.getTracks().forEach(t => t.stop());
+        } catch (err) {
+            setErrorMsg("Camera/Mic permissions denied.");
         }
+    }, []);
 
-        if (!selectedAudioDeviceId && audioInputs.length) {
-            setSelectedAudioDeviceId(audioInputs[0].deviceId);
-        }
-    }, [selectedVideoDeviceId, selectedAudioDeviceId]);
-
-    // ============================================================
-    // B. INITIAL MEDIA INIT (STRICTMODE SAFE)
-    // ============================================================
     useEffect(() => {
-        if (initializedRef.current) return;
-        initializedRef.current = true;
-
-        const init = async () => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true,
-                });
-
-                setLocalStream(stream);
-
-                if (localVideoRef.current) {
-                    localVideoRef.current.srcObject = stream;
-                }
-
-                await fetchDevices();
-            } catch {
-                setErrorMsg("Camera & microphone permission required.");
-            }
-        };
-
-        init();
-
+        fetchDevices();
         navigator.mediaDevices.addEventListener("devicechange", fetchDevices);
-        return () =>
-            navigator.mediaDevices.removeEventListener("devicechange", fetchDevices);
+        return () => navigator.mediaDevices.removeEventListener("devicechange", fetchDevices);
     }, [fetchDevices]);
 
-    // ============================================================
-    // C. DEVICE SWITCHING
-    // ============================================================
-    const changeVideoDevice = async (deviceId: string) => {
-        if (!localStream) return;
-
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: { deviceId: { exact: deviceId } },
-            audio: false,
-        });
-
-        const newTrack = stream.getVideoTracks()[0];
-        const oldTrack = localStream.getVideoTracks()[0];
-
-        oldTrack?.stop();
-        localStream.removeTrack(oldTrack);
-        localStream.addTrack(newTrack);
-
-        if (localVideoRef.current) {
-            localVideoRef.current.srcObject = localStream;
+    // === 5. PREVIEW LOGIC (Not Auto-Live) ===
+    const startPreview = async () => {
+        if (!selectedVideoDeviceId) return;
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { deviceId: { exact: selectedVideoDeviceId } },
+                audio: { deviceId: { exact: selectedAudioDeviceId } }
+            });
+            setLocalStream(stream);
+            if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+        } catch (e) {
+            setErrorMsg("Failed to access selected hardware.");
         }
-
-        if (status === "live" && producerRef.current) {
-            await producerRef.current.replaceTrack({ track: newTrack });
-        }
-
-        setSelectedVideoDeviceId(deviceId);
     };
 
-    const changeAudioDevice = async (deviceId: string) => {
-        if (!localStream) return;
+    // === 6. STATS LOOP ===
+    useEffect(() => {
+        if (status !== 'live' || !producerRef.current) return;
+        const interval = setInterval(async () => {
+            try {
+                const report = await producerRef.current.getStats();
+                report.forEach((stat: any) => {
+                    if (stat.type === 'outbound-rtp') {
+                        const now = stat.timestamp;
+                        const dt = (now - lastTimestampRef.current) / 1000;
+                        if (dt > 0) {
+                            const bitrate = Math.floor(((stat.bytesSent - lastBytesSentRef.current) * 8) / dt);
+                            setStats(prev => ({ ...prev, videoBitrate: bitrate }));
+                        }
+                        lastBytesSentRef.current = stat.bytesSent;
+                        lastTimestampRef.current = now;
+                    }
+                    if (stat.type === 'remote-inbound-rtp') {
+                        setStats(prev => ({ ...prev, rtt: stat.roundTripTime * 1000 }));
+                    }
+                });
+            } catch (e) {}
+        }, 2000);
+        return () => clearInterval(interval);
+    }, [status]);
 
-        const stream = await navigator.mediaDevices.getUserMedia({
-            audio: { deviceId: { exact: deviceId } },
-            video: false,
-        });
-
-        const newTrack = stream.getAudioTracks()[0];
-        const oldTrack = localStream.getAudioTracks()[0];
-
-        oldTrack?.stop();
-        localStream.removeTrack(oldTrack);
-        localStream.addTrack(newTrack);
-
-        if (status === "live" && audioProducerRef.current) {
-            await audioProducerRef.current.replaceTrack({ track: newTrack });
-        }
-
-        setSelectedAudioDeviceId(deviceId);
-    };
-
-    // ============================================================
-    // D. STREAM CONTROLS
-    // ============================================================
+    // === 7. BROADCAST HANDLERS ===
     const handleStartStream = async () => {
-        if (!localStream) return;
+        if (streamMode === 'external') {
+            setStatus("live");
+            socket.emit("stream:start-external", { matchId, title: streamTitle, description: streamDesc });
+            return;
+        }
+        if (!localStream) return await startPreview(); // Start camera if not on
 
         setStatus("connecting");
+        try {
+            const rtpCaps = await new Promise<any>(res => socket.emit("stream:get-capabilities", { matchId }, res));
+            const device = new Device();
+            await device.load({ routerRtpCapabilities: rtpCaps });
+            const transportParams = await new Promise<any>(res => socket.emit("stream:create-transport", { matchId }, res));
+            const transport = device.createSendTransport(transportParams);
+            transportRef.current = transport;
 
-        const rtpCaps = await new Promise<any>(res =>
-            socket.emit("stream:get-capabilities", { matchId }, res)
-        );
+            transport.on("connect", ({ dtlsParameters }, cb) => socket.emit("stream:connect-transport", { matchId, dtlsParameters }, cb));
+            transport.on("produce", ({ kind, rtpParameters }, cb) => 
+                socket.emit("stream:produce", { matchId, kind, rtpParameters }, ({ id }: any) => cb({ id }))
+            );
 
-        const device = new Device();
-        await device.load({ routerRtpCapabilities: rtpCaps });
-
-        const transportParams = await new Promise<any>(res =>
-            socket.emit("stream:create-transport", { matchId }, res)
-        );
-
-        const transport = device.createSendTransport(transportParams);
-        transportRef.current = transport;
-
-        transport.on("connect", ({ dtlsParameters }, cb) =>
-            socket.emit("stream:connect-transport", { matchId, dtlsParameters }, cb)
-        );
-
-        transport.on("produce", ({ kind, rtpParameters }, cb) =>
-            socket.emit(
-                "stream:produce",
-                { matchId, kind, rtpParameters },
-                ({ id }: any) => cb({ id })
-            )
-        );
-
-        producerRef.current = await transport.produce({
-            track: localStream.getVideoTracks()[0],
-        });
-
-        audioProducerRef.current = await transport.produce({
-            track: localStream.getAudioTracks()[0],
-        });
-
-        setStatus("live");
+            producerRef.current = await transport.produce({ track: localStream.getVideoTracks()[0] });
+            audioProducerRef.current = await transport.produce({ track: localStream.getAudioTracks()[0] });
+            setStatus("live");
+        } catch (e: any) { setStatus("idle"); setErrorMsg(e.message); }
     };
 
-    const handleEndStream = () => {
-        transportRef.current?.close();
-
-        localStream?.getTracks().forEach(t => t.stop());
-
-        socket.emit("stream:stop", { matchId });
-
-        setStatus("idle");
-        setElapsedTime("00:00:00");
-    };
-
-    // ============================================================
-    // E. TOGGLES
-    // ============================================================
-    const toggleVideo = () => {
-        const t = localStream?.getVideoTracks()[0];
-        if (!t) return;
-        t.enabled = !t.enabled;
-        setIsVideoEnabled(t.enabled);
-    };
-
-    const toggleAudio = () => {
-        const t = localStream?.getAudioTracks()[0];
-        if (!t) return;
-        t.enabled = !t.enabled;
-        setIsAudioEnabled(t.enabled);
-    };
-
-    // ============================================================
-    // F. API
-    // ============================================================
     return {
-        streamTitle,
-        setStreamTitle,
-        streamDesc,
-        setStreamDesc,
-
-        status,
-        elapsedTime,
-        errorMsg,
-
-        localStream,
-        localVideoRef,
-
-        isAudioEnabled,
-        isVideoEnabled,
-
-        videoDevices,
-        audioDevices,
-        selectedVideoDeviceId,
-        selectedAudioDeviceId,
-        devicesReady,
-
-        handleStartStream,
-        handleEndStream,
-        changeVideoDevice,
-        changeAudioDevice,
-        toggleVideo,
-        toggleAudio,
+        streamTitle, setStreamTitle, streamDesc, setStreamDesc,
+        status, streamMode, setStreamMode, stats,
+        elapsedTime, viewerCount, errorMsg,
+        localStream, localVideoRef, isAudioEnabled, isVideoEnabled,
+        videoDevices, audioDevices, selectedVideoDeviceId, setSelectedVideoDeviceId,
+        selectedAudioDeviceId, setSelectedAudioDeviceId,
+        handleStartStream, 
+        handleEndStream: () => { transportRef.current?.close(); socket.emit("stream:stop", { matchId }); setStatus("idle"); },
+        startPreview,
+        toggleVideo: () => { const t = localStream?.getVideoTracks()[0]; if (t) { t.enabled = !t.enabled; setIsVideoEnabled(t.enabled); } },
+        toggleAudio: () => { const t = localStream?.getAudioTracks()[0]; if (t) { t.enabled = !t.enabled; setIsAudioEnabled(t.enabled); } }
     };
 };

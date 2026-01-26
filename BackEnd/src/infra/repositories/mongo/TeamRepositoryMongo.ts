@@ -165,7 +165,6 @@ export class TeamRepositoryMongo implements ITeamRepository {
 
 
         const result = TeamMongoMapper.toDomainFull(team as unknown as TeamSummaryPopulatedDocument);
-        console.log(result)
         return result
     }
 

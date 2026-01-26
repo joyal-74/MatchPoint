@@ -16,10 +16,12 @@ import {
     fetchLeaderboard,
     getDashboardAnalytics,
     fetchTournamentPointsTable,
+    getTournamentMatchesResult
 } from "./tournamentThunks";
 import type { Fixture, Leaderboard, Match, Tournament } from "../managerTypes";
 import type { RegisteredTeam } from "../../../components/manager/tournaments/TournamentDetails/tabs/TabContent";
 import type { AnalyticsData, PointsTableData } from "./tournamentTypes";
+import type { TeamResultSummary } from "../../../components/manager/tournaments/Types";
 
 interface ManagerTournamentState {
     myTournaments: Tournament[];
@@ -30,7 +32,8 @@ interface ManagerTournamentState {
         data: PointsTableData | null,
         loading: boolean,
         error: string | null
-    }
+    },
+    results: TeamResultSummary[] | null,
     registeredTeams: RegisteredTeam[],
     fixtures: Fixture | null,
     matches: Match[] | null,
@@ -51,6 +54,7 @@ const initialState: ManagerTournamentState = {
         loading: false,
         error: null
     },
+    results : [],
     fixtures: null,
     matches: null,
     leaderboard: {
@@ -321,6 +325,20 @@ const managerTournamentSlice = createSlice({
             .addCase(fetchTournamentPointsTable.rejected, (state, action) => {
                 state.pointsTable.loading = false;
                 state.pointsTable.error = action.payload as string;
+            })
+
+            builder
+            .addCase(getTournamentMatchesResult.pending, (state) => {
+                state.fixturesLoading = true;
+                state.error = null;
+            })
+            .addCase(getTournamentMatchesResult.fulfilled, (state, action) => {
+                state.fixturesLoading = false;
+                state.results = action.payload;
+            })
+            .addCase(getTournamentMatchesResult.rejected, (state, action) => {
+                state.fixturesLoading = false;
+                state.error = action.payload as string;
             });
     },
 });

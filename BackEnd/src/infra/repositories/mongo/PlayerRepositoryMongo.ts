@@ -1,6 +1,6 @@
 import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 import { PlayerProfileResponse } from "domain/dtos/Player.dto";
-import { Player, PlayerEntity, PlayerRegister, PlayerResponse } from "domain/entities/Player";
+import { Player, PlayerEntity, PlayerRegister, PlayerResponse, PopulatedPLayer } from "domain/entities/Player";
 import { UserRole } from "domain/enums/Roles";
 import { NotFoundError } from "domain/errors";
 import { PlayerModel } from "infra/databases/mongo/models/PlayerModel";
@@ -15,8 +15,8 @@ export class PlayerRepositoryMongo implements IPlayerRepository {
         return PlayerMongoMapper.toPlayerProfileResponse(player)
     }
 
-    async findByUserId(userId: string): Promise<PlayerResponse | null> {
-        return PlayerModel.findOne({ userId }).lean<PlayerResponse>().exec();
+    async findByUserId(userId: string): Promise<PopulatedPLayer | null> {
+        return PlayerModel.findOne({ userId }).populate("userId").lean<PopulatedPLayer>().exec();
     }
 
     async findPlayerDetails(userId: string): Promise<PlayerResponse | null> {

@@ -36,27 +36,33 @@ export class NotificationRepository implements INotificationRepository {
 
         return notifications.map(n => this.toResponse(n));
     }
-
-    async markAsRead(notificationId: string, userId: string): Promise<void> {
-        await NotificationModel.updateOne(
+    
+    async markAsRead(notificationId: string, userId: string): Promise<NotificationResponse | null> {
+        const updatedDoc = await NotificationModel.findOneAndUpdate(
             { _id: notificationId, userId },
-            { $set: { isRead: true } }
-        );
+            { $set: { isRead: true } },
+            { new: true }
+        ).lean<NotificationDocument>();
+
+        if (!updatedDoc) return null;
+
+        return this.toResponse(updatedDoc);
+
     }
 
-    async markAllAsRead(userId: string): Promise<void> {
-        await NotificationModel.updateMany(
-            { userId, isRead: false },
-            { $set: { isRead: true } }
-        );
-    }
+    async markAllAsRead(userId: string): Promise < void> {
+            await NotificationModel.updateMany(
+                { userId, isRead: false },
+                { $set: { isRead: true } }
+            );
+        }
 
-    async getUnreadCount(userId: string): Promise<number> {
-        return NotificationModel.countDocuments({
-            userId,
-            isRead: false
-        });
-    }
+    async getUnreadCount(userId: string): Promise < number > {
+            return NotificationModel.countDocuments({
+                userId,
+                isRead: false
+            });
+        }
 
     private toResponse(notification: NotificationDocument): NotificationResponse {
         return {

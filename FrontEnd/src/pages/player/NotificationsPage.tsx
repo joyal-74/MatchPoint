@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../hooks/hooks";
-import NotificationItem from "../../components/player/notifications/NotificationItem";
+import NotificationItem from "../../components/shared/notifications/NotificationItem";
 import { CheckCheck, Trash2, Inbox, Bell } from "lucide-react";
 import { markAllAsRead, clearAllNotifications } from "../../features/player/notifications/notificationSlice";
 

@@ -3,6 +3,7 @@ export const AuthMessages = {
     PASSWORD_REQUIRED: "Password is required",
     PASSWORD_TOO_SHORT: "Password must be 6+ characters",
     FIRST_NAME_REQUIRED: "First name is required",
+    NAME_ONLY_CHARACTERS: "Names cannot contain numbers or characters",
     LAST_NAME_REQUIRED: "Last name is required",
     INVALID_PHONE: "Phone number must be 10 digits",
     GENDER_REQUIRED: "Please select a gender",

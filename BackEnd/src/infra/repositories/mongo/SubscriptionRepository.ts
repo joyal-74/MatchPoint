@@ -12,6 +12,11 @@ const getPlanRank = (level: PlanLevel): number => {
 
 export class SubscriptionRepository implements ISubscriptionRepository {
 
+    async create(subscriptionData: Partial<UserSubscription>): Promise<UserSubscription> {
+        const doc = await UserSubscriptionModel.create(subscriptionData);
+        return SubscriptionMapper.toDomain(doc); 
+    }
+
     async updateUserPlan(userId: string, level: PlanLevel, billingCycle?: BillingCycle): Promise<UserSubscription> {
 
         const currentSub = await UserSubscriptionModel.findOne({ userId });

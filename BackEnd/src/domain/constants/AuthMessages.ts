@@ -16,6 +16,7 @@ export const AuthMessages = {
   VIEWER_SIGNUP_SUCCESS: "Viewer account created",
   PLAYER_SIGNUP_SUCCESS: "Player account created",
   MANAGER_SIGNUP_SUCCESS: "Manager account created",
+  UMPIRE_SIGNUP_SUCCESS: "Manager account created",
   SOCIAL_SIGNUP_SUCCESS: "User account created",
 
   // Token & Logout

@@ -6,7 +6,7 @@ import { logoutUser } from "../../features/auth";
 import { useNavigate, useLocation } from "react-router-dom";
 import LoadingOverlay from "../shared/LoadingOverlay";
 import { useNotifications } from "../../hooks/useNotifications";
-import NotificationDropdown from "../player/notifications/NotificationDropdown";
+import NotificationDropdown from "../shared/notifications/NotificationDropdown";
 
 const Navbar: React.FC = () => {
     const [showProfileCard, setShowProfileCard] = useState(false);
@@ -73,7 +73,7 @@ const Navbar: React.FC = () => {
         <>
             {loading && !user && <LoadingOverlay show={true} />}
             
-            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-20 py-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border transition-colors duration-300">
+            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-8 py-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border transition-colors duration-300">
                 
                 {/* Left Side: Logo & Navigation */}
                 <div className="flex items-center gap-12">

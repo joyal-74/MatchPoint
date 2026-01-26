@@ -4,6 +4,7 @@ import { ManagerRegister } from "domain/entities/Manager";
 import { PlayerRegister } from "domain/entities/Player";
 import { SocialUserRegisterData, UserRegister } from "domain/entities/User";
 import { OtpContext } from "domain/enums/OtpContext";
+import { File } from "domain/entities/File";
 
 
 export interface IAuthUseCase<TAccount> {
@@ -23,7 +24,7 @@ export interface ICompleteSocialSignup<TAccount> {
 }
 
 export interface ISignupUseCase<TInput, TOutput> {
-    execute(userData: TInput): Promise<{
+    execute(userData: TInput, file? : File): Promise<{
         success: boolean;
         message: string;
         user: TOutput;
@@ -92,3 +93,4 @@ export type ISocialUserAuthUseCase = ICompleteSocialSignup<UserLoginResponseDTO>
 export type IViewerSignupUseCase = ISignupUseCase<UserRegister, UserLoginResponseDTO>;
 export type IPlayerSignupUseCase = ISignupUseCase<PlayerRegister, UserLoginResponseDTO>;
 export type IManagerSignupUseCase = ISignupUseCase<ManagerRegister, UserLoginResponseDTO>;
+export type IUmpireSignupUseCase = ISignupUseCase<UserRegister, UserLoginResponseDTO>;

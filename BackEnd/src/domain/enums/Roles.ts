@@ -2,6 +2,7 @@ export const UserRoles = {
     Player: "player",
     Viewer: "viewer",
     Manager: "manager",
+    Umpire: "umpire",
 } as const;
 
 export type UserRole = typeof UserRoles[keyof typeof UserRoles];

@@ -1,10 +1,11 @@
 import type { LoginSocialResult, LoginUser, User } from '../../types/User';
-import type { CompleteUserData, UserRegister } from '../../types/api/UserApi';
+import type { CompleteUserData} from '../../types/api/UserApi';
 import type { ChangePasswordPayload, LoginPayload, OtpPayload, ResetPasswordPayload } from '../../types/api/authPayloads';
 import { axiosClient } from '../http/axiosClient';
 import type { OtpContext } from '../../features/auth/authTypes';
 import { AUTH_ROUTES } from '../../constants/routes/authRoutes';
 import type { LoginAdmin } from '../../types/Admin';
+import type { SignupRole } from '../../types/UserRoles';
 
 export const authEndpoints = {
     login: async (credentials: LoginPayload): Promise<LoginUser> => {
@@ -23,7 +24,7 @@ export const authEndpoints = {
         return data.data;
     },
 
-    loginSocialComplete: async (userdata : CompleteUserData): Promise<User> => {
+    loginSocialComplete: async (userdata: CompleteUserData): Promise<User> => {
         const { data } = await axiosClient.post(AUTH_ROUTES.SOCIAL_COMPLETE, userdata);
         return data.data;
     },
@@ -33,8 +34,11 @@ export const authEndpoints = {
         return data.data.admin;
     },
 
-    signup: async (userData: UserRegister): Promise<{ user: User; expiresAt: string }> => {
-        const { data } = await axiosClient.post(AUTH_ROUTES.SIGNUP(userData.role), userData);
+    signup: async (formData: FormData): Promise<{ user: User; expiresAt: string }> => {
+        const role = formData.get("role") as SignupRole;
+
+        const { data } = await axiosClient.post(AUTH_ROUTES.SIGNUP(role), formData);
+
         return {
             user: data.user,
             expiresAt: data.data.expiresAt,

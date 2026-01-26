@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Notification } from "./notificationTypes";
+import { markAllNotificationRead, markNotificationRead } from "./notificationThunks";
 
 interface NotificationState {
     items: Notification[];
@@ -43,7 +44,26 @@ const notificationSlice = createSlice({
         setUnreadCount(state, action: PayloadAction<number>) {
             state.unreadCount = action.payload;
         }
-    }
+    },
+    extraReducers(builder) {
+        builder
+            .addCase(markAllNotificationRead.fulfilled, (state) => {
+                state.items.forEach(item => { item.isRead = true; });
+                state.unreadCount = 0;
+            })
+
+            .addCase(markNotificationRead.fulfilled, (state, action) => {
+                const updatedNotification = action.payload;
+
+                const index = state.items.findIndex(n => n._id === updatedNotification._id);
+                if (index !== -1) {
+                    if (!state.items[index].isRead) {
+                        state.unreadCount = Math.max(0, state.unreadCount - 1);
+                    }
+                    state.items[index] = updatedNotification;
+                }
+            })
+    },
 });
 
 export const { setNotifications, addNotification, markAsRead, setUnreadCount, markAllAsRead, clearAllNotifications } = notificationSlice.actions;

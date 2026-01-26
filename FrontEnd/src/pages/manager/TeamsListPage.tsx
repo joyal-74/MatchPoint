@@ -29,8 +29,7 @@ const TeamsListPage: React.FC = () => {
         <ManagerLayout>
             <LoadingOverlay show={loading} />
 
-            {/* Main Container - Updated text color for theme support */}
-            <div className="text-foreground mt-8 space-y-8 p-4 md:p-0">
+            <div className="mx-auto px-4 sm:px-6 lg:px-8 pb-20">
                 
                 <TeamsHeader onCreateClick={openCreateModal} />
 

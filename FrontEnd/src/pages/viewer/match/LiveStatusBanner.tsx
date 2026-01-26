@@ -65,7 +65,7 @@ function LiveStatusBanner({ teamA, teamB, liveScore, getPlayerName }: LiveStatus
     // --- RENDER PREP ---
     if (!liveScore || !teamA || !teamB) {
         return (
-            <div className="max-w-7xl mx-auto px-4 mt-6">
+            <div className="mx-auto px-4 mt-6">
                 <div className="h-32 bg-muted/30 rounded-xl border border-border animate-pulse" />
             </div>
         );
@@ -86,7 +86,7 @@ function LiveStatusBanner({ teamA, teamB, liveScore, getPlayerName }: LiveStatus
     const recentLogs = Array.isArray(currentInningsData?.recentLogs) ? currentInningsData.recentLogs.slice(-6) : [];
 
     return (
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="relative z-10 mx-auto px-4 sm:px-6 lg:px-8 mt-6">
             <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
 
                 {/* 1. Status Bar (Hero) */}

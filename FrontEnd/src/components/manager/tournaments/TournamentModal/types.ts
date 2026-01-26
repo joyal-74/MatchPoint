@@ -28,7 +28,6 @@ export interface CreateTournamentModalProps {
     isOpen: boolean;
     managerId: string;
     onClose: () => void;
-    onShowPrizeInfo: () => void;
 }
 
 export interface EditTournamentModalProps extends CreateTournamentModalProps {

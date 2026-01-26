@@ -3,6 +3,9 @@ import { MatchEntity } from "domain/entities/MatchEntity";
 import { MatchStatsMapper } from "infra/utils/mappers/MatchStatsMapper";
 import { IMatchStatsRepo, LiveMatchQuery } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { TournamentMatchStatsDocument } from "domain/types/match.types";
+import { TournamentResult } from "domain/entities/Match";
+import { Types } from "mongoose";
+import { MatchResultMapper } from "infra/utils/mappers/MatchResultMapper";
 
 export class MatchRepoMongo implements IMatchStatsRepo {
     async findByMatchId(matchId: string): Promise<MatchEntity | null> {
@@ -156,5 +159,29 @@ export class MatchRepoMongo implements IMatchStatsRepo {
 
     async getMatchStats(matchId: string): Promise<TournamentMatchStatsDocument | null> {
         return await TournamentMatchStatsModel.findOne({ matchId });
+    }
+
+    async getCompletedMatches(tournamentId: string): Promise<TournamentResult[]> {
+        const docs = await TournamentMatchStatsModel.find({
+            tournamentId: new Types.ObjectId(tournamentId),
+            status: 'completed'
+        })
+            .populate({
+                path: 'matchId',
+                select: 'matchNo date venue teamA teamB round',
+                populate: [
+                    { path: 'teamA', select: 'name logo' },
+                    { path: 'teamB', select: 'name logo' }
+                ]
+            })
+            .sort({ updatedAt: -1 })
+            .lean();
+
+        const results = docs
+            .map(doc => MatchResultMapper.toDTO(doc))
+            .filter((match): match is TournamentResult => match !== null);
+
+        return results;
+
     }
 }

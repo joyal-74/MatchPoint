@@ -18,7 +18,8 @@ import {
     ILoginGoogleUser,
     ILoginFacebookUser,
     ISocialUserAuthUseCase,
-    IUserLoginUseCase
+    IUserLoginUseCase,
+    IUmpireSignupUseCase
 } from 'app/repositories/interfaces/auth/IAuthenticationUseCase';
 import { AuthMessages } from 'domain/constants/AuthMessages';
 
@@ -34,6 +35,7 @@ export class AuthController implements IAuthController {
         @inject(DI_TOKENS.SignupViewerUseCase) private _signupViewerUseCase: IViewerSignupUseCase,
         @inject(DI_TOKENS.SignupPlayerUseCase) private _signupPlayerUseCase: IPlayerSignupUseCase,
         @inject(DI_TOKENS.SignupManagerUseCase) private _signupManagerUseCase: IManagerSignupUseCase,
+        @inject(DI_TOKENS.SignupUmpireUseCase) private _signupUmpireUseCase: IUmpireSignupUseCase,
         @inject(DI_TOKENS.RefreshTokenUseCase) private _refreshTokenUserUseCase: IRefreshTokenUseCase,
         @inject(DI_TOKENS.ForgotPasswordUseCase) private _forgotPasswordUseCase: IForgotPasswordUseCase,
         @inject(DI_TOKENS.VerifyOtpUseCase) private _verifyOtpUseCase: IVerifyOtpUseCase,
@@ -165,7 +167,8 @@ export class AuthController implements IAuthController {
      */
 
     signupViewer = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const result = await this._signupViewerUseCase.execute(httpRequest.body);
+        const file = httpRequest.file;
+        const result = await this._signupViewerUseCase.execute(httpRequest.body, file);
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, AuthMessages.VIEWER_SIGNUP_SUCCESS, {
             user: result.user,
             expiresAt: result.expiresAt,
@@ -186,7 +189,8 @@ export class AuthController implements IAuthController {
      */
 
     signupPlayer = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const result = await this._signupPlayerUseCase.execute(httpRequest.body);
+        const file = httpRequest.file;
+        const result = await this._signupPlayerUseCase.execute(httpRequest.body, file);
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, AuthMessages.PLAYER_SIGNUP_SUCCESS, {
             user: result.user,
             expiresAt: result.expiresAt,
@@ -201,8 +205,18 @@ export class AuthController implements IAuthController {
      */
 
     signupManager = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const result = await this._signupManagerUseCase.execute(httpRequest.body);
+        const file = httpRequest.file;
+        const result = await this._signupManagerUseCase.execute(httpRequest.body, file);
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, AuthMessages.MANAGER_SIGNUP_SUCCESS, {
+            user: result.user,
+            expiresAt: result.expiresAt,
+        }));
+    }
+
+    signupUmpire = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const file = httpRequest.file;
+        const result = await this._signupUmpireUseCase.execute(httpRequest.body, file);
+        return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, AuthMessages.UMPIRE_SIGNUP_SUCCESS, {
             user: result.user,
             expiresAt: result.expiresAt,
         }));

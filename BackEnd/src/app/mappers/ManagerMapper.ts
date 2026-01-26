@@ -1,5 +1,6 @@
 import { ManagerDetails } from "app/usecases/admin/GetManagerDetails";
 import { ManagerLoginResponseDTO, ManagerResponseDTO } from "domain/dtos/Manager.dto";
+import { UserResponseDTO } from "domain/dtos/User.dto";
 import { ManagerResponse } from "domain/entities/Manager";
 import { User } from "domain/entities/User";
 
@@ -17,7 +18,7 @@ export class ManagerMapper {
         };
     }
 
-    static toProfileResponseDTO(manager: ManagerResponseDTO): ManagerResponseDTO {
+    static toProfileResponseDTO(manager: ManagerResponseDTO | UserResponseDTO): ManagerResponseDTO {
         return {
             _id: manager._id,
             userId: manager.userId,

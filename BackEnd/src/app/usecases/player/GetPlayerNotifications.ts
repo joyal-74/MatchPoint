@@ -11,6 +11,7 @@ export class GetPlayerNotificationsUseCase implements IGetPlayerNotificationsUse
     ) { }
 
     async execute(playerId: string) {
-        return this._notificationRepo.findByUser(playerId,);
+        const notification = await this._notificationRepo.findByUser(playerId);
+        return notification
     }
 }

@@ -14,6 +14,9 @@ import { OtpContext } from "domain/enums/OtpContext";
 import { IViewerSignupUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 import { UserMapper } from "app/mappers/UserMapper";
 import { IUserIdGenerator } from "app/providers/IIdGenerator";
+import { IFileStorage } from "app/providers/IFileStorage";
+import { File } from "domain/entities/File";
+
 
 @injectable()
 export class SignupViewer implements IViewerSignupUseCase {
@@ -24,10 +27,16 @@ export class SignupViewer implements IViewerSignupUseCase {
         @inject(DI_TOKENS.PasswordHasher) private _passwordHasher: IPasswordHasher,
         @inject(DI_TOKENS.OtpGenerator) private _otpGenerator: IOtpGenerator,
         @inject(DI_TOKENS.UserIdGenerator) private _idGenerator: IUserIdGenerator,
+        @inject(DI_TOKENS.FileStorage) private _fileStorage: IFileStorage,
     ) { }
 
-    async execute(userData: UserRegister) {
+    async execute(userData: UserRegister, file?: File) {
         const validData = validateUserInput(userData);
+
+        if (file) {
+            const fileKey = await this._fileStorage.upload(file);
+            validData.profileImage = fileKey;
+        }
 
         const existingUser = await this._userRepository.findByEmail(validData.email);
         if (existingUser) throw new BadRequestError("User with this email already exists");
@@ -44,10 +53,11 @@ export class SignupViewer implements IViewerSignupUseCase {
             role: UserRoles.Viewer,
             password: hashedPassword,
             username: `user-${Date.now()}`,
-            phone : validData.phone,
+            phone: validData.phone,
             wallet: 0,
             isActive: true,
             isVerified: false,
+            profileImage : validData.profileImage,
             settings: {
                 theme: validData.settings?.theme || "dark",
                 language: validData.settings?.language || "en",
@@ -65,6 +75,6 @@ export class SignupViewer implements IViewerSignupUseCase {
 
         const userDTO = UserMapper.toUserLoginResponseDTO(newUser);
 
-        return { success: true, message : "Viewer registered successfully", user: userDTO, expiresAt };
+        return { success: true, message: "Viewer registered successfully", user: userDTO, expiresAt };
     }
 }
