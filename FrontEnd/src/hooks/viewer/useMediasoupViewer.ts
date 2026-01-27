@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import * as mediasoupClient from "mediasoup-client";
-import { viewerWebSocketService } from "../../socket/viewerWebSocketService"; // Use the singleton
+import { viewerWebSocketService } from "../../socket/viewerWebSocketService";
 import type { Consumer, DtlsParameters, RtpCapabilities, Transport, TransportOptions } from "mediasoup-client/types";
 
 export type StreamState = "connecting" | "waiting" | "live" | "paused" | "ended" | "error";
@@ -103,14 +103,12 @@ export function useMediasoupViewer(matchId: string | undefined) {
 
         return () => {
             console.log("🔴 [VIEWER] Unmounting - Cleaning up media only");
-            // Remove listeners
             socket.off("connect", handleConnect);
             socket.off("stream-metadata-updated", handleMetadata);
             socket.off("new-producer", handleNewProducer);
             socket.off("stream-ended", handleStreamEnded);
             socket.off("producer-left", onProducerLeft);
             
-            // Close transports but DO NOT disconnect socket
             softCleanup();
         };
     }, [matchId, socket]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -122,11 +120,8 @@ export function useMediasoupViewer(matchId: string | undefined) {
         try {
             setState("connecting");
 
-            // Get Metadata & Join Room (Already joined by hook, but ensuring specifically for stream)
             const metaPromise = emitAsync<StreamMetadata>("live:get-metadata", { matchId });
             
-            // IMPORTANT: We use the existing socket, so we don't need to re-join if the other hook did it,
-            // but calling it ensures the backend LiveStreamHandler sends us the specific streamState
             socket?.emit("viewer:join", { matchId });
 
             metaPromise.then(data => setMetadata(prev => ({ ...prev, ...data })))

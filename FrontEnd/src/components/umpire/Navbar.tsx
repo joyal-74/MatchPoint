@@ -1,0 +1,164 @@
+import React, { useState, useRef, useEffect } from "react";
+import { Bell } from "lucide-react";
+import ProfileCard, { type ProfileAction } from "../shared/ProfileCard";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { logoutUser } from "../../features/auth";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useNotifications } from "../../hooks/useNotifications";
+import NotificationDropdown from "../shared/notifications/NotificationDropdown";
+import BottomNav from "./BottomNav";
+
+const Navbar: React.FC = () => {
+    const [showProfileCard, setShowProfileCard] = useState(false);
+    const profileRef = useRef<HTMLDivElement>(null);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const user = useAppSelector(s => s.auth.user);
+    const role = user?.role ?? "guest";
+
+    const {
+        unreadCount,
+        isOpen: showNotifications,
+        toggle: toggleNotifications,
+        close: closeNotifications
+    } = useNotifications(user?._id);
+
+    // Handle click outside for profile card
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+                setShowProfileCard(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            await dispatch(logoutUser({ userId: user?._id, role: user?.role })).unwrap();
+            navigate("/login");
+        } catch (error) {
+            console.error("Logout failed", error);
+        }
+    };
+
+    const handleProfileAction = (action: ProfileAction) => {
+        switch (action) {
+            case "logout":
+                handleLogout();
+                break;
+            case "tournaments":
+                navigate("/umpire/tournaments");
+                break;
+            case "profile":
+                navigate("/umpire/profile");
+                break;
+            case "settings":
+                navigate("/umpire/settings");
+                break;
+        }
+    };
+
+    const menuItems = [
+        { name: "Home", path: "/umpire/dashboard" },
+        { name: "Matches", path: "/umpire/matches" },
+    ];
+
+    return (
+
+        <>
+            {/* Top Navigation Bar */}
+            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-10 mx-auto py-3 bg-background/95 backdrop-blur border-b border-border">
+
+                <div className="flex items-center gap-12">
+                    {/* Logo - Visible on all screens */}
+                    <h1
+                        className="text-foreground text-xl md:text-2xl font-rowdies cursor-pointer"
+                        onClick={() => navigate('/player/dashboard')}
+                    >
+                        <span className="text-primary">M</span>atch
+                        <span className="text-primary">P</span>oint
+                    </h1>
+
+                    {/* Desktop Navigation Links - HIDDEN on mobile */}
+                    <ul className="hidden md:flex gap-8 text-sm font-medium">
+                        {menuItems.map(item => (
+                            <li key={item.path}>
+                                <button
+                                    onClick={() => navigate(item.path)}
+                                    className={`${location.pathname === item.path
+                                        ? 'text-primary font-semibold'
+                                        : 'text-muted-foreground hover:text-foreground'
+                                        } transition-colors duration-200 cursor-pointer`}
+                                >
+                                    {item.name}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                {/* Right Side Actions */}
+                <div className="flex items-center gap-3 md:gap-4 relative">
+
+    
+
+                    {/* Notification Bell - Visible on all screens */}
+                    <button
+                        onClick={toggleNotifications}
+                        className={`relative p-2 rounded-full transition-all duration-200 
+                            ${showNotifications
+                                ? 'bg-accent text-accent-foreground'
+                                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                            }`}
+                    >
+                        <Bell className="w-5 h-5" />
+                        {unreadCount > 0 && (
+                            <span className="absolute top-1 right-1 bg-destructive text-destructive-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] flex items-center justify-center">
+                                {unreadCount}
+                            </span>
+                        )}
+                    </button>
+
+                    {/* Desktop Profile Dropdown - HIDDEN on mobile */}
+                    <div ref={profileRef} className="relative hidden md:block">
+                        <img
+                            src={user?.profileImage || '/placeholder.png'}
+                            alt="Profile"
+                            className="w-8 h-8 rounded-full border-2 border-border hover:border-primary transition-colors duration-200 cursor-pointer object-cover"
+                            onClick={() => setShowProfileCard((prev) => !prev)}
+                        />
+
+                        {showProfileCard && (
+                            <div className="absolute right-0 mt-2 w-64 origin-top-right">
+                                <ProfileCard role={role} onAction={handleProfileAction} />
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Notification Dropdown Container */}
+                {showNotifications && (
+                    <>
+                        <div
+                            className="fixed inset-0 z-40 bg-black/0"
+                            onClick={closeNotifications}
+                        />
+                        {/* Adjusted positioning for mobile */}
+                        <div className="absolute right-2 md:right-20 top-14 w-[calc(100vw-1rem)] md:w-96 z-50">
+                            <NotificationDropdown onClose={closeNotifications} role={role} />
+                        </div>
+                    </>
+                )}
+            </nav>
+
+            <BottomNav />
+        </>
+    );
+};
+
+export default Navbar;

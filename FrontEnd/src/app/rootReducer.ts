@@ -4,6 +4,7 @@ import usersReducer from "../features/admin/users/userSlice";
 import managerReducer from "../features/manager/managerSlice";
 import playerReducer from "../features/player/playerSlice";
 import viewerReducer from "../features/viewer/viewerSlice";
+import umpireReducer from "../features/umpire/umpireSlice";
 import managerTournamentReducer from "../features/manager/Tournaments/tournamentSlice";
 import playerTeamsReducer from "../features/player/Teams/TeamSlice";
 import playerTournamentReducer from "../features/player/Tournnaments/tournamnetSlice";
@@ -28,6 +29,7 @@ const appReducer = combineReducers({
     manager: managerReducer,
     player: playerReducer,
     viewer: viewerReducer,
+    umpire: umpireReducer,
     managerTournaments: managerTournamentReducer,
     playerTeams: playerTeamsReducer,
     playerTournaments: playerTournamentReducer,

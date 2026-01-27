@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Play, Save, Users } from "lucide-react";
+import { Play, Save, Settings, Users } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { saveMatchData, startMatch } from "../../../features/manager/Matches/matchThunks";
@@ -134,6 +134,7 @@ export const TeamDetailsPanel: React.FC<TeamDetailsPanelProps> = React.memo(
                 {/* Footer Actions */}
                 <div className="p-4 border-t border-border bg-background flex flex-wrap gap-3 justify-end items-center">
                     <ActionButton variant="secondary" icon={<Save size={18} />} label="Save Data" onClick={handleSaveData} />
+                    <ActionButton variant="outline" icon={<Settings size={18} />} label={"Stream settings"} onClick={() => navigate(`/manager/match/${matchId}/stream`)}  />
                     <ActionButton variant="primary" icon={<Play size={18} />} label={isStarting ? "Starting..." : "Start Match"} onClick={handleStartMatch} disabled={!isSaved}  />
                 </div>
             </div>

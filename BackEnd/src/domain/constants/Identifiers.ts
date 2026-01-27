@@ -228,6 +228,11 @@ const ViewerUsecaseTokens = {
     GetLeaderBoardUsecase: 'GetLeaderBoardUsecase',
 }
 
+const UmpireUseCaseTokens = {
+    GetUmpireProfileUsecase : 'GetUmpireProfileUsecase',
+    UpdateUmpireProfile : 'UpdateUmpireProfile'
+}
+
 const SharedUseCaseTokens = {
     MarkNotificationRead : Symbol.for('MarkNotificationRead'),
     MarkAllNotificationRead : Symbol.for('MarkAllNotificationRead'),
@@ -253,7 +258,5 @@ export const DI_TOKENS = {
     ...PlayerUsecaseTokens,
     ...ViewerUsecaseTokens,
     ...SharedUseCaseTokens,
-
-    //user (shared)
-    
+    ...UmpireUseCaseTokens    
 };

@@ -30,7 +30,6 @@ export default function ManagerDashboard() {
     };
 
     // Helper for Status Colors using Semantic Theme Variables
-    // Note: We use specific colors for success/danger, but map 'Upcoming' to the theme's Primary color
     const getStatusColor = (status: string) => {
         switch (status?.toLowerCase()) {
             case 'ongoing':

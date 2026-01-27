@@ -51,6 +51,6 @@ export const managerRoutes = [
     { path: "/manager/match/:matchId/dashboard", element: withManagerProtection(<MatchDashboard />) },
     { path: "/manager/matches", element: withManagerProtection(<MatchesSection />) },
     { path: "/manager/mymatches", element: withManagerProtection(<MyMatchesPage />) },
-    { path: "/manager/stream", element: withManagerProtection(<StreamSettings />) },
+    { path: "/manager/match/:matchId/stream", element: withManagerProtection(<StreamSettings />) },
     { path: "/manager/match/:matchId/control", element: withManagerProtection(<ScoreboardDashboard />) },
 ];

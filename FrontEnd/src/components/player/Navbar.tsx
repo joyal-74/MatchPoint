@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Bell, MessageCircle } from "lucide-react";
-import ProfileCard from "../shared/ProfileCard";
+import ProfileCard, { type ProfileAction } from "../shared/ProfileCard";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { logoutUser } from "../../features/auth";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
         }
     };
 
-    const handleProfileAction = (action: "logout" | "teams" | "profile" | 'settings') => {
+    const handleProfileAction = (action: ProfileAction) => {
         switch (action) {
             case "logout":
                 handleLogout();

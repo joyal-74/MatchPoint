@@ -108,7 +108,7 @@ export class LiveStreamHandler {
         });
 
         // --- Viewer Side Logic ---
-        
+
         // FIX: Handle viewer joining specifically for stream data
         this.socket.on("viewer:join", async ({ matchId }, cb) => {
             // Join the standardized viewer room (consistent with MatchViewerHandler)
@@ -133,6 +133,43 @@ export class LiveStreamHandler {
                 cb?.({ success: true });
             } catch (error) {
                 console.error("Error in viewer:join:", error);
+            }
+        });
+
+
+        this.socket.on("live:get-producers", async ({ matchId }, cb) => {
+            try {
+                const producers = await this.liveStreamService.getProducers(matchId);
+                cb(producers);
+            } catch (err) {
+                cb({ error: (err as Error).message });
+            }
+        });
+
+        // 2. Return stream metadata (Title/Desc)
+        this.socket.on("live:get-metadata", async ({ matchId }, cb) => {
+            try {
+                // This should fetch from your DB or Service memory
+                const metadata = await this.liveStreamService.getStreamMetadata(matchId);
+                cb(metadata);
+            } catch (err) {
+                cb({ error: (err as Error).message });
+            }
+        });
+
+        // 3. Handle Quality Switching
+        this.socket.on("viewer:set-quality", async (data, cb) => {
+            try {
+                await this.liveStreamService.setConsumerPreferredLayers(
+                    data.matchId,
+                    this.socket.id,
+                    data.consumerId,
+                    data.spatialLayer,
+                    2
+                );
+                cb({ success: true });
+            } catch (err) {
+                cb({ error: (err as Error).message });
             }
         });
 

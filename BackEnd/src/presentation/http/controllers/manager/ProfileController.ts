@@ -8,7 +8,7 @@ import { buildResponse } from "infra/utils/responseBuilder";
 import { HttpResponse } from "presentation/http/helpers/HttpResponse";
 import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
 import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
-import { IProfileController } from "presentation/http/interfaces/IManagerController";
+import { IProfileController } from "presentation/http/interfaces/IProfileController";
 
 @injectable()
 export class ProfileController implements IProfileController {

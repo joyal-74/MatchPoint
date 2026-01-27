@@ -36,6 +36,8 @@ const getDefaultRoute = (role: UserRole): string => {
             return '/player/dashboard';
         case 'manager':
             return '/manager/dashboard';
+        case 'umpire':
+            return '/umpire/dashboard';
         case 'viewer':
             return '/';
         default:

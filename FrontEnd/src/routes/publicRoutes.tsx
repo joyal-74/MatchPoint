@@ -54,7 +54,7 @@ export const publicRoutes = [
     {
         path: "/:role/settings",
         element: (
-            <ProtectedRoute allowedRoles={["player", "manager"]}>
+            <ProtectedRoute allowedRoles={["player", "manager", "umpire"]}>
                 <RoleLayoutWrapper>
                     <SettingsPage />
                 </RoleLayoutWrapper>
@@ -84,5 +84,5 @@ export const publicRoutes = [
                 </NavbarWrapper>
             </ProtectedRoute>
         )
-    }
+    },
 ];

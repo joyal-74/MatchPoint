@@ -17,7 +17,9 @@ export interface LoginUser {
     profileImage: string
     role: UserRole;
     wallet: number;
-    isActive : boolean;
+    isActive: boolean;
+    createdAt: Date;
+
 }
 
 export interface User {
@@ -66,4 +68,4 @@ export interface LoginSocialResult {
     refreshToken?: string;
 }
 
-export type AuthUser = Pick<User, "_id" | "firstName" | "lastName" | "email" | "role" | "phone" | "gender" | "profileImage" | "isActive">;
+export type AuthUser = Pick<User, "_id" | "firstName" | "lastName" | "email" | "role" | "phone" | "gender" | "profileImage" | "isActive" | 'createdAt'>;

@@ -12,7 +12,9 @@ export class UserMapper {
             role: user.role,
             wallet: user.wallet,
             profileImage: user.profileImage,
-            isActive: user.isActive
+            isActive: user.isActive,
+            createdAt: user.createdAt,
+
         };
     }
 
@@ -30,7 +32,8 @@ export class UserMapper {
             wallet: user.wallet,
             bio: user.bio,
             profileImage: user.profileImage,
-            isActive: user.isActive
+            isActive: user.isActive,
+            createdAt: user.createdAt,
         };
     }
 

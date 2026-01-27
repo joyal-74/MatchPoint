@@ -137,6 +137,8 @@ import { MarkNotificationRead } from "app/usecases/shared/MarkNotificationAsRead
 import { MarkAllNotificationRead } from "app/usecases/shared/MarkAllNotificationRead";
 import { GetMyTournamentMatchResult } from "app/usecases/manager/tournaments/GetMatchResults";
 import { SignupUmpire } from "app/usecases/auth/SignupUmpire";
+import { UpdateUmpireProfile } from "app/usecases/umpire/UpdateUmpireProfile";
+import { GetUmpireProfile } from "app/usecases/umpire/GetUmpireProfile";
 
 
 // Registrations
@@ -297,3 +299,7 @@ container.register(DI_TOKENS.MarkAllNotificationRead, { useClass: MarkAllNotific
 // --- Viewer ---
 container.register(DI_TOKENS.GetViewerProfile, { useClass: GetViewerProfile });
 container.register(DI_TOKENS.UpdateViewerProfile, { useClass: UpdateViewerProfile });
+
+// --- Viewer ---
+container.register(DI_TOKENS.GetUmpireProfileUsecase, { useClass: GetUmpireProfile });
+container.register(DI_TOKENS.UpdateUmpireProfile, { useClass: UpdateUmpireProfile });

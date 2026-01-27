@@ -17,7 +17,9 @@ export interface UserLoginResponseDTO {
     wallet: number;
     role: RoleType;
     profileImage?: string;
-    isActive : boolean;
+    isActive: boolean;
+    createdAt: Date,
+
 }
 
 export interface ILoginSocialUserResponse {
@@ -43,7 +45,9 @@ export interface UserResponseDTO {
     gender: GenderType;
     phone: string | null;
     wallet: number;
-    isActive : boolean
+    isActive: boolean,
+    createdAt: Date;
+
 }
 
 export interface UserUpdateDTO {

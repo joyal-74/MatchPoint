@@ -15,6 +15,7 @@ export interface LoginAdmin {
     role: UserRole;
     wallet: number;
     isActive : boolean;
+    createdAt: Date;
 }
 
 export interface Admin {

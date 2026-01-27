@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../hooks/hooks";
 import toast from "react-hot-toast";
-import { signupUser, loginUserGoogle } from "../features/auth/authThunks";
+import { signupUser, loginUserGoogle, loginUserFacebook } from "../features/auth/authThunks";
 import { SignupRoles, type Gender, type SignupRole } from "../types/UserRoles";
 import { validateSignup } from "../validators/SignpValidators";
 
@@ -119,6 +119,18 @@ export const useSignup = () => {
         }
     };
 
+    const handleFacebookSignUp = async (token: string) => {
+        setLoading(true);
+        try {
+            await dispatch(loginUserFacebook(token)).unwrap();
+            navigate('/dashboard');
+        } catch (err) {
+            toast.error(typeof err === "string" ? err : "Facebook Auth failed");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return {
         formData,
         errors,
@@ -128,5 +140,6 @@ export const useSignup = () => {
         handleFieldChange,
         handleSignupSubmit,
         handleGoogleSignUp,
+        handleFacebookSignUp
     };
 };

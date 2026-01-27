@@ -6,22 +6,24 @@ import ManagerLayout from "../layout/ManagerLayout";
 import type { RootState } from "../../app/rootReducer";
 import type { FC, PropsWithChildren } from "react";
 import ViewerProfileLayout from "../layout/ViewerProfileLayout";
+import UmpireLayoutNavbar from "../layout/UmpireLayout";
 
 
-type Role = "player" | "manager" | "viewer";
+type Role = "player" | "manager" | "viewer" | 'umpire';
 
 const layouts: Record<Role, FC<PropsWithChildren>> = {
     player: PlayerLayout,
     manager: ManagerLayout,
     viewer: ViewerProfileLayout,
+    umpire: UmpireLayoutNavbar,
 };
 
 export default function RoleLayoutWrapper({ children }: { children: React.ReactNode }) {
     const { role } = useParams();
 
-    const userRole = useSelector((state :RootState) => state.auth.user?.role);
+    const userRole = useSelector((state: RootState) => state.auth.user?.role);
 
-    if (!role || !["player", "manager", "viewer"].includes(role)) {
+    if (!role || !["player", "manager", "viewer", "umpire"].includes(role)) {
         return <Navigate to="/unauthorized" />;
     }
 

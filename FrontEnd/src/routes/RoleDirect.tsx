@@ -17,6 +17,8 @@ const RoleRedirect = () => {
             return <Navigate to="/manager/dashboard" replace />;
         case UserRole.Player:
             return <Navigate to="/player/dashboard" replace />;
+        case UserRole.Umpire:
+            return <Navigate to="/umpire/dashboard" replace />;
         default:
             return <LoginPage />;
     }

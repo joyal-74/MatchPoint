@@ -137,6 +137,8 @@ const Navbar: React.FC = () => {
                 </>
             )}
 
+            <div className="mt-12"></div>
+
             <ManagerBottomNav />
         </>
     );

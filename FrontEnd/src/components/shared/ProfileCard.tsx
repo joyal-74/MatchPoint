@@ -1,15 +1,17 @@
 import React from 'react';
 import { FiGlobe, FiLogOut, FiUser, FiUsers } from 'react-icons/fi';
 
+
+export type ProfileAction = "logout" | "teams" | "profile" | 'settings' | 'tournaments'
 interface ProfileCardProps {
-    onAction: (action: "logout" | "teams" | "profile" | "settings") => void;
+    onAction: (action: ProfileAction) => void;
     role: string;
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ onAction, role }) => {
     return (
         <div className="w-50 bg-card text-foreground text-sm flex flex-col rounded-xl shadow-xl border border-border overflow-hidden">
-            
+
             {/* Main Menu Items */}
             <div className="p-1.5 flex flex-col gap-0.5">
                 <button
@@ -20,13 +22,23 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ onAction, role }) => {
                     <span className="font-medium">Profile</span>
                 </button>
 
-                {role !== 'viewer' && role !== 'admin' && (
+                {role !== 'viewer' && role !== 'umpire' && role !== 'admin' && (
                     <button
                         onClick={() => onAction("teams")}
                         className="flex items-center gap-3 px-3 py-2.5 hover:bg-muted rounded-lg w-full text-left transition-colors duration-150"
                     >
                         <FiUsers className="text-primary text-lg" />
                         <span className="font-medium">My Teams</span>
+                    </button>
+                )}
+
+                {role === 'umpire' || role === 'admin' && (
+                    <button
+                        onClick={() => onAction("tournaments")}
+                        className="flex items-center gap-3 px-3 py-2.5 hover:bg-muted rounded-lg w-full text-left transition-colors duration-150"
+                    >
+                        <FiUsers className="text-primary text-lg" />
+                        <span className="font-medium">My Tournament</span>
                     </button>
                 )}
 

@@ -69,65 +69,67 @@ export const MatchDashboard: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background text-foreground font-sans">
-            <Navbar />
-            <LoadingOverlay show={loading} />
-            
-            <div className="max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
-                {/* Header Section */}
-                <header className="mb-8">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div>
-                            <h1 className="text-3xl font-bold tracking-tight text-foreground">Match Dashboard</h1>
-                            <div className="flex items-center gap-4 mt-2 text-muted-foreground text-sm">
-                                <span className="flex items-center gap-1"><Calendar size={14} /> {matchData.date}</span>
-                                <span className="flex items-center gap-1"><Clock size={14} /> {matchData.time}</span>
-                                <span className="flex items-center gap-1"><MapPin size={14} /> {matchData.venue}</span>
+        <>
+            <div className="bg-background text-foreground mt-12">
+                <Navbar />
+                <LoadingOverlay show={loading} />
+
+                <div className="max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+                    {/* Header Section */}
+                    <header className="mb-8">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div>
+                                <h1 className="text-3xl font-bold tracking-tight text-foreground">Match Dashboard</h1>
+                                <div className="flex items-center gap-4 mt-2 text-muted-foreground text-sm">
+                                    <span className="flex items-center gap-1"><Calendar size={14} /> {matchData.date}</span>
+                                    <span className="flex items-center gap-1"><Clock size={14} /> {matchData.time}</span>
+                                    <span className="flex items-center gap-1"><MapPin size={14} /> {matchData.venue}</span>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <div className="px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full text-xs font-semibold uppercase tracking-wider">
+                                    Match #{matchData.matchNo}
+                                </div>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                             <div className="px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full text-xs font-semibold uppercase tracking-wider">
-                                Match #{matchData.matchNo}
-                             </div>
-                        </div>
-                    </div>
-                </header>
+                    </header>
 
-                {/* Main Grid Layout */}
-                <main className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    
-                    {/* Left Sidebar: Match Info & Toss */}
-                    <aside className="lg:col-span-4 xl:col-span-3 flex flex-col gap-6">
-                        <TossSection
-                            team1={teamA}
-                            team2={teamB}
-                            tossWinnerId={tossWinnerId}
-                            tossDecision={tossDecision}
-                            isFlipping={isFlipping}
-                            setTossWinnerId={setTossWinnerId}
-                            setTossDecision={setTossDecision}
-                            setIsFlipping={setIsFlipping}
-                            isTossLocked={!!tossWinnerId && !!tossDecision}
-                        />
-                        <MatchDetailsCard data={matchData} />
-                    </aside>
+                    {/* Main Grid Layout */}
+                    <main className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-                    {/* Right Panel: Team Management */}
-                    <section className="lg:col-span-8 xl:col-span-9 h-full">
-                        <TeamDetailsPanel
-                            matchId={matchId!}
-                            team={activeTeam!}
-                            team1={teamA}
-                            team2={teamB}
-                            activeTeamId={activeTeamId}
-                            handleTeamSwitch={handleTeamSwitch}
-                            tossWinnerId={tossWinnerId}
-                            tossDecision={tossDecision}
-                        />
-                    </section>
-                </main>
+                        {/* Left Sidebar: Match Info & Toss */}
+                        <aside className="lg:col-span-4 xl:col-span-3 flex flex-col gap-6">
+                            <TossSection
+                                team1={teamA}
+                                team2={teamB}
+                                tossWinnerId={tossWinnerId}
+                                tossDecision={tossDecision}
+                                isFlipping={isFlipping}
+                                setTossWinnerId={setTossWinnerId}
+                                setTossDecision={setTossDecision}
+                                setIsFlipping={setIsFlipping}
+                                isTossLocked={!!tossWinnerId && !!tossDecision}
+                            />
+                            <MatchDetailsCard data={matchData} />
+                        </aside>
+
+                        {/* Right Panel: Team Management */}
+                        <section className="lg:col-span-8 xl:col-span-9 h-full">
+                            <TeamDetailsPanel
+                                matchId={matchId!}
+                                team={activeTeam!}
+                                team1={teamA}
+                                team2={teamB}
+                                activeTeamId={activeTeamId}
+                                handleTeamSwitch={handleTeamSwitch}
+                                tossWinnerId={tossWinnerId}
+                                tossDecision={tossDecision}
+                            />
+                        </section>
+                    </main>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

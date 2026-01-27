@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 import { validateSignup } from "../../validators/SignpValidators";
 
 const SignupPage = () => {
-    const { formData, loading, handleFieldChange, handleSignupSubmit, handleGoogleSignUp, isStepValid, errors, setErrors } = useSignup();
+    const { formData, loading, handleFieldChange, handleSignupSubmit, handleGoogleSignUp, handleFacebookSignUp, isStepValid, errors, setErrors } = useSignup();
     const [step, setStep] = useState(1);
     const [preview, setPreview] = useState<string | null>(null);
     const canGoNext = isStepValid(step, !!preview);
@@ -200,7 +200,7 @@ const SignupPage = () => {
                                     </button>
                                 )}
                                 <button
-                                    type="button" 
+                                    type="button"
                                     disabled={loading}
                                     onClick={handleAction}
                                     className={`flex-1 h-12 rounded-xl font-black transition-all flex items-center justify-center gap-2 
@@ -210,7 +210,7 @@ const SignupPage = () => {
                                 </button>
                             </div>
 
-                            {step === 1 && <SocialAuth onGoogle={handleGoogleSignUp} />}
+                            {step === 1 && <SocialAuth onGoogle={handleGoogleSignUp} onFacebook={handleFacebookSignUp} />}
                         </div>
                     </form>
                 </div>
