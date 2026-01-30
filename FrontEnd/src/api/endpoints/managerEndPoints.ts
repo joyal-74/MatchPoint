@@ -176,7 +176,7 @@ export const managerEndpoints = {
         return data.data;
     },
 
-    fetchTournamentPointsTable: async (tournamentId : string): Promise<PointsTableData[]> => {
+    fetchTournamentPointsTable: async (tournamentId : string): Promise<PointsTableData> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_POINTS_TABLE(tournamentId));
         return data.data;
     },

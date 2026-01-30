@@ -1,6 +1,5 @@
 import type { Tournament } from "../../../../../features/manager/managerTypes";
 import FixturesTab from "./Fixtures/FixturesTab";
-import GroupsTab from "./GroupsTab";
 import InfoTab from "./InfoTab";
 import LeaderboardTab from "./LeaderboardTab";
 import MatchesTab from "./MatchesTab";
@@ -8,7 +7,7 @@ import PointsTableTab from "./PointsTableTab";
 import ResultsTab from "./ResultsTab";
 import TeamsTab from "./TeamsTab";
 
-export type TabType = "info" | "teams" | "fixtures" | "matches" | "results" | "groups" | "leaderboard" | 'points';
+export type TabType = "info" | "teams" | "fixtures" | "matches" | "results" | "leaderboard" | 'points';
 
 export interface RegisteredTeam {
     _id: string;
@@ -31,10 +30,8 @@ export const renderTabContent = (selectedTournament: Tournament, registeredTeams
             return <MatchesTab />;
         case "results":
             return <ResultsTab />;
-        case "groups":
-            return <GroupsTab />;
         case "points":
-            return <PointsTableTab format={selectedTournament.format} />;
+            return <PointsTableTab tournamentId={selectedTournament._id} format={selectedTournament.format} />;
         case "leaderboard":
             return <LeaderboardTab />;
         default:

@@ -1,13 +1,14 @@
+import { RESOLUTIONS, type ResolutionKey } from "../../constants/resolutions";
+
 export const useMediaDevices = () => {
-    const getStream = async (resolution) => {
+    const getStream = async (resolutionKey: ResolutionKey): Promise<MediaStream> => {
+        const videoConstraints = RESOLUTIONS[resolutionKey];
+
         const constraints: MediaStreamConstraints = {
-            video: resolution === "auto"
-                ? true
-                : {
-                    width: resolution.width,
-                    height: resolution.height,
-                    frameRate: 30,
-                },
+            video: resolutionKey === "auto" ? true : {
+                ...videoConstraints,
+                frameRate: { ideal: 30 }
+            },
             audio: true,
         };
 

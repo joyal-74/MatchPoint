@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Device } from "mediasoup-client";
 import { getSocket } from "../socket/socket";
+import { getApiErrorMessage } from "../utils/apiError";
 
 type StreamStatus = "idle" | "connecting" | "live";
 
 export const useStreamManager = (matchId: string, userId: string) => {
-    /* ================= STATE ================= */
     const [status, setStatus] = useState<StreamStatus>("idle");
     const [streamTitle, setStreamTitle] = useState("");
     const [streamDesc, setStreamDesc] = useState("");
@@ -197,7 +197,7 @@ export const useStreamManager = (matchId: string, userId: string) => {
 
         } catch (err) {
             console.error("🛑 Stream Start Failed:", err);
-            setErrorMsg(err.message || "Failed to establish stream connection");
+            setErrorMsg(getApiErrorMessage(err) || "Failed to establish stream connection");
             setStatus("idle");
             // Clean up transport if it failed halfway
             transportRef.current?.close();

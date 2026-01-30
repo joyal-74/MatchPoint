@@ -19,6 +19,8 @@ const matchController = container.resolve(MatchController)
 const financialsController = container.resolve(FinancialsController)
 
 
+router.get("/matches", expressAdapter(matchController.getAllMatches));
+
 router.put("/:managerId", upload.single("file"), expressFileUpdateHandler(managerProfileController.updateProfile));
 router.get('/:managerId', expressAdapter(managerProfileController.getProfile));
 
@@ -64,6 +66,7 @@ router.post("/tournament/matches/:matchId/save", expressAdapter(matchController.
 router.post("/tournament/matches/start", expressAdapter(matchController.startMatchData));
 
 router.get("/financials/:managerId", expressAdapter(financialsController.getReport));
+
 
 
 

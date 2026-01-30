@@ -61,7 +61,7 @@ export interface TournamentCard {
     sport: string;
     startDate: string;
     endDate: string;
-    regDeadline: string | Date;
+    regDeadline: string;
     location: string;
     latitude: number;
     longitude: number;

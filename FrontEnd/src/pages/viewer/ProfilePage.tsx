@@ -10,6 +10,7 @@ import { useProfile } from "../../hooks/viewer/useProfile";
 
 const ProfilePage: React.FC = () => {
     const {
+        user,
         isEditing,
         setIsEditing,
         profileImage,
@@ -26,7 +27,7 @@ const ProfilePage: React.FC = () => {
     // 1. Consistent Loading/Error states matching the source layout
     if (loading && !formData) return <ViewerProfileLayout><LoadingOverlay show={true} /></ViewerProfileLayout>;
     if (error) return <ProfileError error={error} onAction={handleRetry} />;
-    
+
     // Fallback if data is missing
     if (!formData) {
         return (
@@ -42,10 +43,11 @@ const ProfilePage: React.FC = () => {
         <ViewerProfileLayout>
             <div className="mx-auto mt-6">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    
+
                     {/* --- Left Sidebar (Header + Premium) --- */}
                     <div className="lg:col-span-1 space-y-6">
                         <ProfileHeader
+                            user={user}
                             profileData={formData}
                             profileImage={profileImage || formData.profileImage}
                             isEditing={isEditing}
@@ -61,7 +63,7 @@ const ProfilePage: React.FC = () => {
                             bg-card border rounded-xl shadow-sm overflow-hidden transition-colors duration-300
                             ${isEditing ? 'border-primary/50 ring-1 ring-primary/10' : 'border-border'}
                         `}>
-                            
+
                             {/* Sticky Header with Title & Action Buttons */}
                             <div className="px-6 py-4 border-b border-border bg-muted/20 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md">
                                 <div>
@@ -106,7 +108,7 @@ const ProfilePage: React.FC = () => {
                                     )}
                                 </div>
                             </div>
-                            
+
                             {/* Form Body */}
                             <div className="p-6">
                                 <ProfileForm
@@ -117,7 +119,7 @@ const ProfilePage: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </ViewerProfileLayout>

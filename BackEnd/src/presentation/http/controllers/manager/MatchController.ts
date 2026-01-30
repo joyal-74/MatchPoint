@@ -1,7 +1,7 @@
 import { injectable, inject } from "tsyringe";
 import { DI_TOKENS } from "domain/constants/Identifiers";
 
-import { IEndMatchUseCase, IGetLiveScoreUseCase, ISaveMatchData, IStartMatchUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { IEndMatchUseCase, IGetAllMatches, IGetLiveScoreUseCase, ISaveMatchData, IStartMatchUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { IMatchPlayerServices } from "app/services/manager/IMatchPlayerService";
 import { IMatchScoreService } from "app/services/manager/IMatchScoreService";
 import { HttpStatusCode } from "domain/enums/StatusCodes";
@@ -19,6 +19,7 @@ export class MatchController {
         @inject(DI_TOKENS.StartMatchUseCase) private _startMatchData: IStartMatchUseCase,
         @inject(DI_TOKENS.GetLiveScoreUseCase) private _getLiveScoreUseCase: IGetLiveScoreUseCase,
         @inject(DI_TOKENS.EndMatchUseCase) private _endMatchUseCase: IEndMatchUseCase,
+        @inject(DI_TOKENS.GetAllMatches) private _getAllMatches: IGetAllMatches,
     ) { }
 
     /**
@@ -336,5 +337,14 @@ export class MatchController {
         const result = await this._endMatchUseCase.execute(input);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Match ended", result));
+    };
+
+
+    getAllMatches = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { search, limit, page } = httpRequest.params;
+
+        const result = await this._getAllMatches.execute(search, limit, page);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Match fetched", result));
     };
 }

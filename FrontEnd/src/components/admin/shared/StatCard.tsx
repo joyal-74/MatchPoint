@@ -45,7 +45,7 @@ const StatCard: React.FC<StatCardProps> = ({
                 </h3>
                 {icon && (
                     <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                        {React.cloneElement(icon as React.ReactElement, { className: 'w-4 h-4' })}
+                        {React.cloneElement(icon as React.ReactElement)}
                     </div>
                 )}
             </div>

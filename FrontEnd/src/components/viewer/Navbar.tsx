@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
         }
     };
 
-    const handleProfileAction = (action: "logout" | "teams" | "profile" | "settings") => {
+    const handleProfileAction = (action: "logout" | "teams" | "profile" | "settings" | 'tournaments') => {
         switch (action) {
             case "logout":
                 handleLogout();
@@ -57,14 +57,12 @@ const Navbar: React.FC = () => {
             case "settings":
                 navigate("/settings");
                 break;
-            // Add other cases if needed based on ProfileCard implementation
         }
     };
 
     const menuItems = [
         { name: "Home", path: "/" },
         { name: "Tournaments", path: "/tournaments" },
-        { name: "Teams", path: "/teams" },
         { name: "Live", path: "/live" },
         { name: "Leaderboard", path: "/leaderboard" },
     ];

@@ -1,7 +1,7 @@
 export type MatchStatus = "ongoing" | "completed" | "upcoming" | "bye";
 
 
-export interface Match {
+export interface MatchDetails {
     _id?: string;
     matchId : string;
     tournamentId?: string;
@@ -18,8 +18,4 @@ export interface Match {
     venue: string;
     date?: Date;
     winner: string;
-}
-
-export interface MatchDetails {
-    
 }

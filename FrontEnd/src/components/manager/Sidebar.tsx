@@ -1,12 +1,7 @@
 import { type JSX } from "react";
-import {
-    User,
-    CreditCard,
-    Settings,
-    Users2,
-    DollarSign,
-} from "lucide-react";
+import { User, CreditCard, Settings, Users2, DollarSign } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { TbCricket } from "react-icons/tb";
 
 interface MenuItem {
     name: string;
@@ -19,6 +14,7 @@ const Sidebar: React.FC = () => {
     const menuItems: MenuItem[] = [
         { name: "Profile", path: "/manager/profile", icon: <User size={20} /> },
         { name: "My Teams", path: "/manager/teams", icon: <Users2 size={20} /> },
+        { name: "My matches", path: "/manager/mymatches", icon: <TbCricket size={20} /> },
         { name: "Subscription", path: "/manager/subscription", icon: <CreditCard size={20} /> },
         { name: "Payments", path: "/manager/payments", icon: <DollarSign size={20} /> },
         { name: "Settings", path: "/manager/settings", icon: <Settings size={20} /> },
@@ -50,7 +46,7 @@ const Sidebar: React.FC = () => {
                     </NavLink>
                 ))}
             </nav>
-            
+
             <div className="p-4 border-t border-border mt-auto hidden lg:block">
                 <p className="text-xs text-muted-foreground">© 2026 MatchPoint</p>
             </div>

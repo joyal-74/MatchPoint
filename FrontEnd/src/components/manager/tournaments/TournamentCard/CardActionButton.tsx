@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import type { Status, Tournament } from "../../../../features/manager/managerTypes";
 import { setSelectedTournament } from "../../../../features/manager/Tournaments/tournamentSlice";
 import { useAppDispatch } from "../../../../hooks/hooks";
-import type { ColorScheme } from "../../teams/TeamCard/teamColors";
+import type { ColorScheme } from "../../teams/TeamCard/TeamColors";
 
 interface CardActionButtonProps {
     status: Status
@@ -21,7 +21,7 @@ const CardActionButton = ({ status, type, colorScheme, tournament }: CardActionB
     };
 
     const isExplore = type === "explore";
-    const isDisabled = isExplore && status === "ended";
+    const isDisabled = isExplore && status === "completed";
 
     return (
         <button

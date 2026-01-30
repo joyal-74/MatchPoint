@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
+import type { OverlayData } from './OverlayTypes';
 
-export const CyberDashboardOverlay = ({ data }) => {
+export const CyberDashboardOverlay = ({ data }: { data?: OverlayData }) => {
     const stats = data || {
         runs: 0, wickets: 0, overs: '0.0', target: 0,
         batsman1: { name: 'P. Bose', runs: 0, balls: 0, strike: true },
@@ -8,7 +9,6 @@ export const CyberDashboardOverlay = ({ data }) => {
         recentBalls: ['•', '•', '•', '•', '•', '•']
     };
 
-    // Calculate Required Run Rate (RR) safely
     const rr = stats.target > 0 ? (stats.target / 20).toFixed(2) : "0.00";
 
     return (
@@ -37,8 +37,8 @@ export const CyberDashboardOverlay = ({ data }) => {
                     <div
                         key={i}
                         className={`flex justify-between items-center px-2 py-1 rounded transition-all ${player?.strike
-                                ? 'bg-primary/10 border-l-2 border-primary shadow-sm'
-                                : 'opacity-40 border-l-2 border-transparent'
+                            ? 'bg-primary/10 border-l-2 border-primary shadow-sm'
+                            : 'opacity-40 border-l-2 border-transparent'
                             }`}
                     >
                         <span className="text-[11px] font-black uppercase truncate max-w-[100px]">

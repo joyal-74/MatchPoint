@@ -1,4 +1,4 @@
-import type { Team } from "../../../features/manager/Matches/matchTypes";
+import type { Team } from "../../../domain/match/types";
 
 export interface MatchData {
     matchNo: number;

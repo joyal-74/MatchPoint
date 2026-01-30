@@ -1,5 +1,5 @@
 import { CircleDot, Activity } from "lucide-react";
-import type { BowlingStats } from "../../../features/manager/Matches/matchTypes";
+import type { BowlingStats } from "../../../../features/manager/Matches/matchTypes";
 
 interface BowlingTableProps {
     stats: BowlingStats[];

@@ -8,7 +8,8 @@ import toast from "react-hot-toast";
 export const useProfile = () => {
     const dispatch = useAppDispatch();
     const { viewer, loading, error } = useAppSelector((state: RootState) => state.viewer);
-    const viewerId = useAppSelector((state: RootState) => state.auth.user?._id);
+    const user = useAppSelector((state: RootState) => state.auth.user);
+    const viewerId = user?._id
 
     console.log('vieer', viewer)
 
@@ -85,6 +86,7 @@ export const useProfile = () => {
     };
 
     return {
+        user,
         isEditing,
         setIsEditing,
         profileImage,

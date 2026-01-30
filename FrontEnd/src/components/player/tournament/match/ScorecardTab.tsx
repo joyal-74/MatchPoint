@@ -2,7 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { BattingTable } from "./BattingTable";
 import { BowlingTable } from "./BowlingTable";
 import { Users, CircleDot } from "lucide-react";
-import type { BattingStats, BowlingStats, LiveScoreState, Match, Team }from "../../../../features/manager/Matches/matchTypes";
+import type { BattingStats, BowlingStats, LiveScoreState }from "../../../../features/manager/Matches/matchTypes";
+import type { Match, Team } from "../../../../domain/match/types";
 
 interface ScorecardTabProps {
     match: Match;

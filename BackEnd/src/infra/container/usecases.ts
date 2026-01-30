@@ -139,6 +139,8 @@ import { GetMyTournamentMatchResult } from "app/usecases/manager/tournaments/Get
 import { SignupUmpire } from "app/usecases/auth/SignupUmpire";
 import { UpdateUmpireProfile } from "app/usecases/umpire/UpdateUmpireProfile";
 import { GetUmpireProfile } from "app/usecases/umpire/GetUmpireProfile";
+import { GetViewerTournamentsUseCase } from "app/usecases/viewer/GetViewerTournaments";
+import { GetAllMatches } from "app/usecases/manager/match/GetAllMatches";
 
 
 // Registrations
@@ -258,6 +260,7 @@ container.register(DI_TOKENS.GetLeaderBoardUsecase, { useClass: GetLeaderboard }
 container.register(DI_TOKENS.GetLiveScoreUseCase, { useClass: GetLiveScoreUseCase });
 container.register(DI_TOKENS.GetPointsTableUseCase, { useClass: GetPointsTableUseCase });
 container.register(DI_TOKENS.GetMyTournamentMatchResult, { useClass: GetMyTournamentMatchResult });
+container.register(DI_TOKENS.GetAllMatches, { useClass: GetAllMatches });
 
 // --- Player Use Cases ---
 container.register(DI_TOKENS.GetChatsUseCase, { useClass: GetChatsUseCase });
@@ -299,6 +302,7 @@ container.register(DI_TOKENS.MarkAllNotificationRead, { useClass: MarkAllNotific
 // --- Viewer ---
 container.register(DI_TOKENS.GetViewerProfile, { useClass: GetViewerProfile });
 container.register(DI_TOKENS.UpdateViewerProfile, { useClass: UpdateViewerProfile });
+container.register(DI_TOKENS.GetViewerTournamentsUseCase, { useClass: GetViewerTournamentsUseCase });
 
 // --- Viewer ---
 container.register(DI_TOKENS.GetUmpireProfileUsecase, { useClass: GetUmpireProfile });

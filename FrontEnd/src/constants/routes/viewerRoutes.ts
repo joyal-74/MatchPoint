@@ -4,5 +4,6 @@ export const VIEWER_ROUTES = {
     GET_DETAILS: (viewerId: string) => `${API_PREFIX}/viewer/${viewerId}`,
     EDIT_DETAILS: (viewerId: string) => `${API_PREFIX}/viewer/${viewerId}`,
     GET_LIVE_MATCHES: (viewerId: string) => `${API_PREFIX}/viewer/${viewerId}/matches/live`,
+    GET_TOURNAMENTS: `${API_PREFIX}/viewer/tournaments`,
     FETCH_MATCH_UPDATES: (matchId: string) => `${API_PREFIX}/viewer/${matchId}/live/updates`,
 } as const;

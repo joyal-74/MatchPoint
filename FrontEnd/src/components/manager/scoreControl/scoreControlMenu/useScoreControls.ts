@@ -1,5 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
-import type { Match, LiveScoreState, Team, InningsState } from '../../../features/manager/Matches/matchTypes';
+import type { Match, Team } from '../../../../domain/match/types';
+import type { InningsState, LiveScoreState } from '../../../../features/manager/Matches/matchTypes';
+
 
 export type ScoreUpdatePayload =
     | { type: 'RUNS'; matchId: string; runs: number }
@@ -51,7 +53,8 @@ export const useScoreControls = ({ match, teamA, teamB, liveScore, emitScoreUpda
         penaltyRuns: 5,
         retirePlayerId: '',
         retireType: 'hurt' as 'hurt' | 'out',
-        newRetireBatsmanId: ''
+        outPlayerId: '',
+        newRetireBatsmanId: '',
     });
 
     // --- Derived Data ---
@@ -102,13 +105,16 @@ export const useScoreControls = ({ match, teamA, teamB, liveScore, emitScoreUpda
 
     const getAvailableBatsmen = () => {
         return battingTeam.members.filter(player => {
-            const stats = (currentInnings?.battingStats || {})[player._id];
-            return !stats || !(stats).dismissal;
+            const stats = currentInnings?.battingStats.find(
+                s => s.playerId === player._id
+            );
+            return !stats || !stats.out;
         }).filter(player =>
             player._id !== currentInnings?.currentStriker &&
             player._id !== currentInnings?.currentNonStriker
         );
     };
+
 
     const getAvailableBowlers = () => {
         return bowlingTeam.members.filter(player => player._id !== currentInnings?.currentBowler);
@@ -146,7 +152,7 @@ export const useScoreControls = ({ match, teamA, teamB, liveScore, emitScoreUpda
                 matchId: match._id,
                 type: "WICKET",
                 dismissalType: forms.dismissalType,
-                outBatsmanId: currentInnings?.currentStriker || '',
+                outBatsmanId: forms.outPlayerId || currentInnings?.currentStriker || '',
                 nextBatsmanId: forms.newBatsmanId,
                 fielderId: forms.fielderId || null,
             });

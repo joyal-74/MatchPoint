@@ -22,6 +22,8 @@ import Navbar from '../Navbar';
 import StreamManager from '../../../pages/manager/StreamManager';
 import LoadingOverlay from '../../shared/LoadingOverlay';
 
+type endReason = "RAIN" | "BAD_LIGHT" | "FORCE_END" | "COMPLETED" | "OTHER"
+
 const ScoreboardDashboard: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -33,7 +35,7 @@ const ScoreboardDashboard: React.FC = () => {
     
     // --- End Match Logic States ---
     const [showEndMatchConfirm, setShowEndMatchConfirm] = useState(false);
-    const [endReason, setEndReason] = useState<"RAIN" | "BAD_LIGHT" | "FORCE_END" | "COMPLETED" | "OTHER">("COMPLETED");
+    const [endReason, setEndReason] = useState<endReason>("COMPLETED");
     const [winnerId, setWinnerId] = useState<string>("");
     const [winMargin, setWinMargin] = useState<string>("");
     const [winType, setWinType] = useState<"runs" | "wickets">("runs");
@@ -260,7 +262,7 @@ const ScoreboardDashboard: React.FC = () => {
                                 <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Reason</label>
                                 <select
                                     value={endReason}
-                                    onChange={(e) => setEndReason(e.target.value as any)}
+                                    onChange={(e) => setEndReason(e.target.value as endReason)}
                                     className="w-full px-3 py-2.5 rounded-lg bg-muted border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                                 >
                                     <option value="COMPLETED">Match Completed</option>

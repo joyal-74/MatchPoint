@@ -74,9 +74,8 @@ interface PointsTableTabProps {
 export default function PointsTableTab({ tournamentId, format, onNavigate }: PointsTableTabProps) {
     const dispatch = useAppDispatch();
     
-    // ✅ FIX 1: Destructure correctly from state.pointsTable
     const { 
-        data: pointsData, // Rename 'data' to 'pointsData' for clarity
+        data: pointsData, 
         loading, 
         error 
     } = useAppSelector((state) => state.managerTournaments.pointsTable); 
@@ -96,7 +95,6 @@ export default function PointsTableTab({ tournamentId, format, onNavigate }: Poi
         };
     }, [loadData, dispatch]);
 
-    // ✅ FIX 2: Access 'pointsData.groups' instead of 'pointsTable.groups'
     useEffect(() => {
         if (format === 'groups' && pointsData?.groups && pointsData.groups.length > 0 && !activeGroup) {
             setActiveGroup(pointsData.groups[0].groupName);

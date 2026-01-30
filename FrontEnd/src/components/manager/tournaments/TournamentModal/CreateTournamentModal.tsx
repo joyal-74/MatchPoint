@@ -10,7 +10,7 @@ import MapPicker from "../../../shared/MapPicker";
 import { validateTournamentForm } from "../../../../validators/ValidateTournamentForm";
 import { Trophy, Calendar, Activity, FileText, Image as ImageIcon, MapPin, Watch } from "lucide-react";
 
-export default function CreateTournamentModal({ isOpen, onClose, managerId, onShowPrizeInfo, }: CreateTournamentModalProps) {
+export default function CreateTournamentModal({ isOpen, onClose, managerId, onShowPrizeInfo }: CreateTournamentModalProps) {
     const dispatch = useAppDispatch();
     const [formData, setFormData] = useState<TournamentFormData>(initialFormData(managerId));
     const [rulesText, setRulesText] = useState("");

@@ -1,5 +1,5 @@
 import { Pencil, XCircle } from "lucide-react";
-import type { ColorScheme } from "../../teams/TeamCard/teamColors";
+import type { ColorScheme } from "../../teams/TeamCard/TeamColors";
 import type { Status } from "../../../../features/manager/managerTypes";
 
 interface ActionButtonsProps {
@@ -7,7 +7,7 @@ interface ActionButtonsProps {
     colorScheme: ColorScheme;
     tournamentId: string;
     openModal: () => void;
-    onCancelClick?: (id: string) => void; // renamed for clarity
+    onCancelClick?: (id: string) => void;
 }
 
 const ActionButtons = ({
@@ -17,7 +17,7 @@ const ActionButtons = ({
     tournamentId,
     onCancelClick,
 }: ActionButtonsProps) => {
-    const disabled = status === "ended";
+    const disabled = status === "completed";
 
     return (
         <div className="flex gap-2 flex-shrink-0">

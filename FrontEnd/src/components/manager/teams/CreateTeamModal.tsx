@@ -1,7 +1,7 @@
 import ModalBackdrop from "../../ui/ModalBackdrop";
 import ModalHeader from "../../shared/modal/ModalHeader";
 import LogoUpload from "./Modal/LogoUpload";
-import FormInput from "./Modal/FormInput";
+import FormInput, { type FormInputType } from "./Modal/FormInput";
 import FormSelect from "./Modal/FormSelect";
 import FormActions from "../../shared/modal/FormActions";
 import FormTextarea from "./Modal/FormTextarea";
@@ -35,7 +35,8 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, manager
                 if (!value.trim()) return "Team name is required.";
                 if (value.trim().length < 3) return "Team name must be at least 3 characters long.";
                 return "";
-            }
+            },
+            props: { type: "text" as const }
         },
         {
             type: "select",
@@ -45,7 +46,8 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, manager
             onChange: (val: string) => dispatch({ type: 'SET_FIELD', field: 'state', value: val }),
             options: stateOptions,
             placeholder: "Select your state",
-            validation: (value: string) => !value.trim() ? "Please select your state." : ""
+            validation: (value: string) => !value.trim() ? "Please select your state." : "",
+            props: { type: "text" as const }
         },
         {
             type: "input",
@@ -54,7 +56,8 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, manager
             value: state.city,
             onChange: (val: string) => dispatch({ type: 'SET_FIELD', field: 'city', value: val }),
             placeholder: "Enter your city or region",
-            validation: (value: string) => !value.trim() ? "City or region is required." : ""
+            validation: (value: string) => !value.trim() ? "City or region is required." : "",
+            props: { type: "text" as const }
         },
         {
             type: "select",
@@ -63,7 +66,8 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, manager
             value: state.sport,
             onChange: (val: string) => dispatch({ type: 'SET_FIELD', field: 'sport', value: val }),
             options: [{ value: "Cricket", label: "Cricket" }],
-            placeholder: "Select your sport"
+            placeholder: "Select your sport",
+            props: { type: "text" as const }
         },
         {
             type: "input",
@@ -90,14 +94,14 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, manager
 
             {/* Main Modal Container with Semantic Theming */}
             <div className="relative w-full max-w-2xl bg-card text-card-foreground rounded-xl border border-border shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200">
-                <ModalHeader 
-                    title="Create New Team" 
-                    onClose={closeModal} 
-                    disabled={state.isLoading} 
+                <ModalHeader
+                    title="Create New Team"
+                    onClose={closeModal}
+                    disabled={state.isLoading}
                 />
 
                 <form onSubmit={(e) => handleSubmit(e)} className="p-6 space-y-4">
-                    
+
                     {/* Logo Upload Section */}
                     <div className="space-y-2">
                         <LogoUpload
@@ -123,16 +127,18 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, manager
                     <div className="space-y-4">
                         {/* First field (Name) full width */}
                         {formFields.slice(0, 1).map((field) => (
+
                             <div key={field.name} className="space-y-1">
+
                                 {field.type === "input" ? (
                                     <FormInput
+                                        {...field.props}
                                         label={field.label}
-                                        type={field.props?.type || "text"}
+                                        type={field.props?.type as FormInputType}
                                         value={field.value}
                                         onChange={field.onChange}
                                         placeholder={field.placeholder}
                                         disabled={state.isLoading}
-                                        {...field.props}
                                     />
                                 ) : (
                                     <FormSelect
@@ -158,13 +164,13 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, manager
                                 <div key={field.name} className="space-y-1">
                                     {field.type === "input" ? (
                                         <FormInput
+                                            {...field.props}
                                             label={field.label}
-                                            type={field.props?.type}
+                                            type={field.props?.type as FormInputType}
                                             value={field.value}
                                             onChange={field.onChange}
                                             placeholder={field.placeholder}
                                             disabled={state.isLoading}
-                                            {...field.props}
                                         />
                                     ) : (
                                         <FormSelect

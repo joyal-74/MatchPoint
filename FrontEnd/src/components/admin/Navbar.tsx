@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
         }
     };
 
-    const handleProfileAction = (action: "logout" | "teams" | "profile" | 'settings') => {
+    const handleProfileAction = (action: "logout" | "teams" | "profile" | 'settings' | 'tournaments') => {
         switch (action) {
             case "logout":
                 handleLogout();

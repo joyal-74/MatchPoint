@@ -1,13 +1,16 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { loadInitialLiveScore, loadMatchDashboard, saveMatchData } from "./matchThunks";
-import type { Team, Match } from "./matchTypes";
+import { fetchAllMatches, loadInitialLiveScore, loadMatchDashboard, saveMatchData } from "./matchThunks";
 import type { LiveScoreState, InningsState } from "./matchTypes";
+import type { Match, Team } from "../../../domain/match/types";
 
 interface MatchState {
     match: Match | null;
     teamA: Team | null;
     teamB: Team | null;
     loading: boolean;
+    allMatches: Match[];
+    totalPages: number | null;
+    currentMatch : Match | null;
     error: string | undefined;
     liveScore: LiveScoreState | null;
 }
@@ -22,24 +25,24 @@ const initialInningsState: InningsState = {
     runs: 0,
     wickets: 0,
     overLimit: 0,
-    legalBalls : 0,
-    deliveries : 0,
+    legalBalls: 0,
+    deliveries: 0,
     currentStriker: null,
     currentNonStriker: null,
     currentBowler: null,
     isCompleted: false,
-    currentRunRate : '',
+    currentRunRate: '',
     ballEvents: [],
     recentLogs: [],
     battingStats: [],
     bowlingStats: [],
-    extras : {
-        wides : 0,
-        byes : 0,
-        legByes : 0,
-        noBalls : 0,
-        penalty : 0,
-        total : 0
+    extras: {
+        wides: 0,
+        byes: 0,
+        legByes: 0,
+        noBalls: 0,
+        penalty: 0,
+        total: 0
     }
 };
 
@@ -47,10 +50,13 @@ const initialState: MatchState = {
     match: null,
     teamA: null,
     teamB: null,
+    allMatches : [],
+    totalPages : null,
+    currentMatch : null,
     loading: false,
     error: undefined,
     liveScore: {
-        status : '',
+        status: '',
         innings1: initialInningsState,
         innings2: null,
         currentInnings: 1,
@@ -58,7 +64,7 @@ const initialState: MatchState = {
         target: 0,
         currentRunRate: 0,
         requiredRunRate: 0,
-        result : ''
+        result: ''
     }
 };
 
@@ -106,7 +112,7 @@ const matchSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
-            
+
             .addCase(saveMatchData.pending, (state) => {
                 state.loading = true;
             })
@@ -128,6 +134,20 @@ const matchSlice = createSlice({
                 state.error = undefined;
             })
             .addCase(loadInitialLiveScore.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            })
+
+            .addCase(fetchAllMatches.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchAllMatches.fulfilled, (state, action) => {
+                state.loading = false;
+                state.allMatches = action.payload.matches;
+                state.totalPages = action.payload.totalPages;
+                state.error = undefined;
+            })
+            .addCase(fetchAllMatches.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             })

@@ -3,10 +3,7 @@ import { teamInviteReponse } from "../../../features/player/playerThunks";
 import type { Notification } from "../../../features/player/notifications/notificationTypes";
 import { Users, Check, X } from "lucide-react";
 import { timeAgo } from "../../../utils/helpers/dateUtils";
-import {
-    fetchNotifications,
-    fetchUnreadCount
-} from "../../../features/player/notifications/notificationThunks";
+import { fetchNotifications, fetchUnreadCount } from "../../../features/player/notifications/notificationThunks";
 
 interface Props {
     notification: Notification;
@@ -18,10 +15,9 @@ export default function TeamInviteNotification({ notification }: Props) {
 
     const inviteStatus = notification.meta?.inviteStatus ?? "pending";
     const isPending = inviteStatus === "pending";
-    
-    // Determine visual state
-    const containerClasses = isPending 
-        ? "border-l-primary bg-primary/5" 
+
+    const containerClasses = isPending
+        ? "border-l-primary bg-primary/5"
         : "border-l-muted bg-background/50 opacity-80";
 
     const handleResponse = async (status: "approved" | "rejected") => {

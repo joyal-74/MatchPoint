@@ -2,9 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import { getAllTeams, createTeam, deleteTeam, editTeam, fetchManagerData, updateManagerData, getMyTeamDetails } from "./managerThunks";
 import type { Team } from "../../components/manager/teams/Types";
 import type { User } from "../../types/User";
+import type { Match } from "../../domain/match/types";
 
 interface ManagerState {
     teams: Team[];
+    matches : Match[];
+    totalPages : number | null;
     selectedTeam: Team | null;
     manager: User | null;
     loading: boolean;
@@ -14,6 +17,8 @@ interface ManagerState {
 
 const initialState: ManagerState = {
     teams: [],
+    matches : [],
+    totalPages : null,
     selectedTeam: null,
     manager: null,
     loading: false,

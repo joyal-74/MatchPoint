@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import type { Player } from "../../../pages/manager/ManageMembers";
-import type { PlayerCardProps } from "../../manager/manageMembers/PlayerCard";
+import type { Player } from "../../../domain/match/types";
 
 interface PlayerMenuProps {
     player: Player;
-    onAction: PlayerCardProps["onAction"];
+    onAction: (action: "view" | "swap" | "makeSubstitute", player: Player) => void;
 }
 
 export function PlayerMenu({ player, onAction }: PlayerMenuProps) {
@@ -40,7 +39,7 @@ export function PlayerMenu({ player, onAction }: PlayerMenuProps) {
                     <button onClick={(e) => { e.stopPropagation(); onAction("view", player); setIsOpen(false); }} className="w-full px-4 py-3 text-left hover:bg-neutral-700/50 flex items-center text-sm">
                         View Details
                     </button>
-                    {player.status !== "active" && <button onClick={(e) => { e.stopPropagation(); onAction("swap", player); setIsOpen(false); }} className="w-full px-4 py-3 text-left hover:bg-neutral-700/50 flex items-center text-sm">Swap to Playing</button>}
+                    {player.status !== "playing" && <button onClick={(e) => { e.stopPropagation(); onAction("swap", player); setIsOpen(false); }} className="w-full px-4 py-3 text-left hover:bg-neutral-700/50 flex items-center text-sm">Swap to Playing</button>}
                     {player.status !== "substitute" && <button onClick={(e) => { e.stopPropagation(); onAction("makeSubstitute", player); setIsOpen(false); }} className="w-full px-4 py-3 text-left hover:bg-neutral-700/50 flex items-center text-sm">Make Substitute</button>}
                 </div>
             )}

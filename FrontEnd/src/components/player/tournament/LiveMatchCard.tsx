@@ -18,6 +18,7 @@ export interface MatchData {
     oversB: string;
     isStreamLive: boolean;
     tournamentName?: string;
+    matchNumber?: string;
     matchType?: string;
     venue?: string;
     status?: string;

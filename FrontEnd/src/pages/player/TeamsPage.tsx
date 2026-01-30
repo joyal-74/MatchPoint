@@ -31,7 +31,6 @@ const TeamFinderPage = () => {
             {/* --- HERO SECTION --- */}
             <div className="relative bg-background border-b border-border/40 overflow-hidden">
                 <div className="absolute inset-0 bg-primary/5 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
                 
                 <div className="relative mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
@@ -39,13 +38,11 @@ const TeamFinderPage = () => {
                             <h1 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-foreground leading-[1.1]">
                                 Find Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">Dream Team</span>
                             </h1>
-                            {/* Bumped text-lg to text-xl */}
                             <p className="text-md text-muted-foreground leading-relaxed max-w-lg">
                                 Connect with top-tier squads, showcase your talent, and level up your game.
                             </p>
                         </div>
 
-                        {/* Stats / Context Badges */}
                         <div className="hidden md:flex gap-4">
                             <div className="flex items-center gap-4 px-5 py-3 bg-card/50 backdrop-blur-md border border-border/50 rounded-2xl shadow-sm">
                                 <div className="p-2.5 bg-blue-500/10 rounded-full text-blue-500">
@@ -61,11 +58,10 @@ const TeamFinderPage = () => {
                 </div>
             </div>
 
-            {/* --- FILTER BAR (Floating) --- */}
+            {/* --- FILTER BAR --- */}
             <div className="sticky top-4 z-40 mx-auto px-4 sm:px-6 lg:px-8 -mt-10 w-full">
-                <div className="bg-card/80 backdrop-blur-xl border border-border/60 shadow-lg shadow-black/5 rounded-2xl p-3 md:p-4 flex flex-col md:flex-row gap-4 transition-all duration-200">
+                <div className="bg-card/80 backdrop-blur-xl border border-border/60 shadow-lg shadow-black/5 rounded-2xl p-3 md:p-4 flex flex-col md:flex-row gap-4">
                     
-                    {/* Search Field - Increased Font Size */}
                     <div className="relative flex-grow group">
                         <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                             <Search className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -81,9 +77,7 @@ const TeamFinderPage = () => {
 
                     <div className="hidden md:block w-px h-8 bg-border/60 self-center mx-1" />
 
-                    {/* Filters Row - Increased Font Size */}
                     <div className="flex gap-3 overflow-x-auto pb-1 md:pb-0 scrollbar-hide items-center">
-                        {/* Location */}
                         <div className="relative min-w-[160px] group">
                             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
                             <input
@@ -95,7 +89,6 @@ const TeamFinderPage = () => {
                             />
                         </div>
 
-                        {/* Sport Select */}
                         <div className="relative min-w-[160px] group">
                             <Trophy className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
                             <select
@@ -111,7 +104,6 @@ const TeamFinderPage = () => {
                         </div>
                     </div>
 
-                    {/* Right Actions */}
                     <div className="flex items-center gap-3 ml-auto pl-2 md:border-l md:border-border/60">
                         {hasActiveFilters && (
                             <button 
@@ -126,22 +118,14 @@ const TeamFinderPage = () => {
                         <div className="flex bg-secondary/60 p-1.5 rounded-xl border border-border/20">
                             <button
                                 onClick={() => setViewMode('grid')}
-                                className={`p-2.5 rounded-lg transition-all ${
-                                    viewMode === 'grid' 
-                                    ? 'bg-background text-foreground shadow-sm ring-1 ring-black/5' 
-                                    : 'text-muted-foreground hover:text-foreground/70'
-                                }`}
+                                className={`p-2.5 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'}`}
                                 title="Grid View"
                             >
                                 <LayoutGrid size={20} />
                             </button>
                             <button
                                 onClick={() => setViewMode('list')}
-                                className={`p-2.5 rounded-lg transition-all ${
-                                    viewMode === 'list' 
-                                    ? 'bg-background text-foreground shadow-sm ring-1 ring-black/5' 
-                                    : 'text-muted-foreground hover:text-foreground/70'
-                                }`}
+                                className={`p-2.5 rounded-lg transition-all ${viewMode === 'list' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'}`}
                                 title="List View"
                             >
                                 <List size={20} />
@@ -154,7 +138,6 @@ const TeamFinderPage = () => {
             {/* --- MAIN CONTENT --- */}
             <main className="flex-1 mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
                 
-                {/* Result Count Header */}
                 <div className="flex items-baseline justify-between mb-8">
                     <h2 className="text-2xl font-semibold tracking-tight">
                         Available Teams 
@@ -164,62 +147,52 @@ const TeamFinderPage = () => {
                     </h2>
                 </div>
 
-                {/* Empty State */}
                 {currentTeams.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-card/30 rounded-3xl border border-dashed border-border/60">
-                        <div className="relative mb-6 group">
-                            <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <div className="relative bg-background p-8 rounded-2xl border border-border shadow-sm group-hover:scale-110 transition-transform duration-300">
-                                <Search size={48} className="text-muted-foreground" />
-                            </div>
-                        </div>
+                        <Search size={48} className="text-muted-foreground mb-6" />
                         <h3 className="text-3xl font-bold mb-4">No teams found</h3>
-                        <p className="text-lg text-muted-foreground max-w-lg mx-auto mb-8 leading-relaxed">
-                            We couldn't find any teams matching your current filters. 
-                            <br className="hidden sm:block" /> Try adjusting your search or exploring a different city.
+                        <p className="text-lg text-muted-foreground max-w-lg mx-auto mb-8">
+                            We couldn't find any teams matching your current filters.
                         </p>
                         <button 
                             onClick={clearFilters} 
-                            className="px-10 py-4 bg-primary text-primary-foreground font-semibold text-base rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 hover:translate-y-[-2px] active:translate-y-[0px]"
+                            className="px-10 py-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all"
                         >
                             Reset All Filters
                         </button>
                     </div>
                 ) : (
-                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                        {/* Grid / List Switcher */}
+                    <div>
                         <div className={
                             viewMode === 'grid' 
                             ? "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 lg:gap-10" 
                             : "flex flex-col gap-6 mx-auto"
                         }>
-                            {currentTeams.map((team, index) => (
-                                <div 
-                                    key={team._id} 
-                                    className={viewMode === 'grid' ? "h-full" : "w-full"}
-                                    style={{ animationDelay: `${index * 50}ms` }} 
-                                >
-                                    {viewMode === 'grid' ? (
-                                        <div className="group h-full hover:z-10 relative">
-                                            {/* Hover lift wrapper */}
-                                            <div className="h-full transition-transform duration-300 ease-out hover:-translate-y-2">
+                            {currentTeams.map((team) => {
+                                // Logic: Status based on member count
+                                const isFull = team.members?.length >= team.maxPlayers;
+                                const displayStatus = isFull ? 'Team Full' : 'Recruiting';
+
+                                return (
+                                    <div key={team._id} className={viewMode === 'grid' ? "h-full" : "w-full"}>
+                                        {viewMode === 'grid' ? (
+                                            <div className="h-full transition-transform duration-200 hover:-translate-y-1">
                                                 <TeamCard
-                                                    team={team}
+                                                    team={{...team, displayStatus, isFull}}
                                                     onViewDetails={openTeamDetails}
                                                 />
                                             </div>
-                                        </div>
-                                    ) : (
-                                        <TeamListItem
-                                            team={team}
-                                            onViewDetails={openTeamDetails}
-                                        />
-                                    )}
-                                </div>
-                            ))}
+                                        ) : (
+                                            <TeamListItem
+                                                team={{...team, displayStatus, isFull}}
+                                                onViewDetails={openTeamDetails}
+                                            />
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
 
-                        {/* Pagination */}
                         {allTeams.length > pagination.itemsPerPage && (
                             <div className="mt-20 pt-10 border-t border-border/40 flex justify-center">
                                 <Pagination
@@ -233,7 +206,6 @@ const TeamFinderPage = () => {
                 )}
             </main>
 
-            {/* MODAL */}
             {selectedTeam && (
                 <TeamModal
                     team={selectedTeam}

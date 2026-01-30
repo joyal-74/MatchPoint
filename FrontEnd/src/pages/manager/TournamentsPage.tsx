@@ -16,8 +16,6 @@ import { useTournamentModals } from "../../hooks/useTournamentModals";
 export default function TournamentsPage() {
     const dispatch = useAppDispatch();
 
-    // 1. CLEANUP: Only destructure what is needed for the Dashboard
-    // Removed: exploreTournaments, exploreLoading, searchQuery, activeFilter, etc.
     const {
         showMyTournaments,
         loading,

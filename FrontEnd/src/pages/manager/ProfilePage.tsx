@@ -1,7 +1,7 @@
 import React from "react";
-import { 
-    Edit2, Save, X, Loader2, UserCog, 
-    LogOut, Settings, ChevronRight 
+import {
+    Edit2, Save, X, Loader2, UserCog,
+    LogOut, Settings, ChevronRight
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ProfileHeader from "../../components/shared/ProfileHeader";
@@ -41,12 +41,13 @@ const ProfilePage: React.FC = () => {
 
     return (
         <ManagerLayout>
-             <div className="mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+            <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    
+
                     {/* Left Sidebar */}
                     <div className="lg:col-span-1 space-y-6">
                         <ProfileHeader
+                            user={user}
                             profileData={formData}
                             profileImage={profileImage || formData.profileImage}
                             isEditing={isEditing}
@@ -65,7 +66,7 @@ const ProfilePage: React.FC = () => {
                             bg-card border rounded-xl shadow-sm overflow-hidden transition-colors duration-300
                             ${isEditing ? 'border-primary/50 ring-1 ring-primary/10' : 'border-border'}
                         `}>
-                            
+
                             {/* Header Bar */}
                             <div className="px-6 py-4 border-b border-border bg-muted/20 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md">
                                 <div>
@@ -110,7 +111,7 @@ const ProfilePage: React.FC = () => {
                                     )}
                                 </div>
                             </div>
-                            
+
                             {/* Form Body */}
                             <div className="p-6">
                                 <ProfileForm
@@ -124,9 +125,9 @@ const ProfilePage: React.FC = () => {
                         {/* --- Mobile Only: Account Actions --- */}
                         <div className="md:hidden space-y-4 pt-4 border-t border-border">
                             <h3 className="text-sm font-semibold text-muted-foreground px-1">Account</h3>
-                            
+
                             <div className="bg-card border border-border rounded-xl overflow-hidden divide-y divide-border shadow-sm">
-                                <button 
+                                <button
                                     onClick={() => navigate('/manager/settings')}
                                     className="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-colors"
                                 >
@@ -139,7 +140,7 @@ const ProfilePage: React.FC = () => {
                                     <ChevronRight size={16} className="text-muted-foreground" />
                                 </button>
 
-                                <button 
+                                <button
                                     onClick={handleLogout}
                                     className="w-full flex items-center justify-between p-4 hover:bg-red-50 hover:text-red-600 transition-colors group"
                                 >
@@ -159,7 +160,7 @@ const ProfilePage: React.FC = () => {
                         </div>
 
                     </div>
-                    
+
                 </div>
             </div>
         </ManagerLayout>

@@ -5,9 +5,9 @@ import toast from "react-hot-toast";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { saveMatchData, startMatch } from "../../../features/manager/Matches/matchThunks";
 import type { TeamId, TossDecision } from "./matchTypes";
-import type { Team, Player } from "../../../features/manager/Matches/matchTypes";
 import { PlayerCard } from "./PlayerCard";
 import { ActionButton } from "./ActionButton";
+import type { Player, Team } from "../../../domain/match/types";
 
 
 interface TeamDetailsPanelProps {

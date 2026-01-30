@@ -22,5 +22,8 @@ export function createSocket() {
 }
 
 export function getSocket() {
+    if (!_socket) {
+        return createSocket();
+    }
     return _socket;
 }

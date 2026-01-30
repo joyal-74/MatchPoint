@@ -21,6 +21,8 @@ export interface Team {
     };
     phase: "recruiting" | "active" | "completed";
     createdAt: string;
+    displayStatus?: string;
+    isFull?: boolean;
 }
 
 

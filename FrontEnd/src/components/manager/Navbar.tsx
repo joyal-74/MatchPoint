@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
         } catch (error) { console.error("Logout failed:", error); }
     };
 
-    const handleProfileAction = (action: "logout" | "teams" | "profile" | 'settings') => {
+    const handleProfileAction = (action: "logout" | "teams" | "profile" | 'settings' | 'tournaments') => {
         switch (action) {
             case "logout": handleLogout(); break;
             case "teams": navigate("/manager/teams"); break;

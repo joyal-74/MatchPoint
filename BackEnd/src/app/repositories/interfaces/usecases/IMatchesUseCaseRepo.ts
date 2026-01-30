@@ -39,7 +39,7 @@ export interface IGetLiveScoreUseCase {
 }
 
 export interface IAddWicketUseCase {
-    execute(payload : AddWicketPayload): Promise<MatchEntity | null>;
+    execute(payload: AddWicketPayload): Promise<MatchEntity | null>;
 }
 
 export interface IAddRunsUseCase {
@@ -92,4 +92,8 @@ export interface IAddExtrasUseCase {
 
 export interface IEndMatchUseCase {
     execute(input: EndMatchUseCaseInput): Promise<MatchEntity>;
+}
+
+export interface IGetAllMatches {
+    execute(search: string, limit: number, page: number): Promise<{ matches: MatchEntity[], totalPages: number }>;
 }

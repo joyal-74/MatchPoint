@@ -1,7 +1,7 @@
 import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentStatsModel";
 import { MatchEntity } from "domain/entities/MatchEntity";
 import { MatchStatsMapper } from "infra/utils/mappers/MatchStatsMapper";
-import { IMatchStatsRepo, LiveMatchQuery } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { AllMatchQuery, IMatchStatsRepo, LiveMatchQuery } from "app/repositories/interfaces/manager/IMatchStatsRepo";
 import { TournamentMatchStatsDocument } from "domain/types/match.types";
 import { TournamentResult } from "domain/entities/Match";
 import { Types } from "mongoose";
@@ -13,6 +13,36 @@ export class MatchRepoMongo implements IMatchStatsRepo {
         if (!doc) return null;
 
         return MatchStatsMapper.toDomain(doc);
+    }
+
+    async findAllMatches(query: AllMatchQuery): Promise<{ matches: MatchEntity[], totalPages: number }> {
+        const { search, limit = 10, page = 1 } = query;
+        const skip = (page - 1) * limit;
+
+        const mongoQuery : any = {};
+
+        if (search) {
+            mongoQuery.$or = [
+                { venue: { $regex: search, $options: "i" } },
+            ];
+        }
+
+        // Execute count and find in parallel
+        const [docs, totalCount] = await Promise.all([
+            TournamentMatchStatsModel.find(mongoQuery)
+                .sort({ updatedAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .lean(),
+            TournamentMatchStatsModel.countDocuments(mongoQuery)
+        ]);
+
+        const matches = docs.map(doc => MatchStatsMapper.toDomain(doc));
+
+        return {
+            matches,
+            totalPages: Math.ceil(totalCount / limit)
+        };
     }
 
     async findLiveMatches({ limit = 10 }) {

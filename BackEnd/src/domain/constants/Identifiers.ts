@@ -193,8 +193,9 @@ const MatchUsecaseTokens = {
     AddPenaltyUseCase: "AddPenaltyUseCase",
     RetireBatsmanUseCase: "RetireBatsmanUseCase",
     StartMatchUseCase: "StartMatchUseCase",
-    EndMatchUseCase: "EndMatchUseCase",
     GetPointsTableUseCase: "GetPointsTableUseCase",
+    EndMatchUseCase: "EndMatchUseCase",
+    GetAllMatches: "GetAllMatches",
 }
 
 const PlayerUsecaseTokens = {
@@ -226,6 +227,7 @@ const ViewerUsecaseTokens = {
     GetLiveMatches: 'GetLiveMatches',
     GetMatchUpdates: 'GetMatchUpdates',
     GetLeaderBoardUsecase: 'GetLeaderBoardUsecase',
+    GetViewerTournamentsUseCase: 'GetViewerTournamentsUseCase',
 }
 
 const UmpireUseCaseTokens = {

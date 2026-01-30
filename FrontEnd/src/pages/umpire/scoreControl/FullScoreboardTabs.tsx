@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, User, CircleDot, Activity, AlertCircle } from 'lucide-react';
-import type { LiveScoreState, Team } from '../../../features/manager/Matches/matchTypes';
+import type { LiveScoreState } from '../../../features/manager/Matches/matchTypes';
+import type { Team } from '../../../domain/match/types';
 
 interface FullScoreboardTabsProps {
     teamA: Team;

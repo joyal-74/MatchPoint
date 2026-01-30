@@ -13,16 +13,13 @@ export default function TournamentHeader({ tournamentData, type, onClick, isRegi
 
     const isCompleted = tournamentData.status === "completed";
 
-    // Formatting
     const startDate = new Date(tournamentData.startDate);
     const endDate = new Date(tournamentData.endDate);
     const dateRange = `${startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
 
     return (
-        // A self-contained, rounded "Hero Card" that fits inside your layout
         <div className="w-full relative bg-card border border-border rounded-3xl overflow-hidden shadow-sm group my-4">
 
-            {/* ================= 1. BACKGROUND BANNER LAYER ================= */}
             <div className="absolute inset-0 z-0 h-full w-full bg-muted/20">
                 {tournamentData.banner ? (
                     <img
@@ -31,24 +28,17 @@ export default function TournamentHeader({ tournamentData, type, onClick, isRegi
                         className="w-full h-full object-cover opacity-30 dark:opacity-20 blur-[1px] transition-transform duration-700 group-hover:scale-105"
                     />
                 ) : (
-                    // Fallback Pattern
                     <div className="w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
                 )}
 
-                {/* Gradient Overlay: Left-to-Right for text readability */}
                 <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/10" />
-                {/* Gradient Overlay: Bottom-to-Top to blend with card footer */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
             </div>
 
-            {/* ================= 2. CONTENT LAYER ================= */}
             <div className="relative z-10 p-6 md:p-8">
 
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-
-                    {/* --- LEFT SIDE: INFO --- */}
                     <div className="flex-1 space-y-5">
-                        {/* Title Section */}
                         <div className="space-y-2">
                             <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest opacity-90">
                                 <Trophy size={14} />
@@ -59,7 +49,6 @@ export default function TournamentHeader({ tournamentData, type, onClick, isRegi
                             </h1>
                         </div>
 
-                        {/* Stats Row (Glass Cards) */}
                         <div className="flex flex-wrap items-center gap-3">
                             <GlassStat icon={Calendar} label={dateRange} />
                             <GlassStat icon={Users} label={`${tournamentData.currTeams} / ${tournamentData.maxTeams} Teams`} />
@@ -67,7 +56,6 @@ export default function TournamentHeader({ tournamentData, type, onClick, isRegi
                         </div>
                     </div>
 
-                    {/* --- RIGHT SIDE: ACTIONS --- */}
                     <div className="flex items-center gap-3 pb-1">
                         {type === "manage" ? (
                             <button
@@ -106,7 +94,6 @@ export default function TournamentHeader({ tournamentData, type, onClick, isRegi
     );
 }
 
-// Sub-component for cleaner code
 function GlassStat({ icon: Icon, label }: { icon: any, label: string }) {
     return (
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-background/40 border border-border/40 backdrop-blur-sm text-xs font-medium text-foreground/90">

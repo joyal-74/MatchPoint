@@ -1,18 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { User } from "../../types/User";
-import { fetchLiveMatches, fetchViewerData, updateViewerData } from "./viewerThunks";
-import type { Match } from "./viewerTypes";
+import { fetchLiveMatches, fetchTournaments, fetchViewerData, updateViewerData } from "./viewerThunks";
+import type { Tournament } from "../manager/managerTypes";
+import type { Match } from "../../domain/match/types";
 
 interface viewerState {
-    viewer : User | null;
+    allTournaments: Tournament[];
+    totalPages : number ;
+    viewer: User | null;
     loading: boolean;
-    liveMatches : Match[];
+    liveMatches: Match[];
     error: string | null;
 }
 
 const initialState: viewerState = {
+    allTournaments: [],
+    totalPages : 0,
     viewer: null,
-    liveMatches : [],
+    liveMatches: [],
     loading: false,
     error: null,
 };
@@ -64,7 +69,22 @@ const viewerSlice = createSlice({
             .addCase(fetchLiveMatches.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error?.message || "Failed to load matches";
-            });
+            })
+
+            .addCase(fetchTournaments.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchTournaments.fulfilled, (state, action) => {
+                state.loading = false;
+                state.allTournaments = action.payload.tournaments;
+                state.totalPages = action.payload.total;
+            })
+            .addCase(fetchTournaments.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || action.error.message || "Failed to fetch tournaments";
+            })
+
     },
 });
 

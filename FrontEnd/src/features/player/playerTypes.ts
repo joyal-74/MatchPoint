@@ -53,6 +53,7 @@ export type playerJoinStatus = 'pending' | 'approved';
 export interface Match {
     matchNumber: number;
     _id: string;
+    matchId: string;
     teamA: {
         logo : string;
         name : string;

@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { Play, Sword, Zap, CheckCircle2, Lock } from "lucide-react";
 import { CoinFlip } from "./CoinFlip";
 import type { TeamId, TossDecision } from "./matchTypes";
-import type { Team } from "../../../features/manager/Matches/matchTypes";
+import type { Team } from "../../../domain/match/types";
 
 const COIN_FLIP_TIME_MS = 2500;
 

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FileText, BarChart2 } from "lucide-react"; 
+import { FileText, BarChart2 } from "lucide-react";
 
-import { useLiveMatchViewer } from "../../hooks/viewer/useLiveMatchWebSocket"; 
+import { useLiveMatchViewer } from "../../hooks/viewer/useLiveMatchWebSocket";
 import Navbar from "../../components/player/Navbar";
-import { MatchHeader } from "../../components/player/tournament/match/MatchHeader"; 
-import { ScorecardTab } from "../../components/player/tournament/match/ScorecardTab"; 
+import { MatchHeader } from "../../components/player/tournament/match/MatchHeader";
+import { ScorecardTab } from "../../components/player/tournament/match/ScorecardTab";
 import { CommentaryTab } from "../../components/player/tournament/match/CommentaryTab";
-import { useAppSelector } from "../../hooks/hooks"; 
+import { useAppSelector } from "../../hooks/hooks";
 import LiveStatusBanner from "../../components/player/tournament/match/LiveStatusBanner";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
 
@@ -40,13 +40,13 @@ const LiveMatchDetails = () => {
 
     const getPlayerRole = (playerId: string): string => {
         if (teamA) {
-            const memberInTeamA = teamA.members.find((member) => member.userId === playerId);
-            if (memberInTeamA) return memberInTeamA.role;
+            const memberInTeamA = teamA.members.find((member) => member._id === playerId);
+            if (memberInTeamA) return memberInTeamA.role ?? "Player";
         }
 
         if (teamB) {
-            const memberInTeamB = teamB.members.find((member) => member.userId === playerId);
-            if (memberInTeamB) return memberInTeamB.role;
+            const memberInTeamB = teamB.members.find((member) => member._id === playerId);
+            if (memberInTeamB) return memberInTeamB.role ?? "Player";
         }
 
         return "Player";
@@ -68,9 +68,9 @@ const LiveMatchDetails = () => {
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col">
             <Navbar />
-            
+
             <div className="flex-1">
-                
+
                 <MatchHeader
                     match={match}
                     teamA={teamA}
@@ -91,15 +91,15 @@ const LiveMatchDetails = () => {
 
                 {/* 3. Main Content Area */}
                 <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    
+
                     {/* Tabs Navigation */}
                     <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-xl mb-8 w-full md:w-fit overflow-x-auto">
                         <button
                             onClick={() => setActiveTab('scorecard')}
                             className={`
                                 flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap
-                                ${activeTab === 'scorecard' 
-                                    ? 'bg-background text-foreground shadow-sm ring-1 ring-border' 
+                                ${activeTab === 'scorecard'
+                                    ? 'bg-background text-foreground shadow-sm ring-1 ring-border'
                                     : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                                 }
                             `}
@@ -111,8 +111,8 @@ const LiveMatchDetails = () => {
                             onClick={() => setActiveTab('commentary')}
                             className={`
                                 flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap
-                                ${activeTab === 'commentary' 
-                                    ? 'bg-background text-foreground shadow-sm ring-1 ring-border' 
+                                ${activeTab === 'commentary'
+                                    ? 'bg-background text-foreground shadow-sm ring-1 ring-border'
                                     : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                                 }
                             `}

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
+import type { OverlayData } from './OverlayTypes';
 
-export const EliteBroadcastOverlay = ({ data }) => {
+export const EliteBroadcastOverlay = ({ data }: { data?: OverlayData }) => {
     // 1. Fallback / Default state to prevent "undefined" errors
     const stats = data || {
         runs: 0, wickets: 0, overs: '0.0', target: 0,
@@ -17,7 +18,7 @@ export const EliteBroadcastOverlay = ({ data }) => {
 
     return (
         <motion.div
-            initial={{ y: 100 }} 
+            initial={{ y: 100 }}
             animate={{ y: 0 }}
             exit={{ y: 100 }}
             className="absolute bottom-0 left-0 w-full h-16 bg-card/95 backdrop-blur-md border-t border-border flex items-center shadow-2xl overflow-hidden z-50"
@@ -41,10 +42,10 @@ export const EliteBroadcastOverlay = ({ data }) => {
                 {[b1, b2].map((player, i) => (
                     <div key={i} className={`flex items-center gap-2 transition-opacity duration-300 ${player?.strike ? 'opacity-100' : 'opacity-40'}`}>
                         {player?.strike && (
-                            <motion.div 
-                                animate={{ scale: [1, 1.2, 1] }} 
+                            <motion.div
+                                animate={{ scale: [1, 1.2, 1] }}
                                 transition={{ repeat: Infinity, duration: 2 }}
-                                className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_var(--color-primary)]" 
+                                className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_var(--color-primary)]"
                             />
                         )}
                         <div className="flex flex-col leading-tight">
@@ -82,12 +83,12 @@ export const EliteBroadcastOverlay = ({ data }) => {
                 <span className="text-[9px] font-black text-muted-foreground uppercase mr-2 tracking-tighter">Recent</span>
                 <div className="flex gap-1.5">
                     {(stats.recentBalls || []).slice(-6).map((ball, i) => (
-                        <div 
-                            key={i} 
+                        <div
+                            key={i}
                             className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-transform hover:scale-110
                             ${ball === 'W' ? 'bg-destructive text-white border-destructive shadow-lg shadow-destructive/20' :
-                              ['4', '6'].includes(ball) ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20' : 
-                              'border-border text-foreground bg-background/50'}`}
+                                    ['4', '6'].includes(ball) ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20' :
+                                        'border-border text-foreground bg-background/50'}`}
                         >
                             {ball}
                         </div>

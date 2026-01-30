@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { fetchTournaments } from "../../features/player/Tournnaments/tournamentThunks";
 import type { Tournament } from "../../features/manager/managerTypes"; 
+import { getApiErrorMessage } from "../../utils/apiError";
 
 interface UsePlayerTournamentsResult {
     upcomingTournaments: Tournament[];
@@ -39,7 +40,7 @@ export const usePlayerTournaments = (filterStatus: "upcoming" | "completed"): Us
 
         } catch (err) {
             console.error("Failed to fetch tournaments", err);
-            setError(err.message || "Something went wrong");
+            setError(getApiErrorMessage(err) || "Something went wrong");
         } finally {
             setLoading(false);
         }

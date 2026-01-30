@@ -1,5 +1,5 @@
 import { User, Activity } from "lucide-react";
-import type { BattingStats } from "../../../features/manager/Matches/matchTypes";
+import type { BattingStats } from "../../../domain/match/types";
 
 interface BattingTableProps {
     stats: BattingStats[];

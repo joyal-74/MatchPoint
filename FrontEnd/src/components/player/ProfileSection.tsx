@@ -5,6 +5,7 @@ import ProfileActions from "../shared/ProfileActions";
 import type { UserProfile } from '../../types/Profile'
 import PremiumCard from "../shared/PremiumCard";
 import PlayerLayout from "../../pages/layout/PlayerLayout";
+import { useAppSelector } from "../../hooks/hooks";
 
 const ProfilePage: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
@@ -12,7 +13,7 @@ const ProfilePage: React.FC = () => {
     const [profileData, setProfileData] = useState<UserProfile>({
         firstName: "",
         lastName: "",
-        profileImage : '',
+        profileImage: '',
         username: "",
         phone: "",
         email: "",
@@ -21,6 +22,7 @@ const ProfilePage: React.FC = () => {
     });
 
     const [formData, setFormData] = useState<UserProfile>({ ...profileData });
+    const user = useAppSelector((state) => state.auth.user)
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -49,6 +51,7 @@ const ProfilePage: React.FC = () => {
         <PlayerLayout>
             <div className="min-h-40 bg-[var(--color-background)] w-6xl rounded-xl">
                 <ProfileHeader
+                    user={user}
                     profileData={profileData}
                     profileImage={profileImage}
                     isEditing={isEditing}

@@ -28,3 +28,8 @@ export const updateViewerData = createAsyncThunk(
         return response;
     })
 );
+
+export const fetchTournaments = createAsyncThunk(
+    "viewer/fetchTournaments",
+    createApiThunk(viewerEndpoints.fetchTournaments)
+);

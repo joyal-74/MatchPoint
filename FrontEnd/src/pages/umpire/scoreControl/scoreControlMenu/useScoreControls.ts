@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import type { Match, LiveScoreState, Team, InningsState } from '../../../features/manager/Matches/matchTypes';
+import type { Match, Team } from '../../../../domain/match/types';
+import type { InningsState, LiveScoreState } from '../../../../features/manager/Matches/matchTypes';
 
 export type ScoreUpdatePayload =
     | { type: 'RUNS'; matchId: string; runs: number }
@@ -50,6 +51,7 @@ export const useScoreControls = ({ match, teamA, teamB, liveScore, emitScoreUpda
         fielderId: '',
         penaltyRuns: 5,
         retirePlayerId: '',
+        outPlayerId: '',
         retireType: 'hurt' as 'hurt' | 'out',
         newRetireBatsmanId: ''
     });
@@ -102,8 +104,10 @@ export const useScoreControls = ({ match, teamA, teamB, liveScore, emitScoreUpda
 
     const getAvailableBatsmen = () => {
         return battingTeam.members.filter(player => {
-            const stats = (currentInnings?.battingStats || {})[player._id];
-            return !stats || !(stats).dismissal;
+            const stats = currentInnings?.battingStats.find(
+                s => s.playerId === player._id
+            );
+            return !stats || !stats.out;
         }).filter(player =>
             player._id !== currentInnings?.currentStriker &&
             player._id !== currentInnings?.currentNonStriker

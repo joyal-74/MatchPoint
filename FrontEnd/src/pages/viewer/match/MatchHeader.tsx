@@ -1,6 +1,6 @@
 import { ArrowLeft, MapPin, Trophy, Tv, Users, Wifi, WifiOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { Match, Team } from "../../../features/manager/Matches/matchTypes";
+import type { Match, Team } from "../../../domain/match/types";
 
 interface MatchHeaderProps {
     match: Match;

@@ -4,6 +4,7 @@ import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
 import { expressFileUpdateHandler } from "presentation/adaptors/ExpressFileAdaptor";
 import { MatchesController } from "presentation/http/controllers/viewer/MatchesController";
 import { ProfileController } from "presentation/http/controllers/viewer/ProfileController";
+import { TournamentController } from "presentation/http/controllers/viewer/TournamentController";
 import { container } from "tsyringe";
 
 const router = Router();
@@ -11,7 +12,9 @@ const upload = multer();
 
 const viewerMatchesController = container.resolve(MatchesController)
 const viewerProfileController = container.resolve(ProfileController)
+const viewerTournamentController = container.resolve(TournamentController)
 
+router.get("/tournaments", expressAdapter(viewerTournamentController.getTournaments));
 router.get('/:viewerId', expressAdapter(viewerProfileController.getProfile));
 router.put("/:viewerId", upload.single("file"), expressFileUpdateHandler(viewerProfileController.updateProfile));
 router.get("/:viewerId/matches/live", expressAdapter(viewerMatchesController.getLiveMatches));

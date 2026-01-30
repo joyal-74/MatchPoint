@@ -2,7 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { BattingTable } from "./BattingTable";
 import { BowlingTable } from "./BowlingTable";
 import { Users, CircleDot } from "lucide-react";
-import type { BattingStats, BowlingStats, LiveScoreState, Match, Team } from "../../../features/manager/Matches/matchTypes";
+import type { LiveScoreState } from "../../../features/manager/Matches/matchTypes";
+import type { BattingStats, Match, Team } from "../../../domain/match/types";
 
 interface ScorecardTabProps {
     match: Match;
@@ -135,7 +136,7 @@ export const ScorecardTab = ({ match, teamA, liveScore, teamB, getPlayerName, ge
             <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm min-h-[400px]">
                 {displayData.type === 'batting' ? (
                     <BattingTable
-                        stats={displayData.stats as BattingStats[]}
+                        stats={displayData.stats as unknown as BattingStats[]}
                         teamName={displayData.teamName}
                         balls={displayData.legalBalls}
                         getPlayerName={getPlayerName}
@@ -143,7 +144,7 @@ export const ScorecardTab = ({ match, teamA, liveScore, teamB, getPlayerName, ge
                     />
                 ) : (
                     <BowlingTable
-                        stats={displayData.stats as BowlingStats[]}
+                        stats={displayData.stats}
                         currentBowlerId={displayData.currentBowlerId}
                         teamName={displayData.teamName}
                         getPlayerName={getPlayerName}

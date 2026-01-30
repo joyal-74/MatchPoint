@@ -6,15 +6,12 @@ import type { RootState } from "../../app/rootReducer";
 import Navbar from "../../components/viewer/Navbar";
 import SkeletonCard from "../../components/viewer/SkeletonCard";
 import LiveMatchCard from "../../components/viewer/LiveMatchCard";
-import type { Match } from "../../features/viewer/viewerTypes";
 
 const LiveMatches = () => {
     const dispatch = useAppDispatch();
     const { liveMatches, loading } = useAppSelector((state: RootState) => state.viewer);
     const viewerId = useAppSelector((state: RootState) => state.auth.user?._id);
     const [isRefreshing, setIsRefreshing] = useState(false);
-
-    console.log(liveMatches, 'live')
 
     useEffect(() => {
         if (viewerId) {
@@ -74,7 +71,7 @@ const LiveMatches = () => {
                                 </p>
                             </div>
                         ) : (
-                            liveMatches.map((match : Match) => (
+                            liveMatches.map((match) => (
                                 <LiveMatchCard key={match.matchId} match={match} />
                             ))
                         )}

@@ -1,83 +1,76 @@
-import { ArrowRight, Calendar, MapPin, Users, Trophy } from 'lucide-react';
+import { Calendar, MapPin, Users, ChevronRight} from 'lucide-react';
 import type { Tournament } from '../../features/manager/managerTypes';
+import { useNavigate } from 'react-router-dom';
 
 interface TournamentsCardProps {
     tournaments: Tournament[];
 }
 
 const TournamentsCard = ({ tournaments }: TournamentsCardProps) => {
+    const navigate = useNavigate();
+
     return (
-        <section id="tournaments" className="py-16 bg-muted/30">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
-                {/* Section Header */}
-                <div className="flex items-end justify-between mb-8">
-                    <div>
-                        <h2 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-2">
-                            <Trophy className="text-yellow-500" /> Upcoming Tournaments
-                        </h2>
-                        <p className="text-muted-foreground">
-                            Register for premier cricket tournaments happening near you.
-                        </p>
-                    </div>
-                    <button className="text-sm font-semibold text-primary hover:text-primary/80 flex items-center gap-1 transition-colors">
-                        View All <ArrowRight size={16} />
-                    </button>
-                </div>
-
-                {/* Cards Grid */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {tournaments.map((tournament, index) => (
-                        <div
-                            key={index}
-                            className="bg-card text-card-foreground rounded-xl border border-border p-6 hover:shadow-lg hover:border-primary/50 transition-all duration-300 group flex flex-col h-full"
-                        >
-                            {/* Card Header: Format & Prize */}
-                            <div className="flex items-start justify-between mb-4">
-                                <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border border-primary/20">
-                                    {tournament.format}
-                                </span>
-                                <div className="text-right">
-                                    <div className="text-lg font-bold text-foreground">
-                                        {tournament.prizePool}
-                                    </div>
-                                    <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
-                                        Prize Pool
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Card Content */}
-                            <div className="flex-1">
-                                <h3 className="font-bold text-xl mb-4 group-hover:text-primary transition-colors line-clamp-2">
-                                    {tournament.title}
-                                </h3>
-
-                                <div className="space-y-3 mb-6">
-                                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                                        <Calendar size={16} className="text-primary/70" />
-                                        <span>{new Date(tournament.startDate).toLocaleDateString()}</span>
-                                    </div>
-                                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                                        <Users size={16} className="text-primary/70" />
-                                        <span>{tournament.teams?.length || 0} Teams Registered</span>
-                                    </div>
-                                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                                        <MapPin size={16} className="text-primary/70" />
-                                        <span className="truncate">{tournament.location}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Card Footer: Action */}
-                            <button className="w-full py-2.5 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg text-sm font-semibold transition-all shadow-sm group-hover:shadow-md mt-auto">
-                                Register Now
-                            </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tournaments.map((tournament, index) => (
+                <div
+                    key={tournament._id || index}
+                    className="bg-card border border-border rounded-[var(--radius)] overflow-hidden hover:border-primary/50 transition-all duration-300 group flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1"
+                >
+                    {/* Visual Header: Prize & Format */}
+                    <div className="relative p-6 pb-0 flex justify-between items-start">
+                        <div className="space-y-1">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded">
+                                {tournament.format}
+                            </span>
+                            <h3 className="font-black text-2xl uppercase italic tracking-tighter leading-tight mt-2 group-hover:text-primary transition-colors line-clamp-1">
+                                {tournament.title}
+                            </h3>
                         </div>
-                    ))}
+                        <div className="text-right">
+                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Prize Pool</p>
+                            <p className="text-xl font-black text-foreground tabular-nums">
+                                {tournament.prizePool}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Info Section: High Density */}
+                    <div className="p-6 space-y-4 flex-1">
+                        <div className="grid grid-cols-2 gap-4 py-4 border-y border-border/50">
+                            <div className="space-y-1">
+                                <div className="flex items-center gap-1.5 text-muted-foreground">
+                                    <Calendar size={12} className="text-primary" />
+                                    <span className="text-[10px] font-bold uppercase tracking-wider">Start Date</span>
+                                </div>
+                                <p className="text-sm font-bold">{new Date(tournament.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                            </div>
+                            <div className="space-y-1">
+                                <div className="flex items-center gap-1.5 text-muted-foreground">
+                                    <Users size={12} className="text-primary" />
+                                    <span className="text-[10px] font-bold uppercase tracking-wider">Registration</span>
+                                </div>
+                                <p className="text-sm font-bold">{tournament.currTeams || 0} / {tournament.maxTeams}</p>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-muted-foreground text-xs font-medium italic">
+                            <MapPin size={14} className="text-primary shrink-0" />
+                            <span className="truncate">{tournament.location}</span>
+                        </div>
+                    </div>
+
+                    {/* Action Area: Command Style */}
+                    <div className="px-6 pb-6">
+                        <button
+                            onClick={() => navigate(`/player/tournaments/${tournament._id}`)}
+                            className="w-full py-4 bg-secondary text-secondary-foreground group-hover:bg-primary group-hover:text-primary-foreground font-black uppercase tracking-[0.2em] text-[10px] rounded-[var(--radius)] transition-all flex items-center justify-center gap-2"
+                        >
+                            Register Now <ChevronRight size={14} />
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </section>
+            ))}
+        </div>
     );
 }
 

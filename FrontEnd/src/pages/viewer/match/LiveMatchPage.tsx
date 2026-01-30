@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FileText, BarChart2 } from "lucide-react"; 
+import { FileText, BarChart2 } from "lucide-react";
 
 import { useLiveMatchViewer } from "../../../hooks/viewer/useLiveMatchWebSocket";
 import Navbar from "../../../components/viewer/Navbar";
@@ -41,12 +41,12 @@ const LiveMatchPage = () => {
     const getPlayerRole = (playerId: string): string => {
         if (teamA) {
             const memberInTeamA = teamA.members.find((member) => member._id === playerId);
-            if (memberInTeamA) return memberInTeamA.role;
+            if (memberInTeamA) return memberInTeamA.role ?? "Player";
         }
 
         if (teamB) {
             const memberInTeamB = teamB.members.find((member) => member._id === playerId);
-            if (memberInTeamB) return memberInTeamB.role;
+            if (memberInTeamB) return memberInTeamB.role ?? "Player";
         }
 
         return "Player";
@@ -68,9 +68,9 @@ const LiveMatchPage = () => {
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col">
             <Navbar />
-            
+
             <div className="flex-1">
-                
+
                 {/* 1. Header Section */}
                 <MatchHeader
                     match={match}
@@ -93,15 +93,15 @@ const LiveMatchPage = () => {
 
                 {/* 3. Main Content Area */}
                 <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    
+
                     {/* Tabs Navigation */}
                     <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-xl mb-8 w-full md:w-fit overflow-x-auto">
                         <button
                             onClick={() => setActiveTab('scorecard')}
                             className={`
                                 flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap
-                                ${activeTab === 'scorecard' 
-                                    ? 'bg-background text-foreground shadow-sm ring-1 ring-border' 
+                                ${activeTab === 'scorecard'
+                                    ? 'bg-background text-foreground shadow-sm ring-1 ring-border'
                                     : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                                 }
                             `}
@@ -113,8 +113,8 @@ const LiveMatchPage = () => {
                             onClick={() => setActiveTab('commentary')}
                             className={`
                                 flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap
-                                ${activeTab === 'commentary' 
-                                    ? 'bg-background text-foreground shadow-sm ring-1 ring-border' 
+                                ${activeTab === 'commentary'
+                                    ? 'bg-background text-foreground shadow-sm ring-1 ring-border'
                                     : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                                 }
                             `}

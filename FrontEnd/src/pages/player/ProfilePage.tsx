@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { 
-    Edit2, Save, X, Loader2, User, Trophy, Activity, 
-    LogOut, Settings, ChevronRight 
+import {
+    Edit2, Save, X, Loader2, User, Trophy, Activity,
+    LogOut, Settings, ChevronRight
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ProfileHeader from "../../components/shared/ProfileHeader";
@@ -19,7 +19,7 @@ const PlayerProfilePage: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const user = useAppSelector(s => s.auth.user);
-    
+
     const {
         isEditing,
         setIsEditing,
@@ -50,7 +50,7 @@ const PlayerProfilePage: React.FC = () => {
 
     if (loading && !formData) return <PlayerLayout><LoadingOverlay show={true} /></PlayerLayout>;
     if (error) return <ProfileError error={error} onAction={handleRetry} />;
-    
+
     if (!formData || !playerProfile) {
         return (
             <PlayerLayout>
@@ -87,6 +87,7 @@ const PlayerProfilePage: React.FC = () => {
                     {/* Left Sidebar: Photo & Premium */}
                     <div className="lg:col-span-1 space-y-6">
                         <ProfileHeader
+                            user={user}
                             profileData={formData}
                             profileImage={profileImage || formData.profileImage}
                             isEditing={isEditing}
@@ -116,8 +117,8 @@ const PlayerProfilePage: React.FC = () => {
                                         )}
                                     </h2>
                                     <p className="text-xs text-muted-foreground hidden sm:block">
-                                        {activeTab === 'user' 
-                                            ? "Manage your contact info and bio." 
+                                        {activeTab === 'user'
+                                            ? "Manage your contact info and bio."
                                             : "Update your stats, position, and play style."}
                                     </p>
                                 </div>
@@ -161,8 +162,8 @@ const PlayerProfilePage: React.FC = () => {
                                     onClick={() => setActiveTab("user")}
                                     className={`
                                         flex-1 py-3 text-sm font-medium transition-all relative
-                                        ${activeTab === "user" 
-                                            ? "text-primary bg-primary/5" 
+                                        ${activeTab === "user"
+                                            ? "text-primary bg-primary/5"
                                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                         }
                                     `}
@@ -176,8 +177,8 @@ const PlayerProfilePage: React.FC = () => {
                                     onClick={() => setActiveTab("sport")}
                                     className={`
                                         flex-1 py-3 text-sm font-medium transition-all relative
-                                        ${activeTab === "sport" 
-                                            ? "text-primary bg-primary/5" 
+                                        ${activeTab === "sport"
+                                            ? "text-primary bg-primary/5"
                                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                         }
                                     `}
@@ -218,9 +219,9 @@ const PlayerProfilePage: React.FC = () => {
 
                         <div className="md:hidden space-y-4 pt-4 border-t border-border">
                             <h3 className="text-sm font-semibold text-muted-foreground px-1">Account</h3>
-                            
+
                             <div className="bg-card border border-border rounded-xl overflow-hidden divide-y divide-border shadow-sm">
-                                <button 
+                                <button
                                     onClick={() => navigate('/player/settings')}
                                     className="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-colors"
                                 >
@@ -233,7 +234,7 @@ const PlayerProfilePage: React.FC = () => {
                                     <ChevronRight size={16} className="text-muted-foreground" />
                                 </button>
 
-                                <button 
+                                <button
                                     onClick={handleLogout}
                                     className="w-full flex items-center justify-between p-4 hover:bg-red-50 hover:text-red-600 transition-colors group"
                                 >

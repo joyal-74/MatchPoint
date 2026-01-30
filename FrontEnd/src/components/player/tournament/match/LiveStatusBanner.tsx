@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Activity, Target, Disc } from "lucide-react";
-import type { BallEvent, LiveScoreState, Match, Team } from "../../../../features/manager/Matches/matchTypes";
+import type { BallEvent, LiveScoreState } from "../../../../features/manager/Matches/matchTypes";
+import type { Match, Team } from "../../../../domain/match/types";
 
 
 interface LiveStatusBannerProps {

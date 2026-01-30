@@ -1,14 +1,9 @@
 import { useState } from "react";
-import { 
-    MapPin, Calendar, Clock, Trophy, 
-    Wind, CircleDot, ChevronRight, User, 
-    Share2, ArrowLeft, Shield 
-} from "lucide-react";
+import { MapPin, Clock, Wind, CircleDot, Share2, ArrowLeft, Shield } from "lucide-react";
 
-// --- MOCK DATA (Replace with your actual Match Object) ---
 const MATCH_DATA = {
     id: "m1",
-    status: "completed", // upcoming, ongoing, completed
+    status: "completed",
     result: "Royal Strikers won by 14 runs",
     toss: "Galaxy Warriors won the toss and elected to bowl",
     venue: "Greenfield International Stadium, Trivandrum",
@@ -17,7 +12,7 @@ const MATCH_DATA = {
     teamA: {
         name: "Royal Strikers",
         short: "RYS",
-        logo: null, // Use a placeholder or URL
+        logo: null,
         score: "186/4",
         overs: "20.0"
     },
@@ -30,9 +25,7 @@ const MATCH_DATA = {
     }
 };
 
-// --- SUB-COMPONENTS ---
 
-// 1. Batting Row
 const BattingRow = ({ name, r, b, fours, sixes, sr, status }: any) => (
     <tr className="border-b border-border/50 hover:bg-muted/20 transition-colors">
         <td className="py-3 pl-4">
@@ -82,7 +75,7 @@ export default function MatchDetailsPage() {
 
     return (
         <div className="min-h-screen bg-background pb-12">
-            
+
             {/* ================= 1. HERO HEADER ================= */}
             <div className="relative bg-[#0f172a] text-white overflow-hidden pb-8 pt-4">
                 {/* Background Decor */}
@@ -106,7 +99,7 @@ export default function MatchDetailsPage() {
 
                     {/* Score Board Main */}
                     <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-                        
+
                         {/* Team A */}
                         <div className="flex flex-col items-center md:items-start text-center md:text-left">
                             <div className="flex items-center gap-3 mb-2">
@@ -139,7 +132,7 @@ export default function MatchDetailsPage() {
 
                         {/* Team B */}
                         <div className="flex flex-col items-center md:items-end text-center md:text-right">
-                             <div className="flex flex-row-reverse md:flex-row items-center gap-3 mb-2">
+                            <div className="flex flex-row-reverse md:flex-row items-center gap-3 mb-2">
                                 <h2 className="text-2xl font-bold text-white/80">{MATCH_DATA.teamB.name}</h2>
                                 <div className="w-12 h-12 rounded-full bg-white/5 border-2 border-white/10 flex items-center justify-center font-bold text-xl text-white/60">
                                     {MATCH_DATA.teamB.short[0]}
@@ -176,18 +169,17 @@ export default function MatchDetailsPage() {
 
             {/* ================= 3. CONTENT AREA ================= */}
             <div className="container mx-auto px-4 max-w-4xl">
-                
+
                 {/* Tabs */}
                 <div className="flex items-center gap-2 mb-6 border-b border-border overflow-x-auto no-scrollbar">
                     {["scorecard", "squads", "info"].map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab as any)}
-                            className={`px-6 py-3 text-sm font-bold border-b-2 transition-colors whitespace-nowrap capitalize ${
-                                activeTab === tab 
-                                ? "border-primary text-primary" 
-                                : "border-transparent text-muted-foreground hover:text-foreground"
-                            }`}
+                            className={`px-6 py-3 text-sm font-bold border-b-2 transition-colors whitespace-nowrap capitalize ${activeTab === tab
+                                    ? "border-primary text-primary"
+                                    : "border-transparent text-muted-foreground hover:text-foreground"
+                                }`}
                         >
                             {tab}
                         </button>
@@ -197,17 +189,17 @@ export default function MatchDetailsPage() {
                 {/* --- TAB: SCORECARD --- */}
                 {activeTab === "scorecard" && (
                     <div className="animate-in fade-in duration-300 space-y-8">
-                        
+
                         {/* Innings Toggle */}
                         <div className="flex justify-center mb-6">
                             <div className="bg-muted p-1 rounded-xl inline-flex">
-                                <button 
+                                <button
                                     onClick={() => setActiveInnings(1)}
                                     className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeInnings === 1 ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                                 >
                                     {MATCH_DATA.teamA.short} Innings
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => setActiveInnings(2)}
                                     className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeInnings === 2 ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                                 >
@@ -253,7 +245,7 @@ export default function MatchDetailsPage() {
 
                         {/* Bowling Card */}
                         <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
-                             <div className="bg-muted/30 px-4 py-3 border-b border-border">
+                            <div className="bg-muted/30 px-4 py-3 border-b border-border">
                                 <h3 className="font-bold text-sm flex items-center gap-2">
                                     <Wind size={14} className="text-blue-500" /> Bowling
                                 </h3>
@@ -293,7 +285,7 @@ export default function MatchDetailsPage() {
                             <SquadItem name="Pacer Y" role="Bowl" />
                         </div>
                         <div className="space-y-3">
-                             <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+                            <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
                                 <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
                                 {MATCH_DATA.teamB.name}
                             </h3>
@@ -313,19 +305,19 @@ export default function MatchDetailsPage() {
                                 <p className="text-xs text-muted-foreground uppercase font-bold mb-1">Match</p>
                                 <p className="font-medium">Match 12, T20 Championship</p>
                             </div>
-                             <div>
+                            <div>
                                 <p className="text-xs text-muted-foreground uppercase font-bold mb-1">Date</p>
                                 <p className="font-medium">{new Date(MATCH_DATA.date).toDateString()}</p>
                             </div>
-                             <div>
+                            <div>
                                 <p className="text-xs text-muted-foreground uppercase font-bold mb-1">Toss</p>
                                 <p className="font-medium">{MATCH_DATA.toss}</p>
                             </div>
-                             <div>
+                            <div>
                                 <p className="text-xs text-muted-foreground uppercase font-bold mb-1">Venue</p>
                                 <p className="font-medium">{MATCH_DATA.venue}</p>
                             </div>
-                             <div>
+                            <div>
                                 <p className="text-xs text-muted-foreground uppercase font-bold mb-1">Umpires</p>
                                 <p className="font-medium">{MATCH_DATA.umpires}</p>
                             </div>

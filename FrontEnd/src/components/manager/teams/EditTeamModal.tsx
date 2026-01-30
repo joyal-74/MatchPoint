@@ -1,7 +1,7 @@
 import ModalBackdrop from "../../ui/ModalBackdrop";
 import ModalHeader from "../../shared/modal/ModalHeader";
 import LogoUpload from "./Modal/LogoUpload";
-import FormInput from "./Modal/FormInput";
+import FormInput, { type FormInputType } from "./Modal/FormInput";
 import FormSelect from "./Modal/FormSelect";
 import FormActions from "../../shared/modal/FormActions";
 import FormTextarea from "./Modal/FormTextarea";
@@ -144,13 +144,13 @@ export default function EditTeamModal({ isOpen, onClose, onEditTeam, teamData }:
                             <div key={field.name} className="space-y-1">
                                 {field.type === "input" ? (
                                     <FormInput
+                                    {...field.props}
                                         label={field.label}
-                                        type={field.props?.type || "text"}
+                                        type={field.props?.type as FormInputType}
                                         value={field.value}
                                         onChange={field.onChange}
                                         placeholder={field.placeholder}
                                         disabled={state.isLoading}
-                                        {...field.props}
                                     />
                                 ) : (
                                     <FormSelect

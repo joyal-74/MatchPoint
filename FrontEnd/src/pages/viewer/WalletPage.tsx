@@ -12,7 +12,6 @@ import {
     Clock,
     TrendingUp,
     MoreHorizontal,
-    AlertCircle,
     Calendar
 } from "lucide-react";
 import ManagerLayout from "../layout/ManagerLayout";

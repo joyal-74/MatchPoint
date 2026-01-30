@@ -1,6 +1,7 @@
 import React from 'react';
-import { Target, CircleDot} from 'lucide-react';
-import type { Match, LiveScoreState, Team } from '../../../features/manager/Matches/matchTypes';
+import { Target, CircleDot } from 'lucide-react';
+import type { Match, Team } from '../../../domain/match/types';
+import type { LiveScoreState } from '../../../features/manager/Matches/matchTypes';
 
 interface CurrentMatchStateProps {
     match: Match;
@@ -11,7 +12,12 @@ interface CurrentMatchStateProps {
 
 const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, teamB, liveScore }) => {
 
-    // --- Loading State (Themed) ---
+    const getOversFromBalls = (legalBalls: number): string => {
+        const overs = Math.floor(legalBalls / 6);
+        const balls = legalBalls % 6;
+        return `${overs}.${balls}`;
+    };
+
     if (!liveScore) {
         return (
             <div className="w-full bg-card rounded-2xl border border-border overflow-hidden shadow-sm p-6">
@@ -40,7 +46,7 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
         return player?.name || 'Unknown';
     };
 
-    const toArray = (data : any) => {
+    const toArray = (data: any) => {
         if (Array.isArray(data)) return data;
         if (data && typeof data === "object") return Object.values(data);
         return [];
@@ -101,7 +107,7 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
                 <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-2">
                     <div>
                         <div className="text-muted-foreground text-sm font-medium mb-2 flex items-center gap-2">
-                            <span className="text-foreground font-bold text-lg">{battingTeam.name}</span> 
+                            <span className="text-foreground font-bold text-lg">{battingTeam.name}</span>
                             <span className="px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">Batting</span>
                         </div>
                         <div className="flex items-baseline gap-4">
@@ -109,7 +115,7 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
                                 {currentInnings.runs}/{currentInnings.wickets}
                             </span>
                             <span className="text-xl text-muted-foreground font-light">
-                                in <span className="text-foreground font-medium">{currentInnings.overs}</span> ov
+                                in <span className="text-foreground font-medium">{getOversFromBalls(currentInnings.legalBalls)}</span> ov
                             </span>
                         </div>
                     </div>
@@ -117,7 +123,7 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
                     <div className="flex items-center gap-6 bg-muted/30 p-3 rounded-xl border border-border/50">
                         <div className="text-right">
                             <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mb-0.5">CRR</div>
-                            <div className="text-xl font-bold text-primary">{currentInnings.currentRunRate}</div>
+                            <div className="text-xl font-bold text-primary">{getOversFromBalls(currentInnings.legalBalls)}</div>
                         </div>
                         {liveScore.currentInnings === 2 && (
                             <div className="text-right border-l border-border pl-6">
@@ -133,11 +139,12 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
                     <div className="mt-6 pt-4 border-t border-border">
                         <div className="flex justify-between text-xs text-muted-foreground mb-2">
                             <span className="flex items-center gap-1.5 font-medium">
-                                <Target size={14} className="text-primary" /> 
+                                <Target size={14} className="text-primary" />
                                 Target: <span className="text-foreground font-bold">{liveScore.target}</span>
                             </span>
                             <span className="text-orange-500 font-medium bg-orange-500/10 px-2 py-0.5 rounded">
-                                Need <span className="font-bold">{liveScore.requiredRuns}</span> runs off <span className="font-bold">{match.overs * 6 - currentInnings.overs * 6}</span> balls
+                                Need <b>{liveScore.requiredRuns}</b> runs off{" "}
+                                <b>{match.overs * 6 - currentInnings.legalBalls}</b> balls
                             </span>
                         </div>
                         <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
@@ -204,7 +211,7 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
             <div className="px-6 py-4 bg-muted/40 border-t border-border flex justify-between items-center text-xs text-muted-foreground font-medium">
                 <div className="flex gap-4 items-center">
                     <span className="flex items-center gap-1.5 bg-card px-2 py-1 rounded border border-border">
-                        Extras 
+                        Extras
                         <span className="text-foreground font-bold ml-1">
                             {currentInnings.extras?.total ??
                                 ((currentInnings.extras?.wides || 0) +

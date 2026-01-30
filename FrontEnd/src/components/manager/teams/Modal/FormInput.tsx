@@ -1,4 +1,4 @@
-type FormInputType = 'text' | 'number' | 'email' | 'password' | 'tel' | 'url';
+export type FormInputType = 'text' | 'number' | 'email' | 'password' | 'tel' | 'url';
 
 interface FormInputProps {
     label: string;

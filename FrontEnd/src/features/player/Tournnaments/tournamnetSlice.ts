@@ -8,14 +8,15 @@ import {
     fetchTournamentPointsTable,
     fetchTournamentStats
 } from "./tournamentThunks";
-import type { Match, TournamentMatch } from "../playerTypes";
+import type { TournamentMatch } from "../playerTypes";
 import type { PointsRow, TournamentStats } from "./tournamentType";
+import type { MatchData } from "../../../components/player/tournament/LiveMatchCard";
 
 
 interface TournamentState {
     allTournaments: Tournament[];
     selectedTournament: Tournament | null;
-    liveMatches: Match[];
+    liveMatches: MatchData[];
     matches: TournamentMatch[];
     pointsTable: PointsRow[];
     stats: TournamentStats;

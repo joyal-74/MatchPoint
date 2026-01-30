@@ -6,7 +6,7 @@ import { getMyTeamDetails } from '../../features/player/playerThunks';
 import { clearSelectedTeam, setSelectedTeam } from '../../features/player/Teams/TeamSlice';
 import PlayerLayout from '../layout/PlayerLayout';
 import LoadingOverlay from '../../components/shared/LoadingOverlay';
-import TeamHeader from './TeamHeader'; 
+import TeamHeader from './TeamHeader';
 import TeamStats from './TeamStats';
 import TeamMemberCard from './TeamMemberCard';
 
@@ -14,7 +14,7 @@ const ViewTeam = () => {
     const { teamId } = useParams();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    
+
     // Selectors
     const allTeams = useAppSelector((state) => state.playerTeams.allTeams);
     const team = useAppSelector((state) => state.playerTeams.selectedTeam);
@@ -23,15 +23,15 @@ const ViewTeam = () => {
     // Initial Load Logic
     useEffect(() => {
         if (!teamId) return;
-        
+
         const existingTeam = allTeams.find((t) => t._id === teamId);
-        
+
         if (existingTeam) {
             dispatch(setSelectedTeam(existingTeam));
         } else {
             dispatch(getMyTeamDetails(teamId));
         }
-        
+
         // Cleanup on unmount
         return () => {
             dispatch(clearSelectedTeam());
@@ -61,10 +61,10 @@ const ViewTeam = () => {
     return (
         <PlayerLayout>
             <LoadingOverlay show={loading} />
-            
+
             {team && (
                 <div className="mx-auto px-4 sm:px-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    
+
                     {/* Navigation */}
                     <button
                         onClick={() => navigate(-1)}
@@ -78,7 +78,7 @@ const ViewTeam = () => {
 
                     {/* Main Layout Grid */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                        
+
                         {/* Left Column: Team Profile & Stats */}
                         <div className="lg:col-span-1 space-y-6">
                             <TeamHeader team={team} />
@@ -95,8 +95,8 @@ const ViewTeam = () => {
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {team.members
-                                    .filter(m => m.approvalStatus === 'approved')
+                                {/* Add optional chaining here */}
+                                {team.members?.filter(m => m.approvalStatus === 'approved')
                                     .map((member) => (
                                         <TeamMemberCard key={member.playerId} member={member} />
                                     ))

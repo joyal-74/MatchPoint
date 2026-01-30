@@ -84,7 +84,7 @@ export class MatchEntity {
         this.oversLimit = init.oversLimit;
         this.venue = init.venue ?? "";
         this.isLive = init.isLive;
-        this.status = init.status ?? "upcoming"; // Default to upcoming if undefined
+        this.status = init.status ?? "upcoming";
         
         // Result initialization
         this.winner = init.winner ?? null;
@@ -110,13 +110,10 @@ export class MatchEntity {
             this.hasSuperOver = init.hasSuperOver;
         }
         
-        // Infer completion status if loaded from DB as completed
         if (this.status === 'completed') {
             this.isMatchComplete = true;
         }
     }
-
-    // ... (Keep existing getter methods: activeInnings, currentStriker, etc.) ...
     
     private get activeInnings(): Innings {
         if (this.currentInningsNumber === 1) return this.innings1;

@@ -1,21 +1,46 @@
 import React from "react";
 import { User } from "lucide-react";
-import type { Player} from "./matchTypes";
+import type { Player, PlayerStats } from "../../../domain/match/types";
 
 
 export const PlayerCard: React.FC<{ player: Player }> = React.memo(({ player }) => {
     const { role, stats } = player;
 
-    console.log(stats, "stats")
-
-    let selectedStats;
-    if (role === "Batter") {
-        selectedStats = { Mat: stats.batting.matches, Runs: stats.batting.runs, Avg: stats.batting.average };
-    } else if (role === "Bowler") {
-        selectedStats = { Mat: stats.bowling.matches, Wkts: stats.bowling.wickets, Eco: stats.bowling.economy };
-    } else {
-        selectedStats = { Mat: stats.batting.matches, Runs: stats.batting.runs, Avg: stats.batting.average };
+    function isPlayerStats(stats: any): stats is PlayerStats {
+        return (
+            stats &&
+            typeof stats === "object" &&
+            "batting" in stats &&
+            "bowling" in stats &&
+            "fielding" in stats
+        );
     }
+
+
+    let selectedStats: Record<string, number> = {};
+
+    if (!stats || !isPlayerStats(stats)) {
+        selectedStats = { Mat: 0, Runs: 0, Avg: 0 };
+    } else if (role === "Batter") {
+        selectedStats = {
+            Mat: stats.batting.matches,
+            Runs: stats.batting.runs,
+            Avg: stats.batting.average,
+        };
+    } else if (role === "Bowler") {
+        selectedStats = {
+            Mat: stats.bowling.matches,
+            Wkts: stats.bowling.wickets,
+            Eco: stats.bowling.economy,
+        };
+    } else {
+        selectedStats = {
+            Mat: stats.batting.matches,
+            Runs: stats.batting.runs,
+            Avg: stats.batting.average,
+        };
+    }
+
 
     return (
         <div className="
@@ -54,7 +79,7 @@ export const PlayerCard: React.FC<{ player: Player }> = React.memo(({ player }) 
                     </div>
                 ))}
             </div>
-            
+
             {/* Hover Decorator */}
             <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-bl-3xl pointer-events-none" />
         </div>

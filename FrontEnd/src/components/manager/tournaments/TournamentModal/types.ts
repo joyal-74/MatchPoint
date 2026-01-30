@@ -28,6 +28,7 @@ export interface CreateTournamentModalProps {
     isOpen: boolean;
     managerId: string;
     onClose: () => void;
+    onShowPrizeInfo : () => void;
 }
 
 export interface EditTournamentModalProps extends CreateTournamentModalProps {
@@ -35,7 +36,7 @@ export interface EditTournamentModalProps extends CreateTournamentModalProps {
 }
 
 
-export type Status = "upcoming" | "ongoing" | "ended"
+export type Status = "upcoming" | "ongoing" | "completed"
 
 export interface updateTournamentFormData extends TournamentFormData {
     _id: string;

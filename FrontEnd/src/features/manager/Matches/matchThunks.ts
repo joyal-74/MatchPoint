@@ -21,3 +21,13 @@ export const loadInitialLiveScore = createAsyncThunk(
     "manager/loadInitialLiveScore",
     createApiThunk(matchEndpoints.loadInitialLiveScore)
 );
+
+export const fetchMatchesByManager = createAsyncThunk(
+    "manager/fetchMatchesByManager",
+    createApiThunk(matchEndpoints.fetchMatchesByManager)
+);
+
+export const fetchAllMatches = createAsyncThunk(
+    "manager/fetchAllMatches",
+    createApiThunk(matchEndpoints.fetchAllMatches)
+);

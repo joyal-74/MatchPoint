@@ -7,6 +7,10 @@ export interface IGetPlayerTournaments {
     execute(status: string, page: number, limit: number, playerId?: string): Promise<{ tournaments: Tournament[]; total: number }>
 }
 
+export interface IGetViewerTournaments {
+    execute(status: string, page: number, limit: number): Promise<{ tournaments: Tournament[]; total: number }>
+}
+
 export interface IGetPlayerMatches {
     execute(status: string, page: number, limit: number): Promise<LiveMatchCardDTO[]>
 }

@@ -1,213 +1,64 @@
-import { useState, useMemo } from 'react';
-import { Search, MapPin, Calendar, Trophy, CircleDot } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Search, MapPin, Trophy, AlertCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import Navbar from '../../components/manager/Navbar';
 
-// --- Mock Data: Cricket Specific ---
-const MOCK_MATCHES = [
-    {
-        id: 1,
-        status: 'live',
-        league: 'T20 Premier League',
-        matchType: 'T20',
-        teamA: { name: 'Royal Strikers', logo: '🦁', score: '185/6', overs: '20.0' },
-        teamB: { name: 'Kings XI', logo: '👑', score: '172/4', overs: '18.4' },
-        note: 'Kings XI need 14 runs in 8 balls',
-        venue: 'Eden Gardens',
-    },
-    {
-        id: 2,
-        status: 'upcoming',
-        league: 'Champions Trophy',
-        matchType: 'ODI',
-        teamA: { name: 'Blue Titans', logo: '🔵' },
-        teamB: { name: 'Green Warriors', logo: '🟢' },
-        date: '2025-10-15',
-        time: '14:30 PM',
-        venue: 'Melbourne Cricket Ground',
-    },
-    {
-        id: 3,
-        status: 'completed',
-        league: 'Super Smash Series',
-        matchType: 'T20',
-        teamA: { name: 'Thunderbolts', logo: '⚡', score: '142/10', overs: '18.2' },
-        teamB: { name: 'Hurricanes', logo: '🌀', score: '145/3', overs: '16.1' },
-        date: '2025-10-10',
-        winner: 'teamB',
-        resultText: 'Hurricanes won by 7 wickets',
-    },
-    {
-        id: 4,
-        status: 'live',
-        league: 'Test Championship',
-        matchType: 'TEST',
-        teamA: { name: 'Red Dragons', logo: '🐉', score: '350 & 120/2', overs: 'Day 4' },
-        teamB: { name: 'Iron Wolves', logo: '🐺', score: '280', overs: '' },
-        note: 'Dragons lead by 190 runs',
-        venue: 'Lords',
-    },
-    {
-        id: 5,
-        status: 'upcoming',
-        league: 'Charity Shield',
-        matchType: 'T10',
-        teamA: { name: 'Pixel Pioneers', logo: '👾' },
-        teamB: { name: 'Glitch Mob', logo: '📺' },
-        date: '2025-10-16',
-        time: '19:00 PM',
-        venue: 'Oval Stadium',
-    },
-];
+import { fetchAllMatches } from '../../features/manager/Matches/matchThunks';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { useDebounce } from '../../hooks/useDebounce';
+import type { Match } from '../../domain/match/types';
 
-const MatchCard = ({ match }) => {
-    const isLive = match.status === 'live';
-    const isUpcoming = match.status === 'upcoming';
-    const isCompleted = match.status === 'completed';
-
-    return (
-        <div className="group relative flex flex-col gap-4 rounded-xl border border-border bg-card p-5 text-card-foreground shadow-sm transition-all hover:border-primary/50 hover:shadow-md">
-
-            {/* Header: League & Status Indicator */}
-            <div className="flex items-center justify-between text-xs font-medium text-muted-foreground">
-                <div className="flex items-center gap-2">
-                    <span className="rounded bg-secondary px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-secondary-foreground">
-                        {match.matchType}
-                    </span>
-                    <span className="uppercase tracking-wide opacity-80 truncate max-w-[120px]">
-                        {match.league}
-                    </span>
-                </div>
-
-                {isLive && (
-                    <span className="flex items-center gap-1.5 rounded-full bg-destructive/10 px-2.5 py-0.5 text-destructive animate-pulse">
-                        <CircleDot size={12} className="fill-current" /> LIVE
-                    </span>
-                )}
-                {isUpcoming && (
-                    <span className="flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-primary">
-                        <Calendar size={12} /> {match.date}
-                    </span>
-                )}
-                {isCompleted && (
-                    <span className="flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-muted-foreground">
-                        Result
-                    </span>
-                )}
-            </div>
-
-            {/* Teams & Scores Layout */}
-            <div className="flex items-center justify-between py-1">
-                {/* Team A */}
-                <div className="flex flex-col items-center gap-2 text-center w-[35%]">
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-full text-2xl shadow-inner ${isCompleted && match.winner === 'teamA' ? 'bg-primary/10 ring-2 ring-primary' : 'bg-secondary'}`}>
-                        {match.teamA.logo}
-                    </div>
-                    <span className="text-sm font-bold leading-tight line-clamp-1">
-                        {match.teamA.name}
-                    </span>
-                    {!isUpcoming && (
-                        <div className="flex flex-col">
-                            <span className="text-lg font-bold text-foreground">{match.teamA.score}</span>
-                            <span className="text-xs text-muted-foreground">({match.teamA.overs})</span>
-                        </div>
-                    )}
-                </div>
-
-                {/* Center Info (VS or Status) */}
-                <div className="flex flex-col items-center justify-center w-[30%] text-center">
-                    {isUpcoming ? (
-                        <div className="flex flex-col items-center gap-1">
-                            <span className="text-xl font-black text-muted-foreground/30">VS</span>
-                            <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-md whitespace-nowrap">
-                                {match.time}
-                            </span>
-                        </div>
-                    ) : (
-                        <div className="flex flex-col items-center gap-1">
-                            <span className="text-xs font-bold text-muted-foreground/50 uppercase tracking-widest">
-                                {isLive ? 'Playing' : 'Ended'}
-                            </span>
-                            {/* Live Match Situation Text (e.g. "Need 12 off 6") */}
-                            {match.note && (
-                                <span className="text-[10px] leading-3 font-medium text-primary text-center px-1">
-                                    {match.note}
-                                </span>
-                            )}
-                        </div>
-                    )}
-                </div>
-
-                {/* Team B */}
-                <div className="flex flex-col items-center gap-2 text-center w-[35%]">
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-full text-2xl shadow-inner ${isCompleted && match.winner === 'teamB' ? 'bg-primary/10 ring-2 ring-primary' : 'bg-secondary'}`}>
-                        {match.teamB.logo}
-                    </div>
-                    <span className="text-sm font-bold leading-tight line-clamp-1">
-                        {match.teamB.name}
-                    </span>
-                    {!isUpcoming && (
-                        <div className="flex flex-col">
-                            <span className="text-lg font-bold text-foreground">{match.teamB.score}</span>
-                            <span className="text-xs text-muted-foreground">({match.teamB.overs})</span>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Footer: Details */}
-            <div className="mt-auto border-t border-border pt-3">
-                <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-                    {isCompleted ? (
-                        <>
-                            <Trophy size={14} className="text-yellow-500" />
-                            <span className="font-medium text-foreground">{match.resultText}</span>
-                        </>
-                    ) : (
-                        <>
-                            <MapPin size={14} />
-                            <span className="truncate max-w-[200px]">{match.venue}</span>
-                        </>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-};
+const tabs = [
+    { id: 'all', label: 'All Matches' },
+    { id: 'ongoing', label: 'Live' },
+    { id: 'upcoming', label: 'Fixtures' },
+    { id: 'completed', label: 'Results' },
+] as const;
 
 const MatchesSection = () => {
-    const [activeTab, setActiveTab] = useState('all');
+    const dispatch = useAppDispatch();
+
+    // --- Local UI State ---
+    const [activeTab, setActiveTab] = useState<'all' | 'ongoing' | 'upcoming' | 'completed'>('all');
     const [searchQuery, setSearchQuery] = useState('');
+    const [page, setPage] = useState(1);
+    const limit = 12;
 
-    const filteredMatches = useMemo(() => {
-        return MOCK_MATCHES.filter((match) => {
-            const matchesTab = activeTab === 'all' || match.status === activeTab;
-            const matchesSearch =
-                match.teamA.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                match.teamB.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                match.league.toLowerCase().includes(searchQuery.toLowerCase());
+    // --- Redux State ---
+    const { allMatches: matches, totalPages, loading, error } = useAppSelector((state) => state.match);
 
-            return matchesTab && matchesSearch;
-        });
-    }, [activeTab, searchQuery]);
+    const debouncedSearch = useDebounce(searchQuery, 500);
 
-    const tabs = [
-        { id: 'all', label: 'All Matches' },
-        { id: 'live', label: 'Live Scores' },
-        { id: 'upcoming', label: 'Fixtures' },
-        { id: 'completed', label: 'Results' },
-    ];
+    useEffect(() => {
+        dispatch(fetchAllMatches({
+            status: activeTab === 'all' ? undefined : activeTab,
+            search: debouncedSearch || undefined,
+            page,
+            limit
+        }));
+    }, [dispatch, activeTab, debouncedSearch, page]);
+
+    // Reset page when filters change
+    const handleTabChange = (tab: typeof activeTab) => {
+        setActiveTab(tab);
+        setPage(1);
+    };
+
+    console.log(matches)
 
     return (
-        <>
+        <div className="min-h-screen bg-background text-foreground">
             <Navbar />
-            <section className="bg-background p-6 text-foreground md:px-12">
-                <div className="mx-auto space-y-8">
+
+            <section className="p-6 md:px-12 lg:px-16">
+                <div className="mx-auto max-w-7xl space-y-8">
 
                     {/* Header Section */}
-                    <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                    <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
                         <div>
-                            <h2 className="text-3xl font-bold tracking-tight">Matches Center</h2>
-                            <p className="mt-1 text-muted-foreground">Live scores, fixtures, and match results.</p>
+                            <h2 className="text-4xl font-black tracking-tighter uppercase italic">Match Center</h2>
+                            <p className="mt-1 text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                                Global Database • Server-Side Synced
+                            </p>
                         </div>
 
                         {/* Search Bar */}
@@ -215,50 +66,146 @@ const MatchesSection = () => {
                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <input
                                 type="text"
-                                placeholder="Search teams or series..."
+                                placeholder="Search thousands of matches..."
                                 value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="h-10 w-full rounded-md border border-input bg-background pl-10 pr-4 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                onChange={(e) => {
+                                    setSearchQuery(e.target.value);
+                                    setPage(1); // Reset page on search
+                                }}
+                                className="h-11 w-full rounded-xl border-none bg-muted/50 pl-10 pr-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all"
                             />
                         </div>
                     </div>
 
                     {/* Filter Tabs */}
                     <div className="border-b border-border">
-                        <div className="flex gap-6 overflow-x-auto pb-px">
+                        <div className="flex gap-8 overflow-x-auto pb-px scrollbar-hide">
                             {tabs.map((tab) => (
                                 <button
                                     key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={`relative whitespace-nowrap pb-3 text-sm font-medium transition-colors ${activeTab === tab.id
-                                        ? 'text-primary'
-                                        : 'text-muted-foreground hover:text-foreground'
+                                    onClick={() => handleTabChange(tab.id)}
+                                    className={`relative whitespace-nowrap pb-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === tab.id ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                                         }`}
                                 >
                                     {tab.label}
-                                    {activeTab === tab.id && (
-                                        <span className="absolute bottom-0 left-0 h-0.5 w-full bg-primary" />
-                                    )}
+                                    {activeTab === tab.id && <span className="absolute bottom-0 left-0 h-0.5 w-full bg-primary" />}
                                 </button>
                             ))}
                         </div>
                     </div>
 
-                    {/* Matches Grid */}
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {filteredMatches.length > 0 ? (
-                            filteredMatches.map((match) => (
-                                <MatchCard key={match.id} match={match} />
-                            ))
-                        ) : (
-                            <div className="col-span-full py-12 text-center text-muted-foreground">
-                                <p>No matches found matching your criteria.</p>
+                    {/* Content Area */}
+                    {error ? (
+                        <div className="flex items-center gap-3 rounded-2xl border border-red-500/20 bg-red-500/5 p-6 text-red-600">
+                            <AlertCircle size={24} />
+                            <p className="font-bold uppercase tracking-tight">Sync Error: {error}</p>
+                        </div>
+                    ) : loading ? (
+                        <div className="flex h-[40vh] flex-col items-center justify-center gap-4">
+                            <Loader2 className="h-10 w-10 animate-spin text-primary/40" />
+                            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Querying Database...</p>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                                {matches.length > 0 ? (
+                                    matches.map((match) => <MatchCard key={match._id} match={match} />)
+                                ) : (
+                                    <div className="col-span-full flex flex-col items-center justify-center py-24 text-muted-foreground border-2 border-dashed border-border rounded-3xl">
+                                        <Trophy size={48} className="mb-4 opacity-5" />
+                                        <p className="text-xs font-black uppercase tracking-widest">No Matches Found</p>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
+
+                            {/* Pagination Controls */}
+                            {(totalPages ?? 0) > 1 && (
+                                <div className="flex items-center justify-center gap-4 pt-8">
+                                    <button
+                                        disabled={page === 1}
+                                        onClick={() => setPage(p => p - 1)}
+                                        className="p-2 rounded-lg border border-border hover:bg-muted disabled:opacity-30 transition-colors"
+                                    >
+                                        <ChevronLeft size={20} />
+                                    </button>
+                                    <span className="text-xs font-black uppercase tracking-widest">
+                                        Page {page} of {totalPages}
+                                    </span>
+                                    <button
+                                        disabled={page === totalPages}
+                                        onClick={() => setPage(p => p + 1)}
+                                        className="p-2 rounded-lg border border-border hover:bg-muted disabled:opacity-30 transition-colors"
+                                    >
+                                        <ChevronRight size={20} />
+                                    </button>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
             </section>
-        </>
+        </div>
+    );
+};
+
+// --- Sub-Component: MatchCard ---
+const MatchCard = ({ match }: { match: Match }) => {
+    const isLive = match.status === 'ongoing';
+    
+    // Fallback date if string is malformed
+    const matchDate = match.date ? new Date(match.date).toLocaleDateString('en-GB') : 'TBD';
+
+    return (
+        <div className="group flex flex-col gap-4 rounded-2xl border border-border bg-card p-5 transition-all hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 cursor-pointer">
+            <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 line-clamp-1 max-w-[80%]">
+                    {match.tournamentName || "Tournament"}
+                </span>
+                {isLive && (
+                    <span className="flex h-2 w-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
+                )}
+            </div>
+
+            <div className="flex items-center justify-between py-2">
+                {/* Team A */}
+                <div className="flex flex-col items-center gap-2 w-1/3">
+                    <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center overflow-hidden border border-border/50">
+                        {match.teamA?.logo ? (
+                            <img src={match.teamA.logo} className="w-full h-full object-contain" alt="" />
+                        ) : (
+                            <span className="text-[10px] font-black">{match.teamA?.name?.substring(0,2) || 'A'}</span>
+                        )}
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-tighter text-center line-clamp-1">{match.teamA?.name}</span>
+                </div>
+
+                <div className="flex flex-col items-center w-1/3">
+                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/30 mb-1">VS</span>
+                </div>
+
+                {/* Team B */}
+                <div className="flex flex-col items-center gap-2 w-1/3">
+                    <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center overflow-hidden border border-border/50">
+                        {match.teamB?.logo ? (
+                            <img src={match.teamB.logo} className="w-full h-full object-contain" alt="" />
+                        ) : (
+                            <span className="text-[10px] font-black">{match.teamB?.name?.substring(0,2) || 'B'}</span>
+                        )}
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-tighter text-center line-clamp-1">{match.teamB?.name}</span>
+                </div>
+            </div>
+
+            <div className="mt-auto pt-3 border-t border-border/50 flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-[9px] font-bold text-muted-foreground uppercase">
+                    <MapPin size={10} /> 
+                    <span className="line-clamp-1 max-w-[120px]">{match.venue || "TBD Venue"}</span>
+                </div>
+                <div className="text-[9px] font-black text-primary uppercase">
+                    {matchDate}
+                </div>
+            </div>
+        </div>
     );
 };
 
