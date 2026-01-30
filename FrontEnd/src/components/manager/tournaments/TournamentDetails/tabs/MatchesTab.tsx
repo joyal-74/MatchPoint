@@ -174,7 +174,7 @@ function MatchRow({ match, isLive = false, isManager = false }: { match: Match; 
                         )}
                     </div>
 
-                    <span className="font-semibold text-foreground text-sm truncate hidden sm:block max-w-[100px] xl:max-w-[140px]" title={match.teamB}>
+                    <span className="font-semibold text-foreground text-sm truncate hidden sm:block max-w-[100px] xl:max-w-[140px]" title={match.teamB ?? 'Bye'}>
                         {match.teamB ?? ''}
                     </span>
                     <span className="font-semibold text-foreground sm:hidden">{getInitials(match.teamB ?? '')}</span>

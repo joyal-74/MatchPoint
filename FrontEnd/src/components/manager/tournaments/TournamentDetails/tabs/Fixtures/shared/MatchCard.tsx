@@ -153,7 +153,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                         {/* Team B (Right) */}
                         <div className={`flex flex-col items-center gap-3 w-[35%] transition-opacity duration-300 ${getTeamOpacity(match.teamB ?? 'Bye')}`}>
                             <TeamAvatar name={match.teamB ?? 'Bye'} logo={match.teamLogoB} />
-                            <span className="text-xs md:text-sm font-semibold text-foreground text-center leading-tight line-clamp-2 w-full" title={match.teamB}>
+                            <span className="text-xs md:text-sm font-semibold text-foreground text-center leading-tight line-clamp-2 w-full" title={match.teamB ?? 'bye'}>
                                 {match.teamB ?? ''}
                             </span>
                             {isCompleted && match.winner === match.teamB && (
