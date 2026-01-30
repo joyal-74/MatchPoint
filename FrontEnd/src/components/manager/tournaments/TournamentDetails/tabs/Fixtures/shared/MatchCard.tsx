@@ -154,7 +154,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                         <div className={`flex flex-col items-center gap-3 w-[35%] transition-opacity duration-300 ${getTeamOpacity(match.teamB ?? 'Bye')}`}>
                             <TeamAvatar name={match.teamB ?? 'Bye'} logo={match.teamLogoB} />
                             <span className="text-xs md:text-sm font-semibold text-foreground text-center leading-tight line-clamp-2 w-full" title={match.teamB}>
-                                {match.teamB}
+                                {match.teamB ?? ''}
                             </span>
                             {isCompleted && match.winner === match.teamB && (
                                 <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
