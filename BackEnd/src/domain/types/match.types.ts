@@ -16,7 +16,7 @@ export interface BatsmanStat {
 export interface BowlerStat {
     playerId: string;
     overs: number;
-    balls: number; // This should be totalBalls (including legal balls only)
+    balls: number; 
     runsConceded: number;
     wickets: number;
 }

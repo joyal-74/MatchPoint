@@ -90,16 +90,3 @@ export interface Leaderboard {
     topWickets: WicketBoard[];
     mvp: MvpBoard[];
 }
-
-export interface PointsRow {
-    tournamentId : string;
-    rank: number;
-    team: string;
-    p: number;
-    w: number;
-    l: number;
-    t: number;
-    nrr: string;
-    pts: number;
-    form: string[];
-}

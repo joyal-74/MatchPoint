@@ -36,13 +36,17 @@ export interface RetireBatsmanPayload {
 }
 
 export class MatchEntity {
+    teamA?: string;
+    teamB?: string;
     tournamentId: string;
     matchId: string;
+    matchNumber?: number;
     oversLimit: number;
     venue: string;
+    date?: string;
     isLive: boolean;
     status: MatchStatus;
-    
+
     // --- Result Fields ---
     winner: string | null;
     resultType?: 'WIN' | 'TIE' | 'DRAW' | null;
@@ -63,9 +67,11 @@ export class MatchEntity {
         tournamentId: string;
         matchId: string;
         oversLimit: number;
+        matchNumber?: number;
         venue: string;
         isLive: boolean;
-        
+        date?: string;
+
         status?: MatchStatus;
         winner?: string | null;
         resultType?: 'WIN' | 'TIE' | 'DRAW' | null;
@@ -78,6 +84,8 @@ export class MatchEntity {
         innings2?: Innings | null;
         currentInnings?: number;
         hasSuperOver?: boolean;
+        teamA?: string;
+        teamB?: string;
     }) {
         this.tournamentId = init.tournamentId;
         this.matchId = init.matchId;
@@ -85,7 +93,7 @@ export class MatchEntity {
         this.venue = init.venue ?? "";
         this.isLive = init.isLive;
         this.status = init.status ?? "upcoming";
-        
+
         // Result initialization
         this.winner = init.winner ?? null;
         this.resultType = init.resultType;
@@ -93,6 +101,11 @@ export class MatchEntity {
         this.winType = init.winType;
         this.resultDescription = init.resultDescription;
         this.endInfo = init.endInfo ?? undefined;
+        this.matchNumber = init.matchNumber ?? undefined;
+        this.date = init.date ?? undefined;
+
+        this.teamA = init.teamA;
+        this.teamB = init.teamB;
 
         this.innings1 = init.innings1 ?? new Innings({
             oversLimit: this.oversLimit,
@@ -109,12 +122,12 @@ export class MatchEntity {
         if (init.hasSuperOver !== undefined) {
             this.hasSuperOver = init.hasSuperOver;
         }
-        
+
         if (this.status === 'completed') {
             this.isMatchComplete = true;
         }
     }
-    
+
     private get activeInnings(): Innings {
         if (this.currentInningsNumber === 1) return this.innings1;
         if (this.currentInningsNumber === 2) {
@@ -135,7 +148,7 @@ export class MatchEntity {
     get currentBowler(): string | undefined { return this.activeInnings.currentBowler; }
 
     // ... (Keep existing game logic methods: initInnings, addRunsToCurrentInnings, etc.) ...
-    
+
     initInnings(payload: Omit<InitInningsPayload, 'matchId'>) {
         this.activeInnings.initializeInnings({
             oversLimit: payload.oversLimit,
@@ -161,7 +174,7 @@ export class MatchEntity {
     setCurrentNonStriker(batsmanId: string) { this.activeInnings.setCurrentNonStriker(batsmanId); }
     addExtras(type: string, runs: number) { this.activeInnings.addExtras({ type: type as ExtraType, runs }); }
     undoLastBall() { this.activeInnings.undoLastBall(); }
-    
+
     startSuperOver() {
         this.hasSuperOver = true;
         this.oversLimit = 1;
@@ -193,7 +206,7 @@ export class MatchEntity {
         type: "NORMAL" | "ABANDONED" | "NO_RESULT";
         reason?: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER" | "COMPLETED";
         endedBy?: string;
-        
+
         // New Params
         resultType?: 'WIN' | 'TIE' | 'DRAW' | null;
         winMargin?: string | null;
@@ -203,7 +216,7 @@ export class MatchEntity {
         this.isMatchComplete = true;
         this.isLive = false;
         this.status = "completed";
-        
+
         this.winner = params.winnerId ?? null;
         this.resultType = params.resultType;
         this.winMargin = params.winMargin;
@@ -228,13 +241,13 @@ export class MatchEntity {
             oversLimit: this.oversLimit,
             hasSuperOver: this.hasSuperOver,
             isMatchComplete: this.isMatchComplete,
-            
+
             // Send Result Data to Client
             winner: this.winner,
             resultType: this.resultType,
             resultDescription: this.resultDescription,
             endInfo: this.endInfo ?? null,
-            
+
             innings1: this.innings1.toDTO(),
             innings2: this.innings2 ? this.innings2.toDTO() : null,
             currentContext: {

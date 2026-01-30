@@ -4,7 +4,7 @@ import { Types } from "mongoose";
 
 import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
 import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository"; 
+import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 import { IEndMatchUseCase, EndMatchUseCaseInput } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 import { MatchEntity } from "domain/entities/MatchEntity";
 
@@ -35,12 +35,12 @@ export class EndMatchUseCase implements IEndMatchUseCase {
         await this._matchStatsRepo.updateStatus(matchId, 'completed');
 
         const matchStats = await this._matchStatsRepo.getMatchStats(matchId);
-        
+
         if (matchStats) {
             const bulkOps = this.calculatePlayerUpdates(matchStats);
 
             console.log(bulkOps, 'jkl')
-            
+
             await this._playerRepo.bulkUpdateStats(bulkOps);
         }
 

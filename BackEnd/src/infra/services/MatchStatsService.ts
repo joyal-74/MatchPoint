@@ -116,7 +116,7 @@ export class MatchScoreService implements IMatchScoreService {
         return null;
     }
 
-    async endMatch(matchId: string, type: "NORMAL" | "ABANDONED" | "NO_RESULT", reason?: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER", notes?: string, endedBy?: string) {
+    async endMatch(matchId: string, type: "NORMAL" | "ABANDONED" | "NO_RESULT", reason: "RAIN" | "BAD_LIGHT" | "FORCE_END" | "OTHER", notes?: string, endedBy?: string) {
         return await this._endMatchUseCase.execute({ matchId, type, reason, notes, endedBy });
     }
 }

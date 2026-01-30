@@ -1,13 +1,17 @@
-
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
 import { IPointsTableRepository } from "app/repositories/interfaces/shared/IPointsTableRepository";
-import { PointsRow } from "domain/entities/Tournaments";
+import { PointsRow } from "domain/entities/PointsTable";
+
+interface PopulatedTeam {
+    _id: string;
+    name: string;
+}
 
 export class InitializePointsTable {
     constructor(
         private pointsRepo: IPointsTableRepository,
         private registrationRepo: IRegistrationRepository
-    ) {}
+    ) { }
 
     async execute(tournamentId: string): Promise<void> {
         const registrations = await this.registrationRepo.getPaidRegistrationsByTournament(tournamentId);
@@ -17,12 +21,14 @@ export class InitializePointsTable {
             return;
         }
 
-        const emptyRows: PointsRow[] = registrations.map((reg) => {
-            const teamName = (reg.teamId).name || "Unknown Team";
+        const emptyRows: Omit<PointsRow, '_id'>[] = registrations.map((reg) => {
+            const teamInfo = reg.teamId as unknown as PopulatedTeam;
 
             return {
                 tournamentId: tournamentId,
-                team: teamName,
+                teamId: teamInfo._id,
+                teamName: teamInfo.name,
+                team: teamInfo.name,
                 rank: 0,
                 p: 0,
                 w: 0,

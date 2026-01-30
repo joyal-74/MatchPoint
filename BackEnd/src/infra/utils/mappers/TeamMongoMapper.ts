@@ -40,6 +40,7 @@ export class TeamMongoMapper {
             phase: team.phase,
             stats: team.stats,
             createdAt: team.createdAt,
+            isBlocked : team.status === 'blocked',
         };
     }
 
@@ -85,6 +86,7 @@ export class TeamMongoMapper {
             phase: team.phase,
             stats: team.stats,
             createdAt: team.createdAt,
+            isBlocked : team.status === 'blocked',
         };
     }
 

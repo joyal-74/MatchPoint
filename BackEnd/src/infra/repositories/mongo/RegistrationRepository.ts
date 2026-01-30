@@ -1,7 +1,7 @@
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
 import { TrafficPoint } from "domain/dtos/Analytics.dto";
 import { TournamentTeamData } from "domain/dtos/Tournament";
-import { Registration } from "domain/entities/Registration";
+import { PaymentStatus, Registration } from "domain/entities/Registration";
 import { NotFoundError } from "domain/errors";
 import { RegistrationModel } from "infra/databases/mongo/models/RegistrationModel";
 import { TournamentTeamMongoMapper } from "infra/utils/mappers/TournamentTeamMongoMapper";
@@ -19,6 +19,7 @@ export class RegistrationRepository implements IRegistrationRepository {
         return new Registration(
             createdDoc._id.toString(),
             createdDoc.tournamentId.toString(),
+            createdDoc.type,
             createdDoc.teamId.toString(),
             createdDoc.captainId.toString(),
             createdDoc.managerId.toString(),
@@ -52,6 +53,7 @@ export class RegistrationRepository implements IRegistrationRepository {
         return new Registration(
             doc._id.toString(),
             doc.tournamentId.toString(),
+            doc.type,
             doc.teamId.toString(),
             doc.captainId.toString(),
             doc.managerId.toString(),
@@ -92,6 +94,7 @@ export class RegistrationRepository implements IRegistrationRepository {
         return docs.map(doc => new Registration(
             doc._id.toString(),
             doc.tournamentId.toString(),
+            doc.type,
             doc.teamId.toString(),
             doc.captainId.toString(),
             doc.managerId.toString(),
@@ -112,10 +115,23 @@ export class RegistrationRepository implements IRegistrationRepository {
     }
 
     async getPaidRegistrationsByTournament(tournamentId: string): Promise<Registration[]> {
-        return await RegistrationModel.find({
+        const docs = await RegistrationModel.find({
             tournamentId: tournamentId,
             paymentStatus: 'completed'
         }).populate('teamId', 'name').exec();
+
+        return docs.map(doc => new Registration(
+            doc._id.toString(), 
+            doc.tournamentId.toString(),
+            doc.type,
+            doc.teamId.toString(), 
+            doc.captainId.toString(),
+            doc.managerId.toString(),
+            doc.paymentStatus as PaymentStatus,
+            doc.paymentId || null,
+            doc._id.getTimestamp(),
+            doc.updatedAt
+        ));
     }
 
     async getDailyRegistrations(tournamentIds: string[], days: number): Promise<TrafficPoint[]> {

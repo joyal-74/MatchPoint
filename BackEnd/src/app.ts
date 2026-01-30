@@ -17,8 +17,9 @@ import leaderboardRoutes from "presentation/express/routes/leaderboardRoutes";
 import matchRoutes from "presentation/express/routes/matchRoutes";
 import settingsRoutes from "presentation/express/routes/settingsRoutes";
 import notificationsRoutes from "presentation/express/routes/notificationsRoute";
-import { errorHandler } from "presentation/express/middlewares/errorHandler";
 import cookieParser from 'cookie-parser';
+import { container } from "./infra/container";
+import { ErrorHandler } from "presentation/express/middlewares/errorHandler";
 
 const app = express();
 
@@ -66,6 +67,7 @@ app.use(`${API_V1}/match`, matchRoutes);
 app.use(`${API_V1}/settings`, settingsRoutes);
 app.use(`${API_V1}/notifications`, notificationsRoutes);
 
-app.use(errorHandler);
+const errorHandler = container.resolve(ErrorHandler);
+app.use(errorHandler.handle);
 
 export default app;

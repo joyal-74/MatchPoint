@@ -3,8 +3,8 @@ import { DI_TOKENS } from "domain/constants/Identifiers";
 
 import { ILogger } from "../../providers/ILogger";
 import { IGetTournamentPointsTable } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
-import { PointsRow } from "domain/entities/Tournaments";
 import { IPointsTableRepository } from "app/repositories/interfaces/shared/IPointsTableRepository";
+import { PointsRow } from "domain/entities/PointsTable";
 
 @injectable()
 export class GetTournamentPointsTable implements IGetTournamentPointsTable {

@@ -6,6 +6,7 @@ const RegistrationSchema = new Schema({
     captainId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     managerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     paymentStatus: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' },
+    type: { type: String, enum: ['tournament', 'subscription'], default: 'tournament' },
     paymentId: { type: String, default: null },
 }, { timestamps: true });
 

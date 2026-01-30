@@ -5,13 +5,13 @@ import { NotFoundError } from "domain/errors";
 export function validatePlayerSportsFields(data: PlayerProfileFieldDTO): PlayerProfileFieldDTO {
     if (!data.userId) throw new NotFoundError("Missing player ID");
 
-    const { sport } = data;
+    const { sport, profile } = data;
 
-    if (!sport) return data;
+    if (!sport || !profile) return data;
 
     switch (sport.toLowerCase()) {
         case "cricket":
-            validateCricketProfile(data);
+            validateCricketProfile(profile); 
             break;
         default:
             console.warn(`No validation schema found for sport: ${sport}`);
@@ -20,9 +20,9 @@ export function validatePlayerSportsFields(data: PlayerProfileFieldDTO): PlayerP
     return data;
 }
 
-function validateCricketProfile(data: Record<string, string | number | boolean | null>) {
-    if (!data.battingStyle) throw new NotFoundError("Missing batting style");
-    if (!data.bowlingStyle) throw new NotFoundError("Missing bowling style");
-    if (!data.position) throw new NotFoundError("Missing Preffered playing position");
-    if (!data.jerseyNumber) throw new NotFoundError("Missing Jersey Number");
+function validateCricketProfile(profile: Record<string, string | number | boolean | null>) {
+    if (!profile.battingStyle) throw new NotFoundError("Missing batting style");
+    if (!profile.bowlingStyle) throw new NotFoundError("Missing bowling style");
+    if (!profile.position) throw new NotFoundError("Missing Preferred playing position");
+    if (!profile.jerseyNumber) throw new NotFoundError("Missing Jersey Number");
 }

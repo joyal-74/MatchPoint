@@ -19,7 +19,7 @@ export class MatchRepoMongo implements IMatchStatsRepo {
         const { search, limit = 10, page = 1 } = query;
         const skip = (page - 1) * limit;
 
-        const mongoQuery : any = {};
+        const mongoQuery: any = {};
 
         if (search) {
             mongoQuery.$or = [
@@ -152,11 +152,16 @@ export class MatchRepoMongo implements IMatchStatsRepo {
 
         const docs = await TournamentMatchStatsModel
             .find({ status: "ongoing" })
-            .sort({ updatedAt: -1 })
             .limit(limit)
-            .lean();
+            .lean()
+            .exec();
 
-        return docs;
+        return docs.map(doc => ({
+            ...doc,
+            _id: doc._id.toString(),
+            tournamentId: doc.tournamentId.toString(),
+            matchId: doc.matchId.toString(),
+        })) as unknown as TournamentMatchStatsDocument[];
     }
 
     async save(match: MatchEntity): Promise<MatchEntity> {

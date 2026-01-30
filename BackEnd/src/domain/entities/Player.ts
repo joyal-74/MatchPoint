@@ -47,6 +47,7 @@ export interface LeaderBoardPlayer {
 export interface PlayerEntity {
     _id: string;
     userId: string;
+    playerId: string;
     name: string;
     role: string;
     profileImage?: string;

@@ -1,14 +1,13 @@
 import { EndMatchDTO, IMatchesRepository, MatchStreamData } from "app/repositories/interfaces/manager/IMatchesRepository";
-import { MatchResponseDTO } from "domain/dtos/MatchDTO";
+import { DashboardTeam, MatchResponseDTO } from "domain/dtos/MatchDTO";
 import { Extras } from "domain/entities/Extra";
 import { Innings } from "domain/entities/Innings";
 import type { Match } from "domain/entities/Match";
 import { MatchEntity } from "domain/entities/MatchEntity";
-import { BadRequestError, NotFoundError } from "domain/errors";
+import { NotFoundError } from "domain/errors";
 import MatchModel from "infra/databases/mongo/models/MatchesModel";
 import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentStatsModel";
 import { MatchMongoMapper } from "infra/utils/mappers/MatchMongoMapper";
-import { Types } from "mongoose";
 
 export class MatchesRepositoryMongo implements IMatchesRepository {
     async createMatches(tournamentId: string, matches: Match[]): Promise<Match[]> {
@@ -90,10 +89,28 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
     }
 
     async getMatchDetails(matchId: string): Promise<MatchResponseDTO | null> {
-        return await MatchModel.findById(matchId)
+        const data: any = await MatchModel.findById(matchId)
             .populate("teamA")
             .populate("teamB")
             .lean();
+
+        if (!data) return null;
+
+        return {
+            match: {
+                _id: data._id.toString(),
+                tournamentId: data.tournamentId?.toString() || "",
+                matchNumber: data.matchNumber,
+                round: data.round,
+                date: data.date instanceof Date ? data.date.toISOString() : String(data.date),
+                venue: data.venue,
+                status: data.status,
+                winner: data.winner?.toString() || null,
+                stats: data.stats || {},
+            },
+            teamA: data.teamA as DashboardTeam,
+            teamB: data.teamB as DashboardTeam,
+        };
     }
 
     async updateTossDetails(matchId: string, tossWinnerId: string, tossDecision: string): Promise<any | null> {
@@ -179,49 +196,27 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
     }
 
     async endMatch(matchId: string, data: EndMatchDTO): Promise<MatchEntity> {
-        const match = await MatchModel.findOne({ _id: matchId });
+        const doc = await MatchModel.findById(matchId);
 
-        if (!match) {
-            throw new NotFoundError("Match not found");
-        }
+        if (!doc) throw new NotFoundError("Match not found");
 
-        if (match.status === "completed") {
-            throw new BadRequestError("Match already ended");
-        }
+        const matchEntity = MatchMongoMapper.toEntity(doc);
 
-        // 1. Set End Info (Meta data)
-        match.endInfo = {
-            type: data.type || "NORMAL",
-            reason: data.reason ?? null,
-            notes: data.notes ?? "",
-            endedBy: data.endedBy ? new Types.ObjectId(data.endedBy) : null,
-            endedAt: new Date()
-        };
+        matchEntity.endMatch({
+            type: (data.type as any) || "NORMAL",
+            reason: (data.reason as any),
+            winnerId: data.winnerId,
+            endedBy: data.endedBy ?? undefined,
+            resultType: data.resultType as any,
+            winMargin: data.winMargin,
+            winType: data.winType as any,
+            resultDescription: data.resultDescription
+        });
 
+        const updatedData = MatchMongoMapper.toMatchResponse(matchEntity);
+        await MatchModel.updateOne({ _id: matchId }, { $set: updatedData });
 
-        if (data.winnerId) {
-            match.winner = new Types.ObjectId(data.winnerId);
-        }
-        else if (data.reason === 'COMPLETED' && !data.winnerId) {
-            match.winner = null;
-        }
-        else if (data.type && data.type !== "NORMAL") {
-            match.winner = null;
-        }
-
-        if (data.winMargin) match.winMargin = data.winMargin;
-        if (data.winType) match.winType = data.winType;
-
-        // Important: Save the result type (WIN/TIE/DRAW) and the text description
-        if (data.resultType) match.resultType = data.resultType;
-        if (data.resultDescription) match.resultDescription = data.resultDescription;
-
-        // 4. Finalize Status
-        match.status = "completed";
-
-        await match.save();
-
-        return MatchMongoMapper.toEntity(match);
+        return matchEntity;
     }
 
     async getMatchesFilters(filters: { status?: string; page?: number; limit?: number; }): Promise<{ matches: Match[]; total: number }> {

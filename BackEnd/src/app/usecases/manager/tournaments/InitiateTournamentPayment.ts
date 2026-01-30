@@ -70,6 +70,7 @@ export class InitiateTournamentPayment implements IInitiateTournamentPayment {
             const registration = await this._registrationRepo.create({
                 tournamentId: tournament._id,
                 teamId,
+                type : 'tournament',
                 captainId,
                 managerId,
                 paymentStatus: 'completed',
@@ -104,6 +105,7 @@ export class InitiateTournamentPayment implements IInitiateTournamentPayment {
         if (!registration) {
             registration = await this._registrationRepo.create({
                 tournamentId: tournament._id,
+                type : 'tournament',
                 teamId,
                 captainId,
                 managerId,

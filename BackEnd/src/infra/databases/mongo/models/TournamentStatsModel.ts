@@ -1,7 +1,25 @@
 import { BatsmanStat, BowlerStat, InningsDTO, TournamentMatchStatsDocument } from "domain/types/match.types";
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 
-const BatsmanSchema = new Schema<BatsmanStat>({
+interface BatsmanPersist extends Omit<BatsmanStat, 'playerId'> {
+    playerId: Types.ObjectId; 
+}
+
+interface BowlerPersist extends Omit<BowlerStat, 'playerId'> {
+    playerId: Types.ObjectId; 
+}
+
+interface TournamentMatchPersist extends Omit<TournamentMatchStatsDocument, 'tournamentId'| 'matchId'> {
+    tournamentId: Types.ObjectId; 
+    matchId: Types.ObjectId; 
+}
+
+interface InningsPersist extends Omit<InningsDTO, 'battingTeam'| 'bowlingTeam'> {
+    battingTeam: Types.ObjectId; 
+    bowlingTeam: Types.ObjectId; 
+}
+
+const BatsmanSchema = new Schema<BatsmanPersist>({
     playerId: { type: Schema.Types.ObjectId, ref: "Player", required: true },
     runs: { type: Number, default: 0 },
     balls: { type: Number, default: 0 },
@@ -13,7 +31,7 @@ const BatsmanSchema = new Schema<BatsmanStat>({
     retiredHurt: { type: Boolean, default: false },
 });
 
-const BowlerSchema = new Schema<BowlerStat>({
+const BowlerSchema = new Schema<BowlerPersist>({
     playerId: { type: Schema.Types.ObjectId, ref: "Player", required: true },
     overs: { type: Number, default: 0 },
     balls: { type: Number, default: 0 },
@@ -65,7 +83,7 @@ const BallLogSchema = new Schema({
     timestamp: { type: Number, default: Date.now }
 });
 
-const InningsSchema = new Schema<InningsDTO>({
+const InningsSchema = new Schema<InningsPersist>({
     battingTeam: { type: Schema.Types.ObjectId, ref: "Team", default: null },
     bowlingTeam: { type: Schema.Types.ObjectId, ref: "Team", default: null },
 
@@ -93,7 +111,7 @@ const InningsSchema = new Schema<InningsDTO>({
     oversLimit: { type: Number, default: 20 }
 });
 
-const TournamentStatsSchema = new Schema<TournamentMatchStatsDocument>(
+const TournamentStatsSchema = new Schema<TournamentMatchPersist>(
     {
         tournamentId: { type: Schema.Types.ObjectId, ref: "Tournament", required: true },
         matchId: { type: Schema.Types.ObjectId, ref: "Matches", required: true },
@@ -115,4 +133,4 @@ const TournamentStatsSchema = new Schema<TournamentMatchStatsDocument>(
     { timestamps: true }
 );
 
-export const TournamentMatchStatsModel = model<TournamentMatchStatsDocument>("TournamentStats", TournamentStatsSchema);
+export const TournamentMatchStatsModel = model("TournamentStats", TournamentStatsSchema);

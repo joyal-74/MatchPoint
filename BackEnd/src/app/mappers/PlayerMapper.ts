@@ -15,7 +15,8 @@ export class PlayerMapper {
             role: player.role,
             wallet: player.wallet,
             profileImage: player.profileImage,
-            isActive : player.isActive
+            isActive : player.isActive,
+            createdAt : player.createdAt
         };
     }
 

@@ -1,7 +1,6 @@
 import { LiveScoreDto } from "domain/dtos/LiveScoreDto";
 import { MatchResponseDTO } from "domain/dtos/MatchDTO";
 import { AddWicketPayload } from "domain/entities/Innings";
-import { MatchDetails } from "domain/entities/Match";
 import { InitInningsPayload, MatchEntity } from "domain/entities/MatchEntity";
 
 export type AddRunsPayload = {
@@ -11,11 +10,12 @@ export type AddRunsPayload = {
 
 export interface EndMatchUseCaseInput {
     matchId: string;
-    reason: string; // "COMPLETED", "RAIN", "BAD_LIGHT", etc.
+    reason: string;
     endedBy?: string;
-    // New: The Result Data
+    type?: string;
+    notes?: string;
     resultData?: {
-        winnerId: string | null; // null if TIE/DRAW
+        winnerId: string | null;
         resultType: 'WIN' | 'TIE' | 'DRAW';
         winType?: 'runs' | 'wickets';
         margin?: string;
@@ -27,7 +27,7 @@ export interface IGetMatchDetails {
 }
 
 export interface ISaveMatchData {
-    execute(matchId: string, tossWinnerId: string, tossDecision: string): Promise<MatchDetails>
+    execute(matchId: string, tossWinnerId: string, tossDecision: string): Promise<MatchEntity>
 }
 
 export interface IStartMatchUseCase {

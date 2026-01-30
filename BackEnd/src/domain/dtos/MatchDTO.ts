@@ -1,4 +1,13 @@
 import type { TeamEntity as Team } from "domain/entities/Match";
+import { PlayerEntity } from "domain/entities/Player";
+
+export interface DashboardPlayer extends PlayerEntity {
+    status: string;
+}
+
+export interface DashboardTeam extends Omit<Team, 'members'> {
+    members: DashboardPlayer[];
+}
 
 export interface MatchResponseDTO {
     match: {
@@ -12,6 +21,6 @@ export interface MatchResponseDTO {
         winner: string | null;
         stats: Record<string, any>;
     };
-    teamA: Team;
-    teamB: Team;
+    teamA: DashboardTeam;
+    teamB: DashboardTeam;
 }

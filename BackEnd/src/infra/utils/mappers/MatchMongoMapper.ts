@@ -50,11 +50,9 @@ export class MatchMongoMapper {
             venue: matchDoc.venue ?? "",
             isLive: matchDoc.status === "ongoing",
             
-            // Fix: Pass correct ID strings if populated, or raw ID if not
             teamA: matchDoc.teamA?._id ? matchDoc.teamA._id.toString() : matchDoc.teamA?.toString(),
             teamB: matchDoc.teamB?._id ? matchDoc.teamB._id.toString() : matchDoc.teamB?.toString(),
             
-            // 2. Map Winner correctly
             winner: matchDoc.winner ? matchDoc.winner.toString() : null,
             
             // 3. Map Innings (unchanged)

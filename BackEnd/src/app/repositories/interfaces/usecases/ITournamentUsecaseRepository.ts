@@ -1,6 +1,6 @@
 import { TournamentTeamData } from "domain/dtos/Tournament";
 import { Fixture } from "domain/entities/Fixture";
-import { Match } from "domain/entities/Match";
+import { Match, TournamentResult } from "domain/entities/Match";
 import { Tournament } from "domain/entities/Tournaments";
 import type { File } from "domain/entities/File";
 import { DashboardAnalyticsDTO } from "domain/dtos/Analytics.dto";

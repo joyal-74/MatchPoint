@@ -22,12 +22,11 @@ export class UpdatePointsAfterMatch {
 
         if (!winnerRow || !loserRow) throw new Error("Teams not found in points table");
 
-        // 2. Update Stats for Winner
         winnerRow.p += 1;
         winnerRow.w += 1;
-        winnerRow.pts += 2; // +2 points for win
+        winnerRow.pts += 2; 
         winnerRow.form.push('W');
-        if (winnerRow.form.length > 5) winnerRow.form.shift(); // Keep last 5
+        if (winnerRow.form.length > 5) winnerRow.form.shift();
 
         // 3. Update Stats for Loser
         loserRow.p += 1;
@@ -35,16 +34,12 @@ export class UpdatePointsAfterMatch {
         loserRow.form.push('L');
         if (loserRow.form.length > 5) loserRow.form.shift();
 
-        // 4. Calculate NRR (Simplified Logic)
-        // NRR = (Total Runs Scored / Total Overs Faced) - (Total Runs Conceded / Total Overs Bowled)
-        // Note: You usually need to store 'totalRuns' and 'totalOvers' in the DB to calculate this accurately over a season.
-        // For now, I will create a helper function placeholder.
         winnerRow.nrr = this.calculateNewNRR(winnerRow, matchData.runsScoredWinner, matchData.oversFacedWinner, matchData.runsScoredLoser, matchData.oversFacedLoser); 
         loserRow.nrr = this.calculateNewNRR(loserRow, matchData.runsScoredLoser, matchData.oversFacedLoser, matchData.runsScoredWinner, matchData.oversFacedWinner);
 
         // 5. Save Updates
-        await this.pointsRepo.updateTeamStats(matchData.winner, winnerRow);
-        await this.pointsRepo.updateTeamStats(matchData.loser, loserRow);
+        await this.pointsRepo.updateTeamStats(matchData.winner, winnerRow.teamId, winnerRow);
+        await this.pointsRepo.updateTeamStats(matchData.loser,winnerRow.teamId, loserRow);
     }
 
     private calculateNewNRR(current: any, runsScored: number, oversFaced: number, runsConceded: number, oversBowled: number): string {

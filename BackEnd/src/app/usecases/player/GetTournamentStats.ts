@@ -4,6 +4,7 @@ import { DI_TOKENS } from "domain/constants/Identifiers";
 import { ILogger } from "../../providers/ILogger";
 import { IGetTournamentStats } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 import { ILeaderboardRepository } from "app/repositories/interfaces/shared/ILeaderboardRepository";
+import { Leaderboard } from "domain/entities/Tournaments";
 
 @injectable()
 export class GetTournamentStats implements IGetTournamentStats {
@@ -12,7 +13,7 @@ export class GetTournamentStats implements IGetTournamentStats {
         @inject(DI_TOKENS.Logger) private logger: ILogger
     ) { }
 
-    async execute(tournamentId : string): Promise<string[]> {
+    async execute(tournamentId : string): Promise<Leaderboard> {
 
         this.logger.info(`[Fetching Matches] for tournament=${tournamentId}`);
 

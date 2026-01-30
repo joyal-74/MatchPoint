@@ -1,9 +1,9 @@
-import { PointsRow } from "domain/entities/Tournaments";
+import { PointsRow } from "domain/entities/PointsTable";
 
 export interface IPointsTableRepository {
     findByTournamentId(id: string): Promise<PointsRow[]>;
 
-    initializeTable(rows: PointsRow[]): Promise<void>;
-
+    initializeTable(rows: Omit<PointsRow, '_id'>[]): Promise<void>;
+    
     updateTeamStats(tournamentId: string, teamId: string, stats: Partial<PointsRow>): Promise<void>
 }

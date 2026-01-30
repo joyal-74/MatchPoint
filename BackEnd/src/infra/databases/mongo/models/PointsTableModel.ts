@@ -1,10 +1,11 @@
+import { PointsRow } from 'domain/entities/PointsTable';
 import { Schema, Types, model } from 'mongoose';
-import { PointsRow } from 'domain/entities/Tournaments';
 
-export interface PointsTableDocument extends Omit<PointsRow, "tournamentId"> {
+export interface PointsTableDocument extends Omit<PointsRow, "tournamentId" | "teamId" | "_id"> {
     tournamentId: Types.ObjectId;
     teamId: Types.ObjectId;
-    groupName: string | null;
+    _id: Types.ObjectId;
+    groupName: string;
 }
 
 

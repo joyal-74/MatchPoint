@@ -31,6 +31,9 @@ export class UpdateViewerProfile implements IUpdateViewerProfile {
         }
 
         const viewer = await this._userRepo.update(validData._id, validData);
+        if (!viewer) {
+            throw new NotFoundError('Viewer not found')
+        }
         return UserMapper.toProfileResponseDTO(viewer)
     }
 }

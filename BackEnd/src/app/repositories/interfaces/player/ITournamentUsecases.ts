@@ -1,4 +1,5 @@
-import { Leaderboard, PointsRow, Tournament } from "domain/entities/Tournaments";
+import { PointsRow } from "domain/entities/PointsTable";
+import { Leaderboard, Tournament } from "domain/entities/Tournaments";
 
 export interface ITournamentDetails {
     execute(id: string): Promise<Tournament>;

@@ -4,7 +4,7 @@ import { DI_TOKENS } from "domain/constants/Identifiers";
 import { IChatRepository } from "app/repositories/interfaces/player/IChatRepository";
 import { IMessageRepository } from "app/repositories/interfaces/player/IMessageRepository";
 import { NotFoundError } from "domain/errors";
-import { getIO } from "presentation/composition/socketConfig";
+import { SocketServer } from "presentation/socket/SocketServer";
 
 
 interface SendMessageDTO {
@@ -17,7 +17,8 @@ interface SendMessageDTO {
 export class SendMessageUseCase {
     constructor(
         @inject(DI_TOKENS.MessageRepository) private messageRepo: IMessageRepository,
-        @inject(DI_TOKENS.Logger) private _chatRepo: IChatRepository
+        @inject(DI_TOKENS.ChatRepository) private _chatRepo: IChatRepository,
+        private socketServer: SocketServer
     ) { }
 
     async execute(data: SendMessageDTO) {
@@ -32,7 +33,7 @@ export class SendMessageUseCase {
             text: data.text
         });
 
-        const io = getIO();
+        const io = this.socketServer.getIO();
         io.to(data.chatId).emit("receive-message", newMsg);
 
         return newMsg;

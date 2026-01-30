@@ -19,7 +19,8 @@ export class TeamMapper {
             status: team.status,
             createdAt: team.createdAt,
             stats : team.stats,
-            phase : team.phase
+            phase : team.phase,
+            isBlocked : team.isBlocked
         };
     }
 

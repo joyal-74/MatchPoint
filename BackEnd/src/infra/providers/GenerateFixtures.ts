@@ -12,7 +12,7 @@ export class FixtureGeneration implements IFixtureGeneration {
         const fixtures: Round[] = [];
 
         for (let roundNum = 0; roundNum < n - 1; roundNum++) {
-            const roundMatches: Fixture[] = [];
+            const roundMatches: any[] = [];
             for (let i = 0; i < n / 2; i++) {
                 const home = currentTeams[i];
                 const away = currentTeams[n - 1 - i];

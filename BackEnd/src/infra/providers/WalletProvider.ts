@@ -1,7 +1,8 @@
-import { IPaymentProvider, PaymentMetadata, PaymentSession } from "app/providers/IPaymentProvider";
+import { IPaymentProvider, PaymentSession } from "app/providers/IPaymentProvider";
 import { IWalletRepository } from "app/repositories/interfaces/shared/IWalletRepository";
 import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
 import { BadRequestError, NotFoundError } from "domain/errors";
+import { PaymentMetadata, TournamentPaymentMetadata } from "app/repositories/interfaces/IBasePaymentMetaData";
 
 export class WalletProvider implements IPaymentProvider {
     constructor(
@@ -15,28 +16,50 @@ export class WalletProvider implements IPaymentProvider {
         teamName: string,
         metadata: PaymentMetadata
     ): Promise<PaymentSession> {
+        if (metadata.type !== "tournament") {
+            throw new BadRequestError("Wallet payments only supported for tournament registrations");
+        }
+
         const userId = metadata.managerId;
-        const balance = await this._walletRepo.getBalance(userId);
-        if (balance < amount / 100) throw new BadRequestError('Insufficient wallet balance');
+        
+        const wallet = await this._walletRepo.getByOwner(userId, 'USER');
+        if (!wallet) throw new NotFoundError('Wallet not found for this user');
+
+        const deductionAmount = amount / 100;
+
+        if (wallet.balance < deductionAmount) {
+            throw new BadRequestError('Insufficient wallet balance');
+        }
 
         const sessionId = `wallet-${Date.now()}`;
-        await this._walletRepo.deductBalance(userId, amount / 100);
+        
+        // Use wallet._id (string) to perform the debit
+        await this._walletRepo.debit(wallet.id, deductionAmount);
 
         return { sessionId, url: '' };
     }
 
-    async verifyPayment(sessionId: string): Promise<{ status: 'pending' |'completed' | 'failed'; paymentId: string; metadata: PaymentMetadata }> {
+    async verifyPayment(sessionId: string): Promise<{ 
+        status: 'pending' | 'completed' | 'failed'; 
+        paymentId: string; 
+        metadata: PaymentMetadata 
+    }> {
         const registration = await this._registrationRepo.findByPaymentId(sessionId);
         if (!registration) throw new NotFoundError('Registration not found');
+
+        // Construct metadata with the strict literal "tournament"
+        const metadata: TournamentPaymentMetadata = {
+            type: "tournament", // Hardcoded literal satisfies the union
+            tournamentId: registration.tournamentId,
+            teamId: registration.teamId,
+            captainId: registration.captainId,
+            managerId: registration.managerId, // Fixed typo: was captainId
+        };
+
         return {
-            status: registration.paymentStatus,
+            status: registration.paymentStatus as 'pending' | 'completed' | 'failed',
             paymentId: sessionId,
-            metadata: {
-                tournamentId: registration.tournamentId,
-                teamId: registration.teamId,
-                captainId: registration.captainId,
-                managerId: registration.captainId,
-            },
+            metadata
         };
     }
 }

@@ -1,7 +1,7 @@
 import { LiveMatchCardDTO } from "domain/dtos/LiveMatchDTO";
 import { Match } from "domain/entities/Match";
-import { PointsTableResponse } from "domain/entities/PointsTable";
-import { Leaderboard, PointsRow, Tournament } from "domain/entities/Tournaments";
+import { PointsRow, PointsTableResponse } from "domain/entities/PointsTable";
+import { Leaderboard, Tournament } from "domain/entities/Tournaments";
 
 export interface IGetPlayerTournaments {
     execute(status: string, page: number, limit: number, playerId?: string): Promise<{ tournaments: Tournament[]; total: number }>
@@ -28,7 +28,7 @@ export interface IGetTournamentPointsTable {
 }
 
 export interface IGetTournamentStats {
-    execute(tournamentId: string): Promise<string[]>;
+    execute(tournamentId: string): Promise<Leaderboard>;
 }
 
 export interface IStartTournament {

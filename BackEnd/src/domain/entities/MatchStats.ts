@@ -18,10 +18,10 @@ export interface InningsEntity {
   currentBowler: string | null;
   battingTeam: string;
   bowlingTeam: string;
-  batsmen: PlayerBattingStats[];
-  bowlers: PlayerBowlingStats[];
-  extras: ExtraStats;
-  logs: BallLogEntry[];
+  batsmen: any[];
+  bowlers: any[];
+  extras: any;
+  logs: any[];
   isCompleted: boolean;
   isSuperOver: boolean;
 }

@@ -1,5 +1,5 @@
 import { MatchEntity } from "domain/entities/MatchEntity";
-import { BatsmanStat, BowlerStat, InningsDTO, TournamentMatchStatsDocument } from "domain/types/match.types";
+import { BatsmanStat, BowlerStat, InningsDTO } from "domain/types/match.types";
 import { Innings } from "domain/entities/Innings";
 import { Batsman } from "domain/entities/Batsman";
 import { Bowler } from "domain/entities/Bowler";
@@ -77,7 +77,7 @@ export class MatchStatsMapper {
         return innings;
     }
 
-    static toDomain(doc: TournamentMatchStatsDocument): MatchEntity {
+    static toDomain(doc: any): MatchEntity {
         const innings1 = this.mapInnings(doc.innings1) ?? new Innings();
         const innings2 = this.mapInnings(doc.innings2);
 
@@ -98,7 +98,8 @@ export class MatchStatsMapper {
             currentInnings: doc.currentInnings,
             hasSuperOver: doc.hasSuperOver,
             venue: doc.venue || "",
-            isLive: doc.isLive || false
+            isLive: doc.isLive || false,
+
         });
     }
 

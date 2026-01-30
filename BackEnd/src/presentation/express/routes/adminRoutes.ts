@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
-import { adminOnly } from "presentation/composition/shared/middlewares";
 import { DashboardController } from "presentation/http/controllers/admin/DashBoardController";
 import { AdminTransactionController } from "presentation/http/controllers/admin/TransactionController";
 import { UsersManagementController } from "presentation/http/controllers/admin/UsersManagementController";
 import { TournamentManagementController } from "presentation/http/controllers/admin/TournamnetManagementController";
 import { container } from "tsyringe";
+import { adminOnly } from "../middlewares";
 
 const router = Router();
 
