@@ -1,18 +1,29 @@
-import Home from "../pages/viewer/Home";
-import LiveMatchPage from "../pages/viewer/match/LiveMatchPage";
-import LiveMatches from "../pages/viewer/LiveMatches";
-import ProfilePage from "../pages/viewer/ProfilePage";
+import { lazy, Suspense, type JSX } from "react";
 import ProtectedRoute from "./ProtectedRoute";
-import LiveStreamViewer from "../pages/viewer/LiveStreamViewer";
-import WalletPage from "../pages/viewer/WalletPage";
-import TournamentsPage from "../pages/viewer/Tournaments";
+import LoadingOverlay from "../components/shared/LoadingOverlay";
+
+const Home = lazy(() => import("../pages/viewer/Home"));
+const LiveMatchPage = lazy(() => import("../pages/viewer/match/LiveMatchPage"));
+const LiveMatches = lazy(() => import("../pages/viewer/LiveMatches"));
+const ProfilePage = lazy(() => import("../pages/viewer/ProfilePage"));
+const LiveStreamViewer = lazy(() => import("../pages/viewer/LiveStreamViewer"));
+const WalletPage = lazy(() => import("../pages/viewer/WalletPage"));
+const TournamentsPage = lazy(() => import("../pages/viewer/Tournaments"));
+
+const withViewerProtection = (component: JSX.Element) => (
+    <ProtectedRoute allowedRoles={["viewer", "admin", "player", "manager"]}>
+        <Suspense fallback={<LoadingOverlay show />}>
+            {component}
+        </Suspense>
+    </ProtectedRoute>
+);
 
 export const viewerRoutes = [
-    { path: "/profile", element: <ProtectedRoute allowedRoles={['viewer']}><ProfilePage /></ProtectedRoute> },
-    { path: "/", element: <ProtectedRoute allowedRoles={['viewer', 'admin', 'player', 'manager']}><Home /></ProtectedRoute> },
-    { path: "/tournaments", element: <ProtectedRoute allowedRoles={['viewer', 'admin', 'player', 'manager']}><TournamentsPage /></ProtectedRoute> },
-    { path: "/live", element: <ProtectedRoute allowedRoles={['viewer', 'admin', 'player', 'manager']}><LiveMatches /></ProtectedRoute> },
-    { path: "/live/:matchId/details", element: <ProtectedRoute allowedRoles={['viewer', 'admin', 'player', 'manager']}><LiveMatchPage /></ProtectedRoute> },
-    { path: "/live/:matchId/details/stream", element: <ProtectedRoute allowedRoles={['viewer', 'admin', 'player', 'manager']}><LiveStreamViewer /></ProtectedRoute> },
-    { path: "/wallet", element: <ProtectedRoute allowedRoles={['viewer', 'admin', 'player', 'manager']}><WalletPage /></ProtectedRoute> },
+    { path: "/", element: withViewerProtection(<Home />) },
+    { path: "/profile", element: withViewerProtection(<ProfilePage />) },
+    { path: "/tournaments", element: withViewerProtection(<TournamentsPage />) },
+    { path: "/live", element: withViewerProtection(<LiveMatches />) },
+    { path: "/live/:matchId/details", element: withViewerProtection(<LiveMatchPage />) },
+    { path: "/live/:matchId/details/stream", element: withViewerProtection(<LiveStreamViewer />) },
+    { path: "/wallet", element: withViewerProtection(<WalletPage />) },
 ];

@@ -1,11 +1,10 @@
 import { lazy, Suspense, type JSX } from "react";
 import ProtectedRoute from "./ProtectedRoute";
-import LoadingOverlay from "../components/shared/LoadingOverlay";
-import MyStatisticsPage from "../pages/player/MyStats/MyStatisticsPage";
-import MyTournamentsPage from "../pages/player/MyTournamentsPage";
-import TournamentDetailsPage from "../components/player/TournamentDetailsPage";
-import LiveMatchesPage from "../pages/player/LiveMatchPage";
 
+const LoadingOverlay = lazy(() => import("../components/shared/LoadingOverlay"));
+const MyStatisticsPage = lazy(() => import("../pages/player/MyStats/MyStatisticsPage"));
+const MyTournamentsPage = lazy(() => import("../pages/player/MyTournamentsPage"));
+const TournamentDetailsPage = lazy(() => import("../components/player/TournamentDetailsPage"));
 const PlayerDashboard = lazy(() => import("../pages/player/LandingPage"));
 const ViewTeam = lazy(() => import("../pages/player/TeamDetailsPage"));
 const TeamsListPage = lazy(() => import("../pages/player/TeamsListPage"));
@@ -14,6 +13,7 @@ const PlayerProfilePage = lazy(() => import("../pages/player/ProfilePage"));
 const TeamFinderPage = lazy(() => import("../pages/player/TeamsPage"));
 const TeamChat = lazy(() => import("../pages/player/TeamChat/TeamChat"));
 const LiveMatchDetails = lazy(() => import("../pages/player/LiveMatchDetails"));
+const LiveMatchesPage = lazy(() => import("../pages/player/LiveMatchPage"));
 
 const withPlayerProtection = (component: JSX.Element) => (
     <ProtectedRoute allowedRoles={["player"]}>

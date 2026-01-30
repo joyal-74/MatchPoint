@@ -1,18 +1,16 @@
 import { lazy, Suspense, type JSX } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
-import MatchDashboard from "../components/manager/matches/MatchDashboard";
-import ScoreboardDashboard from "../components/manager/scoreControl/ScoreboardDashboard";
-import EarningsPage from "../components/manager/EarningsOverview";
-import FinancialsPage from "../components/manager/PaymentsPage";
-import ExplorePage from "../pages/manager/ExplorePage";
-import MatchesSection from "../pages/manager/MatchesPage";
-import MyMatchesPage from "../pages/manager/MyMatches";
-import CreateTournamentPage from "../components/manager/tournaments/TournamentModal/CreateTournamentPage";
-import EditTournamentPage from "../components/manager/tournaments/TournamentModal/EditTournamentPage";
-import StreamSettings from "../components/manager/liveStream/StreamSettings";
 
-// Lazy load manager pages
+const withManagerProtection = (component: JSX.Element) => (
+    <ProtectedRoute allowedRoles={["manager"]}>
+        <Suspense fallback={<LoadingOverlay show />}>
+            {component}
+        </Suspense>
+    </ProtectedRoute>
+);
+
+// Lazy loaded manager pages
 const Dashboard = lazy(() => import("../pages/manager/Dashboard"));
 const UserProfile = lazy(() => import("../pages/manager/ProfilePage"));
 const TeamsListPage = lazy(() => import("../pages/manager/TeamsListPage"));
@@ -24,13 +22,16 @@ const TournamentDetailsPage = lazy(() => import("../pages/manager/TournamentDeta
 const PaymentSuccessPage = lazy(() => import("../components/manager/tournaments/TournamentDetails/PaymentSuccessPage"));
 const PaymentFailedPage = lazy(() => import("../components/manager/tournaments/TournamentDetails/paymentFailedPage"));
 
-const withManagerProtection = (component: JSX.Element) => (
-    <ProtectedRoute allowedRoles={["manager"]}>
-        <Suspense fallback={<LoadingOverlay show />}>
-            {component}
-        </Suspense>
-    </ProtectedRoute>
-);
+const MatchDashboard = lazy(() => import("../components/manager/matches/MatchDashboard"));
+const ScoreboardDashboard = lazy(() => import("../components/manager/scoreControl/ScoreboardDashboard"));
+const EarningsPage = lazy(() => import("../components/manager/EarningsOverview"));
+const FinancialsPage = lazy(() => import("../components/manager/PaymentsPage"));
+const ExplorePage = lazy(() => import("../pages/manager/ExplorePage"));
+const MatchesSection = lazy(() => import("../pages/manager/MatchesPage"));
+const MyMatchesPage = lazy(() => import("../pages/manager/MyMatches"));
+const CreateTournamentPage = lazy(() => import("../components/manager/tournaments/TournamentModal/CreateTournamentPage"));
+const EditTournamentPage = lazy(() => import("../components/manager/tournaments/TournamentModal/EditTournamentPage"));
+const StreamSettings = lazy(() => import("../components/manager/liveStream/StreamSettings"));
 
 export const managerRoutes = [
     { path: "/manager/dashboard", element: withManagerProtection(<Dashboard />) },
@@ -46,8 +47,14 @@ export const managerRoutes = [
     { path: "/manager/explore", element: withManagerProtection(<ExplorePage />) },
     { path: "/manager/tournaments/match/details", element: withManagerProtection(<MatchDetailsPage />) },
     { path: "/manager/tournaments/:id/:type", element: withManagerProtection(<TournamentDetailsPage />) },
-    { path: "/manager/tournaments/:tournamentId/:teamId/payment-success", element: withManagerProtection(<PaymentSuccessPage />) },
-    { path: "/manager/tournaments/:tournamentId/:teamId/payment-failed", element: withManagerProtection(<PaymentFailedPage />) },
+    {
+        path: "/manager/tournaments/:tournamentId/:teamId/payment-success",
+        element: withManagerProtection(<PaymentSuccessPage />),
+    },
+    {
+        path: "/manager/tournaments/:tournamentId/:teamId/payment-failed",
+        element: withManagerProtection(<PaymentFailedPage />),
+    },
     { path: "/manager/match/:matchId/dashboard", element: withManagerProtection(<MatchDashboard />) },
     { path: "/manager/matches", element: withManagerProtection(<MatchesSection />) },
     { path: "/manager/mymatches", element: withManagerProtection(<MyMatchesPage />) },
