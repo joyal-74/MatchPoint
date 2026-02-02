@@ -12,6 +12,7 @@ import { useTournaments } from "../../hooks/useTournaments";
 import { useAppDispatch } from "../../hooks/hooks";
 import { cancelTournament } from "../../features/manager/Tournaments/tournamentThunks";
 import { useTournamentModals } from "../../hooks/useTournamentModals";
+import { useNavigate } from "react-router-dom";
 
 export default function TournamentsPage() {
     const dispatch = useAppDispatch();
@@ -46,6 +47,7 @@ export default function TournamentsPage() {
         }
         closeConfirmModal();
     };
+    const navigate = useNavigate();
 
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col transition-colors duration-300">
@@ -55,7 +57,7 @@ export default function TournamentsPage() {
             <main className="flex-1 w-full px-4 md:px-10 mx-auto pt-4 pb-10">
 
                 {/* === SECTION 1: HEADER === */}
-                <TournamentsHeader onCreateClick={() => setIsCreateModalOpen(true)} />
+                <TournamentsHeader onCreateClick={() => navigate(`/manager/tournaments/create`)} />
 
                 {/* === SECTION 2: ANALYTICS DASHBOARD === */}
                 <div className="mt-8 space-y-6">
@@ -94,7 +96,7 @@ export default function TournamentsPage() {
                         onShowAll={handleShowAll}
                         onEdit={handleEditClick}
                         onCancel={handleCancelClick}
-                        onCreate={() => setIsCreateModalOpen(true)}
+                        onCreate={() => navigate(`/manager/tournaments/create`)}
                     />
                 </div>
 

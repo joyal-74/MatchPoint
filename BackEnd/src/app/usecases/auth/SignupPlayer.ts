@@ -81,9 +81,9 @@ export class SignupPlayer implements IPlayerSignupUseCase {
 
         await this._playerRepository.create({
             userId: newUser._id,
-            sport: userData.sport,
+            sport: userData.sport ?? 'cricket',
             profile: profile,
-            stats: getDefaultCareerStats(userData.sport),
+            stats: getDefaultCareerStats('cricket'),
         });
 
         const otp = this._otpGenerator.generateOtp();

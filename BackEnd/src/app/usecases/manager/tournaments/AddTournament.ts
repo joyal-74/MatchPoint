@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { DI_TOKENS } from "domain/constants/Identifiers";
 
-import { Tournament } from "domain/entities/Tournaments";
+import { Format, Tournament } from "domain/entities/Tournaments";
 import { ILogger } from "app/providers/ILogger";
 import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
 import { IAddTournament } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
@@ -36,6 +36,7 @@ export class AddTournamentUseCase implements IAddTournament {
             ...data,
             tourId,
             banner: bannerUrl || "",
+            format : data.format.toLocaleLowerCase() as Format
         };
 
         const tournament = await this._tournamentRepo.create(newData);

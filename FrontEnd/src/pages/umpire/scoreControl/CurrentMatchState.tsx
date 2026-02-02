@@ -18,6 +18,8 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
         return `${overs}.${balls}`;
     };
 
+
+
     if (!liveScore) {
         return (
             <div className="w-full bg-card rounded-2xl border border-border overflow-hidden shadow-sm p-6">
@@ -35,6 +37,14 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
 
     // --- Data Preparation ---
     const currentInnings = liveScore.currentInnings === 1 ? liveScore.innings1 : liveScore.innings2;
+
+    if (!currentInnings || !match.teamA?._id || !match.teamB?._id) {
+        return (
+            <div className="p-8 text-center bg-card border border-border rounded-xl text-muted-foreground italic">
+                Initializing match data...
+            </div>
+        );
+    }
     if (!currentInnings) return <div className="p-8 text-center bg-card border border-border rounded-xl text-muted-foreground italic">Waiting for innings data...</div>;
 
     const battingTeam = match.teamA._id === currentInnings.battingTeam ? match.teamA : match.teamB;
@@ -81,6 +91,8 @@ const CurrentMatchState: React.FC<CurrentMatchStateProps> = ({ match, teamA, tea
             <span className={`text-sm font-bold ${highlight ? 'text-destructive' : 'text-foreground'}`}>{value}</span>
         </div>
     );
+
+
 
     return (
         <div className="w-full mx-auto bg-card rounded-2xl border border-border shadow-sm overflow-hidden font-sans">

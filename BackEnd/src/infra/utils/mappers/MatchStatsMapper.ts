@@ -99,7 +99,8 @@ export class MatchStatsMapper {
             hasSuperOver: doc.hasSuperOver,
             venue: doc.venue || "",
             isLive: doc.isLive || false,
-
+            teamA : doc.teamA,
+            teamB : doc.teamB
         });
     }
 

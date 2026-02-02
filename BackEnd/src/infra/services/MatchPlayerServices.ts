@@ -51,7 +51,7 @@ export class MatchPlayerServices implements IMatchPlayerServices {
 
         return {
             match: {
-                ...MatchMapper.toMatchEntity(match),
+                ...MatchMapper.toMatchEntity(match, match.teamA, match.teamB),
                 date: new Date(match.match.date).toISOString(),
             },
             teamA: {

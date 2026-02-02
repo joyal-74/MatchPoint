@@ -141,6 +141,7 @@ import { UpdateUmpireProfile } from "app/usecases/umpire/UpdateUmpireProfile";
 import { GetUmpireProfile } from "app/usecases/umpire/GetUmpireProfile";
 import { GetViewerTournamentsUseCase } from "app/usecases/viewer/GetViewerTournaments";
 import { GetAllMatches } from "app/usecases/manager/match/GetAllMatches";
+import { GetUmpireAllMatches } from "app/usecases/umpire/GetAllMatches";
 
 
 // Registrations
@@ -304,6 +305,7 @@ container.register(DI_TOKENS.GetViewerProfile, { useClass: GetViewerProfile });
 container.register(DI_TOKENS.UpdateViewerProfile, { useClass: UpdateViewerProfile });
 container.register(DI_TOKENS.GetViewerTournamentsUseCase, { useClass: GetViewerTournamentsUseCase });
 
-// --- Viewer ---
+// --- Umpire ---
 container.register(DI_TOKENS.GetUmpireProfileUsecase, { useClass: GetUmpireProfile });
 container.register(DI_TOKENS.UpdateUmpireProfile, { useClass: UpdateUmpireProfile });
+container.register(DI_TOKENS.GetUmpireAllMatches, { useClass: GetUmpireAllMatches });

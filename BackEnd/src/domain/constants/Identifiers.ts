@@ -232,7 +232,8 @@ const ViewerUsecaseTokens = {
 
 const UmpireUseCaseTokens = {
     GetUmpireProfileUsecase : 'GetUmpireProfileUsecase',
-    UpdateUmpireProfile : 'UpdateUmpireProfile'
+    UpdateUmpireProfile : 'UpdateUmpireProfile',
+    GetUmpireAllMatches : 'GetUmpireAllMatches',
 }
 
 const SharedUseCaseTokens = {

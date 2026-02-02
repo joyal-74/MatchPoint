@@ -10,7 +10,7 @@ import type { Match } from '../../domain/match/types';
 const tabs = [
     { id: 'all', label: 'All Matches' },
     { id: 'ongoing', label: 'Live' },
-    { id: 'upcoming', label: 'Fixtures' },
+    { id: 'upcoming', label: 'Upcoming' },
     { id: 'completed', label: 'Results' },
 ] as const;
 
@@ -56,9 +56,6 @@ const MatchesSection = () => {
                     <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
                         <div>
                             <h2 className="text-4xl font-black tracking-tighter uppercase italic">Match Center</h2>
-                            <p className="mt-1 text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                                Global Database • Server-Side Synced
-                            </p>
                         </div>
 
                         {/* Search Bar */}
@@ -70,7 +67,7 @@ const MatchesSection = () => {
                                 value={searchQuery}
                                 onChange={(e) => {
                                     setSearchQuery(e.target.value);
-                                    setPage(1); // Reset page on search
+                                    setPage(1);
                                 }}
                                 className="h-11 w-full rounded-xl border-none bg-muted/50 pl-10 pr-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all"
                             />

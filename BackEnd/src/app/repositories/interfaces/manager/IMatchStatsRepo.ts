@@ -13,6 +13,7 @@ export interface AllMatchQuery {
     limit?: number;
     page?: number; 
     search?: string;
+    userId? : string;
 }
 
 export interface IMatchStatsRepo {

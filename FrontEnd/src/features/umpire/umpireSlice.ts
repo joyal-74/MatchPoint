@@ -1,9 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchUmpireData, updateUmpireData } from "./umpireThunks";
+import { fetchAllMatches, fetchUmpireData, updateUmpireData } from "./umpireThunks";
 import type { User } from "../../types/User";
+import type { Match } from "./umpireTypes";
 
 interface UmpireState {
     umpire: User | null;
+    allMatches: Match[];
+    totalPages: number | null;
     loading: boolean;
     fetched: boolean,
     error: string | null;
@@ -11,6 +14,8 @@ interface UmpireState {
 
 const initialState: UmpireState = {
     umpire: null,
+    allMatches: [],
+    totalPages : null,
     loading: false,
     fetched: false,
     error: null,
@@ -49,7 +54,21 @@ const umpireSlice = createSlice({
             .addCase(updateUmpireData.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? "Edit failed";
-            });
+            })
+
+            .addCase(fetchAllMatches.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchAllMatches.fulfilled, (state, action) => {
+                state.loading = false;
+                state.allMatches = action.payload.matches;
+                state.totalPages = action.payload.totalPages;
+                state.error = null;
+            })
+            .addCase(fetchAllMatches.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            })
     },
 });
 

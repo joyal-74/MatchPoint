@@ -17,3 +17,8 @@ export const updateUmpireData = createAsyncThunk(
         return response;
     })
 );
+
+export const fetchAllMatches = createAsyncThunk(
+    "umpire/fetchAllMatches",
+    createApiThunk(umpireEndpoints.fetchAllMatches)
+);

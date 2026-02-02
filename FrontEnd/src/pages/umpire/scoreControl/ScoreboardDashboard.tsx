@@ -26,7 +26,9 @@ const ScoreboardDashboard: React.FC = () => {
     const navigate = useNavigate();
     const { matchId } = useParams<{ matchId: string }>();
     const { match, teamA, teamB, loading, error, liveScore } = useAppSelector((state: RootState) => state.match);
-    
+
+    console.log(match, 'match')
+
     // --- End Match Logic States ---
     const [showEndMatchConfirm, setShowEndMatchConfirm] = useState(false);
     const [endReason, setEndReason] = useState<endReason>("COMPLETED");
@@ -71,7 +73,9 @@ const ScoreboardDashboard: React.FC = () => {
 
     const emitScoreUpdate = useCallback((payload: ScoreUpdatePayload) => {
         const socket = getSocket();
-        if (socket && matchId) socket.emit('score:update', payload);
+        if (socket && matchId) {
+            socket.emit('score:update', payload);
+        }
     }, [matchId]);
 
     // --- 3. Handle End Match ---
@@ -107,14 +111,14 @@ const ScoreboardDashboard: React.FC = () => {
     return (
         <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
             <Navbar />
-            
+
             <main className="max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8 space-y-6">
 
                 {/* === HEADER === */}
                 <header className="relative overflow-hidden rounded-2xl bg-card border border-border shadow-sm group">
                     <div className="absolute top-0 right-0 p-20 bg-primary/5 rounded-bl-full -mr-10 -mt-10 blur-3xl pointer-events-none" />
                     <div className="relative px-6 py-6 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
-                        
+
                         {/* Meta Info */}
                         <div className="flex flex-col gap-3">
                             <div className="flex items-center gap-3">
@@ -166,7 +170,7 @@ const ScoreboardDashboard: React.FC = () => {
 
                     {/* Right Column: Controls Logic */}
                     <div className="xl:sticky xl:top-24 space-y-6">
-                        
+
                         {/* CASE 1: ONGOING - Show Controls */}
                         {liveScore.status === "ongoing" && (
                             <>
@@ -204,7 +208,7 @@ const ScoreboardDashboard: React.FC = () => {
                                 <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
                                     This match is scheduled but hasn't begun yet. Complete the toss and team selection to enable scoring controls.
                                 </p>
-                                <button 
+                                <button
                                     onClick={() => navigate(`/manager/match/${matchId}/dashboard`)}
                                     className="flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-lg font-bold text-sm hover:opacity-90 transition-all"
                                 >
@@ -243,7 +247,7 @@ const ScoreboardDashboard: React.FC = () => {
                             <h3 className="text-lg font-bold text-foreground">End Match?</h3>
                         </div>
                         <p className="text-sm text-muted-foreground mb-6">Are you sure you want to end this match? This action <strong>cannot be undone</strong>.</p>
-                        
+
                         {/* 1. Reason Selection */}
                         <div className="space-y-4">
                             <div>
@@ -284,8 +288,8 @@ const ScoreboardDashboard: React.FC = () => {
                                         <div className="grid grid-cols-2 gap-3">
                                             <div>
                                                 <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Margin</label>
-                                                <input 
-                                                    type="number" 
+                                                <input
+                                                    type="number"
                                                     placeholder="e.g 10"
                                                     value={winMargin}
                                                     onChange={(e) => setWinMargin(e.target.value)}
@@ -311,8 +315,8 @@ const ScoreboardDashboard: React.FC = () => {
 
                         <div className="flex justify-end gap-3 mt-8">
                             <button onClick={() => setShowEndMatchConfirm(false)} className="px-4 py-2 rounded-lg text-sm font-medium bg-muted text-muted-foreground hover:bg-muted/80">Cancel</button>
-                            <button 
-                                onClick={handleConfirmEndMatch} 
+                            <button
+                                onClick={handleConfirmEndMatch}
                                 className="px-4 py-2 rounded-lg text-sm font-bold bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg shadow-destructive/20"
                             >
                                 Confirm End

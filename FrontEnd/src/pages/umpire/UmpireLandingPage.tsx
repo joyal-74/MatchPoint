@@ -1,21 +1,27 @@
-import {
-    Zap, ShieldCheck, BarChart3, ChevronRight,
-    MapPin,ArrowRight, Activity,
-    Users, Layers,
-    Clock
-} from 'lucide-react';
+import { Zap, ShieldCheck, BarChart3, ChevronRight, MapPin, ArrowRight, Activity, Users, Layers, Clock } from 'lucide-react';
 import Navbar from '../../components/umpire/Navbar';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { useEffect } from 'react';
+import LoadingOverlay from '../../components/shared/LoadingOverlay';
+import Footer from '../../components/viewer/Footer';
+import { fetchAllMatches } from '../../features/umpire/umpireThunks';
 
 const UmpireLandingPage = () => {
-    const matches = [
-        { t1: "Wolves", t2: "Dragons", time: "14:00", date: "Today", loc: "Pitch 1", badge: "Live Soon", type: "T20" },
-        { t1: "Strikers", t2: "Titans", time: "10:30", date: "Jan 28", loc: "Main Oval", badge: "Confirmed", type: "ODI" },
-        { t1: "Eagles", t2: "Panthers", time: "09:00", date: "Jan 30", loc: "Pitch 4", badge: "Pending", type: "T20" },
-        { t1: "Vipers", t2: "Hawks", time: "15:30", date: "Feb 02", loc: "West Ground", badge: "Confirmed", type: "Test" },
-    ];
+    const dispatch = useAppDispatch();
+
+    const { allMatches, loading } = useAppSelector((state) => state.umpire);
+    const userId = useAppSelector((state) => state.auth.user?._id);
+
+    useEffect(() => {
+        if (userId) {
+            dispatch(fetchAllMatches({ limit: 4, page: 1, userId }));
+        }
+    }, [dispatch, userId]);
+
     return (
         <>
             <Navbar />
+            <LoadingOverlay show={loading} />
             <div className="min-h-screen bg-background text-slate-200 selection:bg-primary/20">
 
                 {/* Subtle Ambient Glow */}
@@ -52,7 +58,7 @@ const UmpireLandingPage = () => {
 
                 {/* --- 2. FEATURE TILES --- */}
                 <section className="py-16 px-6">
-                    <div className="max-w-6xl mx-auto">
+                    <div className="max-w-7xl mx-auto">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                             {[
                                 {
@@ -100,7 +106,7 @@ const UmpireLandingPage = () => {
 
                 {/* --- 3. MY MATCHES (COMPACT) --- */}
                 <section className="py-16 px-6 bg-white/[0.01]">
-                    <div className="max-w-6xl mx-auto">
+                    <div className="max-w-7xl mx-auto">
                         {/* Section Header */}
                         <div className="flex items-end justify-between mb-10">
                             <div className="space-y-1">
@@ -114,81 +120,84 @@ const UmpireLandingPage = () => {
 
                         {/* 4-Card Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {matches.map((m, i) => (
-                                <div
-                                    key={i}
-                                    className="group relative bg-white/[0.02] border border-white/5 rounded-2xl p-5 hover:bg-white/[0.04] hover:border-primary/30 transition-all duration-300 cursor-pointer"
-                                >
-                                    {/* Card Header: Type & Status */}
-                                    <div className="flex justify-between items-start mb-6">
-                                        <span className="text-[10px] font-black text-slate-500 bg-white/5 px-2 py-0.5 rounded uppercase tracking-wider">
-                                            {m.type}
-                                        </span>
-                                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter ${m.badge === 'Live Soon' ? 'bg-primary/20 text-primary animate-pulse' : 'bg-slate-800 text-slate-400'
-                                            }`}>
-                                            {m.badge}
-                                        </span>
-                                    </div>
+                            {loading ? (
+                                // Simple Skeleton Loader
+                                [...Array(4)].map((_, i) => (
+                                    <div key={i} className="h-64 bg-white/5 animate-pulse rounded-2xl" />
+                                ))
+                            ) : allMatches.length > 0 ? (
+                                allMatches.map((match) => {
+                                    const isLive = match.status === 'ongoing';
+                                    const dateStr = match.createdAt ? new Date(match.createdAt).toLocaleDateString() : 'TBD';
 
-                                    {/* Team Matchup */}
-                                    <div className="flex items-center justify-between mb-6">
-                                        <div className="flex flex-col items-center gap-1 flex-1">
-                                            <div className="w-10 h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-xs font-bold text-white group-hover:border-primary/50 transition-colors">
-                                                {m.t1[0]}
+                                    return (
+                                        <div
+                                            key={match._id}
+                                            className="group relative bg-white/[0.02] border border-white/5 rounded-2xl p-5 hover:bg-white/[0.04] hover:border-primary/30 transition-all duration-300 cursor-pointer"
+                                        >
+                                            {/* Header: Type & Status */}
+                                            <div className="flex justify-between items-start mb-6">
+                                                <span className="text-[10px] font-black text-slate-500 bg-white/5 px-2 py-0.5 rounded uppercase tracking-wider">
+                                                    {match.oversLimit} Overs
+                                                </span>
+                                                <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter ${isLive ? 'bg-primary/20 text-primary animate-pulse' : 'bg-slate-800 text-slate-400'
+                                                    }`}>
+                                                    {match.status}
+                                                </span>
                                             </div>
-                                            <span className="text-[11px] font-bold text-slate-300">{m.t1}</span>
-                                        </div>
 
-                                        <span className="text-[10px] font-black text-slate-600 italic px-2">VS</span>
+                                            {/* Team Matchup - Resolving from innings1 since teamA/B are IDs */}
+                                            <div className="flex items-center justify-between mb-6">
+                                                <div className="flex flex-col items-center gap-1 flex-1">
+                                                    <div className="w-10 h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-xs font-bold text-white group-hover:border-primary/50 transition-colors">
+                                                        {match.innings1?.battingTeam?.name?.[0] || 'T'}
+                                                    </div>
+                                                    <span className="text-[11px] font-bold text-slate-300 truncate w-full text-center">
+                                                        {match.innings1?.battingTeam?.name || 'Team A'}
+                                                    </span>
+                                                </div>
 
-                                        <div className="flex flex-col items-center gap-1 flex-1">
-                                            <div className="w-10 h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-xs font-bold text-white group-hover:border-primary/50 transition-colors">
-                                                {m.t2[0]}
+                                                <span className="text-[10px] font-black text-slate-600 italic px-2">VS</span>
+
+                                                <div className="flex flex-col items-center gap-1 flex-1">
+                                                    <div className="w-10 h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-xs font-bold text-white group-hover:border-primary/50 transition-colors">
+                                                        {match.innings1?.bowlingTeam?.name?.[0] || 'T'}
+                                                    </div>
+                                                    <span className="text-[11px] font-bold text-slate-300 truncate w-full text-center">
+                                                        {match.innings1?.bowlingTeam?.name || 'Team B'}
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <span className="text-[11px] font-bold text-slate-300">{m.t2}</span>
-                                        </div>
-                                    </div>
 
-                                    {/* Divider */}
-                                    <div className="h-[1px] w-full bg-white/5 mb-4" />
+                                            <div className="h-[1px] w-full bg-white/5 mb-4" />
 
-                                    {/* Card Footer: Time & Place */}
-                                    <div className="space-y-2">
-                                        <div className="flex items-center gap-2 text-slate-400">
-                                            <Clock size={12} className="text-primary/70" />
-                                            <span className="text-[11px] font-medium">{m.date}, {m.time}</span>
+                                            {/* Card Footer */}
+                                            <div className="space-y-2">
+                                                <div className="flex items-center gap-2 text-slate-400">
+                                                    <Clock size={12} className="text-primary/70" />
+                                                    <span className="text-[11px] font-medium">{dateStr}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-slate-400">
+                                                    <MapPin size={12} className="text-primary/70" />
+                                                    <span className="text-[11px] font-medium truncate">
+                                                        {match.venue?.split(',')[0] || "Ground TBD"}
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-2 text-slate-400">
-                                            <MapPin size={12} className="text-primary/70" />
-                                            <span className="text-[11px] font-medium">{m.loc}</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Action Indicator */}
-                                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
-                                        <ChevronRight size={16} className="text-primary" />
-                                    </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="col-span-full py-10 text-center text-slate-500 text-xs uppercase font-bold tracking-widest border border-dashed border-white/10 rounded-2xl">
+                                    No active assignments found.
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </div>
                 </section>
 
                 {/* --- 4. MINI FOOTER --- */}
-                <footer className="py-12 px-6 border-t border-white/5">
-                    <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-slate-500">
-                        <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 bg-primary rounded flex items-center justify-center font-black italic text-[10px] text-primary-foreground">U</div>
-                            <span className="text-sm font-bold text-white tracking-tighter uppercase">UmpirePro</span>
-                        </div>
-                        <div className="flex gap-6 text-[11px] font-bold uppercase tracking-wider">
-                            <a href="#" className="hover:text-primary transition-colors">Safety</a>
-                            <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-                            <a href="#" className="hover:text-primary transition-colors">Terms</a>
-                        </div>
-                        <p className="text-[11px]">© 2026 Umpire Dashboard.</p>
-                    </div>
-                </footer>
+                <Footer />
             </div>
         </>
     );

@@ -8,7 +8,7 @@ export function validatePlayerInput(data, file?: File) {
     const email = data.email?.trim();
 
     const gender = data.gender?.trim();
-    const sport = data.sport?.trim();
+    // const sport = data.sport?.trim();
     const firstName = data.firstName?.trim();
     const lastName = data.lastName?.trim();
     const password = data.password?.trim();
@@ -30,9 +30,9 @@ export function validatePlayerInput(data, file?: File) {
     if (!Validators.notEmpty(firstName)) errors.firstName = "First name is required";
     if (!Validators.notEmpty(lastName)) errors.lastName = "Last name is required";
 
-    if (!Validators.notEmpty(sport)) {
-        errors.sport = "Sport is required";
-    }
+    // if (!Validators.notEmpty(sport)) {
+    //     errors.sport = "Sport is required";
+    // }
 
     if (!Validators.isIn(gender, ["male", "female", "other"])) {
         errors.gender = "Invalid gender";

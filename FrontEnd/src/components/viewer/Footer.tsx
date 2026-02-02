@@ -16,7 +16,7 @@ const footerLinks = {
 const Footer = () => {
     return (
         <footer className="bg-[var(--color-background-secondary)] text-[var(--color-text-secondary)] pt-12 border-t border-[var(--color-border)]">
-            <div className="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 pb-10 border-b border-[var(--color-border)]">
+            <div className="mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 pb-10 border-b border-[var(--color-border)]">
                 {/* Brand */}
                 <div>
                     <h2 className="text-2xl font-bold text-[var(--color-text-primary)] mb-3">
@@ -82,9 +82,9 @@ const Footer = () => {
             </div>
 
             {/* Bottom Bar */}
-            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center text-sm">
+            <div className="mx-auto px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center text-sm">
                 <p className="text-[var(--color-text-tertiary)] mb-4 md:mb-0">
-                    © 2025 MatchPoint – Your Sports tournament manager. All Rights Reserved.
+                    © 2026 MatchPoint – Your Sports tournament manager. All Rights Reserved.
                 </p>
                 <div className="flex space-x-5">
                     <a href="#" className="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors duration-200">

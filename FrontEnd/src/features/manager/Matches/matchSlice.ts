@@ -10,7 +10,7 @@ interface MatchState {
     loading: boolean;
     allMatches: Match[];
     totalPages: number | null;
-    currentMatch : Match | null;
+    currentMatch: Match | null;
     error: string | undefined;
     liveScore: LiveScoreState | null;
 }
@@ -50,9 +50,9 @@ const initialState: MatchState = {
     match: null,
     teamA: null,
     teamB: null,
-    allMatches : [],
-    totalPages : null,
-    currentMatch : null,
+    allMatches: [],
+    totalPages: null,
+    currentMatch: null,
     loading: false,
     error: undefined,
     liveScore: {
@@ -78,6 +78,13 @@ const matchSlice = createSlice({
         setInitialInnings(state, action) {
             const { match } = action.payload;
             const { teamA, teamB, tossWinner, tossDecision } = match;
+
+            console.log(match)
+
+            if (!teamA || !teamB) {
+                console.error("Missing team data in setInitialInnings");
+                return;
+            }
 
             let battingTeamId: string;
             let bowlingTeamId: string;

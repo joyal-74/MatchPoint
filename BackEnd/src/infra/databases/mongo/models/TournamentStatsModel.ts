@@ -12,6 +12,7 @@ interface BowlerPersist extends Omit<BowlerStat, 'playerId'> {
 interface TournamentMatchPersist extends Omit<TournamentMatchStatsDocument, 'tournamentId'| 'matchId'> {
     tournamentId: Types.ObjectId; 
     matchId: Types.ObjectId; 
+    umpire: string; 
 }
 
 interface InningsPersist extends Omit<InningsDTO, 'battingTeam'| 'bowlingTeam'> {
@@ -115,6 +116,7 @@ const TournamentStatsSchema = new Schema<TournamentMatchPersist>(
     {
         tournamentId: { type: Schema.Types.ObjectId, ref: "Tournament", required: true },
         matchId: { type: Schema.Types.ObjectId, ref: "Matches", required: true },
+        umpire: { type: String, default: null, index: true },
 
         innings1: { type: InningsSchema, required: true },
         innings2: { type: InningsSchema, default: null },

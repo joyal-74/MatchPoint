@@ -16,18 +16,16 @@ export class MatchRepoMongo implements IMatchStatsRepo {
     }
 
     async findAllMatches(query: AllMatchQuery): Promise<{ matches: MatchEntity[], totalPages: number }> {
-        const { search, limit = 10, page = 1 } = query;
+        const { search, limit = 10, page = 1, userId } = query;
         const skip = (page - 1) * limit;
 
-        const mongoQuery: any = {};
+        // Direct, simple query
+        const mongoQuery: any = { umpire: userId };
 
         if (search) {
-            mongoQuery.$or = [
-                { venue: { $regex: search, $options: "i" } },
-            ];
+            mongoQuery.venue = { $regex: search, $options: "i" };
         }
 
-        // Execute count and find in parallel
         const [docs, totalCount] = await Promise.all([
             TournamentMatchStatsModel.find(mongoQuery)
                 .sort({ updatedAt: -1 })
@@ -37,13 +35,12 @@ export class MatchRepoMongo implements IMatchStatsRepo {
             TournamentMatchStatsModel.countDocuments(mongoQuery)
         ]);
 
-        const matches = docs.map(doc => MatchStatsMapper.toDomain(doc));
-
         return {
-            matches,
-            totalPages: Math.ceil(totalCount / limit)
+            matches: docs.map(doc => MatchStatsMapper.toDomain(doc)),
+            totalPages: Math.ceil(totalCount / limit) || 1
         };
     }
+
 
     async findLiveMatches({ limit = 10 }) {
         return TournamentMatchStatsModel.aggregate([
