@@ -1,14 +1,30 @@
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
-    build: ./BackEnd
-    expose:
-    - "3000"
+    container_name: matchpoint-backend
+    build:
+      context: ./BackEnd
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./BackEnd/.env
+    restart: always
+    networks:
+      - matchpoint-network
 
   frontend:
-    build: ./FrontEnd
+    container_name: matchpoint-frontend
+    build:
+      context: ./FrontEnd
     ports:
       - "80:80"
     depends_on:
       - backend
+    restart: always
+    networks:
+      - matchpoint-network
+
+networks:
+  matchpoint-network:
+    driver: bridge
