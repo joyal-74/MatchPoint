@@ -2,7 +2,7 @@ import type { Message } from "../../features/player/Chat/messages/messageTypes";
 import axiosClient from "../http/axiosClient";
 
 
-const BASE = import.meta.env.VITE_SERVER_URL ?? "http://localhost:3000";
+const BASE = import.meta.env.VITE_SERVER_URL ?? "/api";
 
 export const messagesEndpoints = {
     fetchMessages: async (params: { chatId: string; page?: number; pageSize?: number }): Promise<Message[]> => {

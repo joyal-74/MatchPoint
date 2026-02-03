@@ -5,7 +5,7 @@ import { initSocket } from "presentation/socket/socketConfig";
 import { startCronJobs } from "infra/cron/initCronJobs";
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 const server = http.createServer(app);
 
@@ -17,7 +17,7 @@ const startServer = async () => {
     startCronJobs();
     console.log("Background jobs started");
 
-    server.listen(PORT, () => {
+    server.listen(PORT, "0.0.0.0", () => {
         console.log(`Server running on port ${PORT}`);
     });
 };
