@@ -1,5 +1,5 @@
-# BUILD STAGE 
-FROM node:22-alpine AS build
+# BUILD STAGE
+FROM node:22-bookworm AS build
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ RUN npm run build
 
 
 # PRODUCTION STAGE
-FROM node:22-alpine
+FROM node:22-bookworm
 
 WORKDIR /app
 ENV NODE_ENV=production
