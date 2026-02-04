@@ -6,7 +6,7 @@ import { ILiveStreamService, StreamMetadata } from "../../app/repositories/inter
 import { NotFoundError } from "../../domain/errors/index.js";
 
 import { IRoomRegistry } from "../../app/repositories/interfaces/shared/ISocketServices.js";
-import { DtlsParameters, MediaKind, RtpCapabilities, RtpParameters } from "mediasoup/types";
+import { DtlsParameters, MediaKind, RtpCapabilities, RtpParameters } from "../livestream/Types.js";
 
 type TransportDirection = "send" | "recv";
 

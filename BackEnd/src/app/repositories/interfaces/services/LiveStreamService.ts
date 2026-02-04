@@ -1,4 +1,4 @@
-import { RtpParameters, RtpCapabilities, IceParameters, IceCandidate, DtlsParameters, MediaKind } from "mediasoup/types";
+import { DtlsParameters, IceCandidate, IceParameters, MediaKind, RtpCapabilities, RtpParameters } from "../../../../infra/livestream/Types.js"; 
 
 export interface StreamMetadata {
     title: string;
