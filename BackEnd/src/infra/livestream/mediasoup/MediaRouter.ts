@@ -1,4 +1,4 @@
-import { Worker, Router, RtpCodecCapability } from "mediasoup/types";
+import { Router, RtpCodecCapability, Worker } from "../Types.js";
 
 const mediaCodecs: RtpCodecCapability[] = [
     {
@@ -22,6 +22,6 @@ const mediaCodecs: RtpCodecCapability[] = [
     },
 ];
 
-export const createMediaRouter = async ( worker: Worker): Promise<Router> => {
+export const createMediaRouter = async (worker: Worker): Promise<Router> => {
     return await worker.createRouter({ mediaCodecs });
 };
