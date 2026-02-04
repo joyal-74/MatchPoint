@@ -1,7 +1,8 @@
-import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
-import { OtpResponse } from "domain/entities/Otp";
-import OTPModel from "infra/databases/mongo/models/OtpModel";
-import { OtpMongoMapper } from "infra/utils/mappers/OtpMongoMapper";
+import { IOtpRepository } from "../../../app/repositories/interfaces/shared/IOtpRepository.js";
+import { OtpResponse } from "../../../domain/entities/Otp.js";
+import OTPModel from "../../databases/mongo/models/OtpModel.js";
+import { OtpMongoMapper } from "../../utils/mappers/OtpMongoMapper.js";
+
 
 export class OtpRepositoryMongo implements IOtpRepository {
 

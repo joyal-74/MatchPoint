@@ -1,5 +1,5 @@
 import { container } from "tsyringe";
-import { AuthMiddleware } from "./authMiddleware"; 
+import { AuthMiddleware } from "./authMiddleware.js"; 
 
 const authMiddleware = container.resolve(AuthMiddleware);
 

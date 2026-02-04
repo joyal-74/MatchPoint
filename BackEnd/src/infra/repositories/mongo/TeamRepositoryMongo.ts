@@ -1,4 +1,3 @@
-import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
 import {
     AdminFilters,
     Filters,
@@ -8,11 +7,12 @@ import {
     TeamDataFull,
     TeamDataSummary,
     TeamRegister
-} from "domain/dtos/Team.dto";
-import { BadRequestError, NotFoundError } from "domain/errors";
-import { TeamModel } from "infra/databases/mongo/models/TeamModel";
-import { TeamMongoMapper, TeamSummaryPopulatedDocument } from "infra/utils/mappers/TeamMongoMapper";
+} from "../../../domain/dtos/Team.dto.js";
 import mongoose from "mongoose";
+import { TeamModel } from "../../databases/mongo/models/TeamModel.js";
+import { ITeamRepository } from "../../../app/repositories/interfaces/shared/ITeamRepository.js";
+import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
+import { TeamMongoMapper, TeamSummaryPopulatedDocument } from "../../utils/mappers/TeamMongoMapper.js";
 
 export class TeamRepositoryMongo implements ITeamRepository {
 

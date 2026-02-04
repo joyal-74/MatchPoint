@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { PaymentMetadata } from "../../repositories/interfaces/IBasePaymentMetaData.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IVerifyPaymentUseCase } from "../../repositories/interfaces/usecases/IPlanUseCaseRepo.js";
+import { IPaymentProvider } from "../../providers/IPaymentProvider.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
 
-import { IPaymentProvider } from "app/providers/IPaymentProvider";
-import { PaymentMetadata } from "app/repositories/interfaces/IBasePaymentMetaData";
-import { IVerifyPaymentUseCase } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
-import { NotFoundError } from "domain/errors";
 
 export interface VerifyPaymentResponse {
     status: "pending" | "completed" | "failed";

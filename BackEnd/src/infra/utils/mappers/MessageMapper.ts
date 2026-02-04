@@ -1,5 +1,5 @@
-import { Message } from 'domain/entities/Message';
-import { IMessage } from 'infra/databases/mongo/models/MessageModel';
+import { Message } from '../../../domain/entities/Message.js';
+import { IMessage } from '../../../infra/databases/mongo/models/MessageModel.js';
 import { HydratedDocument, Types } from 'mongoose';
 
 // Define a type for populated sender

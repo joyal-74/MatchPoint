@@ -1,14 +1,15 @@
-import { GetAllUsersParams } from "app/usecases/admin/GetAllViewers";
-import { ManagerDetails } from "app/usecases/admin/GetManagerDetails";
-import { PlayerDetails } from "app/usecases/admin/GetPlayerDetails";
-import { ViewerDetails } from "app/usecases/admin/GetViewerDetails";
-import { ManagerResponseDTO } from "domain/dtos/Manager.dto";
-import { PlayerResponseDTO } from "domain/dtos/Player.dto";
-import { TeamDataFull, TeamDataSummary, TeamStatus } from "domain/dtos/Team.dto";
-import { UserResponseDTO } from "domain/dtos/User.dto";
-import { Plan } from "domain/entities/Plan";
-import { Tournament } from "domain/entities/Tournaments";
-import { Transaction } from "domain/entities/Transaction";
+import { ManagerResponseDTO } from "../../../../domain/dtos/Manager.dto.js";
+import { PlayerResponseDTO } from "../../../../domain/dtos/Player.dto.js";
+import { TeamDataFull, TeamDataSummary, TeamStatus } from "../../../../domain/dtos/Team.dto.js";
+import { UserResponseDTO } from "../../../../domain/dtos/User.dto.js";
+import { Plan } from "../../../../domain/entities/Plan.js";
+import { Tournament } from "../../../../domain/entities/Tournaments.js";
+import { Transaction } from "../../../../domain/entities/Transaction.js";
+import { GetAllUsersParams } from "../../../usecases/admin/GetAllViewers.js";
+import { ManagerDetails } from "../../../usecases/admin/GetManagerDetails.js";
+import { PlayerDetails } from "../../../usecases/admin/GetPlayerDetails.js";
+import { ViewerDetails } from "../../../usecases/admin/GetViewerDetails.js";
+
 
 export interface AdminTableParams {
     page: number;
@@ -68,7 +69,7 @@ export interface IGetTeamDetails {
 }
 
 export interface IGetTournamentDetails {
-    execute(id: string): Promise<TeamDataFull>;
+    execute(id: string): Promise<Tournament>;
 }
 
 export interface IGetViewerDetails {

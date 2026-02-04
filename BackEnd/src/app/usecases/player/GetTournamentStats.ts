@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IGetTournamentStats } from "../../repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
+import { ILeaderboardRepository } from "../../repositories/interfaces/shared/ILeaderboardRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { Leaderboard } from "../../../domain/entities/Tournaments.js";
 
-import { ILogger } from "../../providers/ILogger";
-import { IGetTournamentStats } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
-import { ILeaderboardRepository } from "app/repositories/interfaces/shared/ILeaderboardRepository";
-import { Leaderboard } from "domain/entities/Tournaments";
 
 @injectable()
 export class GetTournamentStats implements IGetTournamentStats {

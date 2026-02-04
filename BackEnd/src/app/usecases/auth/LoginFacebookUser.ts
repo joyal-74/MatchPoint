@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { ILoginFacebookUser } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { IFacebookServices } from "../../services/auth/IFacebookServices.js";
+import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository.js";
+import { IUserServices } from "../../services/user/IUserServices.js";
+import { IUserAuthServices } from "../../services/auth/IUserAuthServices.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { UserMapper } from "../../mappers/UserMapper.js";
+import { JwtPayload, JwtTempPayload } from "../../../domain/entities/JwtPayload.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { ILoginFacebookUser } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
-import { UserMapper } from "app/mappers/UserMapper";
-import { JwtPayload, JwtTempPayload } from "domain/entities/JwtPayload";
-import { IFacebookServices } from "app/services/auth/IFacebookServices";
-import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
-import { IUserAuthServices } from "app/services/auth/IUserAuthServices";
-import { IUserServices } from "app/services/user/IUserServices";
 
 @injectable()
 export class LoginFacebookUser implements ILoginFacebookUser {

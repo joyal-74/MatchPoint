@@ -1,6 +1,6 @@
-import { Validators } from "./common";
-import { BadRequestError } from "domain/errors";
-import { File } from "domain/entities/File";
+import { Validators } from "./common.js";
+import { BadRequestError } from "../../domain/errors/index.js";
+import { File } from "../../domain/entities/File.js";
 
 export function validateUmpireUpdate(data, file?: File) {
     const errors: Record<string, string> = {};

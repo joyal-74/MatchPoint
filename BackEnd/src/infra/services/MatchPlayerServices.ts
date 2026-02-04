@@ -1,13 +1,13 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { IMatchPlayerServices } from "../../app/services/manager/IMatchPlayerService.js";
+import { IMatchesRepository } from "../../app/repositories/interfaces/manager/IMatchesRepository.js";
+import { IPlayerRepository } from "../../app/repositories/interfaces/player/IPlayerRepository.js";
+import { MatchResponseDTO } from "../../domain/dtos/MatchDTO.js";
+import { NotFoundError } from "../../domain/errors/index.js";
+import { MatchTeamMapper } from "../../app/mappers/MatchTeamMapper.js";
+import { MatchMapper } from "../../app/mappers/MatchMapper.js";
 
-import { MatchMapper } from "app/mappers/MatchMapper";
-import { MatchTeamMapper } from "app/mappers/MatchTeamMapper";
-import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
-import { IMatchPlayerServices } from "app/services/manager/IMatchPlayerService";
-import { MatchResponseDTO } from "domain/dtos/MatchDTO";
-import { NotFoundError } from "domain/errors";
 
 @injectable()
 export class MatchPlayerServices implements IMatchPlayerServices {
@@ -22,13 +22,14 @@ export class MatchPlayerServices implements IMatchPlayerServices {
 
         if (!match) throw new NotFoundError("Match not found");
 
-        const teamAStatusMap = new Map(
-            match.teamA.members.map(m => [m.playerId.toString(), m.status])
+        const teamAStatusMap = new Map<string, string>(
+            match.teamA.members.map((m) => [m.playerId.toString(), m.status])
         );
 
-        const teamBStatusMap = new Map(
+        const teamBStatusMap = new Map<string, string>(
             match.teamB.members.map(m => [m.playerId.toString(), m.status])
         );
+
 
         // Fetch players
         const teamAPlayers = await this._playerRepo.getPlayersByIds(

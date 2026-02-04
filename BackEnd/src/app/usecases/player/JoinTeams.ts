@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IJoinTeamUseCase } from "../../repositories/interfaces/player/ITeamRepositoryUsecase.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository.js";
+import { IPlayerRepository } from "../../repositories/interfaces/player/IPlayerRepository.js";
+import { INotificationRepository } from "../../repositories/interfaces/shared/INotificationRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { TeamData } from "../../../domain/dtos/Team.dto.js";
+import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
-import { IJoinTeamUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
-import { TeamData } from "domain/dtos/Team.dto";
-import { BadRequestError, NotFoundError } from "domain/errors";
-import { INotificationRepository } from "app/repositories/interfaces/shared/INotificationRepository";
 
 @injectable()
 export class JoinTeamUseCase implements IJoinTeamUseCase {

@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IGetTournamentById } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
+import { ILogger } from "../../../providers/ILogger.js";
+import { Tournament } from "../../../../domain/entities/Tournaments.js";
+import { NotFoundError } from "../../../../domain/errors/index.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { IGetTournamentById } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
-import { Tournament } from "domain/entities/Tournaments";
-import { NotFoundError } from "domain/errors";
 
 @injectable()
 export class GetTournamentByIdUseCase implements IGetTournamentById {

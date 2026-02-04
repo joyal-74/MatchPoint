@@ -1,17 +1,12 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
 
-import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
-import { ILiveStreamService, StreamMetadata } from "app/repositories/interfaces/services/LiveStreamService";
-import { NotFoundError } from "domain/errors";
+import { IMatchesRepository } from "../../app/repositories/interfaces/manager/IMatchesRepository.js";
+import { ILiveStreamService, StreamMetadata } from "../../app/repositories/interfaces/services/LiveStreamService.js";
+import { NotFoundError } from "../../domain/errors/index.js";
 
-import {
-    RtpParameters,
-    RtpCapabilities,
-    MediaKind,
-    DtlsParameters
-} from "mediasoup/node/lib/types";
-import { IRoomRegistry } from "app/repositories/interfaces/shared/ISocketServices";
+import { IRoomRegistry } from "../../app/repositories/interfaces/shared/ISocketServices.js";
+import { DtlsParameters, MediaKind, RtpCapabilities, RtpParameters } from "mediasoup/types";
 
 type TransportDirection = "send" | "recv";
 
@@ -101,7 +96,7 @@ export class LiveStreamService implements ILiveStreamService {
     }
 
     public async closeRoom(matchId: string): Promise<void> {
-        console.log(`🛑 [SERVICE] Requesting to close room: ${matchId}`);
+        console.log(`[SERVICE] Requesting to close room: ${matchId}`);
         await this._matchRepository.updateStreamStatus(matchId, false);
         await this._roomRegistry.removeRoom(matchId);
     }

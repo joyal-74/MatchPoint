@@ -1,6 +1,7 @@
-import { ViewerDetails } from "app/usecases/admin/GetViewerDetails";
-import { UserLoginResponseDTO, UserResponseDTO } from "domain/dtos/User.dto";
-import { UserResponse } from "domain/entities/User";
+import { UserLoginResponseDTO, UserResponseDTO } from "../../domain/dtos/User.dto.js"; 
+import { UserResponse } from "../../domain/entities/User.js";
+import { ViewerDetails } from "../usecases/admin/GetViewerDetails.js";
+
 
 export class UserMapper {
     static toUserLoginResponseDTO(user: UserResponse): UserLoginResponseDTO {

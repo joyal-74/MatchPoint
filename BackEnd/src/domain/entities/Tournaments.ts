@@ -1,4 +1,4 @@
-import { paymentStatus } from "./Payment";
+import { paymentStatus } from "./Payment.js";
 
 export type TourStatus = "upcoming" | "ongoing" | "ended" | "cancelled";
 export type Format = 'knockout' | 'league' | 'friendly' | 'groups';

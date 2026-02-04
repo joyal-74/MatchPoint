@@ -1,6 +1,6 @@
-import { TrafficPoint } from "domain/dtos/Analytics.dto";
-import { TournamentTeamData } from "domain/dtos/Tournament";
-import { Registration } from "domain/entities/Registration";
+import { TrafficPoint } from "../../../../domain/dtos/Analytics.dto.js";
+import { TournamentTeamData } from "../../../../domain/dtos/Tournament.js";
+import { Registration } from "../../../../domain/entities/Registration.js";
 
 export interface IRegistrationRepository {
     create(registration: Omit<Registration, '_id' | 'createdAt' | 'updatedAt'>, ctx?: unknown): Promise<Registration>;

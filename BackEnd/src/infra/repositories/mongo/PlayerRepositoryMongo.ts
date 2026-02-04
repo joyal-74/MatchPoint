@@ -1,11 +1,12 @@
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
-import { PlayerProfileResponse } from "domain/dtos/Player.dto";
-import { Player, PlayerEntity, PlayerRegister, PlayerResponse, PopulatedPLayer } from "domain/entities/Player";
-import { UserRole } from "domain/enums/Roles";
-import { NotFoundError } from "domain/errors";
-import { PlayerModel } from "infra/databases/mongo/models/PlayerModel";
-import { PlayerDetailsMapper } from "infra/utils/mappers/PlayerDetailsMapper";
-import { PlayerMongoMapper } from "infra/utils/mappers/PlayerMongoMapper";
+import { IPlayerRepository } from "../../../app/repositories/interfaces/player/IPlayerRepository.js";
+import { PlayerProfileResponse } from "../../../domain/dtos/Player.dto.js";
+import { Player, PlayerEntity, PlayerRegister, PlayerResponse, PopulatedPLayer } from "../../../domain/entities/Player.js";
+import { UserRole } from "../../../domain/enums/Roles.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
+import { PlayerModel } from "../../databases/mongo/models/PlayerModel.js";
+import { PlayerDetailsMapper } from "../../utils/mappers/PlayerDetailsMapper.js";
+import { PlayerMongoMapper } from "../../utils/mappers/PlayerMongoMapper.js";
+
 
 
 export class PlayerRepositoryMongo implements IPlayerRepository {

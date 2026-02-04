@@ -1,4 +1,4 @@
-import { ThemeType, RoleType, GenderType } from "domain/enums";
+import { ThemeType, RoleType, GenderType } from "../../domain/enums/index.js";
 
 export interface UserSettingsDTO {
     location?: string;

@@ -1,15 +1,15 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IInitiateTournamentPayment, ITournamentRegistrationValidator } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
+import { IPaymentProvider } from "../../../providers/IPaymentProvider.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
+import { IRegistrationRepository } from "../../../repositories/interfaces/manager/IRegistrationRepository.js";
+import { TransactionService } from "../../../../infra/services/TransactionService.js";
+import { IUnitOfWork } from "../../../repositories/interfaces/shared/IUnitOfWork.js";
+import { ILogger } from "../../../providers/ILogger.js";
+import { BadRequestError, NotFoundError } from "../../../../domain/errors/index.js";
+import { Tournament } from "../../../../domain/entities/Tournaments.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { IPaymentProvider } from "app/providers/IPaymentProvider";
-import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
-import { IInitiateTournamentPayment, ITournamentRegistrationValidator } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
-import { IUnitOfWork } from "app/repositories/interfaces/shared/IUnitOfWork";
-import { TransactionService } from "infra/services/TransactionService";
-import { BadRequestError, NotFoundError } from "domain/errors";
-import { Tournament } from "domain/entities/Tournaments";
 
 @injectable()
 export class InitiateTournamentPayment implements IInitiateTournamentPayment {

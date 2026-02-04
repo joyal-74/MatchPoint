@@ -1,5 +1,5 @@
 import { Schema, model, Document, Types } from "mongoose";
-import { Tournament } from "domain/entities/Tournaments";
+import { Tournament } from "../../../../domain/entities/Tournaments.js";
 
 interface CanceledInfo {
     isCanceled: boolean;

@@ -1,5 +1,5 @@
-import { FormatStatPoint, TopTournamentPoint } from "domain/dtos/Analytics.dto";
-import { Tournament, TournamentRegister, TournamentTeam } from "domain/entities/Tournaments";
+import { FormatStatPoint, TopTournamentPoint } from "../../../../domain/dtos/Analytics.dto.js";
+import { Tournament, TournamentRegister, TournamentTeam } from "../../../../domain/entities/Tournaments.js";
 
 export interface ITournamentRepository {
     getByManager(managerId: string): Promise<Tournament[] | null>;

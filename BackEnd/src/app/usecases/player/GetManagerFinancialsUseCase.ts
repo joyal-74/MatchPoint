@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IFinancialRepository } from "../../repositories/interfaces/manager/IFinancialRepository.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
 
-import { IFinancialRepository } from "app/repositories/interfaces/manager/IFinancialRepository";
-import { NotFoundError } from "domain/errors";
 
 @injectable()
 export class GetManagerFinancialsUseCase {

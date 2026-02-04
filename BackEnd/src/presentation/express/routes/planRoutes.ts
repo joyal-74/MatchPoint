@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
-import { PlanController } from 'presentation/http/controllers/admin/PlanController';
+
 
 import { container } from "tsyringe";
+import { PlanController } from "../../http/controllers/admin/PlanController.js";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
 
 const router = Router();
 

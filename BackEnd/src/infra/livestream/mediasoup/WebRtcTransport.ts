@@ -1,5 +1,5 @@
-import { WebRtcTransport, WebRtcTransportOptions } from "mediasoup/node/lib/WebRtcTransportTypes";
-import { Router } from "mediasoup/node/lib/types";
+import { WebRtcTransport, WebRtcTransportOptions } from "mediasoup/types"; 
+import { Router } from "mediasoup/types";
 
 export const createWebRtcTransport = async (router: Router): Promise<WebRtcTransport> => {
     const announcedIp = process.env.PUBLIC_IP || "127.0.0.1";

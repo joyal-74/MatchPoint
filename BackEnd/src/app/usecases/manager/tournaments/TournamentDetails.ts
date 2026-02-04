@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IGetTournamentDetails } from "../../../repositories/interfaces/admin/IAdminUsecases.js";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { ILogger } from "../../../providers/ILogger.js";
+import { Tournament } from "../../../../domain/entities/Tournaments.js";
+import { NotFoundError } from "../../../../domain/errors/index.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { IGetTournamentDetails } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
-import { Tournament } from "domain/entities/Tournaments";
-import { NotFoundError } from "domain/errors";
 
 @injectable()
 export class GetTournamentDetails implements IGetTournamentDetails {
@@ -17,8 +17,6 @@ export class GetTournamentDetails implements IGetTournamentDetails {
     async execute(tournamentId: string): Promise<Tournament> {
         
         const tournament = await this._tournamentRepo.findById(tournamentId);
-
-        console.log(tournament, 'trnmrnt')
 
         if (!tournament) {
             this._logger.error(`Tournament not found: ${tournamentId}`);

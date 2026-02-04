@@ -1,8 +1,8 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-import { TeamRegister } from "domain/dtos/Team.dto";
-import { File } from "domain/entities/File";
-import { IAddTeamUseCase, ICreateChatForTeamUseCase } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
+import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { TeamRegister } from "../../domain/dtos/Team.dto.js";
+import { File } from "../../domain/entities/File.js";
+import { IAddTeamUseCase, ICreateChatForTeamUseCase } from "../../app/repositories/interfaces/usecases/ITeamUsecaseRepository.js";
 
 @injectable()
 export class TeamSetupService {

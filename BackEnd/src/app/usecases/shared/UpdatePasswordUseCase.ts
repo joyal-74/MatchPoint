@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { ISettingsRepository } from "../../repositories/interfaces/shared/ISettingsRepo.js";
+import { IPasswordHasher } from "../../providers/IPasswordHasher.js";
+import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
 
-import { IPasswordHasher } from "app/providers/IPasswordHasher";
-import { ISettingsRepository } from "app/repositories/interfaces/shared/ISettingsRepo";
-import { BadRequestError, NotFoundError } from "domain/errors";
 
 @injectable()
 export class UpdatePasswordUseCase {

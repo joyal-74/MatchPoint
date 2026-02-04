@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IPlayerRepository } from "../../repositories/interfaces/player/IPlayerRepository.js";
+import { IManagerRepository } from "../../repositories/interfaces/manager/IManagerRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
 
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
-import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
-import { ILogger } from "app/providers/ILogger";
 
 @injectable()
 export class DeleteUnverifiedUsers {

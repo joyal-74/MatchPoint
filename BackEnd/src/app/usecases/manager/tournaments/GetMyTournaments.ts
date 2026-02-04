@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IGetMyTournaments } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
+import { ILogger } from "../../../providers/ILogger.js";
 
-import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { ILogger } from "app/providers/ILogger";
-import { IGetMyTournaments } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 
 @injectable()
 export class GetMyTournamentsUseCase implements IGetMyTournaments {

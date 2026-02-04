@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { expressAdapter } from 'presentation/adaptors/ExpressAdaptor';
-import { expressFileUpdateHandler } from 'presentation/adaptors/ExpressFileAdaptor';
-import { AuthController } from 'presentation/http/controllers/authentication/AuthController';
+
 import { container } from 'tsyringe';
+import { AuthController } from '../../http/controllers/authentication/AuthController.js';
+import { expressAdapter } from '../../adaptors/ExpressAdaptor.js';
+import { expressFileUpdateHandler } from '../../adaptors/ExpressFileAdaptor.js';
 
 const router = Router();
 const upload = multer();

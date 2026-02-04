@@ -1,9 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-
-import { ILogger } from "app/providers/ILogger";
-import { IGetDashboardStatsUseCase } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { IDashboardRepository } from "app/repositories/interfaces/admin/IDashboardRepository";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IDashboardRepository } from "../../repositories/interfaces/admin/IDashboardRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { IGetDashboardStatsUseCase } from "../../repositories/interfaces/admin/IAdminUsecases.js";
 
 
 @injectable()
@@ -15,6 +14,7 @@ export class GetDashboardStatsUseCase implements IGetDashboardStatsUseCase {
     ) {}
 
     async execute() {
+        this._logger.info('Fetching dashboard ststistics')
         return await this._dashboardRepository.getDashboardStats();
     }
 }

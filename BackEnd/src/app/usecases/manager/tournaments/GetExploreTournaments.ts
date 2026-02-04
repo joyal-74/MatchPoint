@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IGetExploreTournaments } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
+import { ILogger } from "../../../providers/ILogger.js";
+import { Tournament } from "../../../../domain/entities/Tournaments.js";
 
-import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { ILogger } from "app/providers/ILogger";
-import { IGetExploreTournaments } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
-import { Tournament } from "domain/entities/Tournaments";
 
 @injectable()
 export class ExploreTournamentsUseCase implements IGetExploreTournaments {

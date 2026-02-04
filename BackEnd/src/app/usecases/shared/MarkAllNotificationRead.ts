@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IMarkAllNotificationRead } from "../../repositories/interfaces/player/INotificationUseCase.js";
+import { INotificationRepository } from "../../repositories/interfaces/shared/INotificationRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
 
-import { INotificationRepository } from "app/repositories/interfaces/shared/INotificationRepository";
-import { IMarkAllNotificationRead } from "app/repositories/interfaces/player/INotificationUseCase";
-import { ILogger } from "app/providers/ILogger";
 
 @injectable()
 export class MarkAllNotificationRead implements IMarkAllNotificationRead {

@@ -1,14 +1,15 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
 
-import { IFileStorage } from "app/providers/IFileStorage";
-import { IUpdateUmpireProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { UmpireResponseDTO, UmpireUpdateDTO } from "domain/dtos/Umpire.dto";
-import { File } from "domain/entities/File";
-import { NotFoundError } from "domain/errors";
-import { validateUmpireUpdate } from "domain/validators/UmpireProfileValidator";
-import { UserMapper } from "app/mappers/UserMapper";
+import { File } from "../../../domain/entities/File.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IUpdateUmpireProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IFileStorage } from "../../providers/IFileStorage.js";
+import { UmpireResponseDTO, UmpireUpdateDTO } from "../../../domain/dtos/Umpire.dto.js";
+import { validateUmpireUpdate } from "../../../domain/validators/UmpireProfileValidator.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
+import { UserMapper } from "../../mappers/UserMapper.js";
+
 
 @injectable()
 export class UpdateUmpireProfile implements IUpdateUmpireProfile {

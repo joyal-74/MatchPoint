@@ -1,4 +1,4 @@
-import { sportProfileConfig, sportCareerStatsConfig } from '../../infra/utils/sportsConfig'
+import { sportProfileConfig, sportCareerStatsConfig } from '../../infra/utils/sportsConfig.js'
 
 export function getDefaultProfile(sport: string) {
     const key = sport.toLowerCase();

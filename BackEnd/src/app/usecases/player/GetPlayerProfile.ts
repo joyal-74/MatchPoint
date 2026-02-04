@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IGetPlayerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
+import { IPlayerRepository } from "../../repositories/interfaces/player/IPlayerRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { PlayerProfileResponse } from "../../../domain/dtos/Player.dto.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
+import { PlayerMapper } from "../../mappers/PlayerMapper.js";
 
-import { PlayerMapper } from "app/mappers/PlayerMapper";
-import { PlayerProfileResponse } from "domain/dtos/Player.dto";
-import { NotFoundError } from "domain/errors";
-import { ILogger } from "app/providers/ILogger";
-import { IGetPlayerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
 
 @injectable()
 export class GetPlayerProfile implements IGetPlayerProfile {

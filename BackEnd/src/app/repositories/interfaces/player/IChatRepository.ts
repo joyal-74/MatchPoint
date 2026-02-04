@@ -1,4 +1,4 @@
-import { Chat } from "domain/entities/Chat"; 
+import { Chat } from "../../../../domain/entities/Chat.js"; 
 
 export interface IChatRepository {
     findChatsForUser(id: string): Promise<Chat | null>;

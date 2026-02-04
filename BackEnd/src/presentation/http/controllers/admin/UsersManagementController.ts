@@ -1,15 +1,15 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
 
-import { IGetManagersUsecase, IGetPlayersUsecase, IGetViewersUsecase, IGetManagerDetails, IGetPlayerDetails, IGetViewerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
-import { HttpResponse } from "presentation/http/helpers/HttpResponse";
-import { IUsersManagementController } from "presentation/http/interfaces/IUsersManagementController";
-import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
-import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
-import { IUserManagementService } from "app/repositories/interfaces/services/AdminUserServices";
-import { AdminUserMessages } from "domain/constants/admin/AdminUserMessages";
+import { IGetManagersUsecase, IGetPlayersUsecase, IGetViewersUsecase, IGetManagerDetails, IGetPlayerDetails, IGetViewerDetails } from "../../../../app/repositories/interfaces/admin/IAdminUsecases.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
+import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
+import { HttpResponse } from "../../helpers/HttpResponse.js";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
+import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
+import { IUsersManagementController } from "../../interfaces/IUsersManagementController.js";
+import { IUserManagementService } from "../../../../app/repositories/interfaces/services/AdminUserServices.js";
+import { AdminUserMessages } from "../../../../domain/constants/admin/AdminUserMessages.js";
 
 @injectable()
 export class UsersManagementController implements IUsersManagementController {

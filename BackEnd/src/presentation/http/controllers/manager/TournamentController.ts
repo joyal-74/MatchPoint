@@ -1,8 +1,3 @@
-import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-
-import { ILogger } from "app/providers/ILogger";
-import { IGetPointsTableUseCase, IGetTourLeaderboard, IStartTournament } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 import {
     IAddTournament,
     ICancelTournament,
@@ -18,15 +13,19 @@ import {
     ICreateMatchesUseCase,
     IGetTournamentMatches,
     IGetDashboardAnalytics,
-    IGetMyTournamentMatchResult
-} from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
-import { TournamentMessages } from "domain/constants/TournamentMessages";
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
-import { HttpResponse } from "presentation/http/helpers/HttpResponse";
-import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
-import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
-import { ITournamentController } from "presentation/http/interfaces/ITournamentController";
+    IGetMyTournamentMatchResult,
+} from "../../../../app/repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
+import { injectable, inject } from "tsyringe";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
+import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
+import { HttpResponse } from "../../helpers/HttpResponse.js";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
+import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
+import { ITournamentController } from "../../interfaces/ITournamentController.js";
+import { TournamentMessages } from "../../../../domain/constants/TournamentMessages.js";
+import { ILogger } from "../../../../app/providers/ILogger.js";
+import { IGetPointsTableUseCase, IGetTourLeaderboard, IStartTournament } from "../../../../app/repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
 
 @injectable()
 export class TournamentController implements ITournamentController {

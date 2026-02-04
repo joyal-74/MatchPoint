@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import jwt from "jsonwebtoken";
-import { UserModel } from "infra/databases/mongo/models/UserModel";
+import { UserModel } from "../../../infra/databases/mongo/models/UserModel.js";
 
 export interface AuthenticatedSocket extends Socket {
     user?: {

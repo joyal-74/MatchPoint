@@ -1,4 +1,4 @@
-import { PointsRow } from 'domain/entities/PointsTable';
+import { PointsRow } from '../../../../domain/entities/PointsTable.js';
 import { Schema, Types, model } from 'mongoose';
 
 export interface PointsTableDocument extends Omit<PointsRow, "tournamentId" | "teamId" | "_id"> {

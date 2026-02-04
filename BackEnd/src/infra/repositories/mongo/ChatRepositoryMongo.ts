@@ -1,6 +1,7 @@
-import { IChatRepository } from "app/repositories/interfaces/player/IChatRepository";
-import { Chat } from "domain/entities/Chat";
-import { ChatModel } from "infra/databases/mongo/models/ChatModel";
+import { IChatRepository } from "../../../app/repositories/interfaces/player/IChatRepository.js";
+import { Chat } from "../../../domain/entities/Chat.js";
+import { ChatModel } from "../../databases/mongo/models/ChatModel.js";
+
 
 
 export class ChatRepositoryMongo implements IChatRepository {

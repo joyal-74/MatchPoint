@@ -1,4 +1,4 @@
-import { AdminFilters, Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "domain/dtos/Team.dto";
+import { AdminFilters, Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "../../../../domain/dtos/Team.dto.js";
 
 export interface ITeamRepository {
     findByName(name: string): Promise<TeamData | null>;

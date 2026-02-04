@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IUserLoginUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository.js";
+import { IPasswordHasher } from "../../providers/IPasswordHasher.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { NotFoundError, UnauthorizedError } from "../../../domain/errors/index.js";
+import { UserMapper } from "../../mappers/UserMapper.js";
+import { JwtPayload } from "../../../domain/entities/JwtPayload.js";
 
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
-import { JwtPayload } from "domain/entities/JwtPayload";
-import { NotFoundError, UnauthorizedError } from "domain/errors";
-import { IPasswordHasher } from "app/providers/IPasswordHasher";
-import { ILogger } from "app/providers/ILogger";
-import { IUserLoginUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
-import { UserMapper } from "app/mappers/UserMapper";
 
 @injectable()
 export class LoginUser implements IUserLoginUseCase {

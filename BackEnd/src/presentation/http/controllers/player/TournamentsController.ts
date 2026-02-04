@@ -1,15 +1,14 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-
-import { ILogger } from "app/providers/ILogger";
-import { IGetPlayerMatches, IGetPlayerTournamentMatches, IGetPlayerTournaments, IGetTournamentPointsTable, IGetTournamentStats } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
-import { TournamentMessages } from "domain/constants/TournamentMessages";
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
-import { HttpResponse } from "presentation/http/helpers/HttpResponse";
-import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
-import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
-import { ITournamentDetails } from "app/repositories/interfaces/player/ITournamentUsecases";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
+import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
+import { HttpResponse } from "../../helpers/HttpResponse.js";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
+import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
+import { IGetPlayerMatches, IGetPlayerTournamentMatches, IGetPlayerTournaments, IGetTournamentPointsTable, IGetTournamentStats } from "../../../../app/repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
+import { ITournamentDetails } from "../../../../app/repositories/interfaces/player/ITournamentUsecases.js";
+import { ILogger } from "../../../../app/providers/ILogger.js";
+import { TournamentMessages } from "../../../../domain/constants/TournamentMessages.js";
 
 @injectable()
 export class TournamentsController {

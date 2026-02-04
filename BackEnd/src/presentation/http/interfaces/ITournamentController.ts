@@ -1,5 +1,5 @@
-import { IHttpRequest } from "./IHttpRequest";
-import { IHttpResponse } from "./IHttpResponse";
+import { IHttpRequest } from "./IHttpRequest.js";
+import { IHttpResponse } from "./IHttpResponse.js";
 
 export interface ITournamentController {
     getMyTournaments(httpRequest: IHttpRequest): Promise<IHttpResponse>;

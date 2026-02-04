@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
-import { ChatController } from "presentation/http/controllers/player/ChatController";
-import { MessageController } from "presentation/http/controllers/player/MessageController";
 import { container } from "tsyringe";
-import { playerOnly } from "../middlewares";
+import { MessageController } from "../../http/controllers/player/MessageController.js";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
+import { playerOnly } from "../middlewares/index.js";
+import { ChatController } from "../../http/controllers/player/ChatController.js";
+
 
 const router = Router();
 

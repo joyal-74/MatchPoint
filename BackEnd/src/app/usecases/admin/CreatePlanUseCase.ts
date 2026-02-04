@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { ICreatePlan } from "../../repositories/interfaces/admin/IAdminUsecases.js";
+import { IPlanRepository } from "../../repositories/interfaces/admin/IPlanRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { Plan } from "../../../domain/entities/Plan.js";
+import { BadRequestError } from "../../../domain/errors/index.js";
 
-import { ILogger } from "app/providers/ILogger"; // Assuming you have this
-import { ICreatePlan } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { IPlanRepository } from "app/repositories/interfaces/admin/IPlanRepository";
-import { Plan } from "domain/entities/Plan";
-import { BadRequestError } from "domain/errors";
 
 @injectable()
 export class CreatePlanUseCase implements ICreatePlan {

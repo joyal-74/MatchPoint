@@ -1,8 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-import { ILogger } from "app/providers/ILogger";
-import { IGetMyTournamentMatchResult } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
-import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IGetMyTournamentMatchResult } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
+import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo.js";
+import { ILogger } from "../../../providers/ILogger.js";
+
 
 @injectable()
 export class GetMyTournamentMatchResult implements IGetMyTournamentMatchResult {
@@ -15,8 +16,6 @@ export class GetMyTournamentMatchResult implements IGetMyTournamentMatchResult {
         this._logger.info(`[GetMyTournamentsUseCase] Fetching tournaments for managerId=${managerId}`);
 
         const tournaments = await this._matchStatsRepo.getCompletedMatches(managerId) ?? [];
-
-        console.log(tournaments, 'ggg')
 
         this._logger.info(`[GetMyTournamentsUseCase] Fetched ${tournaments.length} tournaments`);
 

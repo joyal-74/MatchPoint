@@ -1,7 +1,8 @@
 import Razorpay from 'razorpay';
-import { IPaymentProvider, PaymentSession } from '../../app/providers/IPaymentProvider';
-import { BadRequestError } from 'domain/errors';
-import { PaymentMetadata } from 'app/repositories/interfaces/IBasePaymentMetaData';
+import { IPaymentProvider, PaymentSession } from '../../app/providers/IPaymentProvider.js';
+import { BadRequestError } from '../../domain/errors/index.js';
+import { PaymentMetadata } from '../../app/repositories/interfaces/IBasePaymentMetaData.js';
+
 
 export class RazorpayProvider implements IPaymentProvider {
     private razorpay: Razorpay;

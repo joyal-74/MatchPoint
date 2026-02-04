@@ -1,4 +1,6 @@
-import { IPointsTableRepository } from "app/repositories/interfaces/shared/IPointsTableRepository";
+import { inject, injectable } from "tsyringe";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IPointsTableRepository } from "../../repositories/interfaces/shared/IPointsTableRepository.js";
 
 interface MatchResult {
     winner: string;
@@ -10,8 +12,11 @@ interface MatchResult {
     oversFacedLoser: number;
 }
 
+@injectable()
 export class UpdatePointsAfterMatch {
-    constructor(private pointsRepo: IPointsTableRepository) {}
+    constructor(
+        @inject(DI_TOKENS.PointsTableRepository) private pointsRepo: IPointsTableRepository
+    ) {}
 
     async execute(matchData: MatchResult): Promise<void> {
         // 1. Fetch current stats for both teams

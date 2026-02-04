@@ -1,10 +1,11 @@
-import { ITransactionRepository, TransactionStats } from "app/repositories/interfaces/shared/ITransactionRepository";
-import { RevenueChartPoint } from "domain/dtos/Analytics.dto";
-import { AdminFilters } from "domain/dtos/Team.dto";
-import { TransactionCheckDTO, TransactionCreateDTO } from "domain/dtos/Transaction.dto";
-import { Transaction } from "domain/entities/Transaction";
-import { TransactionModel } from "infra/databases/mongo/models/TransactionModel";
+
 import mongoose, { ClientSession, FilterQuery } from "mongoose";
+import { TransactionCheckDTO, TransactionCreateDTO } from "../../../domain/dtos/Transaction.dto.js";
+import { ITransactionRepository, TransactionStats } from "../../../app/repositories/interfaces/shared/ITransactionRepository.js";
+import { TransactionModel } from "../../databases/mongo/models/TransactionModel.js";
+import { Transaction } from "../../../domain/entities/Transaction.js";
+import { AdminFilters } from "../../../domain/dtos/Team.dto.js";
+import { RevenueChartPoint } from "../../../domain/dtos/Analytics.dto.js";
 
 
 export class TransactionRepository implements ITransactionRepository {

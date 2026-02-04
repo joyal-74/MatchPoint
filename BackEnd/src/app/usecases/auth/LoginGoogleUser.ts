@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { ILoginGoogleUser } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository.js";
+import { IGoogleAuthServices } from "../../services/auth/IGoogleAuthService.js";
+import { IUserAuthServices } from "../../services/auth/IUserAuthServices.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { UnauthorizedError } from "../../../domain/errors/index.js";
+import { JwtTempPayload } from "../../../domain/entities/JwtPayload.js";
 
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
-import { JwtTempPayload } from "domain/entities/JwtPayload";
-import { ILogger } from "app/providers/ILogger";
-import { ILoginGoogleUser } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
-import { UnauthorizedError } from "domain/errors";
-import { IGoogleAuthServices } from "app/services/auth/IGoogleAuthService";
-import { IUserAuthServices } from "app/services/auth/IUserAuthServices";
 
 @injectable()
 export class LoginGoogleUser implements ILoginGoogleUser {

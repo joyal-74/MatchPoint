@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IDeletePlan } from "../../repositories/interfaces/admin/IAdminUsecases.js";
+import { IPlanRepository } from "../../repositories/interfaces/admin/IPlanRepository.js";
 
-import { IDeletePlan } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { IPlanRepository } from "app/repositories/interfaces/admin/IPlanRepository";
 
 @injectable()
 export class DeletePlanUseCase implements IDeletePlan {

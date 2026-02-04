@@ -1,5 +1,6 @@
-import { AdminResponse } from "domain/entities/Admin";
-import { AdminToResponseDTO } from "domain/dtos/Admin.dto";
+import { AdminToResponseDTO } from "../../domain/dtos/Admin.dto.js";
+import { AdminResponse } from "../../domain/entities/Admin.js";
+
 
 export class AdminMapper {
     static toAdminDTO(admin: AdminResponse): AdminToResponseDTO {

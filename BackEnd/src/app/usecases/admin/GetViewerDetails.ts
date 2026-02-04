@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IGetViewerDetails } from "../../repositories/interfaces/admin/IAdminUsecases.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
+import { UserMapper } from "../../mappers/UserMapper.js";
 
-import { UserMapper } from "app/mappers/UserMapper";
-import { ILogger } from "app/providers/ILogger";
-import { IGetViewerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { NotFoundError } from "domain/errors";
 
 export interface ViewerDetails {
     _id: string;

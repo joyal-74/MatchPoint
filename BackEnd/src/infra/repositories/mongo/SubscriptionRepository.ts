@@ -1,9 +1,9 @@
-import { UpdateQuery } from "mongoose"; // Import this
-import { ISubscriptionRepository } from "app/repositories/interfaces/shared/ISubscriptionRepository";
-import { UserSubscriptionModel, UserSubscriptionDocument } from "infra/databases/mongo/models/SubscriptionModel";
-import { BillingCycle, PlanLevel, UserSubscription } from "domain/entities/Plan";
-import { SubscriptionMapper } from "infra/utils/mappers/SubscriptionMapper";
-import { BadRequestError, NotFoundError } from "domain/errors";
+import { UpdateQuery } from "mongoose";
+import { BillingCycle, PlanLevel, UserSubscription } from "../../../domain/entities/Plan.js";
+import { ISubscriptionRepository } from "../../../app/repositories/interfaces/shared/ISubscriptionRepository.js";
+import { UserSubscriptionDocument, UserSubscriptionModel } from "../../databases/mongo/models/SubscriptionModel.js";
+import { SubscriptionMapper } from "../../utils/mappers/SubscriptionMapper.js";
+import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
 
 const getPlanRank = (level: PlanLevel): number => {
     const ranks: Record<PlanLevel, number> = { "Free": 0, "Super": 1, "Premium": 2 };

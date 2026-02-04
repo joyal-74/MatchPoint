@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IGetPlayerJoinedTeamsUseCase } from "../../repositories/interfaces/player/ITeamRepositoryUsecase.js";
+import { IPlayerTeamServices } from "../../services/player/IPlayerTeamServices.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { PlayerTeamResponseDTO } from "../../../domain/dtos/Team.dto.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { IPlayerTeamServices } from "app/services/player/IPlayerTeamServices";
-import { PlayerTeamResponseDTO } from "domain/dtos/Team.dto";
-import { IGetPlayerJoinedTeamsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 
 @injectable()
 export class GetPlayerJoinedTeamsUseCase implements IGetPlayerJoinedTeamsUseCase {

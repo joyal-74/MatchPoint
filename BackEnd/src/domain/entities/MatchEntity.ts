@@ -1,6 +1,6 @@
-import { ExtraType } from "./Extra";
-import { MatchStatus } from "./Fixture";
-import { AddWicketPayload, Innings } from "./Innings";
+import { ExtraType } from "./Extra.js";
+import { MatchStatus } from "./Fixture.js";
+import { AddWicketPayload, Innings } from "./Innings.js";
 
 export type MatchEndInfo = {
     type: "NORMAL" | "ABANDONED" | "NO_RESULT" | null;

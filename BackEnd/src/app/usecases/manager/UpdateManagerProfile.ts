@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { ManagerResponseDTO, ManagerUpdateDTO } from "../../../domain/dtos/Manager.dto.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IFileStorage } from "../../providers/IFileStorage.js";
+import { validateManagerUpdate } from "../../../domain/validators/ManagerUpdateValidator.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
+import { ManagerMapper } from "../../mappers/ManagerMapper.js";
+import { IUpdateManagerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
+import { File } from "../../../domain/entities/File.js";
 
-import { ManagerMapper } from "app/mappers/ManagerMapper";
-import { IFileStorage } from "app/providers/IFileStorage";
-import { IUpdateManagerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { ManagerResponseDTO, ManagerUpdateDTO } from "domain/dtos/Manager.dto";
-import { File } from "domain/entities/File";
-import { NotFoundError } from "domain/errors";
-import { validateManagerUpdate } from "domain/validators/ManagerUpdateValidator";
 
 @injectable()
 export class UpdateManagerProfile implements IUpdateManagerProfile {

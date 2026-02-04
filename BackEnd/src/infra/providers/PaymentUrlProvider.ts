@@ -1,4 +1,5 @@
-import { IPaymentUrlProvider } from "app/providers/IPaymentUrlsProvider";
+import { IPaymentUrlProvider } from "../../app/providers/IPaymentUrlsProvider.js";
+
 
 export class PaymentUrlProvider implements IPaymentUrlProvider {
     constructor(

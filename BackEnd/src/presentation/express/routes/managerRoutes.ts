@@ -1,13 +1,14 @@
 import { Router } from "express";
 import multer from "multer";
-import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
-import { expressFileUpdateHandler } from "presentation/adaptors/ExpressFileAdaptor";
 import { container } from "tsyringe";
-import { ProfileController } from "presentation/http/controllers/manager/ProfileController";
-import { TeamController } from "presentation/http/controllers/manager/TeamController";
-import { TournamentController } from "presentation/http/controllers/manager/TournamentController";
-import { MatchController } from "presentation/http/controllers/manager/MatchController";
-import { FinancialsController } from "presentation/http/controllers/manager/FinancialsController";
+import { ProfileController } from "../../http/controllers/manager/ProfileController.js";
+import { TeamController } from "../../http/controllers/manager/TeamController.js";
+import { TournamentController } from "../../http/controllers/manager/TournamentController.js";
+import { MatchController } from "../../http/controllers/manager/MatchController.js";
+import { FinancialsController } from "../../http/controllers/manager/FinancialsController.js";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
+import { expressFileUpdateHandler } from "../../adaptors/ExpressFileAdaptor.js";
+
 
 const router = Router();
 const upload = multer();
@@ -66,8 +67,6 @@ router.post("/tournament/matches/:matchId/save", expressAdapter(matchController.
 router.post("/tournament/matches/start", expressAdapter(matchController.startMatchData));
 
 router.get("/financials/:managerId", expressAdapter(financialsController.getReport));
-
-
 
 
 export default router;

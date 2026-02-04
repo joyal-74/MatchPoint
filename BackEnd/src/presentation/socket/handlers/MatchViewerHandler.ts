@@ -1,8 +1,8 @@
 import { Server } from "socket.io";
-import { AuthenticatedSocket } from "../SocketServer";
-import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { AuthenticatedSocket } from "../SocketServer.js";
+import { IMatchStatsRepo } from "../../../app/repositories/interfaces/manager/IMatchStatsRepo.js"; 
 import { inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js"; 
 
 export class MatchViewerHandler {
     constructor(

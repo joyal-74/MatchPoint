@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
-import { IAdminRepository } from "app/repositories/interfaces/admin/IAdminRepository";
+import { IJWTRepository } from "../../../app/repositories/interfaces/providers/IjwtRepository.js";
+import { IAdminRepository } from "../../../app/repositories/interfaces/admin/IAdminRepository.js";
+import { HttpStatusCode } from "../../../domain/enums/StatusCodes.js";
+import { buildResponse } from "../../../infra/utils/responseBuilder.js";
+
 
 interface AuthRequest extends Request {
     user?: { id: string; role: string };

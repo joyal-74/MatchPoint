@@ -1,12 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IManagerRepository } from "../../repositories/interfaces/manager/IManagerRepository.js";
+import { IGetManagerDetails } from "../../repositories/interfaces/admin/IAdminUsecases.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { InternalServerError, NotFoundError } from "../../../domain/errors/index.js";
+import { User } from "../../../domain/entities/User.js";
+import { ManagerMapper } from "../../mappers/ManagerMapper.js";
 
-import { ManagerMapper } from "app/mappers/ManagerMapper";
-import { ILogger } from "app/providers/ILogger";
-import { IGetManagerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
-import { User } from "domain/entities/User";
-import { InternalServerError, NotFoundError } from "domain/errors";
+
 
 export interface ManagerDetails {
     _id: string;

@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IResendOtpUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository.js";
+import { IMailRepository } from "../../providers/IMailRepository.js";
+import { IOtpGenerator } from "../../providers/IOtpGenerator.js";
+import { OtpContext } from "../../../domain/enums/OtpContext.js";
+import { BadRequestError } from "../../../domain/errors/index.js";
 
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
-import { IMailRepository } from "app/providers/IMailRepository";
-import { BadRequestError } from "domain/errors";
-import { IOtpGenerator } from "app/providers/IOtpGenerator";
-import { OtpContext } from "domain/enums/OtpContext";
-import { IResendOtpUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 
 @injectable()
 export class ResendOtp implements IResendOtpUseCase {

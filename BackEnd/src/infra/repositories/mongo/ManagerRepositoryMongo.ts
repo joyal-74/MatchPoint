@@ -1,9 +1,9 @@
-import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
-import { UserRole } from "domain/enums/Roles";
-import { ManagerModel } from "infra/databases/mongo/models/ManagerModel";
-import { Manager, ManagerRegister, ManagerResponse } from "domain/entities/Manager";
-import { NotFoundError } from "domain/errors";
 import { Types } from "mongoose";
+import { IManagerRepository } from "../../../app/repositories/interfaces/manager/IManagerRepository.js";
+import { ManagerModel } from "../../databases/mongo/models/ManagerModel.js";
+import { Manager, ManagerRegister, ManagerResponse } from "../../../domain/entities/Manager.js";
+import { UserRole } from "../../../domain/enums/Roles.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
 
 
 export class ManagerRepositoryMongo implements IManagerRepository {

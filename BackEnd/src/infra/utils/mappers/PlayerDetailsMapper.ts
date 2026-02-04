@@ -1,4 +1,4 @@
-import { PlayerEntity } from "domain/entities/Player";
+import { PlayerEntity } from "../../../domain/entities/Player.js";
 
 export class PlayerDetailsMapper {
     static toEntity(doc: any): PlayerEntity {

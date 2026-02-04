@@ -2,7 +2,7 @@ import {
     TransactionStatus,
     TransactionType,
     PaymentProvider
-} from "../dtos/Transaction.dto";
+} from "../dtos/Transaction.dto.js";
 
 export class Transaction {
     constructor(

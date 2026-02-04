@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../../domain/constants/Identifiers.js";
+import { ICreateTournamentFixtures } from "../../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
+import { IFixturesRepository } from "../../../../repositories/interfaces/manager/IFixturesRepository.js";
+import { ILogger } from "../../../../providers/ILogger.js";
+import { BadRequestError, NotFoundError } from "../../../../../domain/errors/index.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { IFixturesRepository } from "app/repositories/interfaces/manager/IFixturesRepository";
-import { ICreateTournamentFixtures } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
-import { BadRequestError, NotFoundError } from "domain/errors";
 
 @injectable()
 export class CreateFixtureUseCase implements ICreateTournamentFixtures {

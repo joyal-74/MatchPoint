@@ -1,8 +1,9 @@
-import { MatchEntity } from "domain/entities/MatchEntity";
-import { Innings } from "domain/entities/Innings";
-import { Batsman } from "domain/entities/Batsman";
-import { Bowler } from "domain/entities/Bowler";
-import { LiveScoreDto } from "domain/dtos/LiveScoreDto";
+import { LiveScoreDto } from "../../domain/dtos/LiveScoreDto.js";
+import { Batsman } from "../../domain/entities/Batsman.js";
+import { Bowler } from "../../domain/entities/Bowler.js";
+import { Innings } from "../../domain/entities/Innings.js";
+import { MatchEntity } from "../../domain/entities/MatchEntity.js";
+
 
 const ballsToOvers = (totalBalls: number): number => {
     if (!totalBalls) return 0;

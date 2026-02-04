@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-import { IWalletRepository } from "app/repositories/interfaces/shared/IWalletRepository";
-import { ILogger } from "app/providers/ILogger";
-import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
-import { ITournamentRefundService } from "app/services/manager/ITournamentServices";
-import { ITransactionRepository } from "app/repositories/interfaces/shared/ITransactionRepository";
-import { TransactionStatus, TransactionType } from "domain/dtos/Transaction.dto";
+import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { IWalletRepository } from "../../app/repositories/interfaces/shared/IWalletRepository.js";
+import { ILogger } from "../../app/providers/ILogger.js";
+import { IRegistrationRepository } from "../../app/repositories/interfaces/manager/IRegistrationRepository.js";
+import { ITournamentRefundService } from "../../app/services/manager/ITournamentServices.js";
+import { ITransactionRepository } from "../../app/repositories/interfaces/shared/ITransactionRepository.js";
+import { TransactionStatus, TransactionType } from "../../domain/dtos/Transaction.dto.js";
 
 @injectable()
 export class TournamentRefundService implements ITournamentRefundService {

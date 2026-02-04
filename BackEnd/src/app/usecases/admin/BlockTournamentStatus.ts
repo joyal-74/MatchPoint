@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IChangeTournamentDetailStatus } from "../../repositories/interfaces/admin/IAdminUsecases.js";
+import { ITournamentRepository } from "../../repositories/interfaces/shared/ITournamentRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { IChangeTournamentDetailStatus } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
 
 @injectable()
 export class ChangeTournamentDetailStatus implements IChangeTournamentDetailStatus {
@@ -13,8 +13,6 @@ export class ChangeTournamentDetailStatus implements IChangeTournamentDetailStat
     ) { }
 
     async execute(tourId: string, status: boolean) {
-
-        console.log(status, 'ppp')
 
         const tournament = await this._tourRepository.update(tourId, { isBlocked: status });
         this._logger.info(`User with ID ${tourId} status changed to ${status}`);

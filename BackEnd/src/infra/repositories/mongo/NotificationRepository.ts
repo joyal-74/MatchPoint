@@ -1,6 +1,5 @@
-import { INotificationRepository, CreateNotificationDTO, NotificationResponse } from
-    "app/repositories/interfaces/shared/INotificationRepository";
-import { NotificationDocument, NotificationModel } from "infra/databases/mongo/models/NotificationModel";
+import { CreateNotificationDTO, INotificationRepository, NotificationResponse } from "../../../app/repositories/interfaces/shared/INotificationRepository.js";
+import { NotificationDocument, NotificationModel } from "../../databases/mongo/models/NotificationModel.js";
 
 export class NotificationRepository implements INotificationRepository {
 

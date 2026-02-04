@@ -1,4 +1,4 @@
-import { InitInningsPayload, MatchEntity } from "domain/entities/MatchEntity";
+import { InitInningsPayload, MatchEntity } from "../../../domain/entities/MatchEntity.js"; 
 
 export interface IMatchScoreService {
     initInnings(payload: InitInningsPayload): Promise<MatchEntity | null>;

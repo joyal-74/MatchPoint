@@ -1,4 +1,4 @@
-import { Manager, ManagerRegister, ManagerResponse } from "domain/entities/Manager";
+import { Manager, ManagerRegister, ManagerResponse } from "../../../../domain/entities/Manager.js";
 
 export interface IManagerRepository {
     findById(_id: string): Promise<ManagerResponse | null>;

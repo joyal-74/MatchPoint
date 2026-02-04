@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IResetPasswordUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository.js";
+import { IPasswordHasher } from "../../providers/IPasswordHasher.js";
+import { BadRequestError } from "../../../domain/errors/index.js";
+import { OtpContext } from "../../../domain/enums/OtpContext.js";
 
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
-import { IPasswordHasher } from "app/providers/IPasswordHasher";
-import { BadRequestError } from "domain/errors";
-import { OtpContext } from "domain/enums/OtpContext";
-import { IResetPasswordUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 
 @injectable()
 export class ResetPassword implements IResetPasswordUseCase {

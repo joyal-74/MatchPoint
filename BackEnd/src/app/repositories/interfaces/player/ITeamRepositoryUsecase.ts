@@ -1,4 +1,4 @@
-import { Filters, PlayerTeamResponseDTO, TeamData, TeamDataFull, TeamDataSummary } from "domain/dtos/Team.dto";
+import { Filters, PlayerTeamResponseDTO, TeamData, TeamDataFull, TeamDataSummary } from "../../../../domain/dtos/Team.dto.js";
 
 export interface IGetPlayerTeamsUseCase {
     execute(filters: Filters): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;

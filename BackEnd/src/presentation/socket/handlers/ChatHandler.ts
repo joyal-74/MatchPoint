@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 import { Types } from "mongoose";
-import { AuthenticatedSocket } from "../SocketServer"; 
-import { MessageModel } from "infra/databases/mongo/models/MessageModel";
+import { AuthenticatedSocket } from "../SocketServer.js"; 
+import { MessageModel } from "../../../infra/databases/mongo/models/MessageModel.js";
 
 export class ChatHandler {
     constructor(

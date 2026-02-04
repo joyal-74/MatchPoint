@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { ManagerResponseDTO } from "../../../domain/dtos/Manager.dto.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
+import { ManagerMapper } from "../../mappers/ManagerMapper.js";
+import { IGetManagerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
 
-import { ManagerMapper } from "app/mappers/ManagerMapper";
-import { IGetManagerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { ManagerResponseDTO } from "domain/dtos/Manager.dto";
-import { NotFoundError } from "domain/errors";
 
 @injectable()
 export class GetManagerProfile implements IGetManagerProfile {

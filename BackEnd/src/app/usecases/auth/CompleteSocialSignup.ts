@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { ISocialUserAuthUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository.js";
+import { IUserServices } from "../../services/user/IUserServices.js";
+import { IPlayerService } from "../../services/player/IPlayerService.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { SocialUserRegisterData } from "../../../domain/entities/User.js";
+import { UserMapper } from "../../mappers/UserMapper.js";
+import { JwtPayload } from "../../../domain/entities/JwtPayload.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { UserMapper } from "app/mappers/UserMapper";
-import { ISocialUserAuthUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
-import { JwtPayload } from "domain/entities/JwtPayload";
-import { IPlayerService } from "app/services/player/IPlayerService";
-import { IUserServices } from "app/services/user/IUserServices";
-import { SocialUserRegisterData } from "domain/entities/User";
-import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
 
 @injectable()
 export class CompleteSocialSignup implements ISocialUserAuthUseCase {

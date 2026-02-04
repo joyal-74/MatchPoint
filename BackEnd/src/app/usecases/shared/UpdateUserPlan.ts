@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IUpdateUserPlan } from "../../repositories/interfaces/usecases/IPlanUseCaseRepo.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { ISubscriptionRepository } from "../../repositories/interfaces/shared/ISubscriptionRepository.js";
+import { BillingCycle, PlanLevel } from "../../../domain/entities/Plan.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { ISubscriptionRepository } from "app/repositories/interfaces/shared/ISubscriptionRepository";
-import { IUpdateUserPlan } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
-import { BillingCycle, PlanLevel } from "domain/entities/Plan";
 
 @injectable()
-export class UpdateUserPlan implements IUpdateUserPlan{
+export class UpdateUserPlan implements IUpdateUserPlan {
     constructor(
         @inject(DI_TOKENS.SubscriptionRepository) private _subRepo: ISubscriptionRepository,
         @inject(DI_TOKENS.Logger) private _logger: ILogger

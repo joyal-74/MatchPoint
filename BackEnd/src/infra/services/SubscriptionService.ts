@@ -1,15 +1,15 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { ISubscriptionRepository } from "app/repositories/interfaces/shared/ISubscriptionRepository";
-import { IUpdateUserPlan, IVerifyPaymentUseCase } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
-import { ISubscriptionService, SubscriptionFinalizeResult } from "app/services/ISubscriptionServices";
-import { BillingCycle, PlanLevel } from "domain/entities/Plan";
-import { ITransactionRepository } from "app/repositories/interfaces/shared/ITransactionRepository";
-import { IWalletRepository } from "app/repositories/interfaces/shared/IWalletRepository";
-import { Wallet } from "domain/entities/Wallet";
-import { InternalServerError } from "domain/errors";
+import { ILogger } from "../../app/providers/ILogger.js";
+import { ISubscriptionRepository } from "../../app/repositories/interfaces/shared/ISubscriptionRepository.js";
+import { IUpdateUserPlan, IVerifyPaymentUseCase } from "../../app/repositories/interfaces/usecases/IPlanUseCaseRepo.js";
+import { ISubscriptionService, SubscriptionFinalizeResult } from "../../app/services/ISubscriptionServices.js";
+import { BillingCycle, PlanLevel } from "../../domain/entities/Plan.js";
+import { ITransactionRepository } from "../../app/repositories/interfaces/shared/ITransactionRepository.js";
+import { IWalletRepository } from "../../app/repositories/interfaces/shared/IWalletRepository.js";
+import { Wallet } from "../../domain/entities/Wallet.js";
+import { InternalServerError } from "../../domain/errors/index.js";
 
 @injectable()
 export class SubscriptionPaymentService implements ISubscriptionService {

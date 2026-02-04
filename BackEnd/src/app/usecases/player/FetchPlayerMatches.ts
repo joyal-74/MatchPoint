@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IGetPlayerMatches } from "../../repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
+import { IMatchStatsRepo } from "../../repositories/interfaces/manager/IMatchStatsRepo.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { LiveMatchCardDTO } from "../../../domain/dtos/LiveMatchDTO.js";
 
-import { ILogger } from "../../providers/ILogger";
-import { IGetPlayerMatches } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
-import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
-import { LiveMatchCardDTO } from "domain/dtos/LiveMatchDTO";
 
 @injectable()
 export class FetchMatchesUseCase implements IGetPlayerMatches {

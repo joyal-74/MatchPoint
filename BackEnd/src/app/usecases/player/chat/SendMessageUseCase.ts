@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IMessageRepository } from "../../../repositories/interfaces/player/IMessageRepository.js";
+import { IChatRepository } from "../../../repositories/interfaces/player/IChatRepository.js";
+import { SocketServer } from "../../../../presentation/socket/SocketServer.js";
+import { NotFoundError } from "../../../../domain/errors/index.js";
 
-import { IChatRepository } from "app/repositories/interfaces/player/IChatRepository";
-import { IMessageRepository } from "app/repositories/interfaces/player/IMessageRepository";
-import { NotFoundError } from "domain/errors";
-import { SocketServer } from "presentation/socket/SocketServer";
 
 
 interface SendMessageDTO {

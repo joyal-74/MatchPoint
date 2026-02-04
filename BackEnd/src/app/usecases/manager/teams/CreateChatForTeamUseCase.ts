@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IChatRepository } from "../../../repositories/interfaces/player/IChatRepository.js";
+import { ICreateChatForTeamUseCase } from "../../../repositories/interfaces/usecases/ITeamUsecaseRepository.js";
 
-import { IChatRepository } from "app/repositories/interfaces/player/IChatRepository";
-import { ICreateChatForTeamUseCase } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
 
 @injectable()
-export class CreateChatForTeamUseCase implements ICreateChatForTeamUseCase{
+export class CreateChatForTeamUseCase implements ICreateChatForTeamUseCase {
     constructor(
         @inject(DI_TOKENS.ChatRepository) private _chatRepo: IChatRepository
     ) { }

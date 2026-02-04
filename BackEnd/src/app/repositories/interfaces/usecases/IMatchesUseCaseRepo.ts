@@ -1,7 +1,7 @@
-import { LiveScoreDto } from "domain/dtos/LiveScoreDto";
-import { MatchResponseDTO } from "domain/dtos/MatchDTO";
-import { AddWicketPayload } from "domain/entities/Innings";
-import { InitInningsPayload, MatchEntity } from "domain/entities/MatchEntity";
+import { LiveScoreDto } from "../../../../domain/dtos/LiveScoreDto.js";
+import { MatchResponseDTO } from "../../../../domain/dtos/MatchDTO.js";
+import { AddWicketPayload } from "../../../../domain/entities/Innings.js";
+import { InitInningsPayload, MatchEntity } from "../../../../domain/entities/MatchEntity.js";
 
 export type AddRunsPayload = {
     matchId: string;

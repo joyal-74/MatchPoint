@@ -1,4 +1,4 @@
-import { Worker, Router, RtpCodecCapability } from "mediasoup/node/lib/types";
+import { Worker, Router, RtpCodecCapability } from "mediasoup/types";
 
 const mediaCodecs: RtpCodecCapability[] = [
     {

@@ -1,17 +1,17 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IUpdateTournamentTeam } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
+import { IRegistrationRepository } from "../../../repositories/interfaces/manager/IRegistrationRepository.js";
+import { IWalletRepository } from "../../../repositories/interfaces/shared/IWalletRepository.js";
+import { ITransactionRepository } from "../../../repositories/interfaces/shared/ITransactionRepository.js";
+import { IManagerRepository } from "../../../repositories/interfaces/manager/IManagerRepository.js";
+import { ILogger } from "../../../providers/ILogger.js";
+import { Tournament } from "../../../../domain/entities/Tournaments.js";
+import { NotFoundError } from "../../../../domain/errors/index.js";
+import { Wallet } from "../../../../domain/entities/Wallet.js";
+import { Registration } from "../../../../domain/entities/Registration.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
-import { IUpdateTournamentTeam } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
-import { IWalletRepository } from "app/repositories/interfaces/shared/IWalletRepository";
-import { ITransactionRepository } from "app/repositories/interfaces/shared/ITransactionRepository";
-import { Tournament } from "domain/entities/Tournaments";
-import { NotFoundError } from "domain/errors";
-import { Registration } from "domain/entities/Registration";
-import { Wallet } from "domain/entities/Wallet";
-import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
 
 @injectable()
 export class UpdateTournamentTeam implements IUpdateTournamentTeam {

@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo.js";
+import { IGetLiveScoreUseCase } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
+import { NotFoundError } from "../../../../domain/errors/index.js";
+import { mapToLiveScoreDto } from "../../../mappers/LiveScoreMapper.js";
+import { LiveScoreDto } from "../../../../domain/dtos/LiveScoreDto.js";
 
-import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
-import { mapToLiveScoreDto } from "app/mappers/LiveScoreMapper";
-import { NotFoundError } from "domain/errors";
-import { IGetLiveScoreUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
-import { LiveScoreDto } from "domain/dtos/LiveScoreDto";
 
 @injectable()
 export class GetLiveScoreUseCase implements IGetLiveScoreUseCase {

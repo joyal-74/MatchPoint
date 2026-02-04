@@ -1,4 +1,4 @@
-import { MatchStatus } from "domain/entities/Fixture";
+import { MatchStatus } from "../../domain/entities/Fixture.js";
 import { Document } from "mongoose";
 
 export interface BatsmanStat {

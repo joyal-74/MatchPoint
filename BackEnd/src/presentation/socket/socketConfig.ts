@@ -1,5 +1,5 @@
 import { container } from "tsyringe";
-import { SocketServer } from "./SocketServer";
+import { SocketServer } from "./SocketServer.js";
 import http from "http";
 
 let instance: SocketServer | null = null;

@@ -1,5 +1,5 @@
-import { ThemeType, RoleType, GenderType } from "domain/enums";
-import { UserResponseDTO } from "./User.dto";
+import { ThemeType, RoleType, GenderType } from "../../domain/enums/index.js";
+import { UserResponseDTO } from "./User.dto.js";
 
 export interface PlayerSettingsDTO {
     location?: string;

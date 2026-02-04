@@ -1,4 +1,4 @@
-import { PaymentMetadata } from "app/repositories/interfaces/IBasePaymentMetaData";
+import { PaymentMetadata } from "../../app/repositories/interfaces/IBasePaymentMetaData.js";
 
 export interface PaymentSession {
     sessionId: string;

@@ -1,22 +1,22 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IManagerSignupUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IManagerRepository } from "../../repositories/interfaces/manager/IManagerRepository.js";
+import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository.js";
+import { IMailRepository } from "../../providers/IMailRepository.js";
+import { IPasswordHasher } from "../../providers/IPasswordHasher.js";
+import { IOtpGenerator } from "../../providers/IOtpGenerator.js";
+import { IManagerIdGenerator } from "../../providers/IIdGenerator.js";
+import { IFileStorage } from "../../providers/IFileStorage.js";
+import { validateUserInput } from "../../../domain/validators/UserValidators.js";
+import { ManagerRegister } from "../../../domain/entities/Manager.js";
+import { BadRequestError } from "../../../domain/errors/index.js";
+import { UserRoles } from "../../../domain/enums/Roles.js";
+import { OtpContext } from "../../../domain/enums/OtpContext.js";
+import { UserMapper } from "../../mappers/UserMapper.js";
+import { File } from "../../../domain/entities/File.js";
 
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
-import { IMailRepository } from "app/providers/IMailRepository";
-import { BadRequestError } from "domain/errors";
-import { UserRoles } from "domain/enums";
-import { IPasswordHasher } from "app/providers/IPasswordHasher";
-import { IOtpGenerator } from "app/providers/IOtpGenerator";
-import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
-import { ManagerRegister } from "domain/entities/Manager";
-import { validateUserInput } from "domain/validators/UserValidators";
-import { OtpContext } from "domain/enums/OtpContext";
-import { IManagerSignupUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
-import { IManagerIdGenerator } from "app/providers/IIdGenerator";
-import { UserMapper } from "app/mappers/UserMapper";
-import { IFileStorage } from "app/providers/IFileStorage";
-import { File } from "domain/entities/File";
 
 @injectable()
 export class SignupManager implements IManagerSignupUseCase {

@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { Transaction } from "../../../domain/entities/Transaction.js";
+import { IGetTransactionDetails } from "../../repositories/interfaces/admin/IAdminUsecases.js";
+import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository.js";
 
-import { IGetTransactionDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { ITransactionRepository } from "app/repositories/interfaces/shared/ITransactionRepository";
-import { Transaction } from "domain/entities/Transaction";
 
 @injectable()
 export class GetTransactionDetails implements IGetTransactionDetails {

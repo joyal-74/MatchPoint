@@ -1,5 +1,5 @@
-import { MapMember, TeamDataFull, TeamDataSummary, TeamMember } from "domain/dtos/Team.dto";
-import { TeamDocument } from "infra/databases/mongo/models/TeamModel";
+import { MapMember, TeamDataFull, TeamDataSummary, TeamMember } from "../../../domain/dtos/Team.dto.js";
+import { TeamDocument } from "../../../infra/databases/mongo/models/TeamModel.js";
 import { Types } from "mongoose";
 
 // export type TeamPopulatedDocument = Omit<TeamDocument, "members"> & {

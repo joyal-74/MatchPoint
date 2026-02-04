@@ -1,8 +1,9 @@
-import { IMailRepository } from "app/providers/IMailRepository";
-import { OtpContext } from "domain/enums/OtpContext";
-import { InternalServerError } from "domain/errors";
-import { generateOtpEmailTemplate } from "infra/utils/EmailTemplate";
+
 import nodemailer from 'nodemailer';
+import { IMailRepository } from '../../app/providers/IMailRepository.js';
+import { OtpContext } from '../../domain/enums/OtpContext.js';
+import { generateOtpEmailTemplate } from '../utils/EmailTemplate.js';
+import { InternalServerError } from '../../domain/errors/index.js';
 
 export class NodeMailerService implements IMailRepository {
     private transporter;

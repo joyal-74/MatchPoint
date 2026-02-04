@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IEndInningsUseCase } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
+import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { MatchEntity } from "../../../../domain/entities/MatchEntity.js";
+import { NotFoundError } from "../../../../domain/errors/index.js";
 
-import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
-import { IEndInningsUseCase } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
-import { MatchEntity } from "domain/entities/MatchEntity";
-import { NotFoundError } from "domain/errors";
 
 @injectable()
 export class EndInningsUseCase implements IEndInningsUseCase {

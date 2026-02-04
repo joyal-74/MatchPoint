@@ -1,6 +1,7 @@
-import { IPlanRepository } from "app/repositories/interfaces/admin/IPlanRepository";
-import { Plan } from "domain/entities/Plan";
-import { PlanModel } from "infra/databases/mongo/models/PlanModel";
+import { IPlanRepository } from "../../../app/repositories/interfaces/admin/IPlanRepository.js";
+import { Plan } from "../../../domain/entities/Plan.js";
+import { PlanModel } from "../../databases/mongo/models/PlanModel.js";
+
 
 export class PlanRepository implements IPlanRepository {
     async create(plan: Plan): Promise<Plan> {

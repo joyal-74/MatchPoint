@@ -1,5 +1,6 @@
-import { IConfigProvider } from "app/providers/IConfigProvider";
-import { NotFoundError } from "domain/errors";
+import { IConfigProvider } from "../../app/providers/IConfigProvider.js";
+import { NotFoundError } from "../../domain/errors/index.js";
+
 
 export class EnvConfigProvider implements IConfigProvider {
     getGoogleClientId(): string {

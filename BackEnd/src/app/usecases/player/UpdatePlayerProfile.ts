@@ -1,15 +1,16 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IUpdatePlayerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
+import { IPlayerService } from "../../services/player/IPlayerService.js";
+import { IFileStorage } from "../../providers/IFileStorage.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { PlayerProfileResponse, PlayerUpdateDTO } from "../../../domain/dtos/Player.dto.js";
+import { validateManagerUpdate } from "../../../domain/validators/ManagerUpdateValidator.js";
+import { File } from "../../../domain/entities/File.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
+import { PlayerMapper } from "../../mappers/PlayerMapper.js";
 
-import { PlayerMapper } from "app/mappers/PlayerMapper";
-import { IFileStorage } from "app/providers/IFileStorage";
-import { ILogger } from "app/providers/ILogger";
-import { IPlayerService } from "app/services/player/IPlayerService";
-import { IUpdatePlayerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
-import { PlayerProfileResponse, PlayerUpdateDTO } from "domain/dtos/Player.dto";
-import { File } from "domain/entities/File";
-import { NotFoundError } from "domain/errors";
-import { validateManagerUpdate } from "domain/validators/ManagerUpdateValidator";
+
 
 @injectable()
 export class UpdatePlayerProfile implements IUpdatePlayerProfile {

@@ -1,11 +1,10 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-
-import { IUpdatePasswordUseCase, IUpdatePrivacyUseCase, IVerifyPasswordUseCase } from "app/repositories/interfaces/usecases/ISettingsUseCaseRepo";
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
-import { HttpResponse } from "presentation/http/helpers/HttpResponse";
-import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
+import { HttpResponse } from "../../helpers/HttpResponse.js";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
+import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
+import { IUpdatePasswordUseCase, IUpdatePrivacyUseCase, IVerifyPasswordUseCase } from "../../../../app/repositories/interfaces/usecases/ISettingsUseCaseRepo.js";
 
 @injectable()
 export class SettingsController {

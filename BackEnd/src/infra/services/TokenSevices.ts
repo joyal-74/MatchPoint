@@ -1,9 +1,9 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
 
-import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
-import { ITokenService } from "app/services/auth/ITokenService";
-import { JwtPayload, JwtTempPayload } from "domain/entities/JwtPayload";
+import { IJWTRepository } from "../../app/repositories/interfaces/providers/IjwtRepository.js";
+import { ITokenService } from "../../app/services/auth/ITokenService.js";
+import { JwtPayload, JwtTempPayload } from "../../domain/entities/JwtPayload.js";
 
 @injectable()
 export class TokenService implements ITokenService {

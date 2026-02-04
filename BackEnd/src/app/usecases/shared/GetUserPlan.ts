@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IGetUserSubscriptionPlan } from "../../repositories/interfaces/usecases/IPlanUseCaseRepo.js";
+import { ISubscriptionRepository } from "../../repositories/interfaces/shared/ISubscriptionRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { UserSubscription } from "../../../domain/entities/Plan.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { ISubscriptionRepository } from "app/repositories/interfaces/shared/ISubscriptionRepository";
-import { IGetUserSubscriptionPlan } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
-import { UserSubscription } from "domain/entities/Plan";
 
 @injectable()
 export class GetUserSubscriptionPlan implements IGetUserSubscriptionPlan {

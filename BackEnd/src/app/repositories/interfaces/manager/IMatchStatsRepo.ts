@@ -1,7 +1,7 @@
-import { LiveMatchCardDTO } from "domain/dtos/LiveMatchDTO";
-import { TournamentResult } from "domain/entities/Match";
-import { MatchEntity } from "domain/entities/MatchEntity";
-import { TournamentMatchStatsDocument } from "domain/types/match.types";
+import { LiveMatchCardDTO } from "../../../../domain/dtos/LiveMatchDTO.js";
+import { TournamentResult } from "../../../../domain/entities/Match.js";
+import { MatchEntity } from "../../../../domain/entities/MatchEntity.js";
+import { TournamentMatchStatsDocument } from "../../../../domain/types/match.types.js";
 
 export interface LiveMatchQuery {
     limit?: number;

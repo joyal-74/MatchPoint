@@ -1,7 +1,7 @@
-import { LiveMatchCardDTO } from "domain/dtos/LiveMatchDTO";
-import { Match } from "domain/entities/Match";
-import { PointsRow, PointsTableResponse } from "domain/entities/PointsTable";
-import { Leaderboard, Tournament } from "domain/entities/Tournaments";
+import { LiveMatchCardDTO } from "../../../../domain/dtos/LiveMatchDTO.js";
+import { Match } from "../../../../domain/entities/Match.js";
+import { PointsRow, PointsTableResponse } from "../../../../domain/entities/PointsTable.js";
+import { Leaderboard, Tournament } from "../../../../domain/entities/Tournaments.js";
 
 export interface IGetPlayerTournaments {
     execute(status: string, page: number, limit: number, playerId?: string): Promise<{ tournaments: Tournament[]; total: number }>

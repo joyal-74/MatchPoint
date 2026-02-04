@@ -1,5 +1,5 @@
 import mongoose, { ClientSession } from 'mongoose';
-import { IUnitOfWork } from 'app/repositories/interfaces/shared/IUnitOfWork';
+import { IUnitOfWork } from '../../../app/repositories/interfaces/shared/IUnitOfWork.js';
 
 export class MongoUnitOfWork implements IUnitOfWork {
     private session!: ClientSession;

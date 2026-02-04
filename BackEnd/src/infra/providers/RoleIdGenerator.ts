@@ -1,7 +1,7 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
 
-import { IManagerIdGenerator, IPlayerIdGenerator, IRoleIdGenerator, IUserIdGenerator } from "app/providers/IIdGenerator";
+import { IManagerIdGenerator, IPlayerIdGenerator, IRoleIdGenerator, IUserIdGenerator } from "../../app/providers/IIdGenerator.js";
 
 @injectable()
 export class RoleIdGenerator implements IRoleIdGenerator {

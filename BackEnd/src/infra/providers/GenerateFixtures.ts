@@ -1,4 +1,5 @@
-import { IFixtureGeneration, Round } from "app/providers/FixtureGeneration";
+import { IFixtureGeneration, Round } from "../../app/providers/FixtureGeneration.js";
+
 
 export class FixtureGeneration implements IFixtureGeneration {
     constructor() { }
@@ -36,7 +37,7 @@ export class FixtureGeneration implements IFixtureGeneration {
                 ...round,
                 matches: round.matches.map(({ home, away }) => ({ home: away, away: home })),
             }));
-            fixtures.push(...returnFixtures.map((r, i) => ({ ...r, roundNumber: r.roundNumber + fixtures.length })));
+            fixtures.push(...returnFixtures.map((r) => ({ ...r, roundNumber: r.roundNumber + fixtures.length })));
         }
 
         return fixtures;

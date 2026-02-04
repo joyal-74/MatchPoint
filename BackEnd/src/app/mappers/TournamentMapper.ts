@@ -1,4 +1,4 @@
-import { Tournament } from "domain/entities/Tournaments";
+import { Tournament } from "../../domain/entities/Tournaments.js"; 
 
 export class TournamentMapper {
     static toDomain(t: Tournament): Tournament {

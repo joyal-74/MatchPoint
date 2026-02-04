@@ -1,4 +1,4 @@
-import { OtpResponse } from "domain/entities/Otp";
+import { OtpResponse } from "../../../domain/entities/Otp.js";
 
 export class OtpMongoMapper {
     static toDomain(doc): OtpResponse {

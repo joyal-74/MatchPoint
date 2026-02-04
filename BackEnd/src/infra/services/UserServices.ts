@@ -1,11 +1,11 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
 
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { IRoleIdGenerator } from "app/providers/IIdGenerator";
-import { SocialUserRegisterData, UserResponse } from "domain/entities/User";
-import { IUserServices } from "app/services/user/IUserServices";
-import { NotFoundError } from "domain/errors";
+import { IUserRepository } from "../../app/repositories/interfaces/shared/IUserRepository.js";
+import { IRoleIdGenerator } from "../../app/providers/IIdGenerator.js";
+import { SocialUserRegisterData, UserResponse } from "../../domain/entities/User.js";
+import { IUserServices } from "../../app/services/user/IUserServices.js";
+import { NotFoundError } from "../../domain/errors/index.js";
 
 
 @injectable()

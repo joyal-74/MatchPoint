@@ -1,11 +1,12 @@
-import { TournamentMatchStatsModel } from "infra/databases/mongo/models/TournamentStatsModel";
-import { MatchEntity } from "domain/entities/MatchEntity";
-import { MatchStatsMapper } from "infra/utils/mappers/MatchStatsMapper";
-import { AllMatchQuery, IMatchStatsRepo, LiveMatchQuery } from "app/repositories/interfaces/manager/IMatchStatsRepo";
-import { TournamentMatchStatsDocument } from "domain/types/match.types";
-import { TournamentResult } from "domain/entities/Match";
 import { Types } from "mongoose";
-import { MatchResultMapper } from "infra/utils/mappers/MatchResultMapper";
+import { AllMatchQuery, IMatchStatsRepo, LiveMatchQuery } from "../../../app/repositories/interfaces/manager/IMatchStatsRepo.js";
+import { TournamentResult } from "../../../domain/entities/Match.js";
+import { MatchEntity } from "../../../domain/entities/MatchEntity.js";
+import { TournamentMatchStatsDocument } from "../../../domain/types/match.types.js";
+import { TournamentMatchStatsModel } from "../../databases/mongo/models/TournamentStatsModel.js";
+import { MatchResultMapper } from "../../utils/mappers/MatchResultMapper.js";
+import { MatchStatsMapper } from "../../utils/mappers/MatchStatsMapper.js";
+
 
 export class MatchRepoMongo implements IMatchStatsRepo {
     async findByMatchId(matchId: string): Promise<MatchEntity | null> {

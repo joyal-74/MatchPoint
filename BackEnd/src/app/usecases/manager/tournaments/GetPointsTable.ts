@@ -1,9 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-import { IPointsTableRepository } from "app/repositories/interfaces/shared/IPointsTableRepository";
-import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { PointsTableResponse } from "domain/entities/PointsTable"; 
-import { IGetPointsTableUseCase } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IGetPointsTableUseCase } from "../../../repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
+import { IPointsTableRepository } from "../../../repositories/interfaces/shared/IPointsTableRepository.js";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
+import { PointsTableResponse } from "../../../../domain/entities/PointsTable.js";
+
 
 @injectable()
 export class GetPointsTableUseCase implements IGetPointsTableUseCase {

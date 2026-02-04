@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
-import { DashboardController } from "presentation/http/controllers/admin/DashBoardController";
-import { AdminTransactionController } from "presentation/http/controllers/admin/TransactionController";
-import { UsersManagementController } from "presentation/http/controllers/admin/UsersManagementController";
-import { TournamentManagementController } from "presentation/http/controllers/admin/TournamnetManagementController";
+import { DashboardController } from "../../http/controllers/admin/DashBoardController.js";
 import { container } from "tsyringe";
-import { adminOnly } from "../middlewares";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
+import { adminOnly } from "../middlewares/index.js";
+import { TournamentManagementController } from "../../http/controllers/admin/TournamnetManagementController.js";
+import { AdminTransactionController } from "../../http/controllers/admin/TransactionController.js";
+import { UsersManagementController } from "../../http/controllers/admin/UsersManagementController.js";
+
 
 const router = Router();
 

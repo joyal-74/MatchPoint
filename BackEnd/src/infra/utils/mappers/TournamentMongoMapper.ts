@@ -1,5 +1,5 @@
-import { Tournament } from "domain/entities/Tournaments";
-import { TournamentDocument } from "infra/databases/mongo/models/TournamentModel";
+import { Tournament } from "../../../domain/entities/Tournaments.js";
+import { TournamentDocument } from "../../../infra/databases/mongo/models/TournamentModel.js";
 
 export class TournamentMongoMapper {
     static toDomain(t: TournamentDocument): Tournament {

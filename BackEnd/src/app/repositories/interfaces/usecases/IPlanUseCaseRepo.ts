@@ -1,7 +1,7 @@
-import { PaymentSession } from "app/providers/IPaymentProvider";
-import { VerifyPaymentResponse } from "app/usecases/shared/FinalizePaymentUseCase";
-import { CreatePaymentSessionDTO } from "app/usecases/shared/InitiateOrderUseCase";
-import { BillingCycle, Plan, PlanLevel, UserSubscription } from "domain/entities/Plan";
+import { PaymentSession } from "../../../../app/providers/IPaymentProvider.js";
+import { VerifyPaymentResponse } from "../../../../app/usecases/shared/FinalizePaymentUseCase.js";
+import { CreatePaymentSessionDTO } from "../../../../app/usecases/shared/InitiateOrderUseCase.js";
+import { BillingCycle, Plan, PlanLevel, UserSubscription } from "../../../../domain/entities/Plan.js";
 
 export interface IGetUserSubscriptionPlan {
     execute(userId: string): Promise<UserSubscription | null>

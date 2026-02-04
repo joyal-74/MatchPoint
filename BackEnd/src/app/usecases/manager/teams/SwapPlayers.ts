@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { ITeamRepository } from "../../../repositories/interfaces/shared/ITeamRepository.js";
+import { ISwapPlayers } from "../../../repositories/interfaces/usecases/ITeamUsecaseRepository.js";
+import { ILogger } from "../../../providers/ILogger.js";
+import { BadRequestError, NotFoundError } from "../../../../domain/errors/index.js";
+import { playerStatus } from "../../../../domain/dtos/Team.dto.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { ISwapPlayers } from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
-import { playerStatus } from "domain/dtos/Team.dto";
-import { BadRequestError, NotFoundError } from "domain/errors";
 
 @injectable()
 export class SwapPlayers implements ISwapPlayers {

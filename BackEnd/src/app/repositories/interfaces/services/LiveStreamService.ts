@@ -1,4 +1,4 @@
-import { RtpParameters, RtpCapabilities, IceParameters, IceCandidate, DtlsParameters, MediaKind } from "mediasoup/node/lib/types";
+import { RtpParameters, RtpCapabilities, IceParameters, IceCandidate, DtlsParameters, MediaKind } from "mediasoup/types";
 
 export interface StreamMetadata {
     title: string;

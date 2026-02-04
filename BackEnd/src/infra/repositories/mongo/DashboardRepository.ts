@@ -1,17 +1,17 @@
-import { DashboardStats, IDashboardRepository } from "app/repositories/interfaces/admin/IDashboardRepository";
-import { TeamModel } from "infra/databases/mongo/models/TeamModel";
-import { TournamentModel } from "infra/databases/mongo/models/TournamentModel";
-import { TransactionModel } from "infra/databases/mongo/models/TransactionModel";
-import { UserModel } from "infra/databases/mongo/models/UserModel";
+import { DashboardStats, IDashboardRepository } from "../../../app/repositories/interfaces/admin/IDashboardRepository.js";
+import { TeamModel } from "../../databases/mongo/models/TeamModel.js";
+import { TournamentModel } from "../../databases/mongo/models/TournamentModel.js";
+import { TransactionModel } from "../../databases/mongo/models/TransactionModel.js";
+import { UserModel } from "../../databases/mongo/models/UserModel.js";
+
 
 
 export class DashboardRepository implements IDashboardRepository {
     async getDashboardStats(): Promise<DashboardStats> {
 
-        // 1. Get Key Counts
         const totalRevenue = await TransactionModel.aggregate([{ $group: { _id: null, total: { $sum: "$amount" } } }]);
         const activePlayers = await UserModel.countDocuments({ role: 'player', isActive: true });
-        console.log(activePlayers)
+
         const activeTournaments = await TournamentModel.countDocuments({ status: 'ongoing' });
 
         const totalTeams = await TeamModel.countDocuments({});

@@ -1,10 +1,10 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { IGetAvailablePlayersService } from "../../app/services/manager/ITeamSetupService.js";
+import { ITeamRepository } from "../../app/repositories/interfaces/shared/ITeamRepository.js";
+import { IPlayerRepository } from "../../app/repositories/interfaces/player/IPlayerRepository.js";
+import { PlayerEntity } from "../../domain/entities/Player.js";
 
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
-import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { IGetAvailablePlayersService } from "app/services/manager/ITeamSetupService";
-import { PlayerEntity } from "domain/entities/Player";
 
 @injectable()
 export class GetAvailablePlayersService implements IGetAvailablePlayersService {

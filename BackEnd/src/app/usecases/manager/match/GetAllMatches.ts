@@ -1,8 +1,9 @@
 import { injectable, inject } from "tsyringe";
-import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
-import { IGetAllMatches } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
-import { MatchEntity } from "domain/entities/MatchEntity";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IGetAllMatches } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
+import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo.js";
+import { MatchEntity } from "../../../../domain/entities/MatchEntity.js";
+
 
 @injectable()
 export class GetAllMatches implements IGetAllMatches {
@@ -14,9 +15,6 @@ export class GetAllMatches implements IGetAllMatches {
 
         const { matches, totalPages } = await this._matchRepository.findAllMatches({ search, limit, page });
 
-        return {
-            matches,
-            totalPages
-        };
+        return { matches, totalPages };
     }
 }

@@ -1,14 +1,13 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-
-import { GetMessagesUseCase } from "app/usecases/player/chat/GetMessagesUseCase";
-import { SendMessageUseCase } from "app/usecases/player/chat/SendMessageUseCase";
-import { UpdateMessageStatusUseCase } from "app/usecases/player/chat/UpdateMessageStatusUseCase";
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
-import { HttpResponse } from "presentation/http/helpers/HttpResponse";
-import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
-import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
+import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
+import { HttpResponse } from "../../helpers/HttpResponse.js";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
+import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
+import { SendMessageUseCase } from "../../../../app/usecases/player/chat/SendMessageUseCase.js";
+import { GetMessagesUseCase } from "../../../../app/usecases/player/chat/GetMessagesUseCase.js";
+import { UpdateMessageStatusUseCase } from "../../../../app/usecases/player/chat/UpdateMessageStatusUseCase.js";
 
 @injectable()
 export class MessageController {

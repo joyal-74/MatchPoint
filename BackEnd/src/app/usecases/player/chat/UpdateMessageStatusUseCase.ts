@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
 
-import { IMessageRepository } from "app/repositories/interfaces/player/IMessageRepository";
-import { Message } from "domain/entities/Message";
+import { IMessageRepository } from "../../../../app/repositories/interfaces/player/IMessageRepository.js";
+import { Message } from "../../../../domain/entities/Message.js";
 
 @injectable()
 export class UpdateMessageStatusUseCase {

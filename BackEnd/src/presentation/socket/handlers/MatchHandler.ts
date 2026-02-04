@@ -1,9 +1,9 @@
 import { Server } from "socket.io";
 import { Types } from "mongoose";
-import { AuthenticatedSocket } from "../SocketServer";
+import { AuthenticatedSocket } from "../SocketServer.js";
 
-import { IncomingScoreUpdatePayload, ScoreUpdateType } from "domain/types/match.types";
-import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
+import { IncomingScoreUpdatePayload, ScoreUpdateType, } from "../../../domain/types/match.types.js"; 
+import { IMatchStatsRepo } from "../../../app/repositories/interfaces/manager/IMatchStatsRepo.js"; 
 
 import {
     IAddExtrasUseCase,
@@ -21,11 +21,11 @@ import {
     IStartSuperOverUseCase,
     IUndoLastBallUseCase
 
-} from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
-import { NotFoundError } from "domain/errors";
-import { DismissalType } from "domain/entities/Innings";
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+} from "../../../app/repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
+import { NotFoundError } from "../../../domain/errors/index.js"; 
+import { DismissalType } from "../../../domain/entities/Innings.js";
+import { IPlayerRepository } from "../../../app/repositories/interfaces/player/IPlayerRepository.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
 import { inject, injectable } from "tsyringe";
 
 export interface MatchUseCases {

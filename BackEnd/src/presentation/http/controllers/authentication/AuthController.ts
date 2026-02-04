@@ -1,14 +1,11 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
 
-import { IHttpRequest } from '../../interfaces/IHttpRequest';
-import { IHttpResponse } from '../../interfaces/IHttpResponse';
-import { HttpResponse } from '../../helpers/HttpResponse';
-import { BadRequestError, UnauthorizedError } from '../../../../domain/errors';
-import { buildResponse } from '../../../../infra/utils/responseBuilder';
-import { HttpStatusCode } from '../../../../domain/enums/StatusCodes';
-import { OtpContext } from 'domain/enums/OtpContext';
-import { IAuthController } from 'presentation/http/interfaces/IAuthController';
+import { IHttpRequest } from '../../interfaces/IHttpRequest.js';
+import { IHttpResponse } from '../../interfaces/IHttpResponse.js';
+import { HttpResponse } from '../../helpers/HttpResponse.js';
+import { buildResponse } from '../../../../infra/utils/responseBuilder.js';
+import { HttpStatusCode } from '../../../../domain/enums/StatusCodes.js';
+
 import cookie from 'cookie';
 import {
     IAdminAuthUseCase, ILogoutUseCase, IRefreshTokenUseCase,
@@ -19,9 +16,13 @@ import {
     ILoginFacebookUser,
     ISocialUserAuthUseCase,
     IUserLoginUseCase,
-    IUmpireSignupUseCase
-} from 'app/repositories/interfaces/auth/IAuthenticationUseCase';
-import { AuthMessages } from 'domain/constants/AuthMessages';
+} from "../../../../app/repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { IUmpireSignupUseCase } from "../../../../app/repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { IAuthController } from "../../interfaces/IAuthController.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { BadRequestError, UnauthorizedError } from "../../../../domain/errors/index.js";
+import { AuthMessages } from "../../../../domain/constants/AuthMessages.js";
+import { OtpContext } from "../../../../domain/enums/OtpContext.js";
 
 @injectable()
 export class AuthController implements IAuthController {

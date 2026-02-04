@@ -1,11 +1,12 @@
-import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
-import { TrafficPoint } from "domain/dtos/Analytics.dto";
-import { TournamentTeamData } from "domain/dtos/Tournament";
-import { PaymentStatus, Registration } from "domain/entities/Registration";
-import { NotFoundError } from "domain/errors";
-import { RegistrationModel } from "infra/databases/mongo/models/RegistrationModel";
-import { TournamentTeamMongoMapper } from "infra/utils/mappers/TournamentTeamMongoMapper";
+
 import { ClientSession } from "mongoose";
+import { RegistrationModel } from "../../databases/mongo/models/RegistrationModel.js";
+import { IRegistrationRepository } from "../../../app/repositories/interfaces/manager/IRegistrationRepository.js";
+import { TournamentTeamMongoMapper } from "../../utils/mappers/TournamentTeamMongoMapper.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
+import { PaymentStatus, Registration } from "../../../domain/entities/Registration.js";
+import { TrafficPoint } from "../../../domain/dtos/Analytics.dto.js";
+import { TournamentTeamData } from "../../../domain/dtos/Tournament.js";
 
 export class RegistrationRepository implements IRegistrationRepository {
     async create(registration: Omit<Registration, '_id' | 'createdAt' | 'updatedAt'>, ctx?: unknown): Promise<Registration> {

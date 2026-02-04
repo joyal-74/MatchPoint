@@ -1,23 +1,22 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
-import { IMailRepository } from "app/providers/IMailRepository";
-import { BadRequestError } from "domain/errors";
-import { UserRoles } from "domain/enums";
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
-import { PlayerRegister } from "domain/entities/Player";
-import { validatePlayerInput } from "domain/validators/PlayerValidators";
-import { getDefaultCareerStats } from "infra/utils/playerDefaults";
-import { IPasswordHasher } from "app/providers/IPasswordHasher";
-import { IOtpGenerator } from "app/providers/IOtpGenerator";
-import { OtpContext } from "domain/enums/OtpContext";
-import { IPlayerSignupUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
-import { IPlayerIdGenerator } from "app/providers/IIdGenerator";
-import { UserMapper } from "app/mappers/UserMapper";
-import { IFileStorage } from "app/providers/IFileStorage";
-import { File } from "domain/entities/File";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { File } from "../../../domain/entities/File.js";
+import { IPlayerSignupUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IPlayerRepository } from "../../repositories/interfaces/player/IPlayerRepository.js";
+import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository.js";
+import { IMailRepository } from "../../providers/IMailRepository.js";
+import { IPasswordHasher } from "../../providers/IPasswordHasher.js";
+import { IOtpGenerator } from "../../providers/IOtpGenerator.js";
+import { IPlayerIdGenerator } from "../../providers/IIdGenerator.js";
+import { IFileStorage } from "../../providers/IFileStorage.js";
+import { PlayerRegister } from "../../../domain/entities/Player.js";
+import { validatePlayerInput } from "../../../domain/validators/PlayerValidators.js";
+import { BadRequestError } from "../../../domain/errors/index.js";
+import { UserRoles } from "../../../domain/enums/Roles.js";
+import { getDefaultCareerStats } from "../../../infra/utils/playerDefaults.js";
+import { OtpContext } from "../../../domain/enums/OtpContext.js";
+import { UserMapper } from "../../mappers/UserMapper.js";
 
 
 

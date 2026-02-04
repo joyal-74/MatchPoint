@@ -1,27 +1,25 @@
-import { IPaymentProvider, PaymentSession } from "app/providers/IPaymentProvider";
-import { IWalletRepository } from "app/repositories/interfaces/shared/IWalletRepository";
-import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
-import { BadRequestError, NotFoundError } from "domain/errors";
-import { PaymentMetadata, TournamentPaymentMetadata } from "app/repositories/interfaces/IBasePaymentMetaData";
+import { inject } from "tsyringe";
+import { IPaymentProvider, PaymentSession } from "../../app/providers/IPaymentProvider.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { IWalletRepository } from "../../app/repositories/interfaces/shared/IWalletRepository.js";
+import { IRegistrationRepository } from "../../app/repositories/interfaces/manager/IRegistrationRepository.js";
+import { PaymentMetadata, TournamentPaymentMetadata } from "../../app/repositories/interfaces/IBasePaymentMetaData.js";
+import { BadRequestError, NotFoundError } from "../../domain/errors/index.js";
+
 
 export class WalletProvider implements IPaymentProvider {
     constructor(
-        private _walletRepo: IWalletRepository,
-        private _registrationRepo: IRegistrationRepository
+        @inject(DI_TOKENS.WalletProvider) private _walletRepo: IWalletRepository,
+        @inject(DI_TOKENS.RegistrationRepository) private _registrationRepo: IRegistrationRepository
     ) { }
 
-    async createPaymentSession(
-        amount: number,
-        currency: string,
-        teamName: string,
-        metadata: PaymentMetadata
-    ): Promise<PaymentSession> {
+    async createPaymentSession(amount: number, currency: string, teamName: string, metadata: PaymentMetadata): Promise<PaymentSession> {
         if (metadata.type !== "tournament") {
             throw new BadRequestError("Wallet payments only supported for tournament registrations");
         }
 
         const userId = metadata.managerId;
-        
+
         const wallet = await this._walletRepo.getByOwner(userId, 'USER');
         if (!wallet) throw new NotFoundError('Wallet not found for this user');
 
@@ -32,28 +30,26 @@ export class WalletProvider implements IPaymentProvider {
         }
 
         const sessionId = `wallet-${Date.now()}`;
-        
-        // Use wallet._id (string) to perform the debit
+
         await this._walletRepo.debit(wallet.id, deductionAmount);
 
         return { sessionId, url: '' };
     }
 
-    async verifyPayment(sessionId: string): Promise<{ 
-        status: 'pending' | 'completed' | 'failed'; 
-        paymentId: string; 
-        metadata: PaymentMetadata 
+    async verifyPayment(sessionId: string): Promise<{
+        status: 'pending' | 'completed' | 'failed';
+        paymentId: string;
+        metadata: PaymentMetadata
     }> {
         const registration = await this._registrationRepo.findByPaymentId(sessionId);
         if (!registration) throw new NotFoundError('Registration not found');
 
-        // Construct metadata with the strict literal "tournament"
         const metadata: TournamentPaymentMetadata = {
-            type: "tournament", // Hardcoded literal satisfies the union
+            type: "tournament",
             tournamentId: registration.tournamentId,
             teamId: registration.teamId,
             captainId: registration.captainId,
-            managerId: registration.managerId, // Fixed typo: was captainId
+            managerId: registration.managerId,
         };
 
         return {

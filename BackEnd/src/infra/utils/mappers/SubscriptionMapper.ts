@@ -1,5 +1,5 @@
-import { BillingCycle, PlanLevel, UserSubscription } from "domain/entities/Plan";
-import { UserSubscriptionDocument } from "infra/databases/mongo/models/SubscriptionModel";
+import { BillingCycle, PlanLevel, UserSubscription } from "../../../domain/entities/Plan.js";
+import { UserSubscriptionDocument } from "../../../infra/databases/mongo/models/SubscriptionModel.js";
 
 export class SubscriptionMapper {
     static toDomain(doc: UserSubscriptionDocument): UserSubscription {

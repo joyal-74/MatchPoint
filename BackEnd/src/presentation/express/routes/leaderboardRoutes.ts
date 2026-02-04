@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
-import { LeaderboardController } from "presentation/http/controllers/shared/LeaderboardController";
+
 import { container } from "tsyringe";
+import { LeaderboardController } from "../../http/controllers/shared/LeaderboardController.js";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
 
 const router = Router();
 

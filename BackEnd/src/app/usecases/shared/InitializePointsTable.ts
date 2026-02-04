@@ -1,16 +1,20 @@
-import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
-import { IPointsTableRepository } from "app/repositories/interfaces/shared/IPointsTableRepository";
-import { PointsRow } from "domain/entities/PointsTable";
+import { inject, injectable } from "tsyringe";
+import { IPointsTableRepository } from "../../repositories/interfaces/shared/IPointsTableRepository.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IRegistrationRepository } from "../../repositories/interfaces/manager/IRegistrationRepository.js";
+import { PointsRow } from "../../../domain/entities/PointsTable.js";
+
 
 interface PopulatedTeam {
     _id: string;
     name: string;
 }
 
+@injectable()
 export class InitializePointsTable {
     constructor(
-        private pointsRepo: IPointsTableRepository,
-        private registrationRepo: IRegistrationRepository
+        @inject(DI_TOKENS.PointsTableRepository) private pointsRepo: IPointsTableRepository,
+        @inject(DI_TOKENS.RegistrationRepository) private registrationRepo: IRegistrationRepository
     ) { }
 
     async execute(tournamentId: string): Promise<void> {

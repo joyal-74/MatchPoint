@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IJWTRepository } from "../../../app/repositories/interfaces/providers/IjwtRepository.js";
+import { IUserRepository } from "../../../app/repositories/interfaces/shared/IUserRepository.js";
+import { HttpStatusCode } from "../../../domain/enums/StatusCodes.js";
+import { buildResponse } from "../../../infra/utils/responseBuilder.js";
+
 
 export interface AuthRequest extends Request {
     user?: { id: string; role: string };

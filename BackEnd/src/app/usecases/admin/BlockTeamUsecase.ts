@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IChangeTeamDetailStatus } from "../../repositories/interfaces/admin/IAdminUsecases.js";
+import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { TeamStatus } from "../../../domain/dtos/Team.dto.js";
 
-import { ILogger } from "app/providers/ILogger";
-import { IChangeTeamDetailStatus } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { TeamStatus } from "domain/dtos/Team.dto";
 
 @injectable()
 export class ChangeTeamDetailStatus implements IChangeTeamDetailStatus {

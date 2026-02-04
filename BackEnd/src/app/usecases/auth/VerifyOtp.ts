@@ -1,14 +1,13 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IVerifyOtpUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository.js";
+import { IWalletRepository } from "../../repositories/interfaces/shared/IWalletRepository.js";
+import { ISubscriptionRepository } from "../../repositories/interfaces/shared/ISubscriptionRepository.js";
+import { OtpContext } from "../../../domain/enums/OtpContext.js";
+import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
 
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
-import { IWalletRepository } from "app/repositories/interfaces/shared/IWalletRepository";
-import { ISubscriptionRepository } from "app/repositories/interfaces/shared/ISubscriptionRepository";
-
-import { BadRequestError, NotFoundError } from "domain/errors";
-import { OtpContext } from "domain/enums/OtpContext";
-import { IVerifyOtpUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 
 @injectable()
 export class VerifyOtp implements IVerifyOtpUseCase {

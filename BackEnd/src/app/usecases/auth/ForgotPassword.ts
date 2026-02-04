@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IForgotPasswordUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository.js";
+import { IMailRepository } from "../../providers/IMailRepository.js";
+import { IOtpGenerator } from "../../providers/IOtpGenerator.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
+import { OtpContext } from "../../../domain/enums/OtpContext.js";
 
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { IOtpRepository } from "app/repositories/interfaces/shared/IOtpRepository";
-import { IMailRepository } from "app/providers/IMailRepository";
-import { OtpContext } from "domain/enums/OtpContext";
-import { NotFoundError } from "domain/errors";
-import { IOtpGenerator } from "app/providers/IOtpGenerator";
-import { IForgotPasswordUseCase } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
 
 @injectable()
 export class ForgotPassword implements IForgotPasswordUseCase {

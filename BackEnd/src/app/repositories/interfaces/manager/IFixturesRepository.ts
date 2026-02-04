@@ -1,4 +1,4 @@
-import { Fixture } from "domain/entities/Fixture";
+import { Fixture } from "../../../../domain/entities/Fixture.js";
 
 export interface IFixturesRepository {
     createFixture(tournamentId: string, matchIds: { matchId: string; round: number }[], format: string): Promise<Fixture>;

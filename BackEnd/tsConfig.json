@@ -1,54 +1,30 @@
 {
-    "compilerOptions": {
+  "compilerOptions": {
+    "target": "ES2020",
 
-        "target": "ES2020",
-        "module": "ESNext", 
-        "lib": [
-            "ES2020"
-        ],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
 
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true,
-        "resolveJsonModule": true,
-        "forceConsistentCasingInFileNames": true,
+    "lib": ["ES2020"],
 
-        "strict": true,
-        "noImplicitAny": false,
-        "strictNullChecks": true,
-        "strictPropertyInitialization": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
 
-        "baseUrl": "./src",
-        "paths": {
-            "@core/*": [
-                "core/*"
-            ],
-            "@app/*": [
-                "application/*"
-            ],
-            "@infra/*": [
-                "infrastructure/*"
-            ],
-            "@shared/*": [
-                "shared/*"
-            ]
-        },
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
 
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
 
-        "types": [
-            "node",
-            "express"
-        ]
-    },
-    "include": [
-        "src"
-    ],
-    "exclude": [
-        "node_modules",
-        "dist"
-    ]
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+    "types": ["node", "express"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

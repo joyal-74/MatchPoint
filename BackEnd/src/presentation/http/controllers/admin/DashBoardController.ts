@@ -1,12 +1,11 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-
-import { IGetDashboardStatsUseCase } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
-import { HttpResponse } from "presentation/http/helpers/HttpResponse";
-import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
-import { AdminUserMessages } from "domain/constants/admin/AdminUserMessages";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
+import { HttpResponse } from "../../helpers/HttpResponse.js";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
+import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
+import { IGetDashboardStatsUseCase } from "../../../../app/repositories/interfaces/admin/IAdminUsecases.js";
+import { AdminUserMessages } from "../../../../domain/constants/admin/AdminUserMessages.js";
 
 @injectable()
 export class DashboardController {

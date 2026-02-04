@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { Plan } from "../../../domain/entities/Plan.js";
+import { IPlanRepository } from "../../repositories/interfaces/admin/IPlanRepository.js";
+import { IGetPlans } from "../../repositories/interfaces/admin/IAdminUsecases.js";
 
-import { IGetPlans } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { IPlanRepository } from "app/repositories/interfaces/admin/IPlanRepository";
-import { Plan } from "domain/entities/Plan";
 
 @injectable()
 export class GetPlansUseCase implements IGetPlans {

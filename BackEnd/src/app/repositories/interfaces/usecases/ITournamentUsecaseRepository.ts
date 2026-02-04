@@ -1,9 +1,9 @@
-import { TournamentTeamData } from "domain/dtos/Tournament";
-import { Fixture } from "domain/entities/Fixture";
-import { Match, TournamentResult } from "domain/entities/Match";
-import { Tournament } from "domain/entities/Tournaments";
-import type { File } from "domain/entities/File";
-import { DashboardAnalyticsDTO } from "domain/dtos/Analytics.dto";
+import { TournamentTeamData } from "../../../../domain/dtos/Tournament.js";
+import { Fixture } from "../../../../domain/entities/Fixture.js";
+import { Match, TournamentResult } from "../../../../domain/entities/Match.js";
+import { Tournament } from "../../../../domain/entities/Tournaments.js";
+import type { File } from "../../../../domain/entities/File.js";
+import { DashboardAnalyticsDTO } from "../../../../domain/dtos/Analytics.dto.js";
 
 
 export interface IGetMyTournaments {

@@ -1,7 +1,8 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js"; 
 
 import {
+
     IAddPlayerToTeamUseCase,
     IApprovePlayerUseCase,
     IChangePlayerStatusUseCase,
@@ -11,19 +12,20 @@ import {
     IRejectPlayerUseCase,
     IRemovePlayerUseCase,
     ISwapPlayers
-} from "app/repositories/interfaces/usecases/ITeamUsecaseRepository";
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
-import { HttpResponse } from "presentation/http/helpers/HttpResponse";
-import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
-import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
-import { ITeamController } from "presentation/http/interfaces/ITeamController";
-import { ILogger } from "app/providers/ILogger";
-import { BadRequestError } from "domain/errors";
-import { IGetMyTeamDetailsUseCase } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
-import { TeamMessages } from "domain/constants/TeamMessages";
-import { TeamSetupService } from "infra/services/TeamSetupServices";
-import { IGetAvailablePlayersService } from "app/services/manager/ITeamSetupService";
+}from "../../../../app/repositories/interfaces/usecases/ITeamUsecaseRepository.js";
+import { ITeamController } from "../../interfaces/ITeamController.js";
+import { TeamSetupService } from "../../../../infra/services/TeamSetupServices.js";
+import { IGetMyTeamDetailsUseCase } from "../../../../app/repositories/interfaces/player/ITeamRepositoryUsecase.js";
+import { IGetAvailablePlayersService } from "../../../../app/services/manager/ITeamSetupService.js";
+import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
+import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
+import { BadRequestError } from "../../../../domain/errors/index.js";
+import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
+import { TeamMessages } from "../../../../domain/constants/TeamMessages.js";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
+import { HttpResponse } from "../../helpers/HttpResponse.js";
+import { ILogger } from "../../../../app/providers/ILogger.js";
+
 
 @injectable()
 export class TeamController implements ITeamController {

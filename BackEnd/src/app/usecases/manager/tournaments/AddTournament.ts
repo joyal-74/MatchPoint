@@ -1,14 +1,15 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IAddTournament } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
+import { ITournamentIdGenerator } from "../../../providers/IIdGenerator.js";
+import { IManagerRepository } from "../../../repositories/interfaces/manager/IManagerRepository.js";
+import { IFileStorage } from "../../../providers/IFileStorage.js";
+import { ILogger } from "../../../providers/ILogger.js";
+import { File } from "../../../../domain/entities/File.js";
+import { Format, Tournament } from "../../../../domain/entities/Tournaments.js";
 
-import { Format, Tournament } from "domain/entities/Tournaments";
-import { ILogger } from "app/providers/ILogger";
-import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { IAddTournament } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
-import { ITournamentIdGenerator } from "app/providers/IIdGenerator";
-import { IFileStorage } from "app/providers/IFileStorage";
-import type { File } from "domain/entities/File";
-import { IManagerRepository } from "app/repositories/interfaces/manager/IManagerRepository";
+
 
 @injectable()
 export class AddTournamentUseCase implements IAddTournament {

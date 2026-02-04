@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IGetUnreadCountUseCase } from "../../repositories/interfaces/player/INotificationUseCase.js";
+import { INotificationRepository } from "../../repositories/interfaces/shared/INotificationRepository.js";
 
-import { INotificationRepository } from "app/repositories/interfaces/shared/INotificationRepository";
-import { IGetUnreadCountUseCase } from "app/repositories/interfaces/player/INotificationUseCase";
 
 @injectable()
 export class GetUnreadCountUseCase implements IGetUnreadCountUseCase {

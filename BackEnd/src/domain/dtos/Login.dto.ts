@@ -1,5 +1,5 @@
-import { AdminToResponseDTO } from "./Admin.dto";
-import { UserResponseDTO } from "./User.dto";
+import { AdminToResponseDTO } from "./Admin.dto.js";
+import { UserResponseDTO } from "./User.dto.js";
 
 export interface LoginDTOUser {
     accessToken: string;

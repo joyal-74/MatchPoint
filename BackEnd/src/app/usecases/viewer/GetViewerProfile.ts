@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IGetViewerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { UserResponseDTO } from "../../../domain/dtos/User.dto.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
+import { UserMapper } from "../../mappers/UserMapper.js";
 
-import { UserMapper } from "app/mappers/UserMapper";
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { NotFoundError } from "domain/errors";
-import { ILogger } from "app/providers/ILogger";
-import { UserResponseDTO } from "domain/dtos/User.dto";
-import { IGetViewerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
 
 @injectable()
 export class GetViewerProfile implements IGetViewerProfile {

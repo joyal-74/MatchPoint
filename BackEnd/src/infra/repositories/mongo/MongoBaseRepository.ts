@@ -1,11 +1,12 @@
-import { IBaseRepository } from "app/repositories/IBaseRepository";
-import { Model, Document, HydratedDocument, UpdateQuery } from "mongoose";
+import { Model, HydratedDocument, UpdateQuery } from "mongoose";
+import { IBaseRepository } from "../../../app/repositories/IBaseRepository.js";
 
-export class MongoBaseRepository<TDocument extends Document, TResponse>
-    implements IBaseRepository<TDocument, TResponse> {
-    constructor(protected readonly model: Model<TDocument>) { }
+export class MongoBaseRepository<TSchema, TResponse>
+    implements IBaseRepository<TSchema, TResponse> {
 
-    protected toResponse(doc: HydratedDocument<TDocument> | TDocument): TResponse {
+    constructor(protected readonly model: Model<TSchema>) {}
+
+    protected toResponse(doc: HydratedDocument<TSchema>): TResponse {
         return doc.toObject() as TResponse;
     }
 
@@ -24,15 +25,15 @@ export class MongoBaseRepository<TDocument extends Document, TResponse>
         return docs.map((doc) => this.toResponse(doc));
     }
 
-    async create(data: Partial<TDocument>): Promise<TResponse> {
+    async create(data: Partial<TSchema>): Promise<TResponse> {
         const created = await this.model.create(data);
         return this.toResponse(created);
     }
 
-    async update(id: string, data: Partial<TDocument>): Promise<TResponse | null> {
+    async update(id: string, data: Partial<TSchema>): Promise<TResponse | null> {
         const updated = await this.model.findByIdAndUpdate(
             id,
-            data as UpdateQuery<TDocument>,
+            data as UpdateQuery<TSchema>,
             { new: true }
         ).exec();
 

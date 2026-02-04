@@ -1,8 +1,9 @@
-import { ManagerDetails } from "app/usecases/admin/GetManagerDetails";
-import { ManagerLoginResponseDTO, ManagerResponseDTO } from "domain/dtos/Manager.dto";
-import { UserResponseDTO } from "domain/dtos/User.dto";
-import { ManagerResponse } from "domain/entities/Manager";
-import { User } from "domain/entities/User";
+import { ManagerLoginResponseDTO, ManagerResponseDTO } from "../../domain/dtos/Manager.dto.js";
+import { UserResponseDTO } from "../../domain/dtos/User.dto.js";
+import { ManagerResponse } from "../../domain/entities/Manager.js";
+import { User } from "../../domain/entities/User.js";
+import { ManagerDetails } from "../usecases/admin/GetManagerDetails.js";
+
 
 
 export class ManagerMapper {

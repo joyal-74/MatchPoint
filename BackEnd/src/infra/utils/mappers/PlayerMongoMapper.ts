@@ -1,4 +1,4 @@
-import { PlayerProfileResponse } from "domain/dtos/Player.dto";
+import { PlayerProfileResponse } from "../../../domain/dtos/Player.dto.js";
 
 export class PlayerMongoMapper {
     static toPlayerProfileResponse(playerDoc): PlayerProfileResponse {

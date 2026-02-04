@@ -1,4 +1,4 @@
-import { IManagerIdGenerator, IPlayerIdGenerator, ITeamIdGenerator, ITournamentIdGenerator, IUmpireIdGenerator, IUserIdGenerator } from "app/providers/IIdGenerator";
+import { IManagerIdGenerator, IPlayerIdGenerator, ITeamIdGenerator, ITournamentIdGenerator, IUmpireIdGenerator, IUserIdGenerator } from "../../app/providers/IIdGenerator.js";
 import { nanoid } from 'nanoid';
 
 export class TeamIdGenerator implements ITeamIdGenerator {

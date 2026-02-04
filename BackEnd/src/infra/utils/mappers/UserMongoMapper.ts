@@ -1,5 +1,5 @@
-import { UserDocument } from "infra/databases/mongo/models/UserModel";
-import { UserResponse } from "domain/entities/User";
+import { UserDocument } from "../../../infra/databases/mongo/models/UserModel.js";
+import { UserResponse } from "../../../domain/entities/User.js";
 
 export class UserMapper {
     static toResponse(doc: UserDocument): UserResponse {

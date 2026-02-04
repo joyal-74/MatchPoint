@@ -1,5 +1,5 @@
-import { Otp } from "domain/entities/Otp";
-import { OtpContext } from "domain/enums/OtpContext";
+import { Otp } from "../../../../domain/entities/Otp.js";
+import { OtpContext } from "../../../../domain/enums/OtpContext.js";
 
 export interface IOtpRepository {
     saveOtp(id: string, email: string, otp: string, context : OtpContext): Promise<Otp>;

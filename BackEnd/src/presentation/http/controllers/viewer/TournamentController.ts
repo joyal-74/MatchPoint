@@ -1,14 +1,14 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { TournamentMessages } from "../../../../domain/constants/TournamentMessages.js";
+import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
+import { HttpResponse } from "../../helpers/HttpResponse.js";
+import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
+import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
+import { IGetViewerTournaments } from "../../../../app/repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { ILogger } from "../../../../app/providers/ILogger.js";
 
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
-import { HttpResponse } from "presentation/http/helpers/HttpResponse";
-import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
-import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
-import { ILogger } from "app/providers/ILogger";
-import { IGetViewerTournaments } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
-import { TournamentMessages } from "domain/constants/TournamentMessages";
 
 @injectable()
 export class TournamentController {

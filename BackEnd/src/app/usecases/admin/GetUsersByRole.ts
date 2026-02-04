@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IGetUsersByRole } from "../../repositories/interfaces/admin/IAdminUsecases.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { GetAllUsersParams } from "./GetAllViewers.js";
 
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { ILogger } from "app/providers/ILogger";
-import { GetAllUsersParams } from "./GetAllViewers";
-import { IGetUsersByRole } from "app/repositories/interfaces/admin/IAdminUsecases";
 
 @injectable()
 export class GetUsersByRole implements IGetUsersByRole {

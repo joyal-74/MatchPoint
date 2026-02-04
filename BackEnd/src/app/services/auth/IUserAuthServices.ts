@@ -1,5 +1,5 @@
-import { UserLoginResponseDTO } from "domain/dtos/User.dto";
-import { UserResponse } from "domain/entities/User";
+import { UserLoginResponseDTO } from "../../../domain/dtos/User.dto.js";
+import { UserResponse } from "../../../domain/entities/User.js";
 
 export interface IUserAuthServices {
     ensureUserCanLogin(user: UserResponse): void;

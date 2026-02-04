@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IGetPlayerTournaments } from "../../repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
+import { ITournamentRepository } from "../../repositories/interfaces/shared/ITournamentRepository.js";
+import { IRegistrationRepository } from "../../repositories/interfaces/manager/IRegistrationRepository.js";
+import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { Tournament } from "../../../domain/entities/Tournaments.js";
 
-import { IRegistrationRepository } from "app/repositories/interfaces/manager/IRegistrationRepository";
-import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { ILogger } from "../../providers/ILogger";
-import { Tournament } from "domain/entities/Tournaments";
-import { IGetPlayerTournaments } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
 
 @injectable()
 export class FetchTournamentsUseCase implements IGetPlayerTournaments {

@@ -1,6 +1,7 @@
-import { IPointsTableRepository } from "app/repositories/interfaces/shared/IPointsTableRepository";
-import { PointsRow } from "domain/entities/PointsTable";
-import { PointsTableModel } from "infra/databases/mongo/models/PointsTableModel";
+import { IPointsTableRepository } from "../../../app/repositories/interfaces/shared/IPointsTableRepository.js";
+import { PointsRow } from "../../../domain/entities/PointsTable.js";
+import { PointsTableModel } from "../../databases/mongo/models/PointsTableModel.js";
+
 
 export class PointsTableRepository implements IPointsTableRepository {
 
@@ -16,7 +17,7 @@ export class PointsTableRepository implements IPointsTableRepository {
             tournamentId: doc.tournamentId.toString(),
             teamId: doc.teamId.toString(),
             teamName: doc.teamName || doc.team,
-        })) as PointsRow[];
+        }));
     }
 
     async initializeTable(rows: Omit<PointsRow, '_id'>[]): Promise<void> {

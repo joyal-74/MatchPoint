@@ -1,19 +1,19 @@
-import { WinstonLogger } from "../providers/WinstonLogger";
-import { JWTService } from "../services/jwtServices";
-import { NodeMailerService } from "../services/NodeMailerService";
-import { NodeOtpGenerator } from "../providers/NodeOtpGenerator";
-import { BcryptPasswordHasher } from "../providers/BcryptPasswordHasher";
-import { ImageKitFileStorage } from "../providers/ImageKitFileStorage";
-import { WalletProvider } from "../providers/WalletProvider";
-import { RazorpayProvider } from "../providers/RazorpayProvider";
-import { ManagerIdGenerator, PlayerIdGenerator, TeamIdGenerator, TournamentIdGenerator, UmpireIdGenerator, UserIdGenerator } from "../providers/IdGenerator";
-import { RoleIdGenerator } from "../providers/RoleIdGenerator";
-import { EnvConfigProvider } from "../providers/EnvConfigProvider";
-import { RoomRegistry } from "../livestream/mediasoup/RoomRegistry";
-import { MongoUnitOfWork } from "../repositories/mongo/MongoUnitOfWork";
-import { container } from ".";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-import { NodeCronScheduler } from "infra/services/NodeCronScheduler";
+import { WinstonLogger } from "../providers/WinstonLogger.js";
+import { JWTService } from "../services/jwtServices.js";
+import { NodeMailerService } from "../services/NodeMailerService.js";
+import { NodeOtpGenerator } from "../providers/NodeOtpGenerator.js";
+import { BcryptPasswordHasher } from "../providers/BcryptPasswordHasher.js";
+import { ImageKitFileStorage } from "../providers/ImageKitFileStorage.js";
+import { WalletProvider } from "../providers/WalletProvider.js";
+import { RazorpayProvider } from "../providers/RazorpayProvider.js";
+import { ManagerIdGenerator, PlayerIdGenerator, TeamIdGenerator, TournamentIdGenerator, UmpireIdGenerator, UserIdGenerator } from "../providers/IdGenerator.js";
+import { RoleIdGenerator } from "../providers/RoleIdGenerator.js";
+import { EnvConfigProvider } from "../providers/EnvConfigProvider.js";
+import { RoomRegistry } from "../livestream/mediasoup/RoomRegistry.js";
+import { MongoUnitOfWork } from "../repositories/mongo/MongoUnitOfWork.js";
+import { container } from "tsyringe"; 
+import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { NodeCronScheduler } from "../../infra/services/NodeCronScheduler.js";
 
 
 

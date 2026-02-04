@@ -1,8 +1,7 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-
-import { INotificationRepository } from "app/repositories/interfaces/shared/INotificationRepository";
-import { IGetPlayerNotificationsUseCase } from "app/repositories/interfaces/player/INotificationUseCase";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IGetPlayerNotificationsUseCase } from "../../repositories/interfaces/player/INotificationUseCase.js";
+import { INotificationRepository } from "../../repositories/interfaces/shared/INotificationRepository.js";
 
 @injectable()
 export class GetPlayerNotificationsUseCase implements IGetPlayerNotificationsUseCase {

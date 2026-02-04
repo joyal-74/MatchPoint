@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IGetTourLeaderboard } from "../../../repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
+import { ILeaderboardRepository } from "../../../repositories/interfaces/shared/ILeaderboardRepository.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { Leaderboard } from "../../../../domain/entities/Tournaments.js";
 
-import { ILeaderboardRepository } from "app/repositories/interfaces/shared/ILeaderboardRepository";
-import { IGetTourLeaderboard } from "app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
-import { Leaderboard } from "domain/entities/Tournaments";
 
 @injectable()
 export class GetTourLeaderboard implements IGetTourLeaderboard {

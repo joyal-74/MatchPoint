@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IChangeUserStatus } from "../../repositories/interfaces/admin/IAdminUsecases.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { GetAllUsersParams } from "./GetAllViewers.js";
+import { ILogger } from "../../providers/ILogger.js";
 
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { ILogger } from "app/providers/ILogger";
-import { GetAllUsersParams } from "./GetAllViewers";
-import { IChangeUserStatus } from "app/repositories/interfaces/admin/IAdminUsecases";
 
 @injectable()
-export class ChangeUserStatus implements IChangeUserStatus{
+export class ChangeUserStatus implements IChangeUserStatus {
     constructor(
         @inject(DI_TOKENS.UserRepository) private _userRepository: IUserRepository,
         @inject(DI_TOKENS.Logger) private _logger: ILogger

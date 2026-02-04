@@ -1,10 +1,11 @@
-import { ITournamentRepository } from "app/repositories/interfaces/shared/ITournamentRepository";
-import { FormatStatPoint, TopTournamentPoint } from "domain/dtos/Analytics.dto";
-import { TournamentRegister, Tournament, TournamentTeam } from "domain/entities/Tournaments";
-import { BadRequestError, NotFoundError } from "domain/errors";
-import { TournamentModel } from "infra/databases/mongo/models/TournamentModel";
-import { TournamentMongoMapper } from "infra/utils/mappers/TournamentMongoMapper";
+
 import mongoose, { FilterQuery } from "mongoose";
+import { Tournament, TournamentRegister, TournamentTeam } from "../../../domain/entities/Tournaments.js";
+import { ITournamentRepository } from "../../../app/repositories/interfaces/shared/ITournamentRepository.js";
+import { TournamentModel } from "../../databases/mongo/models/TournamentModel.js";
+import { TournamentMongoMapper } from "../../utils/mappers/TournamentMongoMapper.js";
+import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
+import { FormatStatPoint, TopTournamentPoint } from "../../../domain/dtos/Analytics.dto.js";
 
 interface QueryType {
     status?: string;

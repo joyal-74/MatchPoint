@@ -1,5 +1,6 @@
-import { LiveMatchDTO } from "domain/dtos/LiveMatchDTO";
-import { TournamentMatchStatsDocument } from "domain/types/match.types";
+import { LiveMatchDTO } from "../../domain/dtos/LiveMatchDTO.js";
+import { TournamentMatchStatsDocument } from "../../domain/types/match.types.js";
+
 
 export class LiveMatchMapper {
     static toDTO(stats: TournamentMatchStatsDocument, battingTeam: any, bowlingTeam: any, tournament: any): LiveMatchDTO {

@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { Plan } from "../../../domain/entities/Plan.js";
+import { IPlanRepository } from "../../repositories/interfaces/admin/IPlanRepository.js";
 
-import { IPlanRepository } from "app/repositories/interfaces/admin/IPlanRepository";
-import { ILogger } from "app/providers/ILogger";
-import { Plan } from "domain/entities/Plan";
 
 @injectable()
 export class GetAvailablePlansByRole {

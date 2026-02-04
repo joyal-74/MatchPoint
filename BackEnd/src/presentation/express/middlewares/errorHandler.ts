@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import { AppError } from "domain/errors/AppError";
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-import { ILogger } from "app/providers/ILogger";
+import { buildResponse } from "../../../infra/utils/responseBuilder.js";
+import { AppError } from "../../../domain/errors/AppError.js";
+import { ILogger } from "../../../app/providers/ILogger.js";
+import { HttpStatusCode } from "../../../domain/enums/StatusCodes.js";
+
 
 @injectable()
 export class ErrorHandler {

@@ -1,10 +1,10 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-
 import { OAuth2Client } from "google-auth-library";
-import { UnauthorizedError } from "domain/errors";
-import { IGoogleAuthServices, GoogleUserInfo } from "app/services/auth/IGoogleAuthService";
-import { IConfigProvider } from "app/providers/IConfigProvider";
+import { GoogleUserInfo, IGoogleAuthServices } from "../../app/services/auth/IGoogleAuthService.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { IConfigProvider } from "../../app/providers/IConfigProvider.js";
+import { UnauthorizedError } from "../../domain/errors/index.js";
+
 
 @injectable()
 export class GoogleAuthService implements IGoogleAuthServices {

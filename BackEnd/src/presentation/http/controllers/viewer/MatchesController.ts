@@ -1,13 +1,12 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
-import { HttpResponse } from "presentation/http/helpers/HttpResponse";
-import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
-import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
-import { ILogger } from "app/providers/ILogger";
-import { IGetLiveMatches, IGetMatchUpdates } from "app/repositories/interfaces/usecases/IViewerUsecaseRepository";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
+import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
+import { HttpResponse } from "../../helpers/HttpResponse.js";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
+import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
+import { ILogger } from "../../../../app/providers/ILogger.js";
+import { IGetLiveMatches, IGetMatchUpdates } from "../../../../app/repositories/interfaces/usecases/IViewerUsecaseRepository.js";
 
 @injectable()
 export class MatchesController {

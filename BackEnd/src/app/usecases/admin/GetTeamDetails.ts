@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IGetTeamDetails } from "../../repositories/interfaces/admin/IAdminUsecases.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { TeamDataFull } from "../../../domain/dtos/Team.dto.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
+import { TeamMapper } from "../../mappers/TeamMappers.js";
 
-import { TeamMapper } from "app/mappers/TeamMappers";
-import { ILogger } from "app/providers/ILogger";
-import { IGetTeamDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { TeamDataFull } from "domain/dtos/Team.dto";
-import { NotFoundError } from "domain/errors";
 
 @injectable()
 export class GetTeamDetails implements IGetTeamDetails {

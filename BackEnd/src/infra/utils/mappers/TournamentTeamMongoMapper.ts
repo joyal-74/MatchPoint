@@ -1,4 +1,4 @@
-import { TournamentTeamData } from "domain/dtos/Tournament";
+import { TournamentTeamData } from "../../../domain/dtos/Tournament.js";
 
 export class TournamentTeamMongoMapper {
     static toDomain(t): TournamentTeamData {

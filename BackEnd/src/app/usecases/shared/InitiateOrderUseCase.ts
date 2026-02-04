@@ -1,11 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { PaymentMetadata } from "../../repositories/interfaces/IBasePaymentMetaData.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { ICreatePaymentSession } from "../../repositories/interfaces/usecases/IPlanUseCaseRepo.js";
+import { IPaymentProvider, PaymentSession } from "../../providers/IPaymentProvider.js";
+import { BadRequestError } from "../../../domain/errors/index.js";
 
-import { IPaymentProvider, PaymentSession } from "app/providers/IPaymentProvider";
-import { IPlanRepository } from "app/repositories/interfaces/admin/IPlanRepository";
-import { PaymentMetadata } from "app/repositories/interfaces/IBasePaymentMetaData";
-import { ICreatePaymentSession } from "app/repositories/interfaces/usecases/IPlanUseCaseRepo";
-import { BadRequestError } from "domain/errors";
 
 export interface CreatePaymentSessionDTO {
     amount: number;
@@ -18,8 +17,6 @@ export interface CreatePaymentSessionDTO {
 export class CreatePaymentSession implements ICreatePaymentSession {
     constructor(
         @inject(DI_TOKENS.RazorpayProvider) private _paymentProvider: IPaymentProvider,
-        @inject(DI_TOKENS.SubscriptionRepository) private _subscriptionPlanRepo: IPlanRepository,
-
     ) { }
 
     async execute(dto: CreatePaymentSessionDTO): Promise<PaymentSession> {

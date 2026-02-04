@@ -1,5 +1,5 @@
-import { PlayerProfileFieldDTO } from "domain/dtos/Player.dto";
-import { NotFoundError } from "domain/errors";
+import { PlayerProfileFieldDTO } from "../../domain/dtos/Player.dto.js";
+import { NotFoundError } from "../../domain/errors/index.js";
 
 
 export function validatePlayerSportsFields(data: PlayerProfileFieldDTO): PlayerProfileFieldDTO {

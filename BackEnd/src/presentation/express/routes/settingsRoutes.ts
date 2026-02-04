@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { expressAdapter } from "presentation/adaptors/ExpressAdaptor";
-import { SettingsController } from "presentation/http/controllers/shared/SettingsController";
 
 import { container } from "tsyringe";
+import { SettingsController } from "../../http/controllers/shared/SettingsController.js";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
 
 const router = Router();
 

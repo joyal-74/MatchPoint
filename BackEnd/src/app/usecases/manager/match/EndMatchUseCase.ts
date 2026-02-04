@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { EndMatchUseCaseInput, IEndMatchUseCase } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
+import { IMatchesRepository } from "../../../repositories/interfaces/manager/IMatchesRepository.js";
+import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo.js";
+import { IPlayerRepository } from "../../../repositories/interfaces/player/IPlayerRepository.js";
+import { MatchEntity } from "../../../../domain/entities/MatchEntity.js";
 import { Types } from "mongoose";
 
-import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
-import { IMatchStatsRepo } from "app/repositories/interfaces/manager/IMatchStatsRepo";
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
-import { IEndMatchUseCase, EndMatchUseCaseInput } from "app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
-import { MatchEntity } from "domain/entities/MatchEntity";
 
 @injectable()
 export class EndMatchUseCase implements IEndMatchUseCase {
@@ -38,8 +38,6 @@ export class EndMatchUseCase implements IEndMatchUseCase {
 
         if (matchStats) {
             const bulkOps = this.calculatePlayerUpdates(matchStats);
-
-            console.log(bulkOps, 'jkl')
 
             await this._playerRepo.bulkUpdateStats(bulkOps);
         }

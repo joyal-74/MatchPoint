@@ -1,15 +1,15 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IRefreshTokenUseCase, TokenUserResponse } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IAdminRepository } from "../../repositories/interfaces/admin/IAdminRepository.js";
+import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { NotFoundError, UnauthorizedError } from "../../../domain/errors/index.js";
+import { JwtPayload } from "jsonwebtoken";
+import { AdminMapper } from "../../mappers/AdminMapper.js";
+import { UserMapper } from "../../mappers/UserMapper.js";
 
-import { AdminMapper } from "app/mappers/AdminMapper";
-import { UserMapper } from "app/mappers/UserMapper";
-import { ILogger } from "app/providers/ILogger";
-import { IAdminRepository } from "app/repositories/interfaces/admin/IAdminRepository";
-import { IRefreshTokenUseCase, TokenUserResponse } from "app/repositories/interfaces/auth/IAuthenticationUseCase";
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { IJWTRepository } from "app/repositories/interfaces/providers/IjwtRepository";
-import { JwtPayload } from "domain/entities/JwtPayload";
-import { NotFoundError, UnauthorizedError } from "domain/errors";
 
 @injectable()
 export class RefreshToken implements IRefreshTokenUseCase {

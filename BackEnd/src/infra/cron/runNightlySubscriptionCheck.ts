@@ -1,4 +1,4 @@
-import { UserSubscriptionModel } from "infra/databases/mongo/models/SubscriptionModel";
+import { UserSubscriptionModel } from "../../infra/databases/mongo/models/SubscriptionModel.js";
 
 export async function runNightlySubscriptionCheck() {
     const now = new Date();

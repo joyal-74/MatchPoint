@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IUpdatePlayerInviteStatus } from "../../repositories/interfaces/player/ITeamRepositoryUsecase.js";
+import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository.js";
+import { INotificationRepository } from "../../repositories/interfaces/shared/INotificationRepository.js";
+import { BadRequestError } from "../../../domain/errors/index.js";
 
-import { ITeamRepository } from "app/repositories/interfaces/shared/ITeamRepository";
-import { INotificationRepository } from "app/repositories/interfaces/shared/INotificationRepository";
-import { BadRequestError } from "domain/errors";
-import { IUpdatePlayerInviteStatus } from "app/repositories/interfaces/player/ITeamRepositoryUsecase";
 
 @injectable()
 export class UpdatePlayerInviteStatus implements IUpdatePlayerInviteStatus {

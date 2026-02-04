@@ -1,4 +1,4 @@
-import { RtpCapabilities, RtpParameters, DtlsParameters, MediaKind } from "mediasoup/node/lib/types";
+import { RtpCapabilities, RtpParameters, DtlsParameters, MediaKind } from "mediasoup/types";
 
 export interface ProduceData {
     matchId: string;

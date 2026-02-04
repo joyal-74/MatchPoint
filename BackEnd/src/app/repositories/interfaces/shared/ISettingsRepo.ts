@@ -1,4 +1,4 @@
-import { User } from "domain/entities/User";
+import { User } from "../../../../domain/entities/User.js";
 
 export interface ISettingsRepository {
     findById(userId: string): Promise<User | null>;

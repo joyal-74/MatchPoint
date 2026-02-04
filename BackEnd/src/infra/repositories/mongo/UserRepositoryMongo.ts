@@ -1,12 +1,14 @@
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { GetAllUsersParams } from "app/usecases/admin/GetAllViewers";
-import { UserResponseDTO } from "domain/dtos/User.dto";
-import { UserResponse } from "domain/entities/User";
-import { UserModel, UserDocument } from "infra/databases/mongo/models/UserModel";
-import { MongoBaseRepository } from "../mongo/MongoBaseRepository";
-import { UserMapper } from "infra/utils/mappers/UserMongoMapper";
+import { IUserRepository } from "../../../app/repositories/interfaces/shared/IUserRepository.js";
+import { GetAllUsersParams } from "../../../app/usecases/admin/GetAllViewers.js";
+import { UserResponseDTO } from "../../../domain/dtos/User.dto.js";
+import { UserResponse } from "../../../domain/entities/User.js";
+import { UserDocument, UserModel } from "../../databases/mongo/models/UserModel.js";
+import { UserSchemaType } from "../../databases/mongo/types/UserDocument.js";
+import { UserMapper } from "../../utils/mappers/UserMongoMapper.js";
+import { MongoBaseRepository } from "../mongo/MongoBaseRepository.js";
 
-export class UserRepositoryMongo extends MongoBaseRepository<UserDocument, UserResponse> implements IUserRepository {
+
+export class UserRepositoryMongo extends MongoBaseRepository<UserSchemaType, UserResponse> implements IUserRepository {
 
     constructor() {
         super(UserModel);

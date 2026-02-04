@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
-import { IPasswordHasher } from "app/providers/IPasswordHasher";
+import { IPasswordHasher } from "../../app/providers/IPasswordHasher.js";
+
 
 export class BcryptPasswordHasher implements IPasswordHasher {
     async hashPassword(password: string): Promise<string> {

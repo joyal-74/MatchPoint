@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IUpdateViewerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
+import { IFileStorage } from "../../providers/IFileStorage.js";
+import { UserResponseDTO, UserUpdateDTO } from "../../../domain/dtos/User.dto.js";
+import { validateViewerUpdate } from "../../../domain/validators/ViewerUpdateValidators.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
+import { UserMapper } from "../../mappers/UserMapper.js";
+import { File } from "../../../domain/entities/File.js";
 
-import { UserMapper } from "app/mappers/UserMapper";
-import { IFileStorage } from "app/providers/IFileStorage";
-import { IUpdateViewerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
-import { IUserRepository } from "app/repositories/interfaces/shared/IUserRepository";
-import { UserResponseDTO, UserUpdateDTO } from "domain/dtos/User.dto";
-import { File } from "domain/entities/File";
-import { NotFoundError } from "domain/errors";
-import { validateViewerUpdate } from "domain/validators/ViewerUpdateValidators";
 
 
 @injectable()

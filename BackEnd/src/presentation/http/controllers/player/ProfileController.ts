@@ -1,15 +1,14 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
-
-import { IGetPlayerProfile, IUpdatePlayerFields, IUpdatePlayerProfile } from "app/repositories/interfaces/usecases/IUserProfileRepository";
-import { HttpStatusCode } from "domain/enums/StatusCodes";
-import { buildResponse } from "infra/utils/responseBuilder";
-import { HttpResponse } from "presentation/http/helpers/HttpResponse";
-import { IHttpRequest } from "presentation/http/interfaces/IHttpRequest";
-import { IHttpResponse } from "presentation/http/interfaces/IHttpResponse";
-import { IProfileController } from "presentation/http/interfaces/IProfileController";
-import { ILogger } from "app/providers/ILogger";
-import { ProfileMessages } from "domain/constants/player/PlayerProfileMessages";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
+import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
+import { HttpResponse } from "../../helpers/HttpResponse.js";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
+import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
+import { IGetPlayerProfile, IUpdatePlayerFields, IUpdatePlayerProfile } from "../../../../app/repositories/interfaces/usecases/IUserProfileRepository.js";
+import { ILogger } from "../../../../app/providers/ILogger.js";
+import { IProfileController } from "../../interfaces/IProfileController.js";
+import { ProfileMessages } from "../../../../domain/constants/player/PlayerProfileMessages.js";
 
 @injectable()
 export class PlayerProfileController implements IProfileController {

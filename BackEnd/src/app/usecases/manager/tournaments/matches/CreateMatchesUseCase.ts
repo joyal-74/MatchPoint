@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { DI_TOKENS } from "../../../../../domain/constants/Identifiers.js";
+import { ICreateMatchesUseCase } from "../../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
+import { IMatchesRepository } from "../../../../repositories/interfaces/manager/IMatchesRepository.js";
+import { ILogger } from "../../../../providers/ILogger.js";
+import { Match } from "../../../../../domain/entities/Match.js";
+import { BadRequestError } from "../../../../../domain/errors/index.js";
 
-import type { Match } from "domain/entities/Match";
-import { ILogger } from "app/providers/ILogger";
-import { IMatchesRepository } from "app/repositories/interfaces/manager/IMatchesRepository";
-import { ICreateMatchesUseCase } from "app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
-import { BadRequestError } from "domain/errors";
 
 @injectable()
 export class CreateMatchesUseCase implements ICreateMatchesUseCase {

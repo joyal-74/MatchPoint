@@ -1,5 +1,5 @@
-import { LeaderBoardPlayer } from "domain/entities/Player";
-import { Leaderboard } from "domain/entities/Tournaments";
+import { LeaderBoardPlayer } from "../../../../domain/entities/Player.js";
+import { Leaderboard } from "../../../../domain/entities/Tournaments.js";
 
 export interface ILeaderboardRepository {
     getLeaderboard(

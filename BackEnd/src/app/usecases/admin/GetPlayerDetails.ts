@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "domain/constants/Identifiers";
+import { IGetPlayerDetails } from "../../repositories/interfaces/admin/IAdminUsecases.js";
+import { IPlayerRepository } from "../../repositories/interfaces/player/IPlayerRepository.js";
+import { ILogger } from "../../providers/ILogger.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { InternalServerError, NotFoundError } from "../../../domain/errors/index.js";
+import { User } from "../../../domain/entities/User.js";
+import { PlayerMapper } from "../../mappers/PlayerMapper.js";
 
-import { PlayerMapper } from "app/mappers/PlayerMapper";
-import { ILogger } from "app/providers/ILogger";
-import { IGetPlayerDetails } from "app/repositories/interfaces/admin/IAdminUsecases";
-import { IPlayerRepository } from "app/repositories/interfaces/player/IPlayerRepository";
-import { User } from "domain/entities/User";
-import { InternalServerError, NotFoundError } from "domain/errors";
 
 export interface PlayerDetails {
     _id: string;
