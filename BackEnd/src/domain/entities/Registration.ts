@@ -10,8 +10,8 @@ export class Registration {
         public readonly captainId: string,
         public readonly managerId: string,
         public paymentStatus: PaymentStatus,
-        public paymentId: string | null,
+        public paymentId: string | undefined | null,
         public readonly createdAt: Date,
         public readonly updatedAt: Date
-    ) {}
+    ) { }
 }

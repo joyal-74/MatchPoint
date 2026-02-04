@@ -1,8 +1,7 @@
-import { Message } from '../../../domain/entities/Message.js';
-import { IMessage } from '../../../infra/databases/mongo/models/MessageModel.js';
-import { HydratedDocument, Types } from 'mongoose';
+import { Message } from "../../../domain/entities/Message.js";
+import { IMessage } from "../../../infra/databases/mongo/models/MessageModel.js";
+import { FlattenMaps, HydratedDocument, Types } from "mongoose";
 
-// Define a type for populated sender
 type PopulatedSender = {
     _id: Types.ObjectId;
     firstName?: string;
@@ -10,9 +9,13 @@ type PopulatedSender = {
     profileImage?: string;
 } | Types.ObjectId | string | undefined;
 
+export type LeanMessage = FlattenMaps<IMessage> & {
+    senderId?: PopulatedSender;
+};
+
 export class MessageMapper {
 
-    static toPersistence(m: Omit<Message, 'id' | 'createdAt'>) {
+    static toPersistence(m: Omit<Message, "id" | "createdAt">) {
         return {
             chatId: m.chatId,
             senderId: m.senderId,
@@ -26,30 +29,20 @@ export class MessageMapper {
     static fromHydrated(doc: HydratedDocument<IMessage>): Message {
         const sender: PopulatedSender = doc.senderId;
 
-        let senderId: string;
-        let senderName: string;
-        let profileImage: string;
-
+        let senderId = "";
+        let senderName = "Unknown";
+        let profileImage = "";
 
         if (sender instanceof Types.ObjectId) {
             senderId = sender.toString();
-            senderName = 'Unknown';
-            profileImage = '';
-        } else if (typeof sender === 'string') {
+        } else if (typeof sender === "string") {
             senderId = sender;
-            senderName = 'Unknown';
-            profileImage = '';
-        } else if (sender && '_id' in sender) {
+        } else if (sender && "_id" in sender) {
             senderId = sender._id.toString();
-            const firstName = sender.firstName ?? '';
-            const lastName = sender.lastName ?? '';
-            
-            senderName = firstName || lastName ? `${firstName} ${lastName}`.trim() : 'Unknown';
-            profileImage = sender.profileImage ?? '';
-        } else {
-            senderId = '';
-            senderName = 'Unknown';
-            profileImage = '';
+            const firstName = sender.firstName ?? "";
+            const lastName = sender.lastName ?? "";
+            senderName = firstName || lastName ? `${firstName} ${lastName}`.trim() : "Unknown";
+            profileImage = sender.profileImage ?? "";
         }
 
         return {
@@ -66,31 +59,23 @@ export class MessageMapper {
         };
     }
 
-    static fromLean(doc: IMessage & { senderId?: PopulatedSender }): Message {
+    static fromLean(doc: LeanMessage): Message {
         const sender: PopulatedSender = doc.senderId;
 
-        let senderId: string;
-        let senderName: string;
-        let profileImage: string;
+        let senderId = "";
+        let senderName = "Unknown";
+        let profileImage = "";
 
         if (sender instanceof Types.ObjectId) {
             senderId = sender.toString();
-            senderName = 'Unknown';
-            profileImage = '';
-        } else if (typeof sender === 'string') {
+        } else if (typeof sender === "string") {
             senderId = sender;
-            senderName = 'Unknown';
-            profileImage = '';
-        } else if (sender && '_id' in sender) {
+        } else if (sender && "_id" in sender) {
             senderId = sender._id.toString();
-            const firstName = sender.firstName ?? '';
-            const lastName = sender.lastName ?? '';
-            senderName = firstName || lastName ? `${firstName} ${lastName}`.trim() : 'Unknown';
-            profileImage = sender.profileImage ?? '';
-        } else {
-            senderId = '';
-            senderName = 'Unknown';
-            profileImage = '';
+            const firstName = sender.firstName ?? "";
+            const lastName = sender.lastName ?? "";
+            senderName = firstName || lastName ? `${firstName} ${lastName}`.trim() : "Unknown";
+            profileImage = sender.profileImage ?? "";
         }
 
         return {
