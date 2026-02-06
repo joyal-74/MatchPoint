@@ -5,6 +5,9 @@ import { IJWTRepository } from "../../../app/repositories/interfaces/providers/I
 import { IUserRepository } from "../../../app/repositories/interfaces/shared/IUserRepository.js";
 import { HttpStatusCode } from "../../../domain/enums/StatusCodes.js";
 import { buildResponse } from "../../../infra/utils/responseBuilder.js";
+import { IAdminRepository } from "../../../app/repositories/interfaces/admin/IAdminRepository.js";
+import { AdminResponse } from "../../../domain/entities/Admin.js";
+import { UserResponseDTO } from "../../../domain/dtos/User.dto.js";
 
 
 export interface AuthRequest extends Request {
@@ -15,7 +18,8 @@ export interface AuthRequest extends Request {
 export class AuthMiddleware {
     constructor(
         @inject(DI_TOKENS.JWTService) private readonly jwtService: IJWTRepository,
-        @inject(DI_TOKENS.UserRepository) private readonly userRepo: IUserRepository
+        @inject(DI_TOKENS.UserRepository) private readonly userRepo: IUserRepository,
+        @inject(DI_TOKENS.AdminRepository) private readonly adminRepo: IAdminRepository
     ) { }
 
     public restrict(allowedRoles: string[] = []) {
@@ -32,8 +36,15 @@ export class AuthMiddleware {
                 // 2. Verify Token via Injected Service
                 const payload = await this.jwtService.verifyAccessToken(token);
 
+                console.log(payload)
+
                 // 3. Check User via Injected Repository
-                const user = await this.userRepo.findById(payload.userId);
+                let user : AdminResponse | UserResponseDTO | null;
+                if(payload.role === 'admin'){
+                    user = await this.adminRepo.findById(payload.userId);
+                }else{
+                    user = await this.userRepo.findById(payload.userId);
+                }
 
                 if (!user) {
                     return res.status(HttpStatusCode.UNAUTHORIZED)

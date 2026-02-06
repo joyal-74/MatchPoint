@@ -1,10 +1,10 @@
 import { PlayerProfileResponse } from "../../../../domain/dtos/Player.dto.js";
-import { Player, PlayerEntity, PlayerRegister, PlayerResponse, PopulatedPLayer } from "../../../../domain/entities/Player.js";
+import { Player, PlayerEntity, PlayerRegister, PlayerResponse, PopulatedPlayer } from "../../../../domain/entities/Player.js";
 
 export interface IPlayerRepository {
     findById(userId: string): Promise<PlayerProfileResponse | null>;
 
-    findByUserId(userId: string): Promise<PopulatedPLayer | null>;
+    findByUserId(userId: string): Promise<PopulatedPlayer | null>;
 
     findPlayerDetails(userId: string): Promise<PlayerResponse | null>;
 

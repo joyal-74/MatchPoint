@@ -18,6 +18,8 @@ const playerTournamentController = container.resolve(TournamentsController)
 
 router.put("/:playerId/profile", upload.single("file"), expressFileUpdateHandler(playerProfileController.updateProfile));
 
+router.get("/:userId/stats", expressAdapter(playerProfileController.getPlayerStats));
+
 router.put('/:playerId/profile/sports', expressAdapter(playerProfileController.updatePlayerSportsFields));
 
 router.get('/:playerId/profile', expressAdapter(playerProfileController.getProfile));
@@ -31,6 +33,8 @@ router.post('/team/:playerId/invite/status', expressAdapter(playerTeamController
 router.get('/team/:teamId/details', expressAdapter(playerTeamController.getTeamDetails))
 
 router.post('/:teamId/join', expressAdapter(playerTeamController.joinTeams))
+
+router.post('/:teamId/leave', expressAdapter(playerTeamController.playerLeaveTeam))
 
 router.get('/tournaments', expressAdapter(playerTournamentController.getplayerTournaments))
 

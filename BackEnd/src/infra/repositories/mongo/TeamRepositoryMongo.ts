@@ -274,6 +274,27 @@ export class TeamRepositoryMongo implements ITeamRepository {
         return this.findById(teamId);
     }
 
+    async leavePlayer(teamId: string, userId: string): Promise<boolean | null> {
+        const result = await TeamModel.findOneAndUpdate(
+            {
+                _id: teamId,
+                "members.userId": userId 
+            },
+            {
+                $pull: { members: { userId: userId } },
+                $inc: { membersCount: -1 }
+            },
+            { new: true }
+        );
+
+        if (!result) {
+            const teamExists = await TeamModel.exists({ _id: teamId });
+            return teamExists ? false : null;
+        }
+
+        return true;
+    }
+
     async findTeamsByIds(teamIds: string[]) {
         return TeamModel.find({ _id: { $in: teamIds } }).lean();
     }

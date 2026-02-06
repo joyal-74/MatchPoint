@@ -1,250 +1,170 @@
-import { Send, Users, X, Search, ChevronDown, MoreVertical, Loader2 } from "lucide-react";
-import PlayerLayoutNavbar from "../../layout/PlayerLayoutWithNavbar";
+import { Send, Users, X, ChevronLeft, Loader2 } from "lucide-react";
 import { useTeamChatLogic } from "../../../hooks/player/useTeamChatLogic";
 import { UserAvatar } from "./UserAvatar";
 import { EmptyState } from "./EmptyState";
+import Navbar from "../../../components/player/Navbar";
 
-export default function TeamChat(props: { initialChatId?: string; initialTeamId?: string }) {
-    const {
-        currentUser, teams, activeTeam, members, sortedMessages,
-        messageInput, showMembers, showTeamsMobile, loadingMembers,
-        isLoadingMore, hasMoreMessages, isNearBottom, chatStatus,
-        handlers, refs
-    } = useTeamChatLogic(props);
-
-    const typingIndicator = chatStatus.typingUsers.length > 0
-        ? `${chatStatus.typingUsers[0]?.name || "Someone"} is typing...` : null;
+export default function TeamChat() {
+    const { 
+        currentUser, activeTeam, teams, sortedMessages, messageInput, 
+        handlers, refs, chatStatus, showMembers, members, loadingMembers 
+    } = useTeamChatLogic({});
 
     return (
-        <PlayerLayoutNavbar>
-            {/* Container: Uses 'text-foreground' for base text color */}
-            <div className="w-full h-[calc(100vh-150px)] min-h-[650px] max-w-[1600px] mx-auto flex gap-1 text-foreground py-4">
+        <div className="flex flex-col h-screen bg-background overflow-hidden">
+            <Navbar />
+            
+            <div className="flex-1 flex w-full max-w-[1600px] mx-auto lg:p-4 lg:gap-4 overflow-hidden relative">
 
-                <div className={`
-                    flex flex-col w-full lg:w-72 bg-card border border-border rounded-xl overflow-hidden transition-all duration-300
-                    ${showTeamsMobile ? 'fixed inset-0 z-50 lg:relative lg:inset-auto' : 'hidden lg:flex'}
-                    `}>
-                    <div className="p-4 border-b border-border bg-card">
-                        <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-lg font-bold tracking-tight text-card-foreground">Teams</h2>
-                            <button onClick={handlers.toggleTeamsMobile} className="lg:hidden p-2 hover:bg-muted rounded-full text-muted-foreground">
-                                <X size={20} />
-                            </button>
-                        </div>
-                        <div className="relative group">
-                            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                            {/* Input uses 'bg-input' or 'bg-muted' */}
-                            <input
-                                placeholder="Find a team..."
-                                className="w-full bg-input border border-input focus:border-ring rounded-lg pl-10 pr-4 py-2 text-sm outline-none transition-all placeholder:text-muted-foreground"
-                            />
-                        </div>
+                {/* SQUAD LIST SIDEBAR */}
+                <aside className={`
+                    flex-col bg-card lg:border border-border/50 lg:rounded-[2rem] transition-all duration-300
+                    ${activeTeam ? 'hidden lg:flex lg:w-80' : 'flex w-full lg:w-80'}
+                `}>
+                    <div className="p-6 font-black italic text-2xl uppercase text-primary border-b border-border/10">
+                        Squads
                     </div>
-
-                    <div className="flex-1 overflow-y-auto p-2 space-y-1 custom-scrollbar">
+                    <div className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar">
                         {teams.map((team) => (
                             <button
                                 key={team._id}
                                 onClick={() => handlers.handleSelectTeam(team)}
-                                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 group
-                  ${activeTeam?._id === team._id
-                                        ? "bg-primary/10 text-primary font-medium"
-                                        : "hover:bg-muted text-muted-foreground hover:text-foreground"
-                                    }`}
+                                className={`w-full flex items-center gap-3 p-3 rounded-2xl transition-all ${
+                                    activeTeam?._id === team._id ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'hover:bg-muted text-muted-foreground'
+                                }`}
                             >
                                 <UserAvatar src={team.logo} name={team.name} size="md" />
-                                <div className="flex-1 text-left overflow-hidden">
-                                    <p className="text-sm truncate">
-                                        {team.name}
-                                    </p>
-                                    <p className="text-xs opacity-70 truncate">Generic Sport</p>
-                                </div>
+                                <div className="text-left font-bold text-sm truncate">{team.name}</div>
                             </button>
                         ))}
                     </div>
-                </div>
+                </aside>
 
-                {/* === CENTER: CHAT AREA === */}
-                <div className="flex-1 flex flex-col bg-card border border-border rounded-xl overflow-hidden shadow-sm relative">
-
-                    {/* Mobile Header */}
-                    <div className="lg:hidden p-4 border-b border-border flex items-center justify-between bg-card text-card-foreground">
-                        <button onClick={handlers.toggleTeamsMobile} className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                            <ChevronDown size={16} /> Teams
-                        </button>
-                        <span className="font-bold">{activeTeam?.name || "Chat"}</span>
-                        {activeTeam && <button onClick={handlers.toggleMembers}><Users size={20} /></button>}
-                    </div>
-
+                {/* CHAT INTERFACE */}
+                <main className={`
+                    flex-1 flex flex-col bg-card lg:border border-border/50 lg:rounded-[2rem] overflow-hidden 
+                    ${!activeTeam ? 'hidden lg:flex' : 'flex'}
+                `}>
                     {activeTeam ? (
                         <>
-                            {/* Chat Header */}
-                            <div className="hidden lg:flex items-center justify-between p-4 border-b border-border bg-card/95 backdrop-blur z-10">
+                            <header className="px-4 py-4 border-b border-border/50 flex items-center justify-between bg-card/80 backdrop-blur-md">
                                 <div className="flex items-center gap-3">
+                                    <button onClick={() => handlers.handleSelectTeam(null)} className="lg:hidden p-1 -ml-1 text-muted-foreground"><ChevronLeft size={28} /></button>
                                     <UserAvatar src={activeTeam.logo} name={activeTeam.name} size="md" status={chatStatus.connected} />
-                                    <div>
-                                        <h2 className="font-bold text-card-foreground flex items-center gap-2">
-                                            {activeTeam.name}
-                                        </h2>
-                                        <div className="flex items-center gap-2 h-4">
-                                            {typingIndicator ? (
-                                                <span className="text-xs text-primary animate-pulse font-medium">{typingIndicator}</span>
-                                            ) : (
-                                                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                                    {/* Online dot uses Primary color */}
-                                                    <span className={`w-1.5 h-1.5 rounded-full ${chatStatus.connected ? 'bg-primary' : 'bg-destructive'}`} />
-                                                    {chatStatus.connected ? 'Online' : 'Reconnecting...'}
-                                                </span>
-                                            )}
-                                        </div>
+                                    <div className="flex flex-col">
+                                        <h2 className="font-bold leading-none text-sm lg:text-base">{activeTeam.name}</h2>
+                                        <span className="text-[10px] text-primary font-bold uppercase mt-1 tracking-widest">
+                                            {chatStatus.connected ? "● Live Sync" : "Connecting..."}
+                                        </span>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <button onClick={handlers.toggleMembers} className={`p-2.5 rounded-lg transition-colors ${showMembers ? 'bg-accent text-accent-foreground' : 'hover:bg-muted text-muted-foreground'}`}>
-                                        <Users size={20} />
-                                    </button>
-                                    <button className="p-2.5 rounded-lg hover:bg-muted text-muted-foreground">
-                                        <MoreVertical size={20} />
-                                    </button>
-                                </div>
-                            </div>
+                                <button onClick={handlers.toggleMembers} className="p-2 hover:bg-muted rounded-xl"><Users size={20} /></button>
+                            </header>
 
-                            {/* Messages Body */}
-                            <div
+                            {/* MESSAGES AREA */}
+                            <div 
                                 ref={refs.messagesContainerRef}
                                 onScroll={handlers.handleScroll}
-                                className="flex-1 overflow-y-auto p-4 space-y-6 scroll-smooth custom-scrollbar relative bg-background/50"
+                                className="flex-1 overflow-y-auto px-4 lg:px-10 py-6 space-y-1 custom-scrollbar bg-background"
                             >
-                                {isLoadingMore && (
-                                    <div className="flex justify-center py-2"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
-                                )}
-
-                                {!hasMoreMessages && sortedMessages.length > 0 && (
-                                    <div className="text-center py-6">
-                                        <span className="px-3 py-1 rounded-full bg-muted text-xs text-muted-foreground border border-border">Start of conversation</span>
-                                    </div>
-                                )}
-
-                                {chatStatus.loading && !isLoadingMore && (
-                                    <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-20">
-                                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                                    </div>
-                                )}
-
                                 {sortedMessages.map((msg, idx) => {
+                                    // 1. Identify if message is from the logged-in user
                                     const isMine = msg.senderId === currentUser.id;
-                                    const showHeader = idx === 0 || sortedMessages[idx - 1].senderId !== msg.senderId;
-
+                                    
+                                    // 2. Logic to group messages (hide name/avatar if same sender)
+                                    const isSameAsPrev = idx > 0 && sortedMessages[idx - 1].senderId === msg.senderId;
+                                    
                                     return (
-                                        <div key={msg.id || idx} className={`flex gap-3 ${isMine ? "flex-row-reverse" : "flex-row"} group animate-in fade-in slide-in-from-bottom-2 duration-300`}>
-                                            {!isMine && (
-                                                <div className="w-10 flex-shrink-0 flex flex-col items-center">
-                                                    {showHeader ? <UserAvatar src={msg.profileImage} name={msg.senderName} /> : <div className="w-10" />}
+                                        <div key={msg.id || idx} className={`flex ${isMine ? "justify-end" : "justify-start"} ${isSameAsPrev ? "mt-1" : "mt-6"} animate-in fade-in duration-300`}>
+                                            
+                                            {/* Show Avatar only for others and only on the first message of a group */}
+                                            {!isMine && !isSameAsPrev && (
+                                                <div className="mr-3 mt-1">
+                                                    <UserAvatar src={msg.profileImage} name={msg.senderName} size="sm" />
                                                 </div>
                                             )}
-
-                                            <div className={`max-w-[75%] ${isMine ? "items-end" : "items-start"} flex flex-col`}>
-                                                {showHeader && !isMine && (
-                                                    <span className="text-xs text-muted-foreground font-medium ml-1 mb-1 block">{msg.senderName}</span>
+                                            
+                                            <div className={`flex flex-col ${isMine ? "items-end" : "items-start"} ${isSameAsPrev && !isMine ? "ml-11" : ""}`}>
+                                                
+                                                {/* Show Name and Time only on the first message of a group */}
+                                                {!isSameAsPrev && (
+                                                    <span className="text-[11px] font-bold text-muted-foreground/60 mb-1 px-1 uppercase tracking-tight">
+                                                        {isMine ? "You" : msg.senderName} • {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    </span>
                                                 )}
-
+                                                
+                                                {/* The Message Bubble */}
                                                 <div className={`
-                                                    relative px-4 py-2.5 text-[15px] leading-relaxed shadow-sm
-                                                    ${isMine
-                                                        ? "bg-primary text-primary-foreground rounded-2xl rounded-tr-sm" // My Message: Primary Color
-                                                        : "bg-muted text-foreground rounded-2xl rounded-tl-sm border border-border" // Their Message: Muted Color
-                                                    }
-                                                ${msg.status === 'failed' ? 'border-destructive border opacity-80' : ''}
+                                                    px-4 py-2.5 text-[15px] shadow-sm max-w-[85%] lg:max-w-xl transition-all
+                                                    ${isMine 
+                                                        ? "bg-primary text-primary-foreground rounded-2xl rounded-tr-none" 
+                                                        : "bg-muted text-foreground rounded-2xl rounded-tl-none border border-border/40"}
+                                                    ${isSameAsPrev ? (isMine ? "rounded-tr-2xl" : "rounded-tl-2xl") : ""}
                                                 `}>
                                                     {msg.text}
-                                                    <span className={`text-[10px] ml-3 opacity-70 inline-block ${isMine ? 'text-primary-foreground' : 'text-muted-foreground'}`}>
-                                                        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
                                     );
                                 })}
-                                <div id="scroll-anchor" className="h-1" />
+                                <div id="scroll-anchor" className="h-4" />
                             </div>
 
-                            {/* Scroll Down Button */}
-                            {!isNearBottom && (
-                                <button
-                                    onClick={handlers.scrollToBottom}
-                                    className="absolute bottom-24 right-6 p-2 bg-popover border border-border text-primary rounded-full shadow-lg hover:bg-muted transition-all z-20"
-                                >
-                                    <ChevronDown size={20} />
-                                </button>
-                            )}
-
-                            {/* Input Area */}
-                            <div className="p-4 bg-card border-t border-border">
-                                <form onSubmit={handlers.handleSendMessage} className="relative flex items-end gap-2 bg-input/50 p-2 rounded-xl border border-input focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/20 transition-all">
-                                    <input
-                                        ref={refs.inputRef}
-                                        value={messageInput}
-                                        onChange={handlers.handleInputChange}
-                                        placeholder={`Message ${activeTeam.name}...`}
-                                        disabled={!chatStatus.connected}
-                                        className="flex-1 bg-transparent justify-center border-none outline-none text-foreground placeholder:text-muted-foreground py-1.5 max-h-32 resize-none"
+                            {/* INPUT AREA */}
+                            <footer className="p-4 pb-24 lg:pb-6 bg-card border-t border-border/50">
+                                <form onSubmit={handlers.handleSendMessage} className="flex items-center gap-3 bg-muted/60 p-2 pl-4 rounded-[1.5rem] border border-border/50 focus-within:ring-2 ring-primary/5 transition-all">
+                                    <input 
+                                        value={messageInput} 
+                                        onChange={handlers.handleInputChange} 
+                                        placeholder="Type a message..." 
+                                        className="flex-1 bg-transparent py-2.5 outline-none text-sm"
                                         autoComplete="off"
                                     />
-                                    <button
-                                        type="submit"
+                                    <button 
+                                        type="submit" 
                                         disabled={!messageInput.trim() || !chatStatus.connected}
-                                        className={`p-2.5 rounded-lg transition-all duration-200 flex items-center justify-center
-                      ${messageInput.trim() && chatStatus.connected
-                                                ? "bg-primary text-primary-foreground shadow-sm hover:opacity-90 active:scale-95"
-                                                : "bg-muted text-muted-foreground cursor-not-allowed"}
-                    `}
+                                        className="bg-primary text-white p-3 rounded-xl shadow-lg hover:scale-105 active:scale-95 disabled:opacity-30 transition-all"
                                     >
-                                        <Send size={18} className={messageInput.trim() ? "ml-0.5" : ""} />
+                                        <Send size={18} />
                                     </button>
                                 </form>
-                            </div>
+                            </footer>
                         </>
                     ) : (
-                        <EmptyState onAction={handlers.toggleTeamsMobile} />
+                        <div className="flex-1 flex items-center justify-center p-8">
+                             <EmptyState onAction={() => {}} />
+                        </div>
                     )}
-                </div>
+                </main>
 
-                {/* === RIGHT SIDEBAR: MEMBERS === */}
+                {/* ROSTER SIDEBAR */}
                 {showMembers && activeTeam && (
-                    <div className="absolute inset-0 lg:static z-[60] lg:z-auto bg-background/80 lg:bg-transparent flex justify-end backdrop-blur-sm lg:backdrop-blur-none">
-                        <div className="w-full lg:w-72 bg-card border-l border-border h-full flex flex-col animate-in slide-in-from-right duration-300 shadow-2xl lg:shadow-none lg:rounded-r-xl">
-                            <div className="p-4 border-b border-border flex items-center justify-between">
-                                <h3 className="font-bold text-card-foreground">Team Members</h3>
-                                <button onClick={handlers.toggleMembers} className="p-1 hover:bg-muted rounded-md text-muted-foreground">
-                                    <X size={18} />
-                                </button>
+                    <aside className="fixed inset-0 lg:static z-[100] lg:z-auto bg-background/80 lg:bg-transparent backdrop-blur-sm flex justify-end">
+                        <div className="w-full lg:w-80 bg-card border-l border-border/50 h-full flex flex-col lg:rounded-[2rem] shadow-2xl animate-in slide-in-from-right duration-500">
+                            <div className="p-6 border-b border-border/50 flex items-center justify-between">
+                                <h3 className="text-lg font-black uppercase tracking-tighter">Roster</h3>
+                                <button onClick={handlers.toggleMembers} className="p-2 hover:bg-muted rounded-full text-muted-foreground"><X size={20} /></button>
                             </div>
-
-                            <div className="flex-1 overflow-y-auto p-2 space-y-1">
+                            <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
                                 {loadingMembers ? (
-                                    <div className="flex justify-center py-8"><Loader2 className="animate-spin text-muted-foreground" /></div>
-                                ) : members.length > 0 ? (
+                                    <div className="flex justify-center py-12"><Loader2 className="animate-spin text-primary/40" /></div>
+                                ) : (
                                     members.map((member) => (
-                                        <div key={member._id} className="flex items-center gap-3 p-2.5 hover:bg-muted rounded-lg transition-colors cursor-pointer group">
+                                        <div key={member._id} className="flex items-center gap-3 p-3 hover:bg-muted rounded-2xl transition-all cursor-pointer">
                                             <UserAvatar name={member.firstName} size="sm" />
                                             <div className="overflow-hidden">
-                                                <p className="text-sm font-medium text-foreground truncate">
-                                                    {member.firstName} {member.lastName}
-                                                </p>
-                                                <p className="text-xs text-muted-foreground truncate">{member.email}</p>
+                                                <p className="text-sm font-bold text-foreground truncate">{member.firstName} {member.lastName}</p>
+                                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">Active Player</p>
                                             </div>
                                         </div>
                                     ))
-                                ) : (
-                                    <div className="text-center py-8 text-muted-foreground text-sm">No members found</div>
                                 )}
                             </div>
                         </div>
-                        {/* Mobile backdrop click to close */}
                         <div className="flex-1 lg:hidden" onClick={handlers.toggleMembers}></div>
-                    </div>
+                    </aside>
                 )}
             </div>
-        </PlayerLayoutNavbar>
+        </div>
     );
 }

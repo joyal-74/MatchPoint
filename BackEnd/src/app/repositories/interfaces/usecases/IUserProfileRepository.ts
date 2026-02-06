@@ -3,6 +3,7 @@ import { PlayerProfileFieldDTO, PlayerProfileResponse, PlayerUpdateDTO } from ".
 import { UmpireResponseDTO, UmpireUpdateDTO } from "../../../../domain/dtos/Umpire.dto.js";
 import { UserResponseDTO, UserUpdateDTO } from "../../../../domain/dtos/User.dto.js";
 import { File } from "../../../../domain/entities/File.js";
+import { PopulatedPlayer } from "../../../../domain/entities/Player.js";
 
 
 export interface IGetManagerProfile {
@@ -23,6 +24,10 @@ export interface IUpdateUmpireProfile {
 
 export interface IGetPlayerProfile {
     execute(managerId: string): Promise<PlayerProfileResponse>;
+}
+
+export interface IGetPlayerStats {
+    execute(managerId: string): Promise<PopulatedPlayer>;
 }
 
 export interface IUpdatePlayerProfile {

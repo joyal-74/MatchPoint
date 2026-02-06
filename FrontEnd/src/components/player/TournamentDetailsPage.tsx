@@ -10,7 +10,6 @@ import PointsTableTab from './tournament/tabs/PointsTableTab';
 import StatsTab from './tournament/tabs/StatsTab';
 import RulesTab from './tournament/tabs/RulesTab';
 import TeamsTab from './tournament/tabs/TeamsTab';
-import TournamentSidebar from './tournament/TournamentSidebar';
 import TournamentHeader from './tournament/TournamentHeader';
 
 
@@ -56,10 +55,10 @@ const TournamentDetails = () => {
     return (
         <PlayerLayout>
             <div className="min-h-screen bg-background text-foreground pb-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                <div className="mx-auto px-4 sm:px-6">
                     <TournamentHeader tournament={tournament} navigate={navigate} />
                     
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
+                    <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mt-12">
                         <div className="lg:col-span-2 space-y-8">
                             <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
                             <div className="min-h-[400px]">
@@ -67,7 +66,6 @@ const TournamentDetails = () => {
                             </div>
                         </div>
                         
-                        <TournamentSidebar tournament={tournament} />
                     </div>
                 </div>
             </div>

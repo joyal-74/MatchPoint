@@ -60,7 +60,6 @@ export const useSignup = () => {
 
     const isStepValid = (step: number, hasPreview: boolean): boolean => {
         const v = validateSignup(formData);
-        console.log(v, 'v')
         if (step === 1) {
             return !!(formData.firstName && formData.lastName && hasPreview && !v.firstName && !v.lastName && !v.profileImage);
         }

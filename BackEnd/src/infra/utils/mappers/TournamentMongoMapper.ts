@@ -17,15 +17,18 @@ export class TournamentMongoMapper {
 
     static fromHydrated(t: TournamentDocument): Tournament {
         const obj = t.toObject();
-        return this._toDomainFromObj(obj);
+        // Use Class Name instead of 'this'
+        return TournamentMongoMapper._toDomainFromObj(obj);
     }
 
     static fromLean(obj: LeanTournament): Tournament {
-        return this._toDomainFromObj(obj);
+        // Use Class Name instead of 'this'
+        return TournamentMongoMapper._toDomainFromObj(obj);
     }
 
     static toDomainArrayLean(tournaments: LeanTournament[]): Tournament[] {
-        return tournaments.map(this.fromLean);
+        // Use an arrow function to ensure 'obj' is passed correctly
+        return tournaments.map(obj => TournamentMongoMapper.fromLean(obj));
     }
 
     private static _toDomainFromObj(obj: any): Tournament {

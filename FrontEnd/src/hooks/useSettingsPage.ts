@@ -21,23 +21,36 @@ export const useSettingsPage = () => {
     const { theme, setTheme, color, setColor } = useTheme();
 
     // Redux State
-    const { 
-        isLoading, isVerifying, isPasswordVerified, 
-        error: reduxError, successMessage 
+    const {
+        isLoading, isVerifying, isPasswordVerified,
+        error: reduxError, successMessage
     } = useAppSelector((state) => state.settings);
-    
-    const userId = useAppSelector(state => state.auth.user?._id);
+
+    const user = useAppSelector(state => state.auth.user);
+    const userId = user?._id
 
     // Local State
     const [expandedSection, setExpandedSection] = useState<string | null>('appearance');
     const [security, setSecurity] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
     const [showPassword, setShowPassword] = useState({ current: false, new: false, confirm: false });
-    const [preferences, setPreferences] = useState({ language: "en", country: "IN" });
+    const [preferences, setPreferences] = useState({
+        language: user?.settings.language || "en",
+        country: user?.settings.country || "IN"
+    });
 
     // Cleanup Effect
     useEffect(() => {
         return () => { dispatch(resetSettingsState()); }
     }, [dispatch]);
+
+    useEffect(() => {
+        if (user) {
+            setPreferences({
+                language: user.settings.language || "en",
+                country: user.settings.country || "IN"
+            });
+        }
+    }, [user]);
 
     // Computed Properties
     const passwordScore = calculateStrength(security.newPassword);
@@ -46,7 +59,7 @@ export const useSettingsPage = () => {
     const handleSecurityChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setSecurity(prev => ({ ...prev, [name]: value }));
-        
+
         if (name === 'currentPassword') {
             dispatch(invalidatePasswordVerification());
         }
@@ -73,32 +86,32 @@ export const useSettingsPage = () => {
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!userId) return;
 
         if (expandedSection === 'security') {
             if (!isPasswordVerified) return;
-            
+
             if (security.newPassword !== security.confirmPassword) {
                 alert("New passwords do not match."); // Ideally use a toast here
                 return;
             }
 
-            const res = await dispatch(updatePassword({ 
-                userId, 
-                currentPassword: security.currentPassword, 
-                newPassword: security.newPassword 
+            const res = await dispatch(updatePassword({
+                userId,
+                currentPassword: security.currentPassword,
+                newPassword: security.newPassword
             }));
 
             if (res.meta.requestStatus === 'fulfilled') {
                 setSecurity({ currentPassword: "", newPassword: "", confirmPassword: "" });
             }
-        } 
+        }
         else if (expandedSection === 'preferences') {
-            dispatch(updatePrivacySettings({ 
-                userId, 
-                language: preferences.language, 
-                country: preferences.country 
+            dispatch(updatePrivacySettings({
+                userId,
+                language: preferences.language,
+                country: preferences.country
             }));
         }
     };
@@ -108,7 +121,7 @@ export const useSettingsPage = () => {
         theme, color,
         security, preferences, showPassword,
         expandedSection, passwordScore,
-        
+
         // UI State
         isLoading, isVerifying, isPasswordVerified,
         reduxError, successMessage,

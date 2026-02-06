@@ -8,6 +8,10 @@ export interface IGetPlayerJoinedTeamsUseCase {
     execute(playerId: string, status : string): Promise<PlayerTeamResponseDTO>;
 }
 
+export interface IPlayerLeaveTeamUseCase {
+    execute(playerId: string, teamId : string): Promise<string>;
+}
+
 export interface IGetMyTeamDetailsUseCase {
     execute(teamId: string): Promise<TeamDataFull>;
 }

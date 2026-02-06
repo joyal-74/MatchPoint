@@ -49,7 +49,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, profileData, profil
                             />
                         ) : (
                             <div className="text-4xl font-bold text-muted-foreground">
-                                {profileData.firstName[0]}{profileData.lastName[0]}
+                                {(profileData?.firstName?.[0] || '') + (profileData?.lastName?.[0] || '') || '?'}
                             </div>
                         )}
                     </div>

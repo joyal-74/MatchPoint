@@ -1,4 +1,4 @@
-export const LANGUAGES = [{ code: "en", name: "English (US)" }, { code: "en-gb", name: "English (UK)" }, { code: "hi", name: "Hindi" }];
+export const LANGUAGES = [{ code: "en", name: "English" }];
 export const COUNTRIES = [{ code: "US", name: "United States" }, { code: "IN", name: "India" }, { code: "UK", name: "United Kingdom" }, { code: "CA", name: "Canada" }, { code: "AU", name: "Australia" }, { code: "AE", name: "United Arab Emirates" }];
 export const COLOR_PALETTES = [
     { id: 'blue', label: 'Royal', bgClass: 'bg-blue-500' },

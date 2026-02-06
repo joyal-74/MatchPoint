@@ -211,6 +211,7 @@ const PlayerUsecaseTokens = {
     GetPlayerJoinedTeamsUseCase: 'GetPlayerJoinedTeamsUseCase',
     GetPlayerTeamsUseCase: 'GetPlayerTeamsUseCase',
     JoinTeamUseCase: 'JoinTeamUseCase',
+    PlayerLeaveTeamUseCase: 'PlayerLeaveTeamUseCase',
     GetMyTeamDetailsUseCase: 'GetMyTeamDetailsUseCase',
     UpdatePlayerInviteStatus: 'UpdatePlayerInviteStatus',
     GetPlayerTournaments: 'GetPlayerTournaments',
@@ -219,6 +220,7 @@ const PlayerUsecaseTokens = {
     GetPlayerTournamentMatches: 'GetPlayerTournamentMatches',
     GetTournamentPointsTable: 'GetTournamentPointsTable',
     GetTournamentStats: 'GetTournamentStats',
+    GetPlayerStats: 'GetPlayerStats',
 }
 
 const ViewerUsecaseTokens = {

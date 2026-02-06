@@ -14,6 +14,7 @@ export interface ITeamRepository {
     addMember(teamId: string, userId: string, playerId: string): Promise<TeamData>;
     update(teamId: string, updates: Partial<TeamRegister>): Promise<TeamDataFull>;
     removePlayer(teamId: string, playerId: string): Promise<TeamDataFull | null>;
+    leavePlayer(teamId: string, userId: string): Promise<boolean | null>;
     findTeamsByIds(teamIds: string[]);
     findTeamWithPlayers(teamIds: string[], playerIds: string[]) : Promise<TeamData | null>;
     existOrAddMember(teamId: string, userId: string, playerId: string): Promise<{ success: boolean; playerId: string }>;

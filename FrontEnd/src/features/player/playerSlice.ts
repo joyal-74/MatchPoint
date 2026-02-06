@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchPlayerData, getMyAllTeams, updatePlayerData, updatePlayerProfileData } from "./playerThunks";
+import { fetchPlayerData, fetchPlayerStatsData, getMyAllTeams, leaveTeam, updatePlayerData, updatePlayerProfileData } from "./playerThunks";
 import type { Team } from "../../components/player/Teams/Types";
 import type { Player } from "../../types/Player";
 
@@ -9,7 +9,7 @@ interface playerState {
     pendingTeams: Team[];
     totalApprovedTeams: number;
     totalPendingTeams: number;
-    totalTeams: number; // derived total
+    totalTeams: number;
     player: Player | null;
     loading: boolean;
     error: string | null;
@@ -49,7 +49,7 @@ const playerSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload ?? "Team get failed";
             });
-            
+
         builder
             .addCase(fetchPlayerData.pending, (state) => {
                 state.loading = true;
@@ -93,6 +93,35 @@ const playerSlice = createSlice({
             .addCase(updatePlayerProfileData.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? "Team get failed";
+            })
+
+            .addCase(fetchPlayerStatsData.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchPlayerStatsData.fulfilled, (state, action) => {
+                state.player = action.payload;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(fetchPlayerStatsData.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? "Player get failed";
+            })
+
+            .addCase(leaveTeam.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(leaveTeam.fulfilled, (state, action) => {
+                const removedTeamId = action.meta.arg.teamId;
+                state.approvedTeams = state.approvedTeams.filter(team => team._id !== removedTeamId);
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(leaveTeam.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? "Player get failed";
             });
     },
 });

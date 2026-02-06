@@ -3,15 +3,15 @@ interface ConfirmModalProps {
     message: string;
     onConfirm: () => void;
     onCancel: () => void;
-    confirmText?: string; 
+    confirmText?: string;
 }
 
-export default function ConfirmTeamModal({ 
-    title = "Confirm", 
-    message, 
-    onConfirm, 
+export default function ConfirmTeamModal({
+    title = "Confirm",
+    message,
+    onConfirm,
     onCancel,
-    confirmText = "Leave"
+    confirmText = "Leave",
 }: ConfirmModalProps) {
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/80 backdrop-blur-sm transition-all duration-200">

@@ -32,6 +32,8 @@ const TournamentsPage = () => {
         }
     }, [activeTab, dispatch, playerId]);
 
+    console.log(allTournaments)
+
     // Tab Configuration
     const tabs = [
         { id: 'upcoming', label: 'Upcoming', icon: Clock, color: 'text-blue-500' },

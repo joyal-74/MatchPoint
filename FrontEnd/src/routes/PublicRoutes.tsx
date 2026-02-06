@@ -1,88 +1,68 @@
+import { lazy } from 'react';
+import { Routes, Route } from "react-router-dom";
+
+const AdminLoginPage = lazy(() => import('../pages/auth/AdminLogin'));
+const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
+const SignupPage = lazy(() => import('../pages/auth/SignupPage'));
+const ForgotPasswordPage = lazy(() => import('../pages/auth/ForgotPasswordPage'));
+const EnterAccountOtpPage = lazy(() => import('../pages/auth/EnterAccountOtpPage'));
+const EnterForgotOtpPage = lazy(() => import('../pages/auth/EnterForgotOtpPage'));
+const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPasswordPage'));
+const PrivacyPolicy = lazy(() => import('../pages/shared/PrivacyPolicy'));
+const SettingsPage = lazy(() => import('../pages/shared/SettingsPage'));
+const NotificationsPage = lazy(() => import('../pages/player/NotificationsPage'));
+const AllTimeLeaderboard = lazy(() => import('../pages/shared/LeaderBoard/AllTimeLeaderboard'));
+const UserSubscriptionPage = lazy(() => import('../pages/shared/SubscriptionsPage'));
+
 import NavbarWrapper from '../components/shared/NavbarWrapper';
-import SettingsPage from '../pages/shared/SettingsPage';
-import AdminLoginPage from '../pages/auth/AdminLogin';
-import EnterAccountOtpPage from '../pages/auth/EnterAccountOtpPage';
-import EnterForgotOtpPage from '../pages/auth/EnterForgotOtpPage';
-import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
-import LoginPage from '../pages/auth/LoginPage';
-import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
-import SignupPage from '../pages/auth/SignupPage';
 import ViewerProfileLayout from '../pages/layout/ViewerProfileLayout';
-import NotificationsPage from '../pages/player/NotificationsPage';
 import Blocked from '../pages/shared/Blocked';
-import AllTimeLeaderboard from '../pages/shared/LeaderBoard/AllTimeLeaderboard';
 import RoleLayoutWrapper from '../pages/shared/RoleLayoutWrapper';
-import UserSubscriptionPage from '../pages/shared/SubscriptionsPage';
 import Unauthorized from '../pages/shared/Unauthorized';
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
 import RoleRedirect from './RoleDirect';
 
+const PublicRoutes = () => {
+    return (
+        <Routes>
+            {/* Public routes */}
+            <Route path="/admin/login" element={<PublicRoute><AdminLoginPage /></PublicRoute>} />
+            <Route path="/privacy" element={<PublicRoute><PrivacyPolicy /></PublicRoute>} />
+            <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+            <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
+            <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
+            <Route path="/otp-verify" element={<PublicRoute><EnterAccountOtpPage /></PublicRoute>} />
+            <Route path="/otp-verification" element={<PublicRoute><EnterForgotOtpPage /></PublicRoute>} />
+            <Route path="/reset-password" element={<PublicRoute><ResetPasswordPage /></PublicRoute>} />
 
-export const publicRoutes = [
-    // Public routes 
-    { path: "/admin/login", element: <PublicRoute><AdminLoginPage /></PublicRoute> },
-    { path: "/login", element: <PublicRoute ><LoginPage /></PublicRoute> },
-    { path: "/signup", element: <PublicRoute><SignupPage /></PublicRoute> },
-    { path: "/forgot-password", element: <PublicRoute><ForgotPasswordPage /></PublicRoute> },
-    { path: "/otp-verify", element: <PublicRoute><EnterAccountOtpPage /></PublicRoute> },
-    { path: "/otp-verification", element: <PublicRoute><EnterForgotOtpPage /></PublicRoute> },
-    { path: "/reset-password", element: <PublicRoute><ResetPasswordPage /></PublicRoute> },
+            {/* Role-based redirect */}
+            <Route path="/dashboard" element={<ProtectedRoute><RoleRedirect /></ProtectedRoute>} />
+            <Route path="/:role/notifications" element={<ProtectedRoute><RoleLayoutWrapper><NotificationsPage /></RoleLayoutWrapper></ProtectedRoute>} />
+            <Route path="/notifications" element={<ViewerProfileLayout><NotificationsPage /></ViewerProfileLayout>} />
 
-    // Role-based redirect
-    { path: "/dashboard", element: <ProtectedRoute><RoleRedirect /></ProtectedRoute> },
-    { path: "/:role/notifications", element: <ProtectedRoute><RoleLayoutWrapper><NotificationsPage /></RoleLayoutWrapper></ProtectedRoute> },
-    { path: "/notifications", element: <ViewerProfileLayout><NotificationsPage /></ViewerProfileLayout> },
+            {/* Shared pages */}
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="/blocked" element={<Blocked />} />
+            
+            <Route path="/:role/subscription" element={
+                <ProtectedRoute><RoleLayoutWrapper><UserSubscriptionPage /></RoleLayoutWrapper></ProtectedRoute>
+            } />
+            <Route path="/subscription" element={<ViewerProfileLayout><UserSubscriptionPage /></ViewerProfileLayout>} />
+            
+            <Route path="/:role/settings" element={
+                <ProtectedRoute allowedRoles={["player", "manager", "umpire"]}><RoleLayoutWrapper><SettingsPage /></RoleLayoutWrapper></ProtectedRoute>
+            } />
+            <Route path="/settings" element={<ViewerProfileLayout><SettingsPage /></ViewerProfileLayout>} />
+            
+            <Route path="/:role/leaderboard" element={
+                <ProtectedRoute><NavbarWrapper><AllTimeLeaderboard /></NavbarWrapper></ProtectedRoute>
+            } />
+            <Route path="/leaderboard" element={
+                <ProtectedRoute><NavbarWrapper><AllTimeLeaderboard /></NavbarWrapper></ProtectedRoute>
+            } />
+        </Routes>
+    );
+};
 
-    // Shared pages
-    { path: "/unauthorized", element: <Unauthorized /> },
-    { path: "/blocked", element: <Blocked /> },
-    {
-        path: "/:role/subscription",
-        element: (
-            <ProtectedRoute>
-                <RoleLayoutWrapper>
-                    <UserSubscriptionPage />
-                </RoleLayoutWrapper>
-            </ProtectedRoute>
-        )
-    },
-    {
-        path: "/subscription",
-        element: (<ViewerProfileLayout><UserSubscriptionPage /></ViewerProfileLayout>)
-    },
-    {
-        path: "/:role/settings",
-        element: (
-            <ProtectedRoute allowedRoles={["player", "manager", "umpire"]}>
-                <RoleLayoutWrapper>
-                    <SettingsPage />
-                </RoleLayoutWrapper>
-            </ProtectedRoute>
-        )
-    },
-    {
-        path: "/settings",
-        element: (<ViewerProfileLayout><SettingsPage /></ViewerProfileLayout>)
-    },
-    {
-        path: "/:role/leaderboard",
-        element: (
-            <ProtectedRoute>
-                <NavbarWrapper>
-                    <AllTimeLeaderboard />
-                </NavbarWrapper>
-            </ProtectedRoute>
-        )
-    },
-    {
-        path: "/leaderboard",
-        element: (
-            <ProtectedRoute>
-                <NavbarWrapper>
-                    <AllTimeLeaderboard />
-                </NavbarWrapper>
-            </ProtectedRoute>
-        )
-    },
-];
+export default PublicRoutes;

@@ -9,7 +9,7 @@ export class DeleteUnverifiedUsersCronJob {
     constructor(
         @inject(DI_TOKENS.Scheduler) private scheduler: IScheduler,
         @inject(DI_TOKENS.Logger) private _logger: ILogger,
-        private _deleteUnverifiedUsers: DeleteUnverifiedUsers,
+        @inject(DeleteUnverifiedUsers) private _deleteUnverifiedUsers: DeleteUnverifiedUsers
     ) { }
 
     public start(): void {

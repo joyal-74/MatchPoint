@@ -1,12 +1,11 @@
 import { Navigate } from "react-router-dom";
 import { useAppSelector } from "../hooks/hooks";
 import { UserRole } from "../types/UserRoles";
-import LoginPage from "../pages/auth/LoginPage";
 
 const RoleRedirect = () => {
     const { user } = useAppSelector((state) => state.auth);
 
-    if (!user) return <LoginPage />;
+    if (!user) return <Navigate to="/login" replace />;
 
     switch (user.role) {
         case UserRole.Viewer:
@@ -20,7 +19,7 @@ const RoleRedirect = () => {
         case UserRole.Umpire:
             return <Navigate to="/umpire/dashboard" replace />;
         default:
-            return <LoginPage />;
+            return <Navigate to="/login" replace />;
     }
 };
 

@@ -1,52 +1,36 @@
-import { MapPin } from 'lucide-react';
-import type { Team } from '../../components/player/Teams/Types';
+import type { Team } from "../../features/player/playerTypes";
 
-const TeamHeader = ({ team }: { team: Team }) => {
-    return (
-        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
-            
-            <div className="h-24 bg-gradient-to-r from-primary/20 via-primary/10 to-background" />
-
-            <div className="px-6 pb-6 relative">
-                {/* Floating Logo */}
-                <div className="-mt-12 mb-4 relative inline-block">
-                    <img
-                        src={team.logo || '/default-team-logo.png'}
-                        alt={team.name}
-                        className="w-24 h-24 rounded-2xl object-cover border-4 border-card shadow-lg bg-background"
-                    />
-                </div>
-
-                {/* Team Info */}
-                <div>
-                    <div className="flex flex-wrap gap-2 mb-2">
-                        <span className="px-2.5 py-0.5 rounded-md bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider border border-primary/20">
-                            {team.sport}
-                        </span>
-                        <span className={`px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider border 
-                            ${team.phase === 'recruiting' 
-                                ? 'bg-blue-500/10 text-blue-600 border-blue-500/20' 
-                                : 'bg-green-500/10 text-green-600 border-green-500/20'
-                            }`
-                        }>
-                            {team.phase}
-                        </span>
-                    </div>
-
-                    <h1 className="text-2xl font-bold text-foreground mb-1">{team.name}</h1>
-                    
-                    <div className="flex items-center text-sm text-muted-foreground mb-4">
-                        <MapPin size={14} className="mr-1.5" />
-                        {team.city}, {team.state}
-                    </div>
-
-                    <p className="text-sm text-muted-foreground leading-relaxed border-t border-border pt-4">
-                        {team.description || "No description provided."}
-                    </p>
-                </div>
-            </div>
+const TeamHeader = ({ team }: { team: Team }) => (
+    <div className="flex flex-col md:flex-row items-center md:items-end gap-8 pb-4 border-b border-border">
+        <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-tr from-primary to-primary/20 rounded-[32px] blur opacity-25 group-hover:opacity-50 transition duration-500" />
+            <img 
+                src={team.logo || '/default-team.png'} 
+                className="w-28 h-28 rounded-[28px] object-cover border-4 border-background bg-card relative z-10 shadow-xl" 
+                alt="" 
+            />
         </div>
-    );
-};
+
+        <div className="flex-1 text-center md:text-left space-y-3">
+            <div className="flex flex-wrap justify-center md:justify-start gap-2">
+                <span className="px-3 py-1 bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest rounded-full">
+                    {team.phase}
+                </span>
+                <span className="px-3 py-1 bg-muted text-muted-foreground text-[10px] font-black uppercase tracking-widest rounded-full border border-border">
+                    Founded 2024
+                </span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground uppercase italic italic-none">
+                {team.name}
+            </h1>
+        </div>
+
+        <div className="hidden md:flex gap-4">
+            <button className="h-12 px-8 rounded-2xl bg-foreground text-background font-bold text-sm hover:scale-[1.02] transition-transform active:scale-[0.98]">
+                Manage Team
+            </button>
+        </div>
+    </div>
+);
 
 export default TeamHeader;

@@ -15,7 +15,7 @@ import { InternalServerError } from "../../domain/errors/index.js";
 export class SubscriptionPaymentService implements ISubscriptionService {
     constructor(
         @inject(DI_TOKENS.VerifyPaymentUseCase) private verifyPayment: IVerifyPaymentUseCase,
-        @inject(DI_TOKENS.UpdatePlanUseCase) private updateUserPlan: IUpdateUserPlan,
+        @inject(DI_TOKENS.UpdateUserPlanUseCase) private updateUserPlan: IUpdateUserPlan,
         @inject(DI_TOKENS.SubscriptionRepository) private subplanRepo: ISubscriptionRepository,
         @inject(DI_TOKENS.TransactionRepository) private transactionRepo: ITransactionRepository,
         @inject(DI_TOKENS.WalletRepository) private walletRepo: IWalletRepository,

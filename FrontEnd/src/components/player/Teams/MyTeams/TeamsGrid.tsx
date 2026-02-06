@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import TeamCard from "./TeamCard";
 import type { Team } from "../Types";
 import ConfirmTeamModal from "../../../shared/modal/ConfirmTeamModal";
+import { leaveTeam } from "../../../../features/player/playerThunks";
+import { useAppSelector, useAppDispatch } from "../../../../hooks/hooks";
+import toast from "react-hot-toast";
+import { getApiErrorMessage } from "../../../../utils/apiError";
 
 interface TeamsGridProps {
     teams: Team[];
@@ -9,19 +13,30 @@ interface TeamsGridProps {
 
 export const TeamsGrid: React.FC<TeamsGridProps> = ({ teams }) => {
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
+    const [selectedTeam, setSelectedTeam] = useState<{ id: string, name: string } | null>(null);
+    const userId = useAppSelector(state => state.auth.user?._id)
+    const dispatch = useAppDispatch();
 
-    const handleLeaveRequest = (teamId: string) => {
-        setSelectedTeamId(teamId);
+    const handleLeaveRequest = (teamId: string, teamName: string) => {
+        setSelectedTeam({ id: teamId, name: teamName });
         setConfirmOpen(true);
     };
 
-    const handleLeaveConfirm = () => {
-        if (selectedTeamId) {
-            console.log("User left team:", selectedTeamId);
-            // Call API or state update here
-            setConfirmOpen(false);
-            setSelectedTeamId(null);
+    const handleLeaveConfirm = async () => {
+        if (selectedTeam && userId) {
+            try {
+                await dispatch(leaveTeam({
+                    playerId: userId,
+                    teamId: selectedTeam.id
+                })).unwrap();
+
+                toast.success(`Successfully left ${selectedTeam.name}`);
+                setConfirmOpen(false);
+                setSelectedTeam(null);
+
+            } catch (error : unknown) {
+                toast.error(getApiErrorMessage(error) || "Failed to leave the team");
+            }
         }
     };
 
@@ -40,15 +55,15 @@ export const TeamsGrid: React.FC<TeamsGridProps> = ({ teams }) => {
                         membersCount={team.membersCount}
                         maxPlayers={team.maxPlayers.toString()}
                         created={team.createdAt}
-                        onLeaveRequest={handleLeaveRequest}
+                        onLeaveRequest={() => handleLeaveRequest(team._id, team.name)}
                     />
                 ))}
             </div>
 
-            {confirmOpen && selectedTeamId && (
+            {confirmOpen && selectedTeam && (
                 <ConfirmTeamModal
                     title="Leave Team"
-                    message="Are you sure you want to leave this team?"
+                    message={`Are you sure you want to leave ${selectedTeam.name}?`}
                     onCancel={() => setConfirmOpen(false)}
                     onConfirm={handleLeaveConfirm}
                 />

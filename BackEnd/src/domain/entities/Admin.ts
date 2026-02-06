@@ -15,6 +15,7 @@ export interface Admin {
     settings: AdminSettings;
     wallet: number;
     refreshToken?: string | null;
+    isActive : boolean;
 }
 
 export interface AdminResponse extends Admin {

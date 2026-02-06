@@ -1,7 +1,5 @@
 import Navbar from "../../components/manager/Navbar";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
-import CreateTournamentModal from "../../components/manager/tournaments/TournamentModal/CreateTournamentModal";
-import EditTournamentModal from "../../components/manager/tournaments/TournamentModal/EditTournamentModal";
 import ConfirmModal from "../../components/shared/modal/ConfirmModal";
 import PrizeInfoModal from "../../components/manager/tournaments/TournamentModal/PriceInfoModal";
 import TournamentsHeader from "../../components/manager/tournaments/TournamentsHeader";
@@ -9,7 +7,7 @@ import MyTournamentsSection from "../../components/manager/tournaments/MyTournam
 import DashboardStats from "../../components/manager/tournaments/DashboardStats";
 import DashboardAnalytics from "../../components/manager/tournaments/DashboardAnalytics";
 import { useTournaments } from "../../hooks/useTournaments";
-import { useAppDispatch } from "../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { cancelTournament } from "../../features/manager/Tournaments/tournamentThunks";
 import { useTournamentModals } from "../../hooks/useTournamentModals";
 import { useNavigate } from "react-router-dom";
@@ -22,22 +20,15 @@ export default function TournamentsPage() {
         loading,
         hasMoreMyTournaments,
         analyticsData,
-        managerId,
         handleShowAll
     } = useTournaments();
 
     const {
-        isCreateModalOpen,
-        isEditModalOpen,
         isConfirmModalOpen,
         isInfoModalOpen,
-        editingTournament,
         cancelId,
-        setIsCreateModalOpen,
         setIsInfoModalOpen,
-        handleEditClick,
         handleCancelClick,
-        closeEditModal,
         closeConfirmModal
     } = useTournamentModals();
 
@@ -48,6 +39,7 @@ export default function TournamentsPage() {
         closeConfirmModal();
     };
     const navigate = useNavigate();
+    const user = useAppSelector(state => state.auth.user)
 
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col transition-colors duration-300">
@@ -55,11 +47,8 @@ export default function TournamentsPage() {
             <Navbar />
 
             <main className="flex-1 w-full px-4 md:px-10 mx-auto pt-4 pb-10">
+                <TournamentsHeader userName={user?.firstName || 'Manager'} />
 
-                {/* === SECTION 1: HEADER === */}
-                <TournamentsHeader onCreateClick={() => navigate(`/manager/tournaments/create`)} />
-
-                {/* === SECTION 2: ANALYTICS DASHBOARD === */}
                 <div className="mt-8 space-y-6">
                     {/* Key Metrics */}
                     <DashboardStats
@@ -94,31 +83,12 @@ export default function TournamentsPage() {
                         tournaments={showMyTournaments}
                         hasMore={hasMoreMyTournaments}
                         onShowAll={handleShowAll}
-                        onEdit={handleEditClick}
                         onCancel={handleCancelClick}
                         onCreate={() => navigate(`/manager/tournaments/create`)}
                     />
                 </div>
 
             </main>
-
-            {/* === MODALS === */}
-            <CreateTournamentModal
-                isOpen={isCreateModalOpen}
-                managerId={managerId!}
-                onClose={() => setIsCreateModalOpen(false)}
-                onShowPrizeInfo={() => setIsInfoModalOpen(true)}
-            />
-
-            {editingTournament && (
-                <EditTournamentModal
-                    isOpen={isEditModalOpen}
-                    managerId={managerId!}
-                    tournament={editingTournament}
-                    onClose={closeEditModal}
-                    onShowPrizeInfo={() => setIsInfoModalOpen(true)}
-                />
-            )}
 
             <ConfirmModal
                 isOpen={isConfirmModalOpen}

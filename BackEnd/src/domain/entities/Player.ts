@@ -22,7 +22,7 @@ interface UserDetails {
     lastName : string;
 }
 
-export interface PopulatedPLayer {
+export interface PopulatedPlayer {
     _id: string;
     userId: UserDetails;
     sport: string;

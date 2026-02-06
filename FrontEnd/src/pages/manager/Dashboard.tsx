@@ -1,6 +1,5 @@
 import Navbar from "../../components/manager/Navbar";
-import image from '../../assets/images/cricket-3.png';
-import { Users, Calendar, BarChart3, ArrowRight, MapPin, Trophy } from 'lucide-react';
+import { Users, Calendar, BarChart3, ArrowRight, MapPin, Trophy, Plus } from 'lucide-react';
 import Footer from "../../components/viewer/Footer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { useEffect } from "react";
@@ -117,7 +116,7 @@ export default function ManagerDashboard() {
                                         <Calendar className="w-5 h-5" />
                                         <span>Create Tournament</span>
                                     </button>
-                                    
+
                                 </div>
 
                                 {/* Stats */}
@@ -141,7 +140,7 @@ export default function ManagerDashboard() {
                                 <div className="w-75 h-75 lg:w-80 lg:h-96 bg-primary/10 rounded-2xl transform right-10 rotate-12 bottom-4 top-4 absolute" />
 
                                 <img
-                                    src={image}
+                                    src='https://ik.imagekit.io/hzfe5y1ap/cricket-3.png'
                                     alt="Sports character"
                                     className="relative z-10 max-h-[420px] object-contain drop-shadow-2xl"
                                 />
@@ -158,7 +157,7 @@ export default function ManagerDashboard() {
 
                 {/* Features Section */}
                 <section className="py-16 bg-card text-card-foreground border-y border-border">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="mx-auto px-4 sm:px-6 lg:px-18">
                         <div className="text-center mb-12">
                             <h2 className="text-3xl lg:text-4xl font-bold mb-4 pb-1">
                                 Powerful Management Tools
@@ -191,7 +190,7 @@ export default function ManagerDashboard() {
 
                 {/* Active Tournaments Section */}
                 <section className="py-16 bg-muted/30">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="mx-auto px-4 sm:px-16 lg:px-18">
                         <div className="flex items-center justify-between mb-8">
                             <div>
                                 <h2 className="text-3xl font-bold text-foreground mb-2">
@@ -275,8 +274,8 @@ export default function ManagerDashboard() {
                                                         </div>
                                                     </div>
                                                     <button
-                                                    onClick={()=> navigate(`/manager/tournaments/${tournament._id}/explore`)}
-                                                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-lg font-semibold transition-colors duration-200">
+                                                        onClick={() => navigate(`/manager/tournaments/${tournament._id}/explore`)}
+                                                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-lg font-semibold transition-colors duration-200">
                                                         View Details
                                                     </button>
                                                 </div>
@@ -286,9 +285,25 @@ export default function ManagerDashboard() {
                                 })}
                             </div>
                         ) : (
-                            <div className="text-center py-12 bg-card rounded-xl border border-dashed border-border">
-                                <p className="text-muted-foreground">No active tournaments found.</p>
-                                <button className="mt-4 text-primary hover:underline font-medium text-sm">Create your first tournament</button>
+                            <div className="flex flex-col items-center justify-center py-16 px-4 bg-card rounded-2xl border-2 border-dashed border-border/60 transition-colors hover:border-primary/30">
+                                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                                    <Trophy className="w-10 h-10 text-primary opacity-80" />
+                                </div>
+
+                                <h3 className="text-xl font-bold text-foreground mb-2">
+                                    No Active Tournaments
+                                </h3>
+                                <p className="text-muted-foreground text-center max-w-sm mb-8">
+                                    It looks like you haven't started any competitions yet. Ready to organize your next big event?
+                                </p>
+
+                                <button
+                                    onClick={() => navigate(`/manager/tournaments/create`)}
+                                    className="group flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-xl font-bold shadow-lg shadow-primary/20 transition-all active:scale-95"
+                                >
+                                    <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" />
+                                    Create Tournament
+                                </button>
                             </div>
                         )}
                     </div>

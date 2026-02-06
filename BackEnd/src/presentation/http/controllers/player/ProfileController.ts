@@ -5,7 +5,7 @@ import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
 import { HttpResponse } from "../../helpers/HttpResponse.js";
 import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
 import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
-import { IGetPlayerProfile, IUpdatePlayerFields, IUpdatePlayerProfile } from "../../../../app/repositories/interfaces/usecases/IUserProfileRepository.js";
+import { IGetPlayerProfile, IGetPlayerStats, IUpdatePlayerFields, IUpdatePlayerProfile } from "../../../../app/repositories/interfaces/usecases/IUserProfileRepository.js";
 import { ILogger } from "../../../../app/providers/ILogger.js";
 import { IProfileController } from "../../interfaces/IProfileController.js";
 import { ProfileMessages } from "../../../../domain/constants/player/PlayerProfileMessages.js";
@@ -16,6 +16,7 @@ export class PlayerProfileController implements IProfileController {
         @inject(DI_TOKENS.GetPlayerProfile) private _getPlayerProfileUsecase: IGetPlayerProfile,
         @inject(DI_TOKENS.UpdatePlayerProfile) private _profileUpdateUsecase: IUpdatePlayerProfile,
         @inject(DI_TOKENS.UpdatePlayerFields) private _sportsProfileUpdateUsecase: IUpdatePlayerFields,
+        @inject(DI_TOKENS.GetPlayerStats) private _getPlayerStatsUseCase: IGetPlayerStats,
         @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
@@ -71,5 +72,19 @@ export class PlayerProfileController implements IProfileController {
         this._logger.info(`Profile updated successfully for player ID: ${playerId}`);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, ProfileMessages.SPORT_PROFILE_UPDATED, profile));
+    }
+
+    getPlayerStats = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { userId } = httpRequest.params;
+
+        console.log(httpRequest.params)
+
+        this._logger.info(`Fetching stats for player ID: ${userId}`, { params: httpRequest.params });
+
+        const player = await this._getPlayerStatsUseCase.execute(userId);
+
+        this._logger.info(`Stats fetched successfully for player ID: ${userId}`);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, ProfileMessages.PROFILE_FETCHED, player));
     }
 };

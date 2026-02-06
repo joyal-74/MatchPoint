@@ -65,7 +65,7 @@ export const TournamentCard = ({ tournament, type }: TournamentCardProps) => {
             `}
         >
             <div className="relative h-40 w-full overflow-hidden bg-muted/20">
-                {tournament.banner ? (
+                {tournament?.banner ? (
                     <img 
                         src={tournament.banner as string} 
                         alt={tournament.title}

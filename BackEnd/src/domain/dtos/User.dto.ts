@@ -15,6 +15,7 @@ export interface UserLoginResponseDTO {
     lastName: string;
     email: string;
     wallet: number;
+    settings : UserSettingsDTO;
     role: RoleType;
     profileImage?: string;
     isActive: boolean;

@@ -9,7 +9,6 @@ import TournamentsCard from '../../components/player/TournamentsCard';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { fetchLiveMatches, fetchTournaments } from '../../features/player/Tournnaments/tournamentThunks';
-import heroImage from '../../assets/images/cricket-4.png';
 
 export const PlayerDashboard: React.FC = () => {
     const navigate = useNavigate();
@@ -67,7 +66,7 @@ export const PlayerDashboard: React.FC = () => {
                                 <div className="relative w-full max-w-sm">
                                     <div className="absolute inset-0 bg-primary/10 blur-[100px] rounded-full" />
                                     <img
-                                        src={heroImage}
+                                        src="https://ik.imagekit.io/hzfe5y1ap/cricket-4.png"
                                         alt="Player Preview"
                                         className="relative z-10 w-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.2)]"
                                     />

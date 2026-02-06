@@ -59,9 +59,10 @@ export class SignupPlayer implements IPlayerSignupUseCase {
             username: `user-${Date.now()}`,
             phone: validData.phone,
             wallet: 0,
-            sport: validData.sport,
+            sport: validData.sport ?? 'Cricket',
             isActive: true,
             isVerified: false,
+            profileImage: validData.profileImage,
             settings: {
                 theme: validData.settings?.theme || "dark",
                 language: validData.settings?.language || "en",
@@ -72,10 +73,10 @@ export class SignupPlayer implements IPlayerSignupUseCase {
         });
 
         const profile = {
-            battingStyle :  validData.battingStyle,
-            bowlingStyle :  validData.bowlingStyle,
-            position :  validData.playingPosition,
-            jerseyNumber : validData.jerseyNumber,
+            battingStyle: validData.battingStyle,
+            bowlingStyle: validData.bowlingStyle,
+            position: validData.playingPosition,
+            jerseyNumber: validData.jerseyNumber,
         }
 
         await this._playerRepository.create({

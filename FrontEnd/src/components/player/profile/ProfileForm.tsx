@@ -9,7 +9,7 @@ interface ProfileFormProps {
 const ProfileForm: React.FC<ProfileFormProps> = ({ formData, isEditing, onChange }) => {
 
     return (
-        <div className="w-full flex mx-auto gap-3 px-8">
+        <div className="w-full flex mx-auto gap-3">
             <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
                 {[
                     { label: "First Name", field: "firstName", placeholder: "First Name" },

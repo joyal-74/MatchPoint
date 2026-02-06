@@ -3,13 +3,9 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { fetchDashboardStats } from "../../features/admin/dashboard/dashboardSlice";
 import AdminLayout from "../layout/AdminLayout";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
-import {
-    LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
-    XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
-} from "recharts";
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { TrendingUp, Users, Trophy, Calendar } from "lucide-react";
 
-// Using CSS variables for Pie Chart so it adapts to the theme
 const PIE_COLORS = [
     "hsl(var(--primary))",           // Main Theme Color
     "hsl(var(--secondary))",         // Secondary Theme Color
@@ -50,7 +46,7 @@ const Dashboard: React.FC = () => {
                         icon={<TrendingUp className="text-primary" />}
                         trend="Lifetime"
                         // Using explicit colors for positive/negative trends is usually better than theme colors
-                        trendColor="text-green-500" 
+                        trendColor="text-green-500"
                     />
                     <StatCard
                         title="Active Players"
@@ -84,34 +80,34 @@ const Dashboard: React.FC = () => {
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={revenueData}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-                                    <XAxis 
-                                        dataKey="name" 
-                                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} 
-                                        axisLine={false} 
-                                        tickLine={false} 
+                                    <XAxis
+                                        dataKey="name"
+                                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                                        axisLine={false}
+                                        tickLine={false}
                                         dy={10}
                                     />
-                                    <YAxis 
-                                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} 
-                                        axisLine={false} 
-                                        tickLine={false} 
+                                    <YAxis
+                                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                                        axisLine={false}
+                                        tickLine={false}
                                     />
-                                    <Tooltip 
-                                        contentStyle={{ 
-                                            backgroundColor: "hsl(var(--card))", 
-                                            borderColor: "hsl(var(--border))", 
+                                    <Tooltip
+                                        contentStyle={{
+                                            backgroundColor: "hsl(var(--card))",
+                                            borderColor: "hsl(var(--border))",
                                             color: "hsl(var(--foreground))",
                                             borderRadius: "8px"
                                         }}
                                         cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1, strokeDasharray: '4 4' }}
                                     />
                                     {/* The Line stroke now uses the Dynamic Primary Variable */}
-                                    <Line 
-                                        type="monotone" 
-                                        dataKey="revenue" 
-                                        stroke="hsl(var(--primary))" 
-                                        strokeWidth={3} 
-                                        dot={{ r: 4, fill: "hsl(var(--primary))" }} 
+                                    <Line
+                                        type="monotone"
+                                        dataKey="revenue"
+                                        stroke="hsl(var(--primary))"
+                                        strokeWidth={3}
+                                        dot={{ r: 4, fill: "hsl(var(--primary))" }}
                                         activeDot={{ r: 6, strokeWidth: 0 }}
                                     />
                                 </LineChart>
@@ -126,33 +122,33 @@ const Dashboard: React.FC = () => {
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={registrationData}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-                                    <XAxis 
-                                        dataKey="date" 
-                                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} 
-                                        axisLine={false} 
+                                    <XAxis
+                                        dataKey="date"
+                                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                                        axisLine={false}
                                         tickLine={false}
                                         dy={10}
                                     />
-                                    <YAxis 
-                                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} 
-                                        axisLine={false} 
-                                        tickLine={false} 
+                                    <YAxis
+                                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                                        axisLine={false}
+                                        tickLine={false}
                                     />
-                                    <Tooltip 
-                                        cursor={{ fill: 'hsl(var(--muted))', opacity: 0.4 }} 
-                                        contentStyle={{ 
-                                            backgroundColor: "hsl(var(--card))", 
-                                            borderColor: "hsl(var(--border))", 
+                                    <Tooltip
+                                        cursor={{ fill: 'hsl(var(--muted))', opacity: 0.4 }}
+                                        contentStyle={{
+                                            backgroundColor: "hsl(var(--card))",
+                                            borderColor: "hsl(var(--border))",
                                             color: "hsl(var(--foreground))",
                                             borderRadius: "8px"
-                                        }} 
+                                        }}
                                     />
                                     {/* The Bar fill uses Secondary or Primary color */}
-                                    <Bar 
-                                        dataKey="count" 
-                                        fill="hsl(var(--primary))" 
-                                        radius={[4, 4, 0, 0]} 
-                                        barSize={40} 
+                                    <Bar
+                                        dataKey="count"
+                                        fill="hsl(var(--primary))"
+                                        radius={[4, 4, 0, 0]}
+                                        barSize={40}
                                         fillOpacity={0.8}
                                     />
                                 </BarChart>
@@ -170,27 +166,27 @@ const Dashboard: React.FC = () => {
                         <div className="h-[300px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
-                                    <Pie 
-                                        data={userDistributionData} 
-                                        cx="50%" 
-                                        cy="50%" 
-                                        innerRadius={60} 
-                                        outerRadius={80} 
-                                        paddingAngle={5} 
-                                        dataKey="value" 
+                                    <Pie
+                                        data={userDistributionData}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        paddingAngle={5}
+                                        dataKey="value"
                                         stroke="none"
                                     >
                                         {userDistributionData.map((_, index) => (
                                             <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                                         ))}
                                     </Pie>
-                                    <Tooltip 
-                                        contentStyle={{ 
-                                            backgroundColor: "hsl(var(--card))", 
-                                            borderColor: "hsl(var(--border))", 
+                                    <Tooltip
+                                        contentStyle={{
+                                            backgroundColor: "hsl(var(--card))",
+                                            borderColor: "hsl(var(--border))",
                                             color: "hsl(var(--foreground))",
                                             borderRadius: "8px"
-                                        }} 
+                                        }}
                                     />
                                     <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: "20px" }} />
                                 </PieChart>
@@ -203,7 +199,7 @@ const Dashboard: React.FC = () => {
                         <div className="p-4 sm:p-0 border-b sm:border-none border-border">
                             <h3 className="text-lg font-semibold text-foreground">Recent Tournaments</h3>
                         </div>
-                        
+
                         <div className="overflow-x-auto">
                             <table className="w-full text-left text-sm">
                                 <thead className="bg-muted/50 border-b border-border">
@@ -218,11 +214,11 @@ const Dashboard: React.FC = () => {
                                         <tr key={t._id} className="hover:bg-muted/50 transition-colors">
                                             <td className="px-4 py-3 font-medium text-foreground">{t.title}</td>
                                             <td className="px-4 py-3">
-                                                <span 
+                                                <span
                                                     className={`
                                                         px-2.5 py-0.5 rounded-full text-xs font-medium border
-                                                        ${t.status === 'ongoing' 
-                                                            ? 'bg-green-500/10 text-green-600 border-green-500/20 dark:text-green-400' 
+                                                        ${t.status === 'ongoing'
+                                                            ? 'bg-green-500/10 text-green-600 border-green-500/20 dark:text-green-400'
                                                             : 'bg-muted text-muted-foreground border-border'
                                                         }
                                                     `}

@@ -9,6 +9,7 @@ export const PLAYER_ROUTES = {
     GET_MY_All_TEAMS: (playerId: string) => `${API_PREFIX}/player/teams/${playerId}`,
     GET_MY_TEAM: (teamId: string) => `${API_PREFIX}/player/team/${teamId}/details`,
     JOIN_TEAM: (teamId: string) => `${API_PREFIX}/player/${teamId}/join`,
+    LEAVE_TEAM: (teamId: string) => `${API_PREFIX}/player/${teamId}/leave`,
     GET_TOURNAMENTS: `${API_PREFIX}/player/tournaments`,
     GET_TOURNAMENT_MATCHES: `${API_PREFIX}/player/tournaments/details/matches`,
     GET_TOURNAMENT_TABLE: `${API_PREFIX}/player/tournaments/details/pointstable`,
@@ -17,4 +18,6 @@ export const PLAYER_ROUTES = {
     GET_MATCHES: `${API_PREFIX}/player/tournament/matches`,
     GET_MY_TOURNAMENTS: (playerId: string) => `${API_PREFIX}/player/tournaments/${playerId}`,
     SET_PLAYER_STATUS: (playerId: string) => `${API_PREFIX}/player/team/${playerId}/invite/status`,
+    GET_TOURNAMENT_PLAYERS: (tournamentId: string) => `${API_PREFIX}/player/tournaments/${tournamentId}`,
+    GET_PLAYER_STATS: (playerId: string) => `${API_PREFIX}/player/${playerId}/stats`,
 } as const;

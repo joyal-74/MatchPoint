@@ -13,7 +13,7 @@ const SportsProfileForm: React.FC<ProfileFormProps> = ({ formData, isEditing, on
     const sportSpecificFields = sportProfileConfig[selectedSport] || [];
 
     return (
-        <div className="w-full flex mx-auto gap-3 px-8">
+        <div className="w-full flex mx-auto gap-3">
             <div className="w-full grid grid-cols-1 gap-3">
                 {sportSpecificFields.map(({ key, label, type, options }) => (
                     <EditableField

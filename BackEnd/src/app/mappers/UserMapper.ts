@@ -12,6 +12,7 @@ export class UserMapper {
             lastName: user.lastName,
             role: user.role,
             wallet: user.wallet,
+            settings : user.settings,
             profileImage: user.profileImage,
             isActive: user.isActive,
             createdAt: user.createdAt,

@@ -142,6 +142,8 @@ import { GetUmpireProfile } from "../../app/usecases/umpire/GetUmpireProfile.js"
 import { GetViewerTournamentsUseCase } from "../../app/usecases/viewer/GetViewerTournaments.js";
 import { GetAllMatches } from "../../app/usecases/manager/match/GetAllMatches.js";
 import { GetUmpireAllMatches } from "../../app/usecases/umpire/GetAllMatches.js";
+import { GetPlayerStats } from "../../app/usecases/player/GetPlayerStats.js";
+import { PlayerLeaveTeamUseCase } from "../../app/usecases/player/PlayerLeaveTeam.js";
 
 
 // Registrations
@@ -286,6 +288,8 @@ container.register(DI_TOKENS.FetchMatchesUseCase, { useClass: FetchMatchesUseCas
 container.register(DI_TOKENS.GetPlayerTournamentMatches, { useClass: GetPlayerTournamentMatches });
 container.register(DI_TOKENS.GetTournamentPointsTable, { useClass: GetTournamentPointsTable });
 container.register(DI_TOKENS.GetTournamentStats, { useClass: GetTournamentStats });
+container.register(DI_TOKENS.GetPlayerStats, { useClass: GetPlayerStats });
+container.register(DI_TOKENS.PlayerLeaveTeamUseCase, { useClass: PlayerLeaveTeamUseCase });
 
 // --- Shared Use Cases ---
 container.register(DI_TOKENS.VerifyPaymentUseCase, { useClass: VerifyPaymentUseCase });

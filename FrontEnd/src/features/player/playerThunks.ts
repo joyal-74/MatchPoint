@@ -27,6 +27,16 @@ export const teamInviteReponse = createAsyncThunk(
     createApiThunk(playerEndpoints.teamInviteReponse)
 );
 
+export const fetchPlayerStatsData = createAsyncThunk(
+    "player/fetchPlayerStatsData",
+    createApiThunk(playerEndpoints.fetchPlayerStatsData)
+);
+
+export const leaveTeam = createAsyncThunk(
+    "player/leaveTeam",
+    createApiThunk(playerEndpoints.leaveTeam)
+);
+
 
 export const updatePlayerData = createAsyncThunk(
     "player/updatePlayerData",

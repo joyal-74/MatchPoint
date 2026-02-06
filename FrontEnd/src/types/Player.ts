@@ -25,7 +25,12 @@ export interface Player extends User {
     _id: string
     sport: string;
     profile: Record<string, string>;
-    career_stats: PlayerStatsField[];
+    stats: {
+        batting?: Record<string, number | string>;
+        bowling?: Record<string, number | string>;
+        fielding?: Record<string, number | string>;
+        general?: Record<string, number | string>;
+    };
     tournaments: PlayerTournament[];
 }
 

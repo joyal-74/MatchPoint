@@ -6,7 +6,7 @@ import { HttpResponse } from "../../helpers/HttpResponse.js";
 import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
 import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
 import { IPlayerTeamController } from "../../interfaces/IPlayerTeamController.js";
-import { IGetMyTeamDetailsUseCase, IGetPlayerJoinedTeamsUseCase, IGetPlayerTeamsUseCase, IJoinTeamUseCase, IUpdatePlayerInviteStatus } from "../../../../app/repositories/interfaces/player/ITeamRepositoryUsecase.js";
+import { IGetMyTeamDetailsUseCase, IGetPlayerJoinedTeamsUseCase, IPlayerLeaveTeamUseCase, IGetPlayerTeamsUseCase, IJoinTeamUseCase, IUpdatePlayerInviteStatus } from "../../../../app/repositories/interfaces/player/ITeamRepositoryUsecase.js";
 import { ILogger } from "../../../../app/providers/ILogger.js";
 import { TeamMessages } from "../../../../domain/constants/TeamMessages.js";
 
@@ -16,6 +16,7 @@ export class TeamsController implements IPlayerTeamController {
         @inject(DI_TOKENS.JoinTeamUseCase) private _joinTeamsUsecase: IJoinTeamUseCase,
         @inject(DI_TOKENS.GetPlayerTeamsUseCase) private _getplayerTeamsUsecase: IGetPlayerTeamsUseCase,
         @inject(DI_TOKENS.GetPlayerJoinedTeamsUseCase) private _getPlayerJoinedTeamsUsecase: IGetPlayerJoinedTeamsUseCase,
+        @inject(DI_TOKENS.PlayerLeaveTeamUseCase) private _getPlayerLeaveTeamUseCase: IPlayerLeaveTeamUseCase,
         @inject(DI_TOKENS.GetMyTeamDetailsUseCase) private _getmyTeamsDetailsUsecase: IGetMyTeamDetailsUseCase,
         @inject(DI_TOKENS.UpdatePlayerInviteStatus) private _updateInviteStatusUseCase: IUpdatePlayerInviteStatus,
         @inject(DI_TOKENS.Logger) private _logger: ILogger
@@ -99,6 +100,17 @@ export class TeamsController implements IPlayerTeamController {
         const { teamId, status } = httpRequest.body;
 
         const result = await this._updateInviteStatusUseCase.execute({ playerId, teamId, status });
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.TEAM_INVITE_PLAYER, result));
+    };
+
+    playerLeaveTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { teamId } = httpRequest.params;
+        const { playerId } = httpRequest.body;
+
+        console.log(httpRequest.body)
+
+        const result = await this._getPlayerLeaveTeamUseCase.execute(playerId, teamId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.TEAM_INVITE_PLAYER, result));
     };

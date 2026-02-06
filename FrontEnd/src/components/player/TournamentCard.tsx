@@ -24,6 +24,8 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
         });
     };
 
+    console.log(tournament)
+
     return (
         <div
             onClick={() => navigate(`/player/tournaments/${tournament._id}`)}

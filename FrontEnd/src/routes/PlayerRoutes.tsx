@@ -1,7 +1,8 @@
 import { lazy, Suspense, type JSX } from "react";
+import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
+import LoadingOverlay from "../components/shared/LoadingOverlay";
 
-const LoadingOverlay = lazy(() => import("../components/shared/LoadingOverlay"));
 const MyStatisticsPage = lazy(() => import("../pages/player/MyStats/MyStatisticsPage"));
 const MyTournamentsPage = lazy(() => import("../pages/player/MyTournamentsPage"));
 const TournamentDetailsPage = lazy(() => import("../components/player/TournamentDetailsPage"));
@@ -23,17 +24,23 @@ const withPlayerProtection = (component: JSX.Element) => (
     </ProtectedRoute>
 );
 
-export const playerRoutes = [
-    { path: "/player/dashboard", element: withPlayerProtection(<PlayerDashboard />) },
-    { path: "/player/profile", element: withPlayerProtection(<PlayerProfilePage />) },
-    { path: "/player/tournaments", element: withPlayerProtection(<TournamentsPage />) },
-    { path: "/player/mytournaments", element: withPlayerProtection(<MyTournamentsPage />) },
-    { path: "/player/live", element: withPlayerProtection(<LiveMatchesPage />) },
-    { path: "/player/live/:matchId/details", element: withPlayerProtection(<LiveMatchDetails />) },
-    { path: "/player/tournaments/:id", element: withPlayerProtection(<TournamentDetailsPage />) },
-    { path: "/player/teams", element: withPlayerProtection(<TeamFinderPage />) },
-    { path: "/player/myteams/:status", element: withPlayerProtection(<TeamsListPage />) },
-    { path: "/player/myteam/:teamId", element: withPlayerProtection(<ViewTeam />) },
-    { path: "/player/statistics", element: withPlayerProtection(<MyStatisticsPage />) },
-    { path: "/player/chat", element: withPlayerProtection(<TeamChat />) },
-];
+const PlayerRoutes = () => {
+    return (
+        <Routes>
+            <Route path="dashboard" element={withPlayerProtection(<PlayerDashboard />)} />
+            <Route path="profile" element={withPlayerProtection(<PlayerProfilePage />)} />
+            <Route path="tournaments" element={withPlayerProtection(<TournamentsPage />)} />
+            <Route path="mytournaments" element={withPlayerProtection(<MyTournamentsPage />)} />
+            <Route path="live" element={withPlayerProtection(<LiveMatchesPage />)} />
+            <Route path="live/:matchId/details" element={withPlayerProtection(<LiveMatchDetails />)} />
+            <Route path="tournaments/:id" element={withPlayerProtection(<TournamentDetailsPage />)} />
+            <Route path="teams" element={withPlayerProtection(<TeamFinderPage />)} />
+            <Route path="myteams/:status" element={withPlayerProtection(<TeamsListPage />)} />
+            <Route path="myteam/:teamId" element={withPlayerProtection(<ViewTeam />)} />
+            <Route path="statistics" element={withPlayerProtection(<MyStatisticsPage />) } />
+            <Route path="chat" element={withPlayerProtection(<TeamChat />)} />
+        </Routes>
+    );
+};
+
+export default PlayerRoutes;

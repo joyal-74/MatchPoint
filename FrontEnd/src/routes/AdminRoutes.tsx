@@ -1,7 +1,7 @@
 import { lazy, Suspense, type JSX } from "react";
+import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
-
 
 const Dashboard = lazy(() => import("../pages/admin/Dashboard"));
 const ManagersManagement = lazy(() => import("../pages/admin/Manager/ManagersManagement"));
@@ -26,19 +26,25 @@ const withAdminProtection = (component: JSX.Element) => (
     </ProtectedRoute>
 );
 
-export const adminRoutes = [
-    { path: "/admin/dashboard", element: withAdminProtection(<Dashboard />) },
-    { path: "/admin/viewers", element: withAdminProtection(<ViewersManagement />) },
-    { path: "/admin/players", element: withAdminProtection(<PlayersManagement />) },
-    { path: "/admin/managers", element: withAdminProtection(<ManagersManagement />) },
-    { path: "/admin/teams", element: withAdminProtection(<TeamManagement />) },
-    { path: "/admin/tournaments", element: withAdminProtection(<TournamentManagement />) },
-    { path: "/admin/managers/:id/details", element: withAdminProtection(<ManagerDetails />) },
-    { path: "/admin/players/:id/details", element: withAdminProtection(<PlayerDetails />) },
-    { path: "/admin/viewers/:id/details", element: withAdminProtection(<ViewerDetails />) },
-    { path: "/admin/teams/:id/details", element: withAdminProtection(<TeamDetailsPage />) },
-    { path: "/admin/tournament/:id/details", element: withAdminProtection(<TournamentDetailsPage />) },
-    { path: "/admin/subscriptions", element: withAdminProtection(<SubscriptionManagement />) },
-    { path: "/admin/transactions", element: withAdminProtection(<TransactionManagement />) },
-    { path: "/admin/transactions/:id", element: withAdminProtection(<TransactionDetailsPage />) },
-];
+const AdminRoutes = () => {
+    return (
+        <Routes>
+            <Route path="dashboard" element={withAdminProtection(<Dashboard />)} />
+            <Route path="viewers" element={withAdminProtection(<ViewersManagement />)} />
+            <Route path="players" element={withAdminProtection(<PlayersManagement />)} />
+            <Route path="managers" element={withAdminProtection(<ManagersManagement />)} />
+            <Route path="teams" element={withAdminProtection(<TeamManagement />)} />
+            <Route path="tournaments" element={withAdminProtection(<TournamentManagement />)} />
+            <Route path="managers/:id/details" element={withAdminProtection(<ManagerDetails />)} />
+            <Route path="players/:id/details" element={withAdminProtection(<PlayerDetails />)} />
+            <Route path="viewers/:id/details" element={withAdminProtection(<ViewerDetails />)} />
+            <Route path="teams/:id/details" element={withAdminProtection(<TeamDetailsPage />)} />
+            <Route path="tournament/:id/details" element={withAdminProtection(<TournamentDetailsPage />)} />
+            <Route path="subscriptions" element={withAdminProtection(<SubscriptionManagement />)} />
+            <Route path="transactions" element={withAdminProtection(<TransactionManagement />)} />
+            <Route path="transactions/:id" element={withAdminProtection(<TransactionDetailsPage />)} />
+        </Routes>
+    );
+};
+
+export default AdminRoutes;

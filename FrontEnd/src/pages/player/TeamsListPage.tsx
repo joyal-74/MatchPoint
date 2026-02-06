@@ -23,55 +23,64 @@ const TeamsListPage: React.FC = () => {
 
     return (
         <PlayerLayout>
+            {/* 1. Loading state is handled by overlay */}
             <LoadingOverlay show={loading} />
 
-            <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="mx-auto px-3 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 
                 {/* Header Section */}
-                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-border pb-6">
                     <div>
-                        <h1 className="text-3xl font-bold text-foreground mb-2">My Teams</h1>
-                        <p className="text-muted-foreground">
-                            You are currently part of <span className="font-semibold text-foreground">{teams?.length || 0}</span> {currentStatus} team{teams?.length !== 1 ? 's' : ''}.
+                        <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">My Teams</h1>
+                        <p className="text-muted-foreground text-lg">
+                            {loading ? (
+                                "Fetching your teams..."
+                            ) : (
+                                <>
+                                    You are part of <span className="font-semibold text-primary">{teams?.length || 0}</span> {currentStatus} team{teams?.length !== 1 ? 's' : ''}.
+                                </>
+                            )}
                         </p>
                     </div>
 
-                    {/* Tab Switcher (Pill Style) */}
-                    <div className="flex p-1 bg-muted rounded-xl border border-border">
+                    {/* Tab Switcher */}
+                    <div className="flex p-1.5 bg-muted/50 rounded-2xl border border-border backdrop-blur-sm">
                         <button
                             onClick={() => handleJoinStatus("approved")}
                             className={`
-                                flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200
+                                flex items-center gap-2 px-6 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200
                                 ${currentStatus === "approved"
-                                    ? "bg-background text-foreground shadow-sm ring-1 ring-border"
-                                    : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                                    ? "bg-background text-foreground shadow-md ring-1 ring-border"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-background/30"
                                 }
                             `}
                         >
-                            <CheckCircle2 size={16} className={currentStatus === "approved" ? "text-green-500" : ""} />
+                            <CheckCircle2 size={18} className={currentStatus === "approved" ? "text-green-500" : ""} />
                             Approved
                         </button>
 
                         <button
                             onClick={() => handleJoinStatus("pending")}
                             className={`
-                                flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200
+                                flex items-center gap-2 px-6 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200
                                 ${currentStatus === "pending"
-                                    ? "bg-background text-foreground shadow-sm ring-1 ring-border"
-                                    : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                                    ? "bg-background text-foreground shadow-md ring-1 ring-border"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-background/30"
                                 }
                             `}
                         >
-                            <Clock size={16} className={currentStatus === "pending" ? "text-yellow-500" : ""} />
+                            <Clock size={18} className={currentStatus === "pending" ? "text-yellow-500" : ""} />
                             Pending
                         </button>
                     </div>
                 </div>
 
-                {/* Content Area */}
-                <div className="min-h-[400px]">
+                {/* Content Area - Key forces re-animation on tab change */}
+                <div key={currentStatus} className="min-h-[400px] animate-in fade-in slide-in-from-right-4 duration-300">
                     {!loading && (!teams || teams.length === 0) ? (
-                        <EmptyTeams onExplore={() => navigate('/player/teams')} />
+                        <div className="mt-12">
+                            <EmptyTeams onExplore={() => navigate('/player/teams')} />
+                        </div>
                     ) : (
                         <TeamsGrid teams={teams || []} />
                     )}

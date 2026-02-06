@@ -1,4 +1,5 @@
 import { lazy, Suspense, type JSX } from "react";
+import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
 
@@ -18,12 +19,18 @@ const withViewerProtection = (component: JSX.Element) => (
     </ProtectedRoute>
 );
 
-export const viewerRoutes = [
-    { path: "/", element: withViewerProtection(<Home />) },
-    { path: "/profile", element: withViewerProtection(<ProfilePage />) },
-    { path: "/tournaments", element: withViewerProtection(<TournamentsPage />) },
-    { path: "/live", element: withViewerProtection(<LiveMatches />) },
-    { path: "/live/:matchId/details", element: withViewerProtection(<LiveMatchPage />) },
-    { path: "/live/:matchId/details/stream", element: withViewerProtection(<LiveStreamViewer />) },
-    { path: "/wallet", element: withViewerProtection(<WalletPage />) },
-];
+const ViewerRoutes = () => {
+    return (
+        <Routes>
+            <Route index element={withViewerProtection(<Home />)} />
+            <Route path="profile" element={withViewerProtection(<ProfilePage />)} />
+            <Route path="tournaments" element={withViewerProtection(<TournamentsPage />)} />
+            <Route path="live" element={withViewerProtection(<LiveMatches />)} />
+            <Route path="live/:matchId/details" element={withViewerProtection(<LiveMatchPage />)} />
+            <Route path="live/:matchId/details/stream" element={withViewerProtection(<LiveStreamViewer />)} />
+            <Route path="wallet" element={withViewerProtection(<WalletPage />)} />
+        </Routes>
+    );
+};
+
+export default ViewerRoutes;

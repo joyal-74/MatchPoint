@@ -15,7 +15,7 @@ export default function SettingsPage() {
     } = useSettingsPage();
 
     return (
-        <div className="text-foreground p-4 md:p-6 bg-background transition-colors duration-300">
+        <div className="text-foreground px-4 md:px-6 bg-background transition-colors duration-300">
             <div className="mx-auto space-y-6">
 
                 {/* --- Page Header --- */}
@@ -241,7 +241,7 @@ export default function SettingsPage() {
                     </SectionCard>
 
                     {/* --- Action Bar --- */}
-                    <div className="flex justify-end pt-4 sticky bottom-4 z-10">
+                    <div className="flex justify-end sticky bottom-4 z-10">
                         <button type="submit" disabled={isLoading || (expandedSection === 'security' && !isPasswordVerified)}
                             className="px-6 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/20 flex items-center gap-2 transition-all hover:bg-primary/90 active:scale-95">
                             {isLoading ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : <><Save size={16} /> Save Changes</>}

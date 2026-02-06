@@ -36,6 +36,11 @@ export const playerEndpoints = {
         return data.data;
     },
 
+    leaveTeam: async ({ playerId, teamId }: { playerId: string, teamId: string }): Promise<void> => {
+        const { data } = await axiosClient.post(PLAYER_ROUTES.LEAVE_TEAM(teamId), { playerId, teamId })
+        return data.data;
+    },
+
 
     getMyAllTeams: async (playerId: string): Promise<totalTeamResponse> => {
         const { data } = await axiosClient.get(PLAYER_ROUTES.GET_MY_All_TEAMS(playerId))
@@ -93,6 +98,11 @@ export const playerEndpoints = {
     fetchTournamentStats: async (tournamentId: string) => {
         const { data } = await axiosClient.post(PLAYER_ROUTES.GET_TOURNAMENT_STATS, { tournamentId });
 
+        return data.data;
+    },
+
+    fetchPlayerStatsData: async (userId: string) => {
+        const { data } = await axiosClient.get(PLAYER_ROUTES.GET_PLAYER_STATS(userId));
         return data.data;
     },
 };

@@ -1,42 +1,34 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { adminRoutes } from "./AdminRoutes";
-import { playerRoutes } from "./PlayerRoutes";
-import { managerRoutes } from "./ManagerRoutes";
+import { lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import LoadingOverlay from "../components/shared/LoadingOverlay"; 
 import NotFoundPage from "../pages/shared/PageNotFound";
-import { viewerRoutes } from "./ViewerRoutes";
-import { publicRoutes } from "./PublicRoutes";
-import { umpireRoutes } from "./UmpireRoutes";
+
+// Lazy load the route components
+const PublicRoutes = lazy(() => import("./PublicRoutes"));
+const AdminRoutes = lazy(() => import("./AdminRoutes"));
+const PlayerRoutes = lazy(() => import("./PlayerRoutes"));
+const ManagerRoutes = lazy(() => import("./ManagerRoutes"));
+const ViewerRoutes = lazy(() => import("./ViewerRoutes"));
+const UmpireRoutes = lazy(() => import("./UmpireRoutes"));
 
 const AppRoutes = () => {
     return (
         <BrowserRouter>
-            <Routes>
-                {publicRoutes.map(({ path, element }) => (
-                    <Route key={path} path={path} element={element} />
-                ))}
-
-                {adminRoutes.map(({ path, element }) => (
-                    <Route key={path} path={path} element={element} />
-                ))}
-
-                {playerRoutes.map(({ path, element }) => (
-                    <Route key={path} path={path} element={element} />
-                ))}
-
-                {managerRoutes.map(({ path, element }) => (
-                    <Route key={path} path={path} element={element} />
-                ))}
-
-                {viewerRoutes.map(({ path, element }) => (
-                    <Route key={path} path={path} element={element} />
-                ))}
-
-                {umpireRoutes.map(({ path, element }) => (
-                    <Route key={path} path={path} element={element} />
-                ))}
-
-                <Route path="*" element={<NotFoundPage />} />
-            </Routes>
+            <Suspense fallback={<LoadingOverlay show />}>
+                <Routes>
+    
+                    <Route path="/*" element={<PublicRoutes />} />
+                    <Route path="/admin/*" element={<AdminRoutes />} />
+                    <Route path="/player/*" element={<PlayerRoutes />} />
+                    <Route path="/manager/*" element={<ManagerRoutes />} />
+                    <Route path="/viewer/*" element={<ViewerRoutes />} />
+                    <Route path="/umpire/*" element={<UmpireRoutes />} />
+                    
+                    {/* Fallback for unknown routes */}
+                    <Route path="/404" element={<NotFoundPage />} />
+                    <Route path="*" element={<Navigate to="/404" replace />} />
+                </Routes>
+            </Suspense>
         </BrowserRouter>
     );
 };

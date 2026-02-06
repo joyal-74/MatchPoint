@@ -8,7 +8,6 @@ interface MyTournamentsSectionProps {
     tournaments: Tournament[];
     hasMore: boolean;
     onShowAll: () => void;
-    onEdit: (tournament: Tournament) => void;
     onCancel: (id: string) => void;
     onCreate: () => void;
 }
@@ -17,7 +16,6 @@ export default function MyTournamentsSection({
     tournaments, 
     hasMore, 
     onShowAll, 
-    onEdit, 
     onCancel, 
     onCreate 
 }: MyTournamentsSectionProps) {
@@ -75,7 +73,7 @@ export default function MyTournamentsSection({
                                 type="manage"
                                 index={index}
                                 onAction={() => navigate(`/manager/tournaments/${tournament._id}/manage`)}
-                                onEdit={() => onEdit(tournament)}
+                                onEdit={() => navigate(`/manager/tournaments/${tournament._id}/edit`)}
                                 onCancel={onCancel}
                             />
                         ))}

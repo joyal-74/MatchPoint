@@ -11,6 +11,7 @@ export interface LoginAdmin {
     firstName: string;
     lastName: string;
     email: string;
+    settings : AdminSettings;
     profileImage: string
     role: UserRole;
     wallet: number;

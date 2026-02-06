@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSignup, type SignUpFormExtended } from "../../hooks/useSignup";
 import { SignupRoles, UserRole, type Gender, type SignupRole } from "../../types/UserRoles";
-import { ArrowLeft, Mail, Lock, Phone, ChevronRight, Hash, Move } from "lucide-react";
+import { ArrowLeft, Mail, Lock, Phone, Hash } from "lucide-react";
 import SocialAuth from "./SignUp/SocialAuth";
 import { FormInput } from "./SignUp/FormInput";
 import { FormSelect } from "./SignUp/FormSelect";
@@ -12,6 +12,7 @@ import AvatarUpload from "./SignUp/AvatarUpload";
 import RolePicker from "./SignUp/RolePicker";
 import toast from "react-hot-toast";
 import { validateSignup } from "../../validators/SignpValidators";
+import { Link } from "react-router-dom";
 
 const SignupPage = () => {
     const { formData, loading, handleFieldChange, handleSignupSubmit, handleGoogleSignUp, handleFacebookSignUp, isStepValid, errors, setErrors } = useSignup();
@@ -80,24 +81,24 @@ const SignupPage = () => {
     };
 
     return (
-        <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background p-4 md:p-6 relative overflow-hidden">
-
+        <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background p-4 relative overflow-hidden">
             {/* Background Decorative Mesh */}
             <div className="absolute top-0 left-0 w-full h-full -z-10 pointer-events-none">
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px]" />
                 <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[30%] rounded-full bg-primary/10 blur-[100px]" />
             </div>
 
-            <div className="w-full min-h-[665px] max-w-[950px] bg-transparent md:bg-card border border-border rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-hidden transition-all duration-500">
+            {/* Container: Fixed height for desktop to prevent layout shifts */}
+            <div className="w-full lg:h-[680px] max-w-[950px] bg-transparent md:bg-card border border-border rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-hidden transition-all duration-500">
 
                 {/* --- SIDEBAR --- */}
-                <div className="lg:w-[32%] bg-muted/30 p-8 lg:p-10 border-b lg:border-b-0 lg:border-r border-border flex flex-col justify-between relative">
+                <div className="lg:w-[32%] bg-muted/30 p-6 lg:p-10 border-b lg:border-b-0 lg:border-r border-border flex flex-col justify-between relative">
                     <div className="z-10">
-                        <div className="flex items-center gap-2 mb-10">
+                        <div className="flex items-center gap-2 mb-8 lg:mb-12">
                             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center rotate-3 shadow-lg shadow-primary/20">
                                 <span className="text-primary-foreground font-black text-xs">MP</span>
                             </div>
-                            <h1 className="text-xl font-black uppercase tracking-tighter text-foreground">MatchPoint</h1>
+                            <h1 className="text-xl font-black uppercase tracking-tighter text-foreground text-nowrap">MatchPoint</h1>
                         </div>
 
                         <div className="mb-10 hidden lg:block">
@@ -124,12 +125,20 @@ const SignupPage = () => {
                         </div>
                         <StepIndicator current={step} total={3} />
                     </div>
+
+                    <div className="hidden lg:block z-10">
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
+                            Professional Sports Management
+                        </p>
+                    </div>
                 </div>
 
                 {/* --- FORM SECTION --- */}
-                <div className="flex-1 p-8 md:p-10 lg:p-12 bg-card flex flex-col">
-                    <form className="max-w-xl mx-auto w-full flex flex-col h-full">
-                        <div className="flex-1 min-h-[400px] md:min-h-[440px]">
+                <div className="flex-1 p-6 md:p-8 lg:p-10 bg-card flex flex-col overflow-y-auto lg:overflow-visible">
+                    <form className="max-w-xl mx-auto w-full flex flex-col h-full" onSubmit={(e) => e.preventDefault()}>
+                        
+                        {/* Scrollable Content Area */}
+                        <div className="flex-1">
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={step}
@@ -137,24 +146,19 @@ const SignupPage = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
                                     transition={{ duration: 0.2 }}
+                                    className="space-y-4" // Reduced from space-y-8
                                 >
-                                    <div className="mb-4 md:mb-8">
-                                        <StepHeader step={step} />
-                                    </div>
+                                    <StepHeader step={step} />
 
                                     {step === 1 && (
-                                        <div className="space-y-4 md:space-y-6"> {/* 3. Tighter spacing */}
+                                        <div className="space-y-3"> {/* Tightened spacing */}
                                             <AvatarUpload preview={preview} error={errors.profileImage} onImageChange={handleImageChange} />
-
-                                            {/* 4. Ensure RolePicker uses a compact grid */}
                                             <RolePicker
                                                 selectedRole={formData.role}
                                                 onRoleChange={(role) => handleFieldChange("role", role as SignupRole)}
                                                 roles={Object.values(SignupRoles)}
                                             />
-
-                                            {/* 5. Tighter gap for Name inputs */}
-                                            <div className="grid grid-cols-2 gap-2 md:gap-3">
+                                            <div className="grid grid-cols-2 gap-3">
                                                 <FormInput label="First Name" error={errors.firstName} placeholder="Cristiano" value={formData.firstName} onChange={(v) => handleFieldChange("firstName", v)} />
                                                 <FormInput label="Last Name" error={errors.lastName} placeholder="Ronaldo" value={formData.lastName} onChange={(v) => handleFieldChange("lastName", v)} />
                                             </div>
@@ -162,22 +166,29 @@ const SignupPage = () => {
                                     )}
 
                                     {step === 2 && (
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            <FormSelect label="Batting Style" error={errors.battingStyle} options={[{ value: 'r', label: 'Right Hand' }, { value: 'l', label: 'Left Hand' }]} onChange={(v) => handleFieldChange("battingStyle", v)} />
-                                            <FormInput icon={Move} error={errors.bowlingStyle} label="Bowling Style" placeholder="Off-Spin" value={formData.bowlingStyle} onChange={(v) => handleFieldChange("bowlingStyle", v)} />
-                                            <FormInput icon={ChevronRight} error={errors.playingPosition} label="Position" placeholder="Midfielder" value={formData.playingPosition} onChange={(v) => handleFieldChange("playingPosition", v)} />
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3"> {/* Use grid for compactness */}
+                                            <FormSelect label="Batting Style" error={errors.battingStyle} options={[{ value: 'RHB', label: 'Right Hand' }, { value: 'LHB', label: 'Left Hand' }]} onChange={(v) => handleFieldChange("battingStyle", v)} />
+                                            <FormSelect label="Bowling Style" error={errors.bowlingStyle} options={[
+                                                { value: 'none', label: 'None' },
+                                                { value: 'RAF', label: 'R-arm Fast' },
+                                                { value: 'RAFM', label: 'R-arm Fast Med' },
+                                                { value: 'RAS', label: 'R-arm Off Spin' },
+                                                { value: 'RALB', label: 'R-arm Leg Spin' },
+                                                { value: 'LAO', label: 'L-arm Orthodox' },
+                                            ]} onChange={(v) => handleFieldChange("bowlingStyle", v)} />
+                                            <FormSelect label="Position" error={errors.playingPosition} options={[{ value: 'bt', label: 'Batting' }, { value: 'bl', label: 'Bowling' }, { value: 'ar', label: 'All Rounder' }, { value: 'wk', label: 'Wicket Keeper' }]} onChange={(v) => handleFieldChange("playingPosition", v)} />
                                             <FormInput icon={Hash} error={errors.jerseyNumber} label="Jersey #" type="number" value={formData.jerseyNumber} onChange={(v) => handleFieldChange("jerseyNumber", v)} />
                                         </div>
                                     )}
 
                                     {step === 3 && (
-                                        <div className="space-y-4">
+                                        <div className="space-y-3">
                                             <FormInput icon={Mail} error={errors.email} label="Email" type="email" value={formData.email} onChange={(v) => handleFieldChange("email", v)} />
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                                 <FormInput icon={Phone} error={errors.phone} label="Phone" value={formData.phone} onChange={(v) => handleFieldChange("phone", v)} />
                                                 <FormSelect label="Gender" error={errors.gender} options={[{ value: 'm', label: 'Male' }, { value: 'f', label: 'Female' }]} onChange={(v) => handleFieldChange("gender", v as Gender)} />
                                             </div>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                                 <FormInput icon={Lock} error={errors.password} label="Password" type="password" onChange={(v) => handleFieldChange("password", v)} />
                                                 <FormInput icon={Lock} error={errors.confirmPassword} label="Confirm" type="password" onChange={(v) => handleFieldChange("confirmPassword", v)} />
                                             </div>
@@ -187,14 +198,14 @@ const SignupPage = () => {
                             </AnimatePresence>
                         </div>
 
-                        {/* NAV BUTTONS: Now pinned to the bottom because of flex-col + mt-auto */}
-                        <div className="pt-6 md:pt-1">
+                        {/* NAV BUTTONS & LINKS - Pinned to bottom */}
+                        <div className="mt-6">
                             <div className="flex gap-3">
                                 {step > 1 && (
                                     <button
                                         type="button"
                                         onClick={handleBack}
-                                        className="h-12 px-6 rounded-xl border border-input active:scale-95 transition-all flex items-center justify-center hover:bg-muted"
+                                        className="h-11 px-5 rounded-xl border border-input active:scale-95 transition-all flex items-center justify-center hover:bg-muted"
                                     >
                                         <ArrowLeft className="w-5 h-5" />
                                     </button>
@@ -203,14 +214,31 @@ const SignupPage = () => {
                                     type="button"
                                     disabled={loading}
                                     onClick={handleAction}
-                                    className={`flex-1 h-12 rounded-xl font-black transition-all flex items-center justify-center gap-2 
-                                        ${!canGoNext ? "bg-primary/70 text-white/80" : "bg-primary text-white shadow-lg"}`}
+                                    className={`flex-1 h-11 rounded-xl font-black text-sm transition-all flex items-center justify-center gap-2 
+                                        ${!canGoNext ? "bg-primary/70 text-white/80" : "bg-primary text-white shadow-md active:scale-[0.98]"}`}
                                 >
                                     {loading ? "..." : step === 3 ? "Complete Sign Up" : "Next Step"}
                                 </button>
                             </div>
 
-                            {step === 1 && <SocialAuth onGoogle={handleGoogleSignUp} onFacebook={handleFacebookSignUp} />}
+                            <div className="mt-4 space-y-3 text-center">
+                                {step === 1 && (
+                                    <>
+                                        <SocialAuth onGoogle={handleGoogleSignUp} onFacebook={handleFacebookSignUp} />
+                                        <p className="text-xs text-muted-foreground font-medium">
+                                            Already have an account?{" "}
+                                            <Link to="/login" className="text-primary font-bold hover:underline">Log In</Link>
+                                        </p>
+                                    </>
+                                )}
+                                
+                                <Link 
+                                    to="/privacy" 
+                                    className="block text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50 hover:text-primary transition-colors"
+                                >
+                                    Privacy Policy & Usage Terms
+                                </Link>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -218,5 +246,4 @@ const SignupPage = () => {
         </div>
     );
 };
-
 export default SignupPage;
