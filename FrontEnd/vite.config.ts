@@ -25,25 +25,18 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          if (id.includes('node_modules/recharts')) {
-            return 'recharts';
-          }
-          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
-            return 'react-core';
-          }
-          if (id.includes('node_modules/lucide-react')) {
-            return 'ui-icons';
-          }
-          if (id.includes('node_modules/framer-motion')) {
-             return 'animations';
-          }
+          // Keep React core modules together with the main vendor bundle
+          // to ensure they are available when other libraries load.
           if (id.includes('node_modules')) {
+            if (id.includes('recharts')) return 'recharts';
+            if (id.includes('framer-motion')) return 'animations';
+            if (id.includes('lucide-react')) return 'ui-icons';
+          
             return 'vendor';
           }
         },
       },
     },
-
     chunkSizeWarningLimit: 1000,
   },
 });
