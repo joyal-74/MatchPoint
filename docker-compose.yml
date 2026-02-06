@@ -24,6 +24,9 @@ services:
         - VITE_FACEBOOK_APP_ID=${VITE_FACEBOOK_APP_ID}
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - backend
     restart: always
