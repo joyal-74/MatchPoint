@@ -42,6 +42,12 @@ export const subscriptionEndpoints = {
 
         return data.data;
     },
+    
+    fetchUserPlan: async ({ userId }: { userId: string}): Promise<UserSubscription> => {
+        const { data } = await axiosClient.get(SUBSCRIPTION_ROUTES.GET_USER_PLAN(userId));
+
+        return data.data;
+    },
 
     initiateOrder: async (InitiateOrderPayload: InitiateOrderPayload): Promise<InitiateOrderResponse> => {
         const { data } = await axiosClient.post(SUBSCRIPTION_ROUTES.INITIALIZE_ORDER, InitiateOrderPayload);

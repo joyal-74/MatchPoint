@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAvailablePlans, finalizeSubscriptionPayment, initiateSubscriptionOrder } from "./subscriptionThunks";
+import { fetchAvailablePlans, fetchUserPlan, finalizeSubscriptionPayment, initiateSubscriptionOrder } from "./subscriptionThunks";
 import type { AvailablePlan, UserSubscription } from "./subscriptionTypes";
 
 interface SubscriptionState {
@@ -66,6 +66,21 @@ const subscriptionSlice = createSlice({
         });
 
         builder.addCase(finalizeSubscriptionPayment.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload as string;
+        });
+
+        builder.addCase(fetchUserPlan.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+
+        builder.addCase(fetchUserPlan.fulfilled, (state, action) => {
+            state.userSubscription = action.payload;
+            state.loading = false;
+        });
+
+        builder.addCase(fetchUserPlan.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
         });

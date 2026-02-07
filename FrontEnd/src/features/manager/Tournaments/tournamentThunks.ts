@@ -92,3 +92,8 @@ export const fetchTournamentPointsTable  = createAsyncThunk(
     "manager/fetchTournamentPointsTable",
     createApiThunk(managerEndpoints.fetchTournamentPointsTable )
 )
+
+export const searchAvailableUmpires = createAsyncThunk(
+    "manager/searchAvailableUmpires",
+    createApiThunk(managerEndpoints.searchAvailableUmpires)
+);

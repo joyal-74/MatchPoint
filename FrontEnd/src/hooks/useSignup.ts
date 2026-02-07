@@ -109,8 +109,18 @@ export const useSignup = () => {
     const handleGoogleSignUp = async (token: string) => {
         setLoading(true);
         try {
-            await dispatch(loginUserGoogle(token)).unwrap();
-            navigate('/dashboard');
+           const result = await dispatch(loginUserGoogle(token)).unwrap();
+
+            if (result.tempToken) {
+
+                toast.success("Almost there! Please select your role to finish signup.");
+                navigate('/complete-profile', {
+                    state: { tempToken: result.tempToken, provider: 'google' }
+                });
+            } else if (result.accessToken) {
+                toast.success("Welcome back!");
+                navigate('/');
+            }
         } catch (err) {
             toast.error(typeof err === "string" ? err : "Google Auth failed");
         } finally {
@@ -121,8 +131,18 @@ export const useSignup = () => {
     const handleFacebookSignUp = async (token: string) => {
         setLoading(true);
         try {
-            await dispatch(loginUserFacebook(token)).unwrap();
-            navigate('/dashboard');
+            const result = await dispatch(loginUserFacebook(token)).unwrap();
+
+            if (result.tempToken) {
+
+                toast.success("Almost there! Please select your role to finish signup.");
+                navigate('/complete-profile', {
+                    state: { tempToken: result.tempToken, provider: 'facebook' }
+                });
+            } else if (result.accessToken) {
+                toast.success("Welcome back!");
+                navigate('/');
+            }
         } catch (err) {
             toast.error(typeof err === "string" ? err : "Facebook Auth failed");
         } finally {

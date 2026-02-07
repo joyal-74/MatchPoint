@@ -6,7 +6,7 @@ import { HttpResponse } from "../../helpers/HttpResponse.js";
 import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
 import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
 import { IGetPlansAndUserSubscription, ISubscriptionService } from "../../../../app/services/ISubscriptionServices.js";
-import { ICreatePaymentSession, IUpdateUserDirectlyPlan } from "../../../../app/repositories/interfaces/usecases/IPlanUseCaseRepo.js";
+import { ICreatePaymentSession, IGetUserSubscriptionPlan, IUpdateUserDirectlyPlan } from "../../../../app/repositories/interfaces/usecases/IPlanUseCaseRepo.js";
 import { SubscriptionMessages } from "../../../../domain/constants/admin/AdminSubscriptionMessages.js";
 
 @injectable()
@@ -16,6 +16,7 @@ export class SubscriptionController {
         @inject(DI_TOKENS.CreatePaymentSession) private _createPaymentSessionUseCase: ICreatePaymentSession,
         @inject(DI_TOKENS.UpdateUserDirectlyPlan) private _updatePlanDirectUseCase: IUpdateUserDirectlyPlan,
         @inject(DI_TOKENS.SubscriptionService) private _subscriptionPaymentService: ISubscriptionService,
+        @inject(DI_TOKENS.GetUserSubscriptionPlan) private _getUserSubscription: IGetUserSubscriptionPlan,
     ) { }
 
     getUserPlan = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
@@ -23,6 +24,13 @@ export class SubscriptionController {
         const plans = await this._getPlansAndUserSubscription.execute({ userId, role });
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, SubscriptionMessages.USER_PLAN_FETCHED, plans));
+    }
+
+    getUserPlanOnly = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { userId } = httpRequest.params;
+        const plan = await this._getUserSubscription.execute(userId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, SubscriptionMessages.USER_PLAN_FETCHED, plan));
     }
 
     initiateOrder = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {

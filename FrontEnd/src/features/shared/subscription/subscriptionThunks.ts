@@ -22,3 +22,8 @@ export const finalizeSubscriptionPayment = createAsyncThunk(
     "subscription/finalizeSubscriptionPayment",
     createApiThunk(subscriptionEndpoints.finalizePayment)
 );
+
+export const fetchUserPlan = createAsyncThunk(
+    "subscription/fetchUserPlan",
+    createApiThunk(subscriptionEndpoints.fetchUserPlan)
+);

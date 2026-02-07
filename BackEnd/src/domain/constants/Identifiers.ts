@@ -249,6 +249,7 @@ const SharedUseCaseTokens = {
     GetPlansAndUserSubscription: "GetPlansAndUserSubscription",
     CreatePaymentSession: "CreatePaymentSession",
     SubscriptionService: "SubscriptionService",
+    GetUserSubscriptionPlan: "GetUserSubscriptionPlan",
 }
 
 

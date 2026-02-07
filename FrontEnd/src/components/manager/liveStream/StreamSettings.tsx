@@ -1,21 +1,14 @@
-import { useState, useEffect } from 'react';
-import {
-    StopCircle, Layers, Activity, Mic, MicOff, Video, VideoOff,
-    Settings2, Radio, Monitor, TrendingUp, Hash, AlignLeft, Loader2
-} from 'lucide-react';
+import { useEffect } from 'react';
+import { StopCircle, Activity, Mic, MicOff, Video, VideoOff, Settings2, Radio, TrendingUp, Hash, AlignLeft, Loader2 } from 'lucide-react';
 import { useStreamManager } from '../../../hooks/useStreamManager';
 import { useParams } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
-import { EliteBroadcastOverlay } from './overlay/EliteBroadcastOverlay';
-import { CyberDashboardOverlay } from './overlay/CyberDashboardOverlay';
 import Navbar from '../Navbar';
 import { useAppSelector } from '../../../hooks/hooks';
 
 const StreamerDashboard = () => {
     const { matchId } = useParams();
-    const userId = useAppSelector((state)=> state.auth.user?._id)
+    const userId = useAppSelector((state) => state.auth.user?._id);
     const stream = useStreamManager(matchId || "", userId || '');
-    const [selectedOverlay, setSelectedOverlay] = useState('cricket_pro');
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -25,12 +18,6 @@ const StreamerDashboard = () => {
         }, 1000);
         return () => clearTimeout(timer);
     }, [stream.streamTitle, stream.streamDesc, stream.status]);
-
-    const overlays = [
-        { id: 'cricket_pro', name: 'Cricket Pro', preview: 'Scoreboard Lower-Third', icon: Activity },
-        { id: 'minimal_top', name: 'Minimal HUD', preview: 'Sleek Top Indicator', icon: Monitor },
-        { id: 'full_stats', name: 'Stat Panel', preview: 'Detailed Analysis', icon: TrendingUp },
-    ];
 
     const formatBitrate = (bitrate: number) => {
         if (bitrate >= 1000000) return `${(bitrate / 1000000).toFixed(1)} Mbps`;
@@ -77,14 +64,6 @@ const StreamerDashboard = () => {
                                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${stream.localStream ? 'opacity-100' : 'opacity-20'}`}
                             />
 
-                            {/* BROADCAST OVERLAYS - Pinned to bottom container */}
-                            <div className="absolute inset-0 z-10 pointer-events-none">
-                                <AnimatePresence mode="wait">
-                                    {selectedOverlay === 'cricket_pro' && <EliteBroadcastOverlay key="pro" data={stream.matchScore} />}
-                                    {selectedOverlay === 'minimal_top' && <CyberDashboardOverlay key="minimal" data={stream.matchScore} />}
-                                </AnimatePresence>
-                            </div>
-
                             {/* INITIALIZE UI */}
                             {!stream.localStream && (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-background/40 backdrop-blur-md">
@@ -106,32 +85,6 @@ const StreamerDashboard = () => {
                                     <StopCircle size={14} /> {stream.errorMsg}
                                 </div>
                             )}
-                        </div>
-
-                        {/* OVERLAY GALLERY */}
-                        <div className="mt-6 flex flex-col gap-3">
-                            <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2 ml-1">
-                                <Layers size={14} className="text-primary" /> Switch Overlay Template
-                            </h3>
-                            <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
-                                {overlays.map(o => (
-                                    <button
-                                        key={o.id}
-                                        onClick={() => setSelectedOverlay(o.id)}
-                                        className={`flex-shrink-0 w-48 p-4 rounded-2xl border-2 transition-all text-left group ${selectedOverlay === o.id
-                                            ? 'bg-primary/10 border-primary shadow-lg ring-4 ring-primary/5'
-                                            : 'bg-card border-border hover:border-primary/40 hover:bg-muted/50'
-                                            }`}
-                                    >
-                                        <div className="flex justify-between items-start mb-2">
-                                            <o.icon size={18} className={selectedOverlay === o.id ? 'text-primary' : 'text-muted-foreground group-hover:text-primary/70'} />
-                                            {selectedOverlay === o.id && <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
-                                        </div>
-                                        <p className={`text-xs font-black uppercase tracking-tight ${selectedOverlay === o.id ? 'text-primary' : ''}`}>{o.name}</p>
-                                        <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{o.preview}</p>
-                                    </button>
-                                ))}
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -179,7 +132,6 @@ const StreamerDashboard = () => {
                             </h3>
 
                             <div className="space-y-5">
-                                {/* Title */}
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black text-muted-foreground uppercase flex items-center gap-1.5 ml-1">
                                         <Hash size={12} /> Broadcast Title
@@ -192,7 +144,6 @@ const StreamerDashboard = () => {
                                     />
                                 </div>
 
-                                {/* Description */}
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black text-muted-foreground uppercase flex items-center gap-1.5 ml-1">
                                         <AlignLeft size={12} /> Description
@@ -205,7 +156,6 @@ const StreamerDashboard = () => {
                                     />
                                 </div>
 
-                                {/* Video Source */}
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black text-muted-foreground uppercase flex items-center gap-1.5 ml-1">
                                         <Video size={12} /> Camera Source
@@ -219,7 +169,6 @@ const StreamerDashboard = () => {
                                     </select>
                                 </div>
 
-                                {/* Audio Source */}
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black text-muted-foreground uppercase flex items-center gap-1.5 ml-1">
                                         <Mic size={12} /> Mic Source

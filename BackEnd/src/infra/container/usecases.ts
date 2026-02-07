@@ -144,6 +144,7 @@ import { GetAllMatches } from "../../app/usecases/manager/match/GetAllMatches.js
 import { GetUmpireAllMatches } from "../../app/usecases/umpire/GetAllMatches.js";
 import { GetPlayerStats } from "../../app/usecases/player/GetPlayerStats.js";
 import { PlayerLeaveTeamUseCase } from "../../app/usecases/player/PlayerLeaveTeam.js";
+import { GetUserSubscriptionPlan } from "../../app/usecases/shared/GetUserPlan.js";
 
 
 // Registrations
@@ -303,6 +304,7 @@ container.register(DI_TOKENS.CreatePaymentSession, { useClass: CreatePaymentSess
 container.register(DI_TOKENS.SubscriptionService, { useClass: SubscriptionPaymentService });
 container.register(DI_TOKENS.MarkNotificationRead, { useClass: MarkNotificationRead });
 container.register(DI_TOKENS.MarkAllNotificationRead, { useClass: MarkAllNotificationRead });
+container.register(DI_TOKENS.GetUserSubscriptionPlan, { useClass: GetUserSubscriptionPlan });
 
 // --- Viewer ---
 container.register(DI_TOKENS.GetViewerProfile, { useClass: GetViewerProfile });

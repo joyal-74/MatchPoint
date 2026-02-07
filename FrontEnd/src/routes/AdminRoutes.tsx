@@ -2,6 +2,8 @@ import { lazy, Suspense, type JSX } from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
+import AdminLoginPage from "../pages/auth/AdminLogin";
+import PublicRoute from "./PublicRoute";
 
 const Dashboard = lazy(() => import("../pages/admin/Dashboard"));
 const ManagersManagement = lazy(() => import("../pages/admin/Manager/ManagersManagement"));
@@ -28,22 +30,25 @@ const withAdminProtection = (component: JSX.Element) => (
 
 const AdminRoutes = () => {
     return (
-        <Routes>
-            <Route path="dashboard" element={withAdminProtection(<Dashboard />)} />
-            <Route path="viewers" element={withAdminProtection(<ViewersManagement />)} />
-            <Route path="players" element={withAdminProtection(<PlayersManagement />)} />
-            <Route path="managers" element={withAdminProtection(<ManagersManagement />)} />
-            <Route path="teams" element={withAdminProtection(<TeamManagement />)} />
-            <Route path="tournaments" element={withAdminProtection(<TournamentManagement />)} />
-            <Route path="managers/:id/details" element={withAdminProtection(<ManagerDetails />)} />
-            <Route path="players/:id/details" element={withAdminProtection(<PlayerDetails />)} />
-            <Route path="viewers/:id/details" element={withAdminProtection(<ViewerDetails />)} />
-            <Route path="teams/:id/details" element={withAdminProtection(<TeamDetailsPage />)} />
-            <Route path="tournament/:id/details" element={withAdminProtection(<TournamentDetailsPage />)} />
-            <Route path="subscriptions" element={withAdminProtection(<SubscriptionManagement />)} />
-            <Route path="transactions" element={withAdminProtection(<TransactionManagement />)} />
-            <Route path="transactions/:id" element={withAdminProtection(<TransactionDetailsPage />)} />
-        </Routes>
+        <Suspense fallback={<LoadingOverlay show />}>
+            <Routes>
+                <Route path="login" element={<PublicRoute><AdminLoginPage /></PublicRoute>} />
+                <Route path="dashboard" element={withAdminProtection(<Dashboard />)} />
+                <Route path="viewers" element={withAdminProtection(<ViewersManagement />)} />
+                <Route path="players" element={withAdminProtection(<PlayersManagement />)} />
+                <Route path="managers" element={withAdminProtection(<ManagersManagement />)} />
+                <Route path="teams" element={withAdminProtection(<TeamManagement />)} />
+                <Route path="tournaments" element={withAdminProtection(<TournamentManagement />)} />
+                <Route path="managers/:id/details" element={withAdminProtection(<ManagerDetails />)} />
+                <Route path="players/:id/details" element={withAdminProtection(<PlayerDetails />)} />
+                <Route path="viewers/:id/details" element={withAdminProtection(<ViewerDetails />)} />
+                <Route path="teams/:id/details" element={withAdminProtection(<TeamDetailsPage />)} />
+                <Route path="tournament/:id/details" element={withAdminProtection(<TournamentDetailsPage />)} />
+                <Route path="subscriptions" element={withAdminProtection(<SubscriptionManagement />)} />
+                <Route path="transactions" element={withAdminProtection(<TransactionManagement />)} />
+                <Route path="transactions/:id" element={withAdminProtection(<TransactionDetailsPage />)} />
+            </Routes>
+        </Suspense>
     );
 };
 

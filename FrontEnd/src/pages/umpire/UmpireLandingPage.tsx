@@ -10,6 +10,8 @@ const UmpireLandingPage = () => {
     const dispatch = useAppDispatch();
 
     const { allMatches, loading } = useAppSelector((state) => state.umpire);
+    console.log(allMatches)
+    
     const userId = useAppSelector((state) => state.auth.user?._id);
 
     useEffect(() => {
@@ -111,7 +113,7 @@ const UmpireLandingPage = () => {
                         <div className="flex items-end justify-between mb-10">
                             <div className="space-y-1">
                                 <h2 className="text-primary text-[10px] font-black uppercase tracking-[0.3em]">Duty Roster</h2>
-                                <h3 className="text-2xl font-bold text-white tracking-tight">Upcoming Assignments</h3>
+                                <h3 className="text-2xl font-bold text-white tracking-tight">My Assignments</h3>
                             </div>
                             <button className="text-xs font-bold text-slate-400 hover:text-primary transition-colors flex items-center gap-1">
                                 View Schedule <ChevronRight size={14} />
@@ -196,7 +198,6 @@ const UmpireLandingPage = () => {
                     </div>
                 </section>
 
-                {/* --- 4. MINI FOOTER --- */}
                 <Footer />
             </div>
         </>

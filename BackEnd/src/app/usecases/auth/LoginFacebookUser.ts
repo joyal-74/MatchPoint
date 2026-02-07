@@ -31,20 +31,22 @@ export class LoginFacebookUser implements ILoginFacebookUser {
 
         const user = await this._userServices.findExistingUserByEmail(email);
 
-        if (user && user.authProvider === "facebook") {
-            this._userAuthService.ensureUserCanLogin(user);
+        if (user) {
+            if (user.authProvider === "facebook") {
+                this._userAuthService.ensureUserCanLogin(user);
 
-            const jwtPayload: JwtPayload = { userId: user._id, role: user.role };
-            const accessToken = await this._tokenService.generateAccessToken(jwtPayload);
-            const refreshToken = await this._tokenService.generateRefreshToken(jwtPayload);
+                const jwtPayload: JwtPayload = { userId: user._id, role: user.role };
+                const accessToken = await this._tokenService.generateAccessToken(jwtPayload);
+                const refreshToken = await this._tokenService.generateRefreshToken(jwtPayload);
 
-            await this._userServices.updateRefreshToken(user._id, refreshToken);
+                await this._userServices.updateRefreshToken(user._id, refreshToken);
 
-            const userDTO = UserMapper.toUserLoginResponseDTO(user);
-            return { isNewUser: false, accessToken, refreshToken, user: userDTO };
+                const userDTO = UserMapper.toUserLoginResponseDTO(user);
+                return { isNewUser: false, accessToken, refreshToken, user: userDTO };
+            } else {
+                this._userAuthService.facebookProviderExistCheck(user);
+            }
         }
-
-        this._userAuthService.facebookProviderExistCheck(user);
 
         const payloadTemp: JwtTempPayload = { email, name, picture };
         const tempToken = await this._tokenService.generateTempToken(payloadTemp);

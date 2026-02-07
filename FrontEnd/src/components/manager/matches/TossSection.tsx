@@ -7,8 +7,8 @@ import type { Team } from "../../../domain/match/types";
 const COIN_FLIP_TIME_MS = 2500;
 
 interface TossSectionProps {
-    team1: Team;
-    team2: Team;
+    teamA: Team;
+    teamB: Team;
     tossWinnerId: TeamId | null;
     tossDecision: TossDecision;
     isFlipping: boolean;
@@ -20,11 +20,11 @@ interface TossSectionProps {
 
 export const TossSection: React.FC<TossSectionProps> = React.memo((props) => {
     const {
-        team1, team2, tossWinnerId, tossDecision, isFlipping,
+        teamA, teamB, tossWinnerId, tossDecision, isFlipping,
         setTossWinnerId, setTossDecision, setIsFlipping, isTossLocked
     } = props;
 
-    const teams = [team1, team2];
+    const teams = [teamA, teamB];
     const tossWinner = teams.find(t => t._id === tossWinnerId);
 
     const handleCoinFlip = useCallback(() => {
@@ -33,11 +33,11 @@ export const TossSection: React.FC<TossSectionProps> = React.memo((props) => {
         setIsFlipping(true);
 
         setTimeout(() => {
-            const winner = Math.random() < 0.5 ? team1._id : team2._id;
+            const winner = Math.random() < 0.5 ? teamA._id : teamB._id;
             setTossWinnerId(winner as TeamId);
             setIsFlipping(false);
         }, COIN_FLIP_TIME_MS + 200);
-    }, [isFlipping, team1._id, team2._id, setTossWinnerId, setTossDecision, setIsFlipping]);
+    }, [isFlipping, teamA._id, teamB._id, setTossWinnerId, setTossDecision, setIsFlipping]);
 
     const handleManualTossSelect = useCallback((teamId: TeamId) => {
         setTossWinnerId(teamId);

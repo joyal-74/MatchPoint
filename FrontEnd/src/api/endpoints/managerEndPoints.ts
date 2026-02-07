@@ -171,18 +171,23 @@ export const managerEndpoints = {
         return data.data;
     },
 
-    getDashboardAnalytics: async (managerId : string): Promise<AnalyticsData> => {
+    getDashboardAnalytics: async (managerId: string): Promise<AnalyticsData> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_DASHBOARD_ANALYTICS(managerId));
         return data.data;
     },
 
-    fetchTournamentPointsTable: async (tournamentId : string): Promise<PointsTableData> => {
+    fetchTournamentPointsTable: async (tournamentId: string): Promise<PointsTableData> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_POINTS_TABLE(tournamentId));
         return data.data;
     },
 
-    getTournamentMatchesResult: async (tournamentId : string): Promise<TeamResultSummary[]> => {
+    getTournamentMatchesResult: async (tournamentId: string): Promise<TeamResultSummary[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_MATCH_RESULT(tournamentId));
+        return data.data;
+    },
+
+    searchAvailableUmpires: async ({ query, date, tournamentId }: { query: string, date: string, tournamentId: string }): Promise<Match> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.AVAILABLE_UMPIRES(tournamentId), { params: { query, date } });
         return data.data;
     },
 }

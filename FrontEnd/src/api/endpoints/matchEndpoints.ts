@@ -24,7 +24,6 @@ export const matchEndpoints = {
         const { data } = await axiosClient.post(MATCH_ROUTES.SAVE_MATCH(matchId), { tossWinnerId, tossDecision });
         return data.data;
     },
-
     startMatch: async (matchId: string): Promise<Match> => {
         const { data } = await axiosClient.post(MATCH_ROUTES.START_MATCH, { matchId });
         return data.data;

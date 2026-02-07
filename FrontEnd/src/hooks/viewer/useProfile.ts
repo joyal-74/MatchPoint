@@ -11,6 +11,8 @@ export const useProfile = () => {
     const user = useAppSelector((state: RootState) => state.auth.user);
     const viewerId = user?._id
 
+
+    console.log('viewerId', viewerId)
     console.log('vieer', viewer)
 
     const [isEditing, setIsEditing] = useState(false);

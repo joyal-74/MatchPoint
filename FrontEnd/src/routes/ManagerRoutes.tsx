@@ -2,6 +2,7 @@ import { lazy, Suspense, type JSX } from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
+import RoleLayoutWrapper from "../pages/shared/RoleLayoutWrapper";
 
 // Helper for protection
 const withManagerProtection = (component: JSX.Element) => (
@@ -33,6 +34,9 @@ const MyMatchesPage = lazy(() => import("../pages/manager/MyMatches"));
 const CreateTournamentPage = lazy(() => import("../components/manager/tournaments/TournamentModal/CreateTournamentPage"));
 const EditTournamentPage = lazy(() => import("../components/manager/tournaments/TournamentModal/EditTournamentPage"));
 const StreamSettings = lazy(() => import("../components/manager/liveStream/StreamSettings"));
+const SettingsPage = lazy(() => import("../pages/shared/SettingsPage"));
+const SubscriptionPage = lazy(() => import("../pages/shared/SubscriptionsPage"));
+const NotificationsPage = lazy(() => import("../pages/player/NotificationsPage"));
 
 const ManagerRoutes = () => {
     return (
@@ -58,6 +62,9 @@ const ManagerRoutes = () => {
             <Route path="mymatches" element={withManagerProtection(<MyMatchesPage />)} />
             <Route path="match/:matchId/stream" element={withManagerProtection(<StreamSettings />)} />
             <Route path="match/:matchId/control" element={withManagerProtection(<ScoreboardDashboard />)} />
+            <Route path="settings" element={withManagerProtection(<RoleLayoutWrapper><SettingsPage /></RoleLayoutWrapper>)} />
+            <Route path="subscription" element={withManagerProtection(<RoleLayoutWrapper><SubscriptionPage /></RoleLayoutWrapper>)} />
+            <Route path="notifications" element={withManagerProtection(<RoleLayoutWrapper><NotificationsPage /></RoleLayoutWrapper>)} />
         </Routes>
     );
 };

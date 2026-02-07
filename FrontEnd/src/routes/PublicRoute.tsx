@@ -27,21 +27,14 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
     return <>{children}</>;
 };
 
-// Helper to get the correct dashboard route
 const getDefaultRoute = (role: UserRole): string => {
     switch (role) {
-        case 'admin':
-            return '/admin/dashboard';
-        case 'player':
-            return '/player/dashboard';
-        case 'manager':
-            return '/manager/dashboard';
-        case 'umpire':
-            return '/umpire/dashboard';
-        case 'viewer':
-            return '/';
-        default:
-            return '/';
+        case 'admin': return '/admin/dashboard';
+        case 'player': return '/player/dashboard';
+        case 'manager': return '/manager/dashboard';
+        case 'umpire': return '/umpire/dashboard';
+        case 'viewer': return '/'; 
+        default: return '/';
     }
 };
 

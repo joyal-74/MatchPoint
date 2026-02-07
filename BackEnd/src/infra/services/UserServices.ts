@@ -5,7 +5,6 @@ import { IUserRepository } from "../../app/repositories/interfaces/shared/IUserR
 import { IRoleIdGenerator } from "../../app/providers/IIdGenerator.js";
 import { SocialUserRegisterData, UserResponse } from "../../domain/entities/User.js";
 import { IUserServices } from "../../app/services/user/IUserServices.js";
-import { NotFoundError } from "../../domain/errors/index.js";
 
 
 @injectable()
@@ -17,7 +16,7 @@ export class UserServices implements IUserServices {
 
     async createUser(userData: SocialUserRegisterData, email: string, name: string, picture?: string) {
         const userId = this.idGenerator.generate(userData.role);
-        
+
         const [firstName, lastName] = name.split(" ");
         const newUser = await this.userRepository.create({
             userId,
@@ -49,11 +48,9 @@ export class UserServices implements IUserServices {
         await this.userRepository.update(userId, { refreshToken });
     }
 
-    async findExistingUserByEmail(email: string): Promise<UserResponse> {
+    async findExistingUserByEmail(email: string): Promise<UserResponse | null> {
         const user = await this.userRepository.findByEmail(email);
-        if (!user) {
-            throw new NotFoundError('User not found with this email')
-        }
-        return user
+        if (!user) return null;
+        return user;
     }
 }

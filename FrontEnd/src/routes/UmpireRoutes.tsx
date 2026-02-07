@@ -2,12 +2,15 @@ import { lazy, Suspense, type JSX } from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
+import RoleLayoutWrapper from "../pages/shared/RoleLayoutWrapper";
 
+// Lazy loaded umpire pages
 const UmpireLandingPage = lazy(() => import("../pages/umpire/UmpireLandingPage"));
 const MatchCenter = lazy(() => import("../pages/umpire/MatchCenter"));
 const MatchDetails = lazy(() => import("../pages/umpire/MatchDetails"));
 const ScoreboardDashboard = lazy(() => import("../pages/umpire/scoreControl/ScoreboardDashboard"));
 const ProfilePage = lazy(() => import("../pages/umpire/ProfilePage"));
+const SettingsPage = lazy(() => import("../pages/shared/SettingsPage"));
 
 const withUmpireProtection = (component: JSX.Element) => (
     <ProtectedRoute allowedRoles={["umpire"]}>
@@ -25,6 +28,13 @@ const UmpireRoutes = () => {
             <Route path="matches" element={withUmpireProtection(<MatchCenter />)} />
             <Route path="matches/details" element={withUmpireProtection(<MatchDetails />)} />
             <Route path="matches/:matchId/live-score" element={withUmpireProtection(<ScoreboardDashboard />)} />
+            
+            <Route path="settings" element={withUmpireProtection(
+                    <RoleLayoutWrapper>
+                        <SettingsPage />
+                    </RoleLayoutWrapper>
+                )} 
+            />
         </Routes>
     );
 };

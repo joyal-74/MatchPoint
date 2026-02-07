@@ -63,7 +63,6 @@ export const useLogin = () => {
             const payload = resultAction.payload as LoginSocialResult;
 
             if (payload?.tempToken) {
-                // Social login needs more info; modal will show via useEffect
                 return;
             }
 
@@ -76,7 +75,6 @@ export const useLogin = () => {
         }
     };
 
-    // FIX: Make 'e' optional to prevent "Expected 1 argument" error in the component
     const handleLoginSubmit = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
         setErrors({});

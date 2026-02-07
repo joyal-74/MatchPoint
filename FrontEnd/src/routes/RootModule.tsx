@@ -1,0 +1,85 @@
+import { lazy, Suspense, type JSX } from "react";
+import { Route, Routes } from "react-router-dom";
+
+// Auth Pages
+const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
+const SignupPage = lazy(() => import('../pages/auth/SignupPage'));
+const ForgotPasswordPage = lazy(() => import('../pages/auth/ForgotPasswordPage'));
+const EnterAccountOtpPage = lazy(() => import('../pages/auth/EnterAccountOtpPage'));
+const EnterForgotOtpPage = lazy(() => import('../pages/auth/EnterForgotOtpPage'));
+const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPasswordPage'));
+
+// Shared Pages
+const PrivacyPolicy = lazy(() => import('../pages/shared/PrivacyPolicy'));
+const SettingsPage = lazy(() => import('../pages/shared/SettingsPage'));
+const NotificationsPage = lazy(() => import('../pages/player/NotificationsPage'));
+const AllTimeLeaderboard = lazy(() => import('../pages/shared/LeaderBoard/AllTimeLeaderboard'));
+const UserSubscriptionPage = lazy(() => import('../pages/shared/SubscriptionsPage'));
+const Blocked = lazy(() => import('../pages/shared/Blocked'));
+const Unauthorized = lazy(() => import('../pages/shared/Unauthorized'));
+
+// Viewer Specific Pages
+const Home = lazy(() => import("../pages/viewer/Home"));
+const LiveMatchPage = lazy(() => import("../pages/viewer/match/LiveMatchPage"));
+const LiveMatches = lazy(() => import("../pages/viewer/LiveMatches"));
+const ProfilePage = lazy(() => import("../pages/viewer/ProfilePage"));
+const LiveStreamViewer = lazy(() => import("../pages/viewer/LiveStreamViewer"));
+const WalletPage = lazy(() => import("../pages/viewer/WalletPage"));
+const TournamentsPage = lazy(() => import("../pages/viewer/Tournaments"));
+
+// Components & Layouts
+import NavbarWrapper from '../components/shared/NavbarWrapper';
+import ViewerProfileLayout from '../pages/layout/ViewerProfileLayout';
+import LoadingOverlay from '../components/shared/LoadingOverlay';
+
+// Logic & Protection
+import ProtectedRoute from './ProtectedRoute';
+import PublicRoute from './PublicRoute';
+import RoleRedirect from './RoleDirect';
+
+const withViewerProtection = (component: JSX.Element) => (
+    <ProtectedRoute allowedRoles={["viewer", "admin", "player", "manager", "umpire"]}>
+        <Suspense fallback={<LoadingOverlay show />}>
+            {component}
+        </Suspense>
+    </ProtectedRoute>
+);
+
+const RootModule = () => {
+    return (
+        <Suspense fallback={<LoadingOverlay show />}>
+            <Routes>
+                {/* --- 1. Public Routes --- */}
+                <Route path="privacy" element={<PrivacyPolicy />} />
+                <Route path="login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+                <Route path="signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
+                <Route path="forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
+                <Route path="otp-verify" element={<PublicRoute><EnterAccountOtpPage /></PublicRoute>} />
+                <Route path="otp-verification" element={<PublicRoute><EnterForgotOtpPage /></PublicRoute>} />
+                <Route path="reset-password" element={<PublicRoute><ResetPasswordPage /></PublicRoute>} />
+
+                {/* --- 2. Viewer/Root Level Protected Routes --- */}
+                <Route path="/" element={withViewerProtection(<Home />)} />
+                <Route path="profile" element={withViewerProtection(<ProfilePage />)} />
+                <Route path="tournaments" element={withViewerProtection(<TournamentsPage />)} />
+                <Route path="live" element={withViewerProtection(<LiveMatches />)} />
+                <Route path="live/:matchId/details" element={withViewerProtection(<LiveMatchPage />)} />
+                <Route path="live/:matchId/details/stream" element={withViewerProtection(<LiveStreamViewer />)} />
+                <Route path="wallet" element={withViewerProtection(<WalletPage />)} />
+                
+                {/* Root-level Shared Pages (Used by Viewers) */}
+                <Route path="/notifications" element={withViewerProtection(<ViewerProfileLayout><NotificationsPage /></ViewerProfileLayout>)} />
+                <Route path="/settings" element={withViewerProtection(<ViewerProfileLayout><SettingsPage /></ViewerProfileLayout>)} />
+                <Route path="/subscription" element={withViewerProtection(<ViewerProfileLayout><UserSubscriptionPage /></ViewerProfileLayout>)} />
+                <Route path="/leaderboard" element={withViewerProtection(<NavbarWrapper><AllTimeLeaderboard /></NavbarWrapper>)} />
+
+                {/* --- 3. System Utility Routes --- */}
+                <Route path="/dashboard" element={<ProtectedRoute><RoleRedirect /></ProtectedRoute>} />
+                <Route path="/unauthorized" element={<Unauthorized />} />
+                <Route path="/blocked" element={<Blocked />} />
+            </Routes>
+        </Suspense>
+    );
+};
+
+export default RootModule;

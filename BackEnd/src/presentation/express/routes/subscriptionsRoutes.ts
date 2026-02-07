@@ -10,6 +10,8 @@ const subscriptionController = container.resolve(SubscriptionController)
 
 router.get("/roles/:role/:userId/plans", expressAdapter(subscriptionController.getUserPlan));
 
+router.get("/:userId/plan", expressAdapter(subscriptionController.getUserPlanOnly));
+
 router.post("/plan/order", expressAdapter(subscriptionController.initiateOrder));
 
 router.put("/plan/update-plan", expressAdapter(subscriptionController.updatePlan));

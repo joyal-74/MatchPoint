@@ -1,4 +1,4 @@
-import { useParams, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import PlayerLayout from "../layout/PlayerLayout";
@@ -8,8 +8,7 @@ import type { FC, PropsWithChildren } from "react";
 import ViewerProfileLayout from "../layout/ViewerProfileLayout";
 import UmpireLayoutNavbar from "../layout/UmpireLayout";
 
-
-type Role = "player" | "manager" | "viewer" | 'umpire';
+type Role = "player" | "manager" | "viewer" | "umpire";
 
 const layouts: Record<Role, FC<PropsWithChildren>> = {
     player: PlayerLayout,
@@ -19,18 +18,17 @@ const layouts: Record<Role, FC<PropsWithChildren>> = {
 };
 
 export default function RoleLayoutWrapper({ children }: { children: React.ReactNode }) {
-    const { role } = useParams();
+    const userRole = useSelector((state: RootState) => state.auth.user?.role) as Role | undefined;
 
-    const userRole = useSelector((state: RootState) => state.auth.user?.role);
+    if (!userRole) {
+        return <Navigate to="/login" />;
+    }
 
-    if (!role || !["player", "manager", "viewer", "umpire"].includes(role)) {
+    if (!layouts[userRole]) {
         return <Navigate to="/unauthorized" />;
     }
 
-    if (userRole !== role) {
-        return <Navigate to="/unauthorized" />;
-    }
-
-    const Layout = layouts[role as Role];
+    const Layout = layouts[userRole];
+    
     return <Layout>{children}</Layout>;
 }
