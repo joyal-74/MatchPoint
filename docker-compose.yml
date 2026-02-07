@@ -5,13 +5,11 @@ services:
     container_name: matchpoint-backend
     build:
       context: ./BackEnd
-    ports:
-      - "3000:3000"
+    
     env_file:
       - ./BackEnd/.env
     restart: always
-    networks:
-      - matchpoint-network
+    network_mode: "host"
 
   frontend:
     container_name: matchpoint-frontend

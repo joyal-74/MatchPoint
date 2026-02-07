@@ -3,8 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { loadMatchDashboard, saveMatchData } from "../../../features/manager/Matches/matchThunks";
 import { fetchUserPlan } from "../../../features/shared/subscription/subscriptionThunks"; 
-import {Trophy, ChevronRight, ChevronLeft, Tv, Save,
-    Lock, ArrowUpCircle, Info, Users, MapPin, Calendar, Activity
+import { Trophy, ChevronRight, ChevronLeft, Tv, Save,
+    Lock, ArrowUpCircle, Users, MapPin, Calendar, Activity, CheckCircle2
 } from "lucide-react";
 import Navbar from "../Navbar";
 import LoadingOverlay from "../../shared/LoadingOverlay";
@@ -17,6 +17,8 @@ const MatchDashboard = () => {
 
     const { match, teamA, teamB, loading: matchLoading } = useAppSelector((state) => state.match);
     const { userSubscription, loading: planLoading } = useAppSelector((state) => state.userSubscription);
+
+    console.log(match)
     const { user } = useAppSelector((state) => state.auth);
 
     const [currentStep, setCurrentStep] = useState(1);
@@ -28,9 +30,11 @@ const MatchDashboard = () => {
         if (user?._id) dispatch(fetchUserPlan({ userId: user._id }));
     }, [matchId, user?._id, dispatch]);
 
+    // SYNC SAVED DATA ON RELOAD
     useEffect(() => {
         if (match?.tossWinner) {
             setTossWinnerId(match.tossWinner);
+            // If toss is already saved, we might want to default the user to Step 2
             setCurrentStep(2); 
         }
         if (match?.tossDecision) {
@@ -38,12 +42,8 @@ const MatchDashboard = () => {
         }
     }, [match]);
 
-    useEffect(() => {
-        if (match?.tossWinner) setTossWinnerId(match.tossWinner);
-        if (match?.tossDecision) setTossDecision(match.tossDecision.toUpperCase());
-    }, [match]);
-
     const canStream = userSubscription?.level === "Super" || userSubscription?.level === "Premium";
+    const isTossSaved = !!match?.tossWinner && !!match?.tossDecision;
 
     const handleSaveDetails = async () => {
         if (!tossWinnerId || !tossDecision) {
@@ -66,7 +66,6 @@ const MatchDashboard = () => {
         <div className="min-h-screen bg-background text-foreground flex flex-col">
             <Navbar />
 
-            {/* Main Content Area - Optimized Height */}
             <div className="flex-1 flex flex-col pt-10 pb-32 px-6 max-w-[1400px] mx-auto w-full">
                 
                 {/* MATCH HEADER */}
@@ -94,9 +93,7 @@ const MatchDashboard = () => {
 
                 <main className="flex-1">
                     {currentStep === 1 ? (
-                        /* --- STEP 1: ROSTER & INTEL --- */
                         <div className="grid lg:grid-cols-12 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            {/* Team Rosters */}
                             <div className="lg:col-span-8 grid md:grid-cols-2 gap-6">
                                 {[teamA, teamB].map((team, idx) => (
                                     <div key={idx} className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm group hover:border-primary/30 transition-all">
@@ -124,7 +121,6 @@ const MatchDashboard = () => {
                                 ))}
                             </div>
 
-                            {/* Sidebar Info */}
                             <div className="lg:col-span-4 space-y-6">
                                 <div className="bg-primary/5 border border-primary/10 rounded-2xl p-6">
                                     <h4 className="text-xs font-black uppercase mb-4 tracking-widest text-primary">Pre-Match Intel</h4>
@@ -135,17 +131,23 @@ const MatchDashboard = () => {
                                         </li>
                                         <li className="flex gap-3">
                                             <div className="mt-1 w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                                            <p className="text-xs leading-relaxed text-muted-foreground">Match scoring is handled by the <b>Appointed Umpire</b> via the digital scoring interface.</p>
+                                            <p className="text-xs leading-relaxed text-muted-foreground">Match scoring is handled by the <b>Appointed Umpire</b>.</p>
                                         </li>
                                     </ul>
                                 </div>
+                                {isTossSaved && (
+                                    <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-6 flex items-center gap-4">
+                                        <CheckCircle2 className="text-green-500" size={24} />
+                                        <div>
+                                            <p className="text-[10px] font-black text-green-600 uppercase tracking-widest">Saved Status</p>
+                                            <p className="text-xs font-bold text-green-700">Toss details are already synced.</p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ) : (
-                        /* --- STEP 2: TOSS & BROADCAST --- */
                         <div className="grid lg:grid-cols-12 gap-8 animate-in fade-in zoom-in-95 duration-500">
-                            
-                            {/* LEFT: TOSS & CONTROL */}
                             <div className="lg:col-span-7 space-y-6">
                                 <div className="bg-card border border-border rounded-3xl p-8 shadow-sm relative overflow-hidden">
                                     <div className="absolute top-0 right-0 p-8 opacity-5">
@@ -179,21 +181,20 @@ const MatchDashboard = () => {
                                     </div>
 
                                     <button onClick={handleSaveDetails} className="w-full py-5 bg-primary text-white rounded-2xl font-black text-xs tracking-widest uppercase flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/20">
-                                        <Save size={18} /> Finalize & Initialize Match
+                                        <Save size={18} /> {isTossSaved ? "Update Toss Details" : "Finalize & Initialize Match"}
                                     </button>
                                 </div>
 
-                                <div className="p-6 bg-secondary/30 border border-border rounded-2xl flex gap-4 items-center">
-                                    <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center shrink-0 border border-border">
-                                        <Info size={18} className="text-primary" />
-                                    </div>
-                                    <p className="text-[11px] font-medium text-muted-foreground leading-relaxed">
-                                        Finalizing the toss will alert the <b>Umpires</b> and <b>Commentators</b>. The match will move to "Live" status automatically on the public portal.
-                                    </p>
-                                </div>
+                                {isTossSaved && (
+                                     <div className="bg-primary/10 border border-primary/20 rounded-2xl p-6">
+                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-2">Current Saved Result</p>
+                                        <p className="text-xl font-black italic">
+                                            {match?.tossWinner === teamA?._id ? teamA?.name : teamB?.name} won the toss and elected to {match?.tossDecision}!
+                                        </p>
+                                     </div>
+                                )}
                             </div>
 
-                            {/* RIGHT: BROADCAST MONITOR */}
                             <div className="lg:col-span-5 space-y-6">
                                 <div className={`border-2 rounded-3xl p-8 flex flex-col items-center text-center transition-all ${canStream ? "bg-card border-primary/20 shadow-xl shadow-primary/5" : "bg-muted/40 border-dashed border-border"}`}>
                                     <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mb-6 ${canStream ? "bg-primary text-white shadow-2xl shadow-primary/40" : "bg-muted-foreground/10 text-muted-foreground"}`}>
@@ -225,10 +226,12 @@ const MatchDashboard = () => {
                                 
                                 <div className="bg-card border border-border rounded-2xl p-6 flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                        <div className={`w-2 h-2 rounded-full ${isTossSaved ? "bg-green-500 animate-pulse" : "bg-yellow-500"}`} />
                                         <span className="text-xs font-black uppercase tracking-widest">Umpire Portal</span>
                                     </div>
-                                    <span className="text-[10px] font-bold py-1 px-3 bg-muted rounded-full text-muted-foreground">WAITING FOR TOSS</span>
+                                    <span className="text-[10px] font-bold py-1 px-3 bg-muted rounded-full text-muted-foreground">
+                                        {isTossSaved ? "LIVE SCORING READY" : "WAITING FOR TOSS"}
+                                    </span>
                                 </div>
                             </div>
                         </div>
