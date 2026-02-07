@@ -23,7 +23,13 @@ export class MediaRoom {
         direction: TransportDirection
     ): Promise<WebRtcTransport> {
 
-        const announcedIp = process.env.PUBLIC_IP || "103.191.187.6";
+        const announcedIp = process.env.PUBLIC_IP || "143.110.183.69";
+
+        if (!announcedIp) {
+            console.error("❌ CRITICAL: process.env.PUBLIC_IP is undefined! Check your .env file path.");
+        }
+
+        console.log(`📡 Creating ${direction} transport for socket ${socketId} using announcedIp: ${announcedIp}`);
 
         const transport = await this.router.createWebRtcTransport({
             listenIps: [{ ip: "0.0.0.0", announcedIp }],
