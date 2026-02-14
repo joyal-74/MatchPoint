@@ -5,13 +5,14 @@ import { TournamentModel } from "../../databases/mongo/models/TournamentModel.js
 import { TournamentMongoMapper } from "../../utils/mappers/TournamentMongoMapper.js";
 import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
 import { FormatStatPoint, TopTournamentPoint } from "../../../domain/dtos/Analytics.dto.js";
+import { BaseRepository } from "./BaseRepository.js";
 
 interface QueryType {
     status?: string;
     isBlocked?: boolean;
 }
 
-export class TournamentRepositoryMongo implements ITournamentRepository {
+export class TournamentRepository extends BaseRepository<Tournament, Tournament> implements ITournamentRepository {
 
     async create(tournamentData: TournamentRegister): Promise<Tournament> {
         const created = new TournamentModel(tournamentData);
@@ -19,7 +20,7 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
         return TournamentMongoMapper.fromHydrated(created);
     }
 
-    async findAll(managerId: string): Promise<Tournament[]> {
+    async findAllByManager(managerId: string): Promise<Tournament[]> {
         const tournaments = await TournamentModel
             .find({ managerId, status: { $ne: "cancelled" } })
             .populate("managerId", "firstName lastName email phone");
@@ -45,7 +46,7 @@ export class TournamentRepositoryMongo implements ITournamentRepository {
 
     async getExploreTournaments(managerId: string, page: number = 1, limit: number = 15, search?: string, filter?: string): Promise<Tournament[] | null> {
 
-        const query: FilterQuery<any> = { managerId: { $ne: managerId } };
+        const query: FilterQuery<Tournament> = { managerId: { $ne: managerId } };
 
         if (search) {
             const regex = new RegExp(search, "i");

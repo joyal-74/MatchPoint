@@ -19,7 +19,6 @@ export class UpdatePointsAfterMatch {
     ) {}
 
     async execute(matchData: MatchResult): Promise<void> {
-        // 1. Fetch current stats for both teams
         const table = await this.pointsRepo.findByTournamentId(matchData.tournamentId);
         
         const winnerRow = table.find(r => r.team === matchData.winner);
@@ -33,7 +32,6 @@ export class UpdatePointsAfterMatch {
         winnerRow.form.push('W');
         if (winnerRow.form.length > 5) winnerRow.form.shift();
 
-        // 3. Update Stats for Loser
         loserRow.p += 1;
         loserRow.l += 1;
         loserRow.form.push('L');
@@ -42,7 +40,6 @@ export class UpdatePointsAfterMatch {
         winnerRow.nrr = this.calculateNewNRR(winnerRow, matchData.runsScoredWinner, matchData.oversFacedWinner, matchData.runsScoredLoser, matchData.oversFacedLoser); 
         loserRow.nrr = this.calculateNewNRR(loserRow, matchData.runsScoredLoser, matchData.oversFacedLoser, matchData.runsScoredWinner, matchData.oversFacedWinner);
 
-        // 5. Save Updates
         await this.pointsRepo.updateTeamStats(matchData.winner, winnerRow.teamId, winnerRow);
         await this.pointsRepo.updateTeamStats(matchData.loser,winnerRow.teamId, loserRow);
     }

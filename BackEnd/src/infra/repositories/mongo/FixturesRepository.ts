@@ -6,7 +6,7 @@ import { FixtureMongoMapper } from "../../utils/mappers/FixtureMongoMapper.js";
 import { NotFoundError } from "../../../domain/errors/index.js";
 
 
-export class FixturesRepositoryMongo implements IFixturesRepository {
+export class FixturesRepository implements IFixturesRepository {
     async createFixture(tournamentId: string, matchIds: { matchId: string; round: number }[], format: string): Promise<Fixture> {
         const matches = matchIds.map(({ matchId, round }) => ({ matchId: new Types.ObjectId(matchId), round, }));
 

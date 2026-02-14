@@ -66,3 +66,10 @@ export interface UmpireState {
     error: string | undefined;
     totalPages: number | null;
 }
+
+export interface UmpireData {
+    _id : string;
+    name : string;
+    profileImage : string;
+    matches : string;
+}

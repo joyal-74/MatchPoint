@@ -5,10 +5,10 @@ import { IPlayerService } from "../../services/player/IPlayerService.js";
 import { IFileStorage } from "../../providers/IFileStorage.js";
 import { ILogger } from "../../providers/ILogger.js";
 import { PlayerProfileResponse, PlayerUpdateDTO } from "../../../domain/dtos/Player.dto.js";
-import { validateManagerUpdate } from "../../../domain/validators/ManagerUpdateValidator.js";
 import { File } from "../../../domain/entities/File.js";
 import { NotFoundError } from "../../../domain/errors/index.js";
 import { PlayerMapper } from "../../mappers/PlayerMapper.js";
+import { validateUserProfileUpdata } from "../../../domain/validators/UserProfileUpdateValidator.js";
 
 
 
@@ -22,7 +22,7 @@ export class UpdatePlayerProfile implements IUpdatePlayerProfile {
 
     async execute(updateData: PlayerUpdateDTO, file?: File): Promise<PlayerProfileResponse> {
 
-        const validData = validateManagerUpdate(updateData, file); 
+        const validData = validateUserProfileUpdata(updateData, file); 
 
         if (!validData.userId) {
             this._logger.warn("[UpdatePlayerProfile] Missing user ID in update data");

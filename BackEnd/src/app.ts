@@ -15,6 +15,7 @@ import subscriptionsRoutes from "./presentation/express/routes/subscriptionsRout
 import chatRoutes from "./presentation/express/routes/chatRoutes.js";
 import leaderboardRoutes from "./presentation/express/routes/leaderboardRoutes.js";
 import matchRoutes from "./presentation/express/routes/matchRoutes.js";
+import walletRoutes from "./presentation/express/routes/walletRoutes.js";
 import settingsRoutes from "./presentation/express/routes/settingsRoutes.js";
 import notificationsRoutes from "./presentation/express/routes/notificationsRoute.js";
 import cookieParser from 'cookie-parser';
@@ -66,6 +67,7 @@ app.use(`${API_V1}/leaderboard`, leaderboardRoutes);
 app.use(`${API_V1}/match`, matchRoutes);
 app.use(`${API_V1}/settings`, settingsRoutes);
 app.use(`${API_V1}/notifications`, notificationsRoutes);
+app.use(`${API_V1}/wallet`, walletRoutes);
 
 const errorHandler = container.resolve(ErrorHandler);
 app.use(errorHandler.handle);

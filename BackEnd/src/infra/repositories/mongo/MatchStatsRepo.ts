@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { AllMatchQuery, IMatchStatsRepo, LiveMatchQuery } from "../../../app/repositories/interfaces/manager/IMatchStatsRepo.js";
 import { TournamentResult } from "../../../domain/entities/Match.js";
 import { MatchEntity } from "../../../domain/entities/MatchEntity.js";
@@ -8,7 +8,7 @@ import { MatchResultMapper } from "../../utils/mappers/MatchResultMapper.js";
 import { MatchStatsMapper } from "../../utils/mappers/MatchStatsMapper.js";
 
 
-export class MatchRepoMongo implements IMatchStatsRepo {
+export class MatchStatsRepository implements IMatchStatsRepo {
     async findByMatchId(matchId: string): Promise<MatchEntity | null> {
         const doc = await TournamentMatchStatsModel.findOne({ matchId }).lean();
         if (!doc) return null;
@@ -21,7 +21,7 @@ export class MatchRepoMongo implements IMatchStatsRepo {
         const skip = (page - 1) * limit;
 
         // Direct, simple query
-        const mongoQuery: any = { umpire: userId };
+        const mongoQuery: FilterQuery<MatchEntity> = { umpire: userId };
 
         if (search) {
             mongoQuery.venue = { $regex: search, $options: "i" };

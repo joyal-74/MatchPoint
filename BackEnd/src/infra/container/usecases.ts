@@ -39,7 +39,7 @@ import { ChangeUserStatus } from "../../app/usecases/admin/ChangeUserStatus.js";
 import { ChangeBlockUserStatus } from "../../app/usecases/admin/ChangeBlockUserStatus.js";
 import { GetUsersByRole } from "../../app/usecases/admin/GetUsersByRole.js";
 
-import { VerifyPaymentUseCase } from "../../app/usecases/shared/FinalizePaymentUseCase.js";
+import { VerifyPaymentUseCase } from "../../app/usecases/shared/VerifyPaymentUseCase.js";
 import { UpdateUserPlan } from "../../app/usecases/shared/UpdateUserPlan.js";
 
 import { AddNewTeamUseCase } from "../../app/usecases/manager/teams/AddNewTeam.js";
@@ -145,6 +145,13 @@ import { GetUmpireAllMatches } from "../../app/usecases/umpire/GetAllMatches.js"
 import { GetPlayerStats } from "../../app/usecases/player/GetPlayerStats.js";
 import { PlayerLeaveTeamUseCase } from "../../app/usecases/player/PlayerLeaveTeam.js";
 import { GetUserSubscriptionPlan } from "../../app/usecases/shared/GetUserPlan.js";
+import { SavePayoutMethodUseCase } from "../../app/usecases/shared/SavePayoutMethodUseCase.js";
+import { GetPayoutMethodsUseCase } from "../../app/usecases/shared/GetPayoutMethodsUseCase.js";
+import { DeletePayoutMethodUseCase } from "../../app/usecases/shared/DeletePayoutMethodUseCase.js";
+import { VerifyWalletPaymentUseCase } from "../../app/usecases/shared/VerifyWalletPaymentUseCase.js";
+import { CreateWalletOrderUseCase } from "../../app/usecases/shared/CreateWalletOrderUseCase.js";
+import { InitiateWithdrawalUseCase } from "../../app/usecases/shared/InitiateWithdrawalUseCase.js";
+import { HandlePayoutWebhookUseCase } from "../../app/usecases/shared/HandlePayoutWebhook.js";
 
 
 // Registrations
@@ -305,6 +312,13 @@ container.register(DI_TOKENS.SubscriptionService, { useClass: SubscriptionPaymen
 container.register(DI_TOKENS.MarkNotificationRead, { useClass: MarkNotificationRead });
 container.register(DI_TOKENS.MarkAllNotificationRead, { useClass: MarkAllNotificationRead });
 container.register(DI_TOKENS.GetUserSubscriptionPlan, { useClass: GetUserSubscriptionPlan });
+container.register(DI_TOKENS.SavePayoutMethodUseCase, { useClass: SavePayoutMethodUseCase });
+container.register(DI_TOKENS.GetPayoutMethodsUseCase, { useClass: GetPayoutMethodsUseCase });
+container.register(DI_TOKENS.DeletePayoutMethodUseCase, { useClass: DeletePayoutMethodUseCase });
+container.register(DI_TOKENS.CreateWalletOrderUseCase, { useClass: CreateWalletOrderUseCase });
+container.register(DI_TOKENS.VerifyWalletPaymentUseCase, { useClass: VerifyWalletPaymentUseCase });
+container.register(DI_TOKENS.InitiateWithdrawalUseCase, { useClass: InitiateWithdrawalUseCase });
+container.register(DI_TOKENS.HandleWebhookUseCase, { useClass: HandlePayoutWebhookUseCase });
 
 // --- Viewer ---
 container.register(DI_TOKENS.GetViewerProfile, { useClass: GetViewerProfile });

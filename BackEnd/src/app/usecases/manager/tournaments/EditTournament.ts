@@ -44,6 +44,8 @@ export class EditTournamentUseCase implements IEditTournament {
 
         const updated = await this._tournamentRepo.update(data._id, updatedTournamentData);
 
+        if(!updated) throw new NotFoundError('tournament not found after update');
+
         this._logger.info(`[EditTournamentUseCase] Tournament updated id=${data._id}`);
 
         return updated;

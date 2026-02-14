@@ -32,4 +32,28 @@ export class EnvConfigProvider implements IConfigProvider {
         if (!secret) throw new NotFoundError("Missing FACEBOOK_APP_SECRET in environment");
         return secret;
     }
+
+    getRazorPayKey(): string {
+        const key = process.env.RAZOR_KEY_ID;
+        if (!key) throw new NotFoundError("Missing RAZOR_KEY_ID in environment");
+        return key;
+    }
+    
+    getRazorPaySecret(): string {
+        const secret = process.env.RAZOR_KEY_SECRET;
+        if (!secret) throw new NotFoundError("Missing RAZOR_KEY_SECRET in environment");
+        return secret;
+    }
+
+    getRazorpayXAccountNumber(): string {
+        const number = process.env.RAZOR_ACCOUNT_NUMBER;
+        if (!number) throw new NotFoundError("Missing RAZOR_KEY_SECRET in environment");
+        return number;
+    }
+
+    getWebhookSecret(): string {
+        const secret = process.env.RAZOR_WEBHOOK_SECRET;
+        if (!secret) throw new NotFoundError("Missing RAZOR_WEBHOOK_SECRET in environment");
+        return secret;
+    }
 }

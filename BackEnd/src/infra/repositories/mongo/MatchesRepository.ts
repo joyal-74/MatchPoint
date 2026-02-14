@@ -1,3 +1,4 @@
+import { FilterQuery } from "mongoose";
 import { EndMatchDTO, IMatchesRepository, MatchStreamData } from "../../../app/repositories/interfaces/manager/IMatchesRepository.js";
 import { DashboardTeam, MatchResponseDTO } from "../../../domain/dtos/MatchDTO.js";
 import { Extras } from "../../../domain/entities/Extra.js";
@@ -10,7 +11,7 @@ import { TournamentMatchStatsModel } from "../../databases/mongo/models/Tourname
 import { MatchMongoMapper } from "../../utils/mappers/MatchMongoMapper.js";
 
 
-export class MatchesRepositoryMongo implements IMatchesRepository {
+export class MatchesRepository implements IMatchesRepository {
     async createMatches(tournamentId: string, matches: Match[]): Promise<Match[]> {
         const matchesWithTournament = matches.map(m => ({ ...m, tournamentId }));
 
@@ -224,7 +225,7 @@ export class MatchesRepositoryMongo implements IMatchesRepository {
 
         const { status, page = 1, limit = 3 } = filters;
 
-        const query: any = {};
+        const query: FilterQuery<Match> = {};
 
         if (status && status !== "all") {
             query.status = status;

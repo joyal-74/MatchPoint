@@ -17,7 +17,7 @@ export class GetAllTeamUseCase implements IGetAllTeamsUseCase {
     async execute(managerId : string): Promise<TeamDataFull[]> {
         this._logger.info(`Fetching teams.. for ${managerId}`);
 
-        const allTeams = await this._teamRepo.findAll(managerId);
+        const allTeams = await this._teamRepo.findAllByManager(managerId);
 
         this._logger.info(`Total ${allTeams.length} teams found for manager ${managerId}`);
         

@@ -1,6 +1,7 @@
 import { Socket } from "socket.io";
 import jwt from "jsonwebtoken";
 import { UserModel } from "../../../infra/databases/mongo/models/UserModel.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
 
 export interface AuthenticatedSocket extends Socket {
     user?: {
@@ -12,15 +13,12 @@ export interface AuthenticatedSocket extends Socket {
     };
 }
 
-export const authenticateSocket = async (
-    socket: AuthenticatedSocket,
-    next: (err?: Error) => void
-) => {
+export const authenticateSocket = async (socket: AuthenticatedSocket, next: (err?: Error) => void) => {
     try {
         const cookies = socket.handshake.headers.cookie;
 
         if (!cookies) {
-            return next(new Error("Authentication error: No cookies found"));
+            return next(new NotFoundError("Authentication error: No cookies found"));
         }
 
         const accessTokenCookie = cookies
@@ -28,13 +26,13 @@ export const authenticateSocket = async (
             .find((c) => c.trim().startsWith("accessToken="));
 
         if (!accessTokenCookie) {
-            return next(new Error("Authentication error: No accessToken found"));
+            return next(new NotFoundError("Authentication error: No accessToken found"));
         }
 
         const token = accessTokenCookie.split("=")[1];
 
         if (!token) {
-            return next(new Error("Authentication error: Empty token"));
+            return next(new NotFoundError("Authentication error: Empty token"));
         }
 
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as {
@@ -59,11 +57,11 @@ export const authenticateSocket = async (
             role: user.role,
         };
 
-        console.log(`✅ Socket Authenticated: ${user.firstName} ${user.lastName}`);
+        console.log(`Socket Authenticated: ${user.firstName} ${user.lastName}`);
 
         next();
     } catch (err) {
-        console.log("❌ Socket authentication failed:", err);
+        console.log("Socket authentication failed:", err);
         next(new Error("Authentication error: Invalid or expired token"));
     }
 };

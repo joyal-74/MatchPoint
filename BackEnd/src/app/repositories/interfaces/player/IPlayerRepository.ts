@@ -1,3 +1,4 @@
+import { AnyBulkWriteOperation } from "mongoose";
 import { PlayerProfileResponse } from "../../../../domain/dtos/Player.dto.js";
 import { Player, PlayerEntity, PlayerRegister, PlayerResponse, PopulatedPlayer } from "../../../../domain/entities/Player.js";
 
@@ -24,5 +25,5 @@ export interface IPlayerRepository {
 
     findAllPlayers(): Promise<PlayerEntity[]>;
 
-    bulkUpdateStats(ops: any[]): Promise<void>;
+    bulkUpdateStats(ops: AnyBulkWriteOperation[]): Promise<void>;
 }

@@ -8,6 +8,7 @@ const PlanSchema = new Schema<Plan>(
         level: { type: String, enum: ["Free", "Premium", "Super"], required: true },
         billingCycle: { type: String, enum: ["Monthly", "Yearly"], required: false },
         price: { type: Number, required: true },
+        isArchived: { type: Boolean, default: false },
         features: [{ type: String, required: true }]
     },
     { timestamps: true }

@@ -14,8 +14,9 @@ export class GetManagerFinancialsUseCase {
         if (!managerId) {
             throw new NotFoundError("Manager ID is required");
         }
+        
         const result = await this._financialRepository.getManagerFinancialReport(managerId);
-        console.log(result)
+ 
         return result;
     }
 }

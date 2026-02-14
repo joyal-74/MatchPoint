@@ -2,15 +2,15 @@
 import { IAdminRepository } from "../../../app/repositories/interfaces/admin/IAdminRepository.js";
 import { AdminResponse } from "../../../domain/entities/Admin.js";
 import { AdminDocument, AdminModel } from "../../databases/mongo/models/AdminModel.js";
-import { MongoBaseRepository } from "./MongoBaseRepository.js";
+import { BaseRepository } from "./BaseRepository.js";
 
-export class AdminRepositoryMongo extends MongoBaseRepository<AdminDocument, AdminResponse> implements IAdminRepository {
+export class AdminRepository extends BaseRepository<AdminDocument, AdminResponse> implements IAdminRepository {
     constructor() {
         super(AdminModel);
     }
 
     async findByEmail(email: string): Promise<AdminResponse | null> {
-        const result = await this.model.findOne({ email }).lean<AdminResponse>().exec();
+        const result = await this._model.findOne({ email }).lean<AdminResponse>().exec();
         return result || null;
     }
 }

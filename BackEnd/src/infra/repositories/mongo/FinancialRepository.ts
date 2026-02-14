@@ -15,7 +15,6 @@ export class FinancialRepository implements IFinancialRepository {
     async getManagerFinancialReport(managerId: string): Promise<FinancialReport> {
         const userId = new Types.ObjectId(managerId);
 
-        // 1. Get Manager's Wallet
         const wallet = await WalletModel.findOne({ ownerId: userId, ownerType: 'USER' });
 
         if (!wallet) {
@@ -28,15 +27,21 @@ export class FinancialRepository implements IFinancialRepository {
         }
 
         // 2. Get Transactions 
+        const walletId = new Types.ObjectId(wallet._id);
+
         const rawTransactions = await TransactionModel.find({
             $or: [
-                { fromWalletId: wallet._id },
-                { toWalletId: wallet._id }
-            ]
+                { fromWalletId: walletId },
+                { toWalletId: walletId }
+            ],
+            status: { $in: ['SUCCESS', 'FAILED', 'PENDING'] }
         })
             .populate('metadata.tournamentId', 'title')
             .sort({ createdAt: -1 })
-            .limit(100);
+            .lean() 
+            .exec();
+
+            console.log(rawTransactions)
 
 
         const transactions: DomainTransaction[] = rawTransactions.map(tx => {

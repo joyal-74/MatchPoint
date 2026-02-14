@@ -1,96 +1,53 @@
 import Razorpay from 'razorpay';
+import { inject, injectable } from 'tsyringe';
 import { IPaymentProvider, PaymentSession } from '../../app/providers/IPaymentProvider.js';
-import { BadRequestError } from '../../domain/errors/index.js';
 import { PaymentMetadata } from '../../app/repositories/interfaces/IBasePaymentMetaData.js';
+import { PaymentStrategyRegistry } from './PaymentStrategyRegistry.js';
+import { DI_TOKENS } from '../../domain/constants/Identifiers.js';
+import { IConfigProvider } from '../../app/providers/IConfigProvider.js';
 
-
+@injectable()
 export class RazorpayProvider implements IPaymentProvider {
     private razorpay: Razorpay;
 
-    constructor(keyId: string, keySecret: string) {
-        this.razorpay = new Razorpay({ key_id: keyId, key_secret: keySecret });
+    constructor(
+        @inject(PaymentStrategyRegistry) private strategyRegistry: PaymentStrategyRegistry,
+        @inject(DI_TOKENS.ConfigProvider) private _config: IConfigProvider
+    ) {
+        this.razorpay = new Razorpay({ 
+            key_id: this._config.getRazorPayKey(), 
+            key_secret: this._config.getRazorPaySecret() 
+        });
     }
 
     async createPaymentSession(amount: number, currency: string, title: string, metadata: PaymentMetadata): Promise<PaymentSession> {
-        if (currency !== 'INR') {
-            throw new BadRequestError('Razorpay only supports INR currency');
-        }
+        const strategy = this.strategyRegistry.getStrategy(metadata.type);
 
-        try {
-            let order;
-            if (metadata.type === 'tournament') {
-                order = await this.razorpay.orders.create({
-                    amount: amount * 100,
-                    currency: 'INR',
-                    receipt: `${metadata.teamId}_${Date.now()}`,
-                    notes: {
-                        tournamentId: metadata.tournamentId,
-                        teamId: metadata.teamId,
-                        captainId: metadata.captainId,
-                    } as Record<string, string>,
-                });
-            } else if (metadata.type === 'subscription') {
-                order = await this.razorpay.orders.create({
-                    amount: amount * 100,
-                    currency: 'INR',
-                    receipt: `sub_${metadata.userId.slice(0, 10)}_${Date.now().toString().slice(-6)}`,
-                    notes: {
-                        userId: metadata.userId,
-                        planLevel: metadata.planLevel,
-                        billingCycle: metadata.billingCycle,
-                    } as Record<string, string>,
-                });
-            }
+        const order = await this.razorpay.orders.create({
+            amount: amount * 100,
+            currency: currency || 'INR',
+            receipt: strategy.getReceipt(metadata),
+            notes: strategy.getNotes(metadata)
+        });
 
-            if (!order?.id) throw new BadRequestError('Failed to create Razorpay order');
-
-            return {
-                sessionId: order.id,
-                orderId: order.id,
-                keyId: process.env.RAZOR_API_KEY!,
-                url: '',
-            };
-        } catch (error) {
-            console.log(error)
-            throw new BadRequestError(`Razorpay order creation failed: ${error}`);
-        }
+        return {
+            sessionId: order.id,
+            orderId: order.id,
+            keyId: this._config.getRazorPayKey(),
+            url: '',
+        };
     }
 
+    async verifyPayment(paymentId: string): Promise<{ status: "pending" | "completed" | "failed"; paymentId: string; metadata: PaymentMetadata; }> {
+        const payment = await this.razorpay.payments.fetch(paymentId);
+        
+        // Ensure the strategy matches the metadata type stored in notes
+        const strategy = this.strategyRegistry.getStrategy(payment.notes.type);
 
-    async verifyPayment(paymentId: string): Promise<{ status: 'completed' | 'failed'; paymentId: string; metadata: PaymentMetadata }> {
-        try {
-            const payment = await this.razorpay.payments.fetch(paymentId);
-            if (!payment) throw new BadRequestError('Payment not found');
-
-            const notes = payment.notes ?? {};
-            let metadata: PaymentMetadata;
-            const amountPaid = payment.amount ? (Number(payment.amount) / 100) : 0;
-
-            if ('tournamentId' in notes) {
-                metadata = {
-                    type: 'tournament',
-                    tournamentId: notes.tournamentId || '',
-                    teamId: notes.teamId || '',
-                    captainId: notes.captainId || '',
-                    managerId: notes.managerId || '',
-                };
-            } else if ('userId' in notes) {
-                metadata = {
-                    type: 'subscription',
-                    userId: notes.userId || '',
-                    planLevel: notes.planLevel || '',
-                    billingCycle: notes.billingCycle || '',
-                    amount : amountPaid
-                };
-            } else {
-                throw new BadRequestError('Unknown payment metadata');
-            }
-
-            const status: 'completed' | 'failed' = payment.status === 'captured' ? 'completed' : 'failed';
-            return { status, paymentId: payment.id, metadata };
-        } catch (error) {
-            console.log(error)
-            throw new BadRequestError(`Payment verification failed: ${error}`);
-        }
+        return {
+            status: payment.status === 'captured' ? 'completed' : 'failed',
+            paymentId: payment.id,
+            metadata: strategy.parseNotes(payment.notes)
+        };
     }
 }

@@ -1,5 +1,13 @@
+export type PaymentType = "tournament" | "subscription" | "wallet" | "other";
+
 export interface BasePaymentMetadata {
-    type: "tournament" | "subscription" | "other";
+    type: PaymentType
+}
+
+export interface WalletPaymentMetadata extends BasePaymentMetadata {
+    type: "wallet";
+    userId: string;
+    amount: number;
 }
 
 export interface TournamentPaymentMetadata extends BasePaymentMetadata {
@@ -18,5 +26,7 @@ export interface SubscriptionPaymentMetadata extends BasePaymentMetadata {
     amount: number;
 }
 
-
-export type PaymentMetadata = | TournamentPaymentMetadata | SubscriptionPaymentMetadata;
+export type PaymentMetadata = 
+    | TournamentPaymentMetadata 
+    | SubscriptionPaymentMetadata 
+    | WalletPaymentMetadata;

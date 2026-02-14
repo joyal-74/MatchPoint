@@ -1,6 +1,6 @@
 import { ManagerResponseDTO } from "../../../../domain/dtos/Manager.dto.js";
 import { PlayerResponseDTO } from "../../../../domain/dtos/Player.dto.js";
-import { TeamDataFull, TeamDataSummary, TeamStatus } from "../../../../domain/dtos/Team.dto.js";
+import { AdminFilters, TeamDataFull, TeamDataSummary, TeamStatus } from "../../../../domain/dtos/Team.dto.js";
 import { UserResponseDTO } from "../../../../domain/dtos/User.dto.js";
 import { Plan } from "../../../../domain/entities/Plan.js";
 import { Tournament } from "../../../../domain/entities/Tournaments.js";
@@ -9,6 +9,7 @@ import { GetAllUsersParams } from "../../../usecases/admin/GetAllViewers.js";
 import { ManagerDetails } from "../../../usecases/admin/GetManagerDetails.js";
 import { PlayerDetails } from "../../../usecases/admin/GetPlayerDetails.js";
 import { ViewerDetails } from "../../../usecases/admin/GetViewerDetails.js";
+import { TransactionReadModel, TransactionStats } from "../shared/ITransactionRepository.js";
 
 
 export interface AdminTableParams {
@@ -34,7 +35,7 @@ export interface IChangeTeamStatus {
 }
 
 export interface IChangeTeamDetailStatus {
-    execute(teamId: string, status: TeamStatus ): Promise<TeamDataFull>;
+    execute(teamId: string, status: TeamStatus ): Promise<TeamDataFull | null>;
 }
 
 export interface IChangeTournamentStatus {
@@ -101,7 +102,11 @@ export interface IGetTournamentUsecase {
 }
 
 export interface IGetAdminTransactions {
-    execute(params: GetAllUsersParams): Promise<{ data: Transaction[], total: number }>
+    execute(params: AdminFilters): Promise<{ 
+        data: TransactionReadModel[]; 
+        total: number; 
+        stats: TransactionStats; 
+    }>;
 }
 
 export interface IGetTransactionDetails {

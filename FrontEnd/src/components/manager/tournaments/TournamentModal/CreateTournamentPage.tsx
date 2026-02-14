@@ -1,28 +1,31 @@
 import { useState, useMemo, useEffect } from "react";
-import { 
-    Trophy, Calendar, Activity, FileText, Image as ImageIcon, 
-    MapPin, ChevronLeft, Save, Sparkles, AlertCircle, Check, Info, Users 
+import {
+    Trophy, Calendar, Activity, FileText, Image as ImageIcon,
+    MapPin, ChevronLeft, Save, Sparkles, AlertCircle, Check, Info, Users,
+    UserCheck
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { createTournament } from "../../../../features/manager/Tournaments/tournamentThunks";
+import { createTournament, searchAvailableUmpires } from "../../../../features/manager/Tournaments/tournamentThunks";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/hooks";
 import { initialFormData, sports, formats } from "./constants";
 import FormInput from "./FormInput";
 import MapPicker from "../../../shared/MapPicker";
 import { validateTournamentForm } from "../../../../validators/ValidateTournamentForm";
-import Navbar from "../../Navbar"; 
+import Navbar from "../../Navbar";
+import type { UmpireData } from "../../../../features/umpire/umpireTypes";
 
 export default function CreateTournamentPage() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { user } = useAppSelector(state => state.auth);
-    
+
     // State & Handlers (Same as before)
     const [formData, setFormData] = useState(initialFormData(user?._id || ""));
     const [rulesText, setRulesText] = useState("");
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [availableUmpires, setAvailableUmpires] = useState<UmpireData[] | null>();
     const toOptions = (items: string[]) => items.map(item => ({ value: item, label: item }));
 
     useEffect(() => {
@@ -30,6 +33,18 @@ export default function CreateTournamentPage() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    useEffect(() => {
+        const getUmpires = async () => {
+            try {
+                const result = await dispatch(searchAvailableUmpires(user?._id)).unwrap();
+                setAvailableUmpires(result);
+            } catch (err) {
+                console.error("Failed to load umpires", err);
+            }
+        };
+        getUmpires();
+    }, [dispatch]);
 
     const estimatedPrizePool = useMemo(() => {
         return Number(formData.entryFee) * Number(formData.minTeams);
@@ -53,17 +68,17 @@ export default function CreateTournamentPage() {
         setIsSubmitting(true);
         const fd = new FormData();
         Object.entries(formattedData).forEach(([key, value]) => {
-             if(key === 'rules' || key === 'banner') return; 
-             fd.append(key, String(value));
+            if (key === 'rules' || key === 'banner') return;
+            fd.append(key, String(value));
         });
         fd.set("prizePool", String(estimatedPrizePool));
         formattedData.rules.forEach((r, i) => fd.append(`rules[${i}]`, r));
-        if(formattedData.banner instanceof File) fd.append("banner", formattedData.banner);
+        if (formattedData.banner instanceof File) fd.append("banner", formattedData.banner);
 
         try {
             await dispatch(createTournament(fd)).unwrap();
-            navigate('/manager/tournaments'); 
-        } catch (err) { console.error("Failed", err); } 
+            navigate('/manager/tournaments');
+        } catch (err) { console.error("Failed", err); }
         finally { setIsSubmitting(false); }
     };
 
@@ -88,7 +103,7 @@ export default function CreateTournamentPage() {
                             Discard
                         </button>
                         <button onClick={handleSubmit} disabled={isSubmitting} className="px-6 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-full shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-70 disabled:pointer-events-none">
-                            {isSubmitting ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"/> : <Save size={18} />}
+                            {isSubmitting ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Save size={18} />}
                             <span>Publish</span>
                         </button>
                     </div>
@@ -97,9 +112,9 @@ export default function CreateTournamentPage() {
 
             <main className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    
+
                     <div className="lg:col-span-7 space-y-8">
-                        
+
                         {/* 1. BASIC INFO */}
                         <section className="bg-card border border-border/50 rounded-2xl p-6 md:p-8 shadow-sm relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-8 -mt-8 pointer-events-none" />
@@ -116,7 +131,41 @@ export default function CreateTournamentPage() {
                                 <div>
                                     <label className="text-sm font-medium text-muted-foreground mb-2 block">Description</label>
                                     <textarea name="description" value={formData.description} onChange={handleChange} rows={5} className="w-full bg-background border border-input rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none" placeholder="Tell participants what makes this tournament special..." />
-                                    {errors.description && <p className="text-xs text-destructive mt-2 flex items-center gap-1"><AlertCircle size={12}/>{errors.description}</p>}
+                                    {errors.description && <p className="text-xs text-destructive mt-2 flex items-center gap-1"><AlertCircle size={12} />{errors.description}</p>}
+                                </div>
+                            </div>
+                        </section>
+
+                        <section className="bg-card border border-border/50 rounded-2xl p-6 md:p-8 shadow-sm">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                                    <UserCheck size={20} />
+                                </div>
+                                <div>
+                                    <h2 className="text-lg font-bold">Match Official</h2>
+                                    <p className="text-[10px] text-muted-foreground uppercase font-medium tracking-wider">Assign an umpire for scoring</p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <FormInput
+                                    label="Select Primary Umpire"
+                                    type="select"
+                                    name="umpireId"
+                                    value={formData.umpireId}
+                                    onChange={handleChange}
+                                    options={[
+                                        { value: "", label: "Assign later / No Umpire" },
+                                        ...(availableUmpires?.map(u => ({ value: u._id, label: u.name })) || [])
+                                    ]}
+                                    error={errors.umpireId}
+                                />
+
+                                <div className="p-4 bg-muted/30 rounded-xl flex gap-3 items-start border border-border/50">
+                                    <Info size={16} className="text-primary shrink-0 mt-0.5" />
+                                    <p className="text-xs text-muted-foreground leading-relaxed">
+                                        The assigned umpire will have permissions to start matches, update live scores, and manage match-level settings.
+                                    </p>
                                 </div>
                             </div>
                         </section>
@@ -142,7 +191,7 @@ export default function CreateTournamentPage() {
                             </div>
                             <div className="rounded-xl overflow-hidden border border-border bg-muted/20">
                                 <div className="p-1.5">
-                                    <MapPicker onSelectLocation={(data) => setFormData(prev => ({...prev, location: data.address, latitude: data.lat, longitude: data.lng}))} />
+                                    <MapPicker onSelectLocation={(data) => setFormData(prev => ({ ...prev, location: data.address, latitude: data.lat, longitude: data.lng }))} />
                                 </div>
                                 <div className={`px-5 py-4 border-t border-border flex items-center gap-3 ${formData.location ? 'bg-card' : 'bg-muted/30'}`}>
                                     <MapPin size={18} className={formData.location ? "text-primary" : "text-muted-foreground"} />
@@ -150,13 +199,13 @@ export default function CreateTournamentPage() {
                                     {formData.location && <Check className="text-green-500 w-5 h-5" />}
                                 </div>
                             </div>
-                            {errors.location && <p className="text-xs text-destructive mt-2 flex items-center gap-1"><AlertCircle size={12}/>{errors.location}</p>}
+                            {errors.location && <p className="text-xs text-destructive mt-2 flex items-center gap-1"><AlertCircle size={12} />{errors.location}</p>}
                         </section>
                     </div>
 
                     {/* === RIGHT COLUMN (The "How" & "Money") === */}
                     <div className="lg:col-span-5 space-y-8">
-                        
+
                         {/* 1. BANNER */}
                         <section className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm">
                             <div className="flex items-center justify-between mb-4">
@@ -168,14 +217,14 @@ export default function CreateTournamentPage() {
                                     <>
                                         <img src={formData.banner instanceof File ? URL.createObjectURL(formData.banner) : ''} className="w-full h-full object-cover" alt="Banner" />
                                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                            <button onClick={() => setFormData(prev => ({...prev, banner: undefined}))} className="bg-destructive text-destructive-foreground px-4 py-2 rounded-full text-xs font-bold shadow-lg">Change</button>
+                                            <button onClick={() => setFormData(prev => ({ ...prev, banner: undefined }))} className="bg-destructive text-destructive-foreground px-4 py-2 rounded-full text-xs font-bold shadow-lg">Change</button>
                                         </div>
                                     </>
                                 ) : (
                                     <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
                                         <div className="p-3 bg-background rounded-full shadow-sm mb-2 group-hover:scale-110 transition-transform"><ImageIcon size={24} className="text-muted-foreground" /></div>
                                         <span className="text-xs font-medium text-muted-foreground">Click to upload</span>
-                                        <input type="file" className="hidden" accept="image/*" onChange={(e) => { if(e.target.files?.[0]) setFormData(prev => ({...prev, banner: e.target.files![0]})); }} />
+                                        <input type="file" className="hidden" accept="image/*" onChange={(e) => { if (e.target.files?.[0]) setFormData(prev => ({ ...prev, banner: e.target.files![0] })); }} />
                                     </label>
                                 )}
                             </div>

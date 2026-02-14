@@ -5,7 +5,7 @@ import { IEditTeamUseCase } from "../../../repositories/interfaces/usecases/ITea
 import { IFileStorage } from "../../../providers/IFileStorage.js";
 import { ILogger } from "../../../providers/ILogger.js";
 import { TeamData, TeamRegister } from "../../../../domain/dtos/Team.dto.js";
-import { BadRequestError } from "../../../../domain/errors/index.js";
+import { BadRequestError, NotFoundError } from "../../../../domain/errors/index.js";
 import { TeamMapper } from "../../../mappers/TeamMappers.js";
 import { File } from "../../../../domain/entities/File.js";
 
@@ -37,7 +37,9 @@ export class EditTeamUseCase implements IEditTeamUseCase {
             logo: teamData.logo ?? existingTeam.logo,
         };
 
-        const updatedTeam = await this._teamRepo.update(teamId, updatePayload)
+        const updatedTeam = await this._teamRepo.update(teamId, updatePayload);
+
+        if(!updatedTeam) throw new NotFoundError('Team not found after update')
 
         return TeamMapper.toTeamDTO(updatedTeam);
     }

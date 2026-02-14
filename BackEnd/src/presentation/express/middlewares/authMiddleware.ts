@@ -17,9 +17,9 @@ export interface AuthRequest extends Request {
 @injectable()
 export class AuthMiddleware {
     constructor(
-        @inject(DI_TOKENS.JWTService) private readonly jwtService: IJWTRepository,
-        @inject(DI_TOKENS.UserRepository) private readonly userRepo: IUserRepository,
-        @inject(DI_TOKENS.AdminRepository) private readonly adminRepo: IAdminRepository
+        @inject(DI_TOKENS.JWTService) private _jwtService: IJWTRepository,
+        @inject(DI_TOKENS.UserRepository) private _userRepo: IUserRepository,
+        @inject(DI_TOKENS.AdminRepository) private _adminRepo: IAdminRepository
     ) { }
 
     public restrict(allowedRoles: string[] = []) {
@@ -34,16 +34,16 @@ export class AuthMiddleware {
                 }
 
                 // 2. Verify Token via Injected Service
-                const payload = await this.jwtService.verifyAccessToken(token);
+                const payload = await this._jwtService.verifyAccessToken(token);
 
                 console.log(payload)
 
                 // 3. Check User via Injected Repository
                 let user : AdminResponse | UserResponseDTO | null;
                 if(payload.role === 'admin'){
-                    user = await this.adminRepo.findById(payload.userId);
+                    user = await this._adminRepo.findById(payload.userId);
                 }else{
-                    user = await this.userRepo.findById(payload.userId);
+                    user = await this._userRepo.findById(payload.userId);
                 }
 
                 if (!user) {

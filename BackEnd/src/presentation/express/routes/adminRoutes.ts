@@ -10,10 +10,10 @@ import { UsersManagementController } from "../../http/controllers/admin/UsersMan
 
 const router = Router();
 
-const dashboardController = container.resolve(DashboardController)
-const tournamentController = container.resolve(TournamentManagementController)
-const transactionController = container.resolve(AdminTransactionController)
-const usersManagementController = container.resolve(UsersManagementController)
+const dashboardController = container.resolve(DashboardController);
+const tournamentController = container.resolve(TournamentManagementController);
+const transactionController = container.resolve(AdminTransactionController);
+const usersManagementController = container.resolve(UsersManagementController);
 
 router.get("/dashboard/stats", adminOnly, expressAdapter(dashboardController.getDashboard));
 

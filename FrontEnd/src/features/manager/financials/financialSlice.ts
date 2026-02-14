@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchFinancialReport } from "./financialThunk";
+import { createRazorpayOrder, deletePayoutMethod, fetchFinancialReport, fetchPayoutMethods, saveNewAccountMethod, verifyPayment } from "./financialThunk";
+import type { PayoutMethod } from "./financialTypes";
 
 // --- Types ---
 export interface Transaction {
@@ -27,6 +28,7 @@ interface FinancialState {
     balance: number;
     transactions: Transaction[];
     tournaments: TournamentFinancials[];
+    payoutMethods: PayoutMethod[];
     loading: boolean;
 }
 
@@ -34,6 +36,7 @@ const initialState: FinancialState = {
     balance: 0,
     transactions: [],
     tournaments: [],
+    payoutMethods: [],
     loading: false
 };
 
@@ -53,6 +56,61 @@ const financialSlice = createSlice({
                 state.tournaments = action.payload.tournaments;
             })
             .addCase(fetchFinancialReport.rejected, (state) => {
+                state.loading = false;
+            })
+
+            .addCase(saveNewAccountMethod.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(saveNewAccountMethod.fulfilled, (state, action) => {
+                state.loading = false;
+                state.payoutMethods.push(action.payload);
+            })
+            .addCase(saveNewAccountMethod.rejected, (state) => {
+                state.loading = false;
+            })
+
+            .addCase(fetchPayoutMethods.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchPayoutMethods.fulfilled, (state, action) => {
+                state.loading = false;
+                state.payoutMethods = action.payload;
+            })
+            .addCase(fetchPayoutMethods.rejected, (state) => {
+                state.loading = false;
+            })
+
+            .addCase(deletePayoutMethod.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(deletePayoutMethod.fulfilled, (state, action) => {
+                state.loading = false;
+                state.payoutMethods = action.payload;
+            })
+            .addCase(deletePayoutMethod.rejected, (state) => {
+                state.loading = false;
+            })
+
+            .addCase(createRazorpayOrder.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(createRazorpayOrder.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(createRazorpayOrder.rejected, (state) => {
+                state.loading = false;
+            })
+
+            // --- Verify Payment ---
+            .addCase(verifyPayment.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(verifyPayment.fulfilled, (state, action) => {
+                state.loading = false;
+                state.balance = action.payload.balance;
+            })
+            .addCase(verifyPayment.rejected, (state) => {
                 state.loading = false;
             });
     }

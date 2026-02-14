@@ -22,8 +22,6 @@ export class GetAllViewers {
     async execute(params: GetAllUsersParams): Promise<{ users: UserResponseDTO[], totalCount: number }> {
         this._logger.info("Fetching all viewers");
 
-        console.log(params, 'params')
-
         // Fetch players from db
         const { users, totalCount } = await this._userRepository.findAllViewers(params);
 

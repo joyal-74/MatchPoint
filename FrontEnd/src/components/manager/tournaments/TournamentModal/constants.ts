@@ -23,7 +23,8 @@ export const initialFormData = (managerId: string): TournamentFormData => ({
     prizePool: 0,
     playersPerTeam: 0,
     rules: [],
-    banner: undefined
+    banner: undefined,
+    umpireId : '',
 });
 
 export const initialEditFormData = (managerId: string, id: string): updateTournamentFormData => ({
@@ -49,6 +50,7 @@ export const initialEditFormData = (managerId: string, id: string): updateTourna
     status: 'ongoing',
     rules: [],
     banner: undefined,
+    umpireId: '',
 });
 
 
@@ -75,4 +77,5 @@ export const mapTournamentToFormData = (tournament: Tournament): updateTournamen
     status: tournament.status,
     rules: tournament.rules,
     banner: tournament.banner,
+    umpireId : tournament.umpire
 });

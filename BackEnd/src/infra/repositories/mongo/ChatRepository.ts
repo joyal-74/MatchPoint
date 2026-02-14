@@ -4,7 +4,7 @@ import { ChatModel } from "../../databases/mongo/models/ChatModel.js";
 
 
 
-export class ChatRepositoryMongo implements IChatRepository {
+export class ChatRepository implements IChatRepository {
     async create(teamId: string): Promise<Chat> {
         const chatDoc = new ChatModel({ teamId });
         const saved = await chatDoc.save();

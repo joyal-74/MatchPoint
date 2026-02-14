@@ -21,10 +21,10 @@ export class ChangeTeamStatusUsecase implements IChangeTeamStatusUseCase {
 
         if (!teamExist) throw new BadRequestError('No team exist with this teamId');
 
-        const teamData = await this._teamRepo.update(teamId, { status: "deleted" })
+        await this._teamRepo.update(teamId, { status: "deleted" })
 
         this._logger.info(`Successfully deleted team with Id :  ${teamId}`);
 
-        return teamData._id;
+        return teamId;
     }
 }

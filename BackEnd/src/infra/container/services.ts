@@ -21,6 +21,8 @@ import { UserAuthServices } from "../services/UserAuthServices.js";
 import { GetPlansAndUserSubscription } from "../services/GetPlansAndUserSubscription.js";
 import { StartTournament } from "../../infra/services/StartTournament.js";
 import { TournamentRefundService } from "../../infra/services/TournamentRefundService.js";
+import { PayoutMethodResolver } from "../providers/PayoutMethodResolver.js";
+import { WebhookService } from "../services/WebhookService.js";
 
 // registrations
 container.register(DI_TOKENS.UserManagementService, { useClass: UserManagementService });
@@ -42,3 +44,5 @@ container.register(DI_TOKENS.SubscriptionPaymentService, { useClass: Subscriptio
 container.register(DI_TOKENS.GetPlansAndUserSubscription, { useClass: GetPlansAndUserSubscription });
 container.register(DI_TOKENS.StartTournament, { useClass: StartTournament });
 container.register(DI_TOKENS.TournamentRefundService, { useClass: TournamentRefundService });
+container.register(DI_TOKENS.PayoutMethodResolver, { useClass: PayoutMethodResolver });
+container.register(DI_TOKENS.WebhookService, { useClass: WebhookService });

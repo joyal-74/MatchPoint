@@ -4,10 +4,10 @@ import { IUpdateViewerProfile } from "../../repositories/interfaces/usecases/IUs
 import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
 import { IFileStorage } from "../../providers/IFileStorage.js";
 import { UserResponseDTO, UserUpdateDTO } from "../../../domain/dtos/User.dto.js";
-import { validateViewerUpdate } from "../../../domain/validators/ViewerUpdateValidators.js";
 import { NotFoundError } from "../../../domain/errors/index.js";
 import { UserMapper } from "../../mappers/UserMapper.js";
 import { File } from "../../../domain/entities/File.js";
+import { validateUserProfileUpdata } from "../../../domain/validators/UserProfileUpdateValidator.js";
 
 
 
@@ -19,7 +19,7 @@ export class UpdateViewerProfile implements IUpdateViewerProfile {
     ) { }
 
     async execute(update: UserUpdateDTO, file?: File): Promise<UserResponseDTO> {
-        const validData = validateViewerUpdate(update, file);
+        const validData = validateUserProfileUpdata(update, file);
 
         if (file) {
             const fileKey = await this._fileStorage.upload(file);

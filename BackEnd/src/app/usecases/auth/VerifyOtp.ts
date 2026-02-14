@@ -19,7 +19,7 @@ export class VerifyOtp implements IVerifyOtpUseCase {
     ) { }
 
     async execute(email: string, otp: string, context: OtpContext) {
-        const otpRecord = await this._otpRepository.findOtpByEmail(email);
+        const otpRecord = await this._otpRepository.findByEmail(email);
         
         if (!otpRecord) {
             throw new NotFoundError("OTP not found or expired");

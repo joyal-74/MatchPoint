@@ -6,7 +6,6 @@ services:
     build:
       context: ./BackEnd
     ports:
-      - "3000:3000"
       - "10000-10100:10000-10100/udp"
     env_file:
       - ./BackEnd/.env

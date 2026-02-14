@@ -6,7 +6,7 @@ import { MessageMapper } from "../../utils/mappers/MessageMapper.js";
 
 
 
-export class MessageRepositoryMongo implements IMessageRepository {
+export class MessageRepository implements IMessageRepository {
     async create(data: CreateMessageDTO): Promise<Message> {
         const doc = await MessageModel.create({
             chatId: data.chatId,

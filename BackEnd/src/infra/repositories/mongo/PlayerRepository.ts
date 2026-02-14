@@ -1,3 +1,4 @@
+import { AnyBulkWriteOperation } from "mongoose";
 import { IPlayerRepository } from "../../../app/repositories/interfaces/player/IPlayerRepository.js";
 import { PlayerProfileResponse } from "../../../domain/dtos/Player.dto.js";
 import { Player, PlayerEntity, PlayerRegister, PlayerResponse, PopulatedPlayer } from "../../../domain/entities/Player.js";
@@ -8,8 +9,7 @@ import { PlayerDetailsMapper } from "../../utils/mappers/PlayerDetailsMapper.js"
 import { PlayerMongoMapper } from "../../utils/mappers/PlayerMongoMapper.js";
 
 
-
-export class PlayerRepositoryMongo implements IPlayerRepository {
+export class PlayerRepository implements IPlayerRepository {
     async findById(userId: string): Promise<PlayerProfileResponse | null> {
         const player = await PlayerModel.findOne({ userId }).populate("userId").lean();
         if (!player) throw new NotFoundError("Player not found");
@@ -86,7 +86,7 @@ export class PlayerRepositoryMongo implements IPlayerRepository {
         return PlayerDetailsMapper.toEntityList(docs);
     }
 
-    async bulkUpdateStats(ops: any[]): Promise<void> {
+    async bulkUpdateStats(ops: AnyBulkWriteOperation[]): Promise<void> {
         if (ops.length > 0) {
             await PlayerModel.bulkWrite(ops);
         }

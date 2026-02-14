@@ -16,8 +16,7 @@ export class FinancialsController {
 
     getReport = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const managerId = httpRequest.params.managerId;
-        console.log(httpRequest.params, " ooooo")
-        console.log(managerId)
+
         const result = await this._getManagerFinancialsUseCase.execute(managerId);
 
         return new HttpResponse(

@@ -15,7 +15,7 @@ export interface VerifyPaymentResponse {
 @injectable()
 export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
     constructor(
-        @inject(DI_TOKENS.RazorpayProvider) private _paymentProvider: IPaymentProvider
+        @inject(DI_TOKENS.PaymentProvider) private _paymentProvider: IPaymentProvider
     ) {}
 
     async execute(sessionId: string): Promise<VerifyPaymentResponse> {
@@ -24,8 +24,6 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
         }
 
         const verification = await this._paymentProvider.verifyPayment(sessionId);
-
-        console.log(verification, 'verification')
 
         return {
             status: verification.status,

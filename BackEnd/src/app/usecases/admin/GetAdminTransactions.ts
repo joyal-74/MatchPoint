@@ -8,19 +8,15 @@ import { AdminFilters } from "../../../domain/dtos/Team.dto.js";
 @injectable()
 export class GetAdminTransactions implements IGetAdminTransactions {
     constructor(
-        @inject(DI_TOKENS.TransactionRepository) private transactionRepo: ITransactionRepository
+        @inject(DI_TOKENS.TransactionRepository) private _transactionRepo: ITransactionRepository
     ) { }
 
     async execute(params: AdminFilters) {
         const [listResult, stats] = await Promise.all([
-            this.transactionRepo.findAll(params),
-            this.transactionRepo.getStats()
+            this._transactionRepo.findAllTransactions(params),
+            this._transactionRepo.getStats()
         ]);
 
-        return {
-            data: listResult.data,
-            total: listResult.total,
-            stats: stats
-        };
+        return { data: listResult.data, total: listResult.total, stats: stats };
     }
 }

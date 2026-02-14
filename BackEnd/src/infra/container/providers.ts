@@ -14,6 +14,14 @@ import { MongoUnitOfWork } from "../repositories/mongo/MongoUnitOfWork.js";
 import { container } from "tsyringe"; 
 import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
 import { NodeCronScheduler } from "../../infra/services/NodeCronScheduler.js";
+import { CryptoEncryptionProvider } from "../providers/CryptoEncryptionProvider.js";
+import { WalletPaymentStrategy } from "../strategies/WalletPaymentStrategy.js";
+import { TournamentPaymentStrategy } from "../strategies/TournamentPaymentStrategy.js";
+import { SubscriptionPaymentStrategy } from "../strategies/SubscriptionPaymentStrategy.js";
+import { PaymentStrategyRegistry } from "../providers/PaymentStrategyRegistry.js";
+import { WalletTournamentProcessor } from "../providers/WalletTournamentProcessor.js";
+import { RazorpayTournamentProcessor } from "../providers/RazorpayTournamentProcessor.js";
+import { RazorpayXPayoutProvider } from "../providers/RazorpayXPayoutProvider.js";
 
 
 
@@ -38,12 +46,26 @@ container.register(DI_TOKENS.TournamentIdGenerator, { useClass: TournamentIdGene
 container.register(DI_TOKENS.RoleIdGenerator, { useClass: RoleIdGenerator });
 container.register(DI_TOKENS.UmpireIdGenerator, { useClass: UmpireIdGenerator });
 
-// Specialized Providers (Requiring Constructor Args from Env)
-container.register(DI_TOKENS.RazorpayProvider, { 
-    useFactory: () => new RazorpayProvider(
-        process.env.RAZOR_API_KEY || "", 
-        process.env.RAZOR_API_SECRET || ""
-    ) 
+container.registerSingleton(DI_TOKENS.PaymentStrategyRegistry, PaymentStrategyRegistry);
+
+container.register(DI_TOKENS.PaymentProvider, { useClass: RazorpayProvider });
+
+container.register(DI_TOKENS.EncryptionProvider, { 
+    useFactory: () => {
+        const key = process.env.PAYOUT_ENCRYPTION_KEY;
+        if (!key || key.length !== 32) {
+            throw new Error("Encryption Key must be exactly 32 characters. Check your .env file.");
+        }
+        return new CryptoEncryptionProvider(key);
+    }
 });
 
 container.register(DI_TOKENS.WalletProvider, { useClass: WalletProvider });
+
+container.register(DI_TOKENS.PaymentStrategy, { useClass: WalletPaymentStrategy });
+container.register(DI_TOKENS.PaymentStrategy, { useClass: TournamentPaymentStrategy });
+container.register(DI_TOKENS.PaymentStrategy, { useClass: SubscriptionPaymentStrategy });
+
+container.register(DI_TOKENS.TournamentPaymentProcessor, { useClass: WalletTournamentProcessor });
+container.register(DI_TOKENS.TournamentPaymentProcessor, { useClass: RazorpayTournamentProcessor });
+container.register(DI_TOKENS.PayoutProvider, { useClass: RazorpayXPayoutProvider });

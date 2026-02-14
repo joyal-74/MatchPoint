@@ -4,6 +4,7 @@ import type { PaymentInitiateResponse, TeamResultSummary } from "../../component
 import { MANAGER_ROUTES } from "../../constants/routes/managerRoutes";
 import type { Fixture, Leaderboard, Match, Tournament } from "../../features/manager/managerTypes";
 import type { AnalyticsData, PointsTableData } from "../../features/manager/Tournaments/tournamentTypes";
+import type { UmpireData } from "../../features/umpire/umpireTypes";
 import type { TeamPlayer } from "../../types/Player";
 import type { User } from "../../types/User";
 import axiosClient from "../http/axiosClient";
@@ -153,6 +154,7 @@ export const managerEndpoints = {
 
     fetchPayments: async (managerId: string): Promise<{ balance: any, transactions: any, tournaments: any }> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_PAYMENTS(managerId));
+        console.log(data.data)
         return data.data
     },
 
@@ -186,8 +188,8 @@ export const managerEndpoints = {
         return data.data;
     },
 
-    searchAvailableUmpires: async ({ query, date, tournamentId }: { query: string, date: string, tournamentId: string }): Promise<Match> => {
-        const { data } = await axiosClient.get(MANAGER_ROUTES.AVAILABLE_UMPIRES(tournamentId), { params: { query, date } });
+    searchAvailableUmpires: async (): Promise<UmpireData[]> => {
+        const { data } = await axiosClient.get(MANAGER_ROUTES.AVAILABLE_UMPIRES);
         return data.data;
     },
 }

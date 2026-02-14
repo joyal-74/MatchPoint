@@ -1,7 +1,9 @@
 import { CreateNotificationDTO, INotificationRepository, NotificationResponse } from "../../../app/repositories/interfaces/shared/INotificationRepository.js";
 import { NotificationDocument, NotificationModel } from "../../databases/mongo/models/NotificationModel.js";
+import { NotificationMapper } from "../../utils/mappers/NotificationMapper.js";
+import { BaseRepository } from "./BaseRepository.js";
 
-export class NotificationRepository implements INotificationRepository {
+export class NotificationRepository extends BaseRepository<CreateNotificationDTO, NotificationResponse> implements INotificationRepository {
 
     async create(data: CreateNotificationDTO): Promise<NotificationResponse> {
         const notification = await NotificationModel.create({
@@ -12,7 +14,7 @@ export class NotificationRepository implements INotificationRepository {
             meta: data.meta
         });
 
-        return this.toResponse(notification);
+        return NotificationMapper.toResponse(notification);
     }
 
     async findByUser(userId: string, options?: { limit?: number; skip?: number; unreadOnly?: boolean }): Promise<NotificationResponse[]> {
@@ -33,7 +35,7 @@ export class NotificationRepository implements INotificationRepository {
             .limit(options?.limit ?? 20)
             .lean<NotificationDocument[]>();
 
-        return notifications.map(n => this.toResponse(n));
+        return NotificationMapper.toResponseArray(notifications);
     }
     
     async markAsRead(notificationId: string, userId: string): Promise<NotificationResponse | null> {
@@ -45,7 +47,7 @@ export class NotificationRepository implements INotificationRepository {
 
         if (!updatedDoc) return null;
 
-        return this.toResponse(updatedDoc);
+        return NotificationMapper.toResponse(updatedDoc);
 
     }
 
@@ -63,18 +65,6 @@ export class NotificationRepository implements INotificationRepository {
             });
         }
 
-    private toResponse(notification: NotificationDocument): NotificationResponse {
-        return {
-            _id: notification._id.toString(),
-            userId: notification.userId.toString(),
-            type: notification.type,
-            title: notification.title,
-            message: notification.message,
-            meta: notification.meta,
-            isRead: notification.isRead,
-            createdAt: notification.createdAt
-        };
-    }
 
     async markInviteAsRead(playerId: string, teamId: string, status: string) {
         await NotificationModel.updateMany(

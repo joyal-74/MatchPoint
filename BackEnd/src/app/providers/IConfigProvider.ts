@@ -4,4 +4,8 @@ export interface IConfigProvider {
     getGoogleRedirectUrl(): string;
     getFacebookAppId(): string;
     getFacebookAppSecret(): string;
+    getRazorPaySecret(): string;
+    getRazorPayKey(): string;
+    getRazorpayXAccountNumber(): string;
+    getWebhookSecret(): string;
 }

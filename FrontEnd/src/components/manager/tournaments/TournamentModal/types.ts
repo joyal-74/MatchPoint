@@ -19,6 +19,7 @@ export interface TournamentFormData {
     prizePool: number;
     playersPerTeam: number;
     rules: string[];
+    umpireId: string;
     banner: File | string | undefined;
     overs?: number;
 }

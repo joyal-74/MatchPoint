@@ -6,7 +6,7 @@ import { UserRole } from "../../../domain/enums/Roles.js";
 import { NotFoundError } from "../../../domain/errors/index.js";
 
 
-export class ManagerRepositoryMongo implements IManagerRepository {
+export class ManagerRepository implements IManagerRepository {
     async findById(id: string): Promise<ManagerResponse | null> {
         return ManagerModel.findById(id).lean<ManagerResponse>().exec();
     }

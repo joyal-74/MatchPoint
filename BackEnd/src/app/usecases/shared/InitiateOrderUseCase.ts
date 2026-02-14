@@ -16,7 +16,7 @@ export interface CreatePaymentSessionDTO {
 @injectable()
 export class CreatePaymentSession implements ICreatePaymentSession {
     constructor(
-        @inject(DI_TOKENS.RazorpayProvider) private _paymentProvider: IPaymentProvider,
+        @inject(DI_TOKENS.PaymentProvider) private _paymentProvider: IPaymentProvider,
     ) { }
 
     async execute(dto: CreatePaymentSessionDTO): Promise<PaymentSession> {

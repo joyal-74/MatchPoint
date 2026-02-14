@@ -5,10 +5,10 @@ import { UserResponse } from "../../../domain/entities/User.js";
 import { UserDocument, UserModel } from "../../databases/mongo/models/UserModel.js";
 import { UserSchemaType } from "../../databases/mongo/types/UserDocument.js";
 import { UserMapper } from "../../utils/mappers/UserMongoMapper.js";
-import { MongoBaseRepository } from "../mongo/MongoBaseRepository.js";
+import { BaseRepository } from "./BaseRepository.js";
 
 
-export class UserRepositoryMongo extends MongoBaseRepository<UserSchemaType, UserResponse> implements IUserRepository {
+export class UserRepository extends BaseRepository<UserSchemaType, UserResponse> implements IUserRepository {
 
     constructor() {
         super(UserModel);

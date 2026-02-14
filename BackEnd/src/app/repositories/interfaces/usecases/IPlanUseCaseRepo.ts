@@ -1,5 +1,5 @@
 import { PaymentSession } from "../../../../app/providers/IPaymentProvider.js";
-import { VerifyPaymentResponse } from "../../../../app/usecases/shared/FinalizePaymentUseCase.js";
+import { VerifyPaymentResponse } from "../../../usecases/shared/VerifyPaymentUseCase.js";
 import { CreatePaymentSessionDTO } from "../../../../app/usecases/shared/InitiateOrderUseCase.js";
 import { BillingCycle, Plan, PlanLevel, UserSubscription } from "../../../../domain/entities/Plan.js";
 

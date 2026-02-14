@@ -6,7 +6,7 @@ import {
 
 export class Transaction {
     constructor(
-        public readonly id: string,
+        public readonly _id: string,
         public readonly type: TransactionType,
         public readonly amount: number,
         public readonly fromWalletId?: string | null,
