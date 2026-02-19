@@ -24,5 +24,4 @@ export class FinancialsController {
             buildResponse(true, 'Report generated', result)
         );
     };
-
 }

@@ -24,7 +24,8 @@ const LiveMatchPage = lazy(() => import("../pages/viewer/match/LiveMatchPage"));
 const LiveMatches = lazy(() => import("../pages/viewer/LiveMatches"));
 const ProfilePage = lazy(() => import("../pages/viewer/ProfilePage"));
 const LiveStreamViewer = lazy(() => import("../pages/viewer/LiveStreamViewer"));
-const WalletPage = lazy(() => import("../pages/viewer/WalletPage"));
+const WalletPage = lazy(() => import("../pages/shared/PaymentsPage"));
+const FinancialHistory = lazy(() => import("../pages/shared/FinancialHistory"));
 const TournamentsPage = lazy(() => import("../pages/viewer/Tournaments"));
 
 // Components & Layouts
@@ -65,7 +66,8 @@ const RootModule = () => {
                 <Route path="live" element={withViewerProtection(<LiveMatches />)} />
                 <Route path="live/:matchId/details" element={withViewerProtection(<LiveMatchPage />)} />
                 <Route path="live/:matchId/details/stream" element={withViewerProtection(<LiveStreamViewer />)} />
-                <Route path="wallet" element={withViewerProtection(<WalletPage />)} />
+                <Route path="payments" element={withViewerProtection(<WalletPage />)} />
+                <Route path="payments/history" element={withViewerProtection(<FinancialHistory />)} />
                 
                 {/* Root-level Shared Pages (Used by Viewers) */}
                 <Route path="/notifications" element={withViewerProtection(<ViewerProfileLayout><NotificationsPage /></ViewerProfileLayout>)} />

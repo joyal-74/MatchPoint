@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import type { Match, Team } from '../../../../domain/match/types';
 import type { InningsState, LiveScoreState } from '../../../../features/manager/Matches/matchTypes';
 
@@ -73,24 +73,23 @@ export const useScoreControls = ({ match, teamA, teamB, liveScore, emitScoreUpda
         const bowlingStats = Array.isArray(currentInnings.bowlingStats) ? currentInnings.bowlingStats : [];
         const currentBowlerStat = bowlingStats.find(stat => String(stat.playerId) === String(currentInnings?.currentBowler));
         return currentBowlerStat?.balls ?? 0;
-    }, [currentInnings?.bowlingStats, currentInnings?.currentBowler]);
+    }, [currentInnings]);
 
 
     const allPlayers = useMemo(() => [...battingTeam.members, ...bowlingTeam.members], [battingTeam, bowlingTeam]);
 
-    // Reset setup form on innings update
+    const updateForm = useCallback((key: keyof typeof forms, value: string | number | boolean) => {
+        setForms(prev => ({ ...prev, [key]: value }));
+    }, []);
+
     useEffect(() => {
         if (currentInnings?.currentStriker) {
             updateForm('striker', currentInnings.currentStriker);
             updateForm('nonStriker', currentInnings.currentNonStriker || '');
             updateForm('bowler', currentInnings.currentBowler || '');
         }
-    }, [currentInnings?.currentStriker, currentInnings?.currentNonStriker, currentInnings?.currentBowler]);
+    }, [currentInnings?.currentStriker, currentInnings?.currentNonStriker, currentInnings?.currentBowler, updateForm]);
 
-    // --- Helpers ---
-    const updateForm = (key: keyof typeof forms, value: string | number | boolean) => {
-        setForms(prev => ({ ...prev, [key]: value }));
-    };
 
     const toggleModal = (key: keyof typeof modals, value: boolean) => {
         setModals(prev => ({ ...prev, [key]: value }));

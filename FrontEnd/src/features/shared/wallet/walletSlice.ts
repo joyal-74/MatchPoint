@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createRazorpayOrder, deletePayoutMethod, fetchFinancialReport, fetchPayoutMethods, saveNewAccountMethod, verifyPayment } from "./financialThunk";
-import type { PayoutMethod } from "./financialTypes";
+import type { PayoutMethod } from "./walletTypes"; 
+import { createRazorpayOrder, deletePayoutMethod, fetchFinancialReport, fetchPayoutMethods, fetchUserPayments, saveNewAccountMethod, verifyPayment } from "./walletThunks";
+
 
 // --- Types ---
 export interface Transaction {
@@ -24,28 +25,40 @@ export interface TournamentFinancials {
     status: 'Upcoming' | 'Live' | 'Completed';
 }
 
-interface FinancialState {
+interface WalletState {
     balance: number;
     transactions: Transaction[];
-    tournaments: TournamentFinancials[];
     payoutMethods: PayoutMethod[];
+    tournaments: TournamentFinancials[];
     loading: boolean;
 }
 
-const initialState: FinancialState = {
+const initialState: WalletState = {
     balance: 0,
     transactions: [],
-    tournaments: [],
     payoutMethods: [],
+    tournaments: [],
     loading: false
 };
 
 const financialSlice = createSlice({
-    name: "financials",
+    name: "wallet",
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(fetchUserPayments.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchUserPayments.fulfilled, (state, action) => {
+                state.loading = false;
+                state.balance = action.payload.balance;
+                state.transactions = action.payload.transactions;
+            })
+            .addCase(fetchUserPayments.rejected, (state) => {
+                state.loading = false;
+            })
+
             .addCase(fetchFinancialReport.pending, (state) => {
                 state.loading = true;
             })

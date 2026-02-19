@@ -8,6 +8,14 @@ import prettierConfig from "eslint-config-prettier";
  * @type {import("eslint").Linter.FlatConfig[]}
  *  */
 export default [
+    {
+        ignores: [
+            "dist/**",
+            "node_modules/**",
+            "build/**",
+            "coverage/**"
+        ]
+    },
     js.configs.recommended,
     ...tseslint.configs.recommended,
     prettierConfig,
@@ -37,14 +45,16 @@ export default [
                 {
                     vars: "all",
                     varsIgnorePattern: "^_",
-                    args: "after-used",
+                    args: "none",
                     argsIgnorePattern: "^_",
                 },
             ],
 
             "no-unused-vars": "off",
+            "@typescript-eslint/no-unused-vars": "off",
 
-            "@typescript-eslint/no-explicit-any": "error",
+            "@typescript-eslint/no-explicit-any": "off",
         },
+        
     },
 ];

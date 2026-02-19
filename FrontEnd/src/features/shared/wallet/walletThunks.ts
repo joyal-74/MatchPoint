@@ -1,9 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createApiThunk } from "../../../utils/createApiThunk";
-import { managerEndpoints } from "../../../api/endpoints/managerEndPoints";
 import { walletEndpoints } from "../../../api/endpoints/walletEndPoints";
+import { managerEndpoints } from "../../../api/endpoints/managerEndPoints";
 
-// --- Thunk ---
+
+export const fetchUserPayments = createAsyncThunk(
+    "shared/fetchUserPayments",
+    createApiThunk(walletEndpoints.fetchUserPayments)
+);
+
+
 
 export const fetchFinancialReport = createAsyncThunk(
     "manager/fetchPayments",
@@ -11,32 +17,32 @@ export const fetchFinancialReport = createAsyncThunk(
 );
 
 export const saveNewAccountMethod = createAsyncThunk(
-    "manager/saveNewAccountMethod",
+    "shared/saveNewAccountMethod",
     createApiThunk(walletEndpoints.saveNewAccountMethod)
 );
 
 
 export const fetchPayoutMethods = createAsyncThunk(
-    "manager/fetchPayoutMethods",
+    "shared/fetchPayoutMethods",
     createApiThunk(walletEndpoints.fetchPayoutMethods)
 );
 
 export const deletePayoutMethod = createAsyncThunk(
-    "manager/deletePayoutMethod",
+    "shared/deletePayoutMethod",
     createApiThunk(walletEndpoints.deletePayoutMethod)
 );
 
 export const createRazorpayOrder = createAsyncThunk(
-    "manager/createRazorpayOrder",
+    "shared/createRazorpayOrder",
     createApiThunk(walletEndpoints.createRazorpayOrder)
 );
 
 export const verifyPayment = createAsyncThunk(
-    "manager/verifyPayment",
+    "shared/verifyPayment",
     createApiThunk(walletEndpoints.verifyPayment)
 );
 
 export const initiateWithdrawal = createAsyncThunk(
-    "manager/initiateWithdrawal",
+    "shared/initiateWithdrawal",
     createApiThunk(walletEndpoints.initiateWithdrawal)
 );

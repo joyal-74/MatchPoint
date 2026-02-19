@@ -8,6 +8,7 @@ const router = Router();
 
 const walletController = container.resolve(WalletController)
 
+router.get("/:userId/user", expressAdapter(walletController.getWallet));
 router.get("/:userId/methods", expressAdapter(walletController.getPayoutMethods));
 router.post("/:userId/save", expressAdapter(walletController.savePayoutMethod));
 router.delete("/:userId/remove", expressAdapter(walletController.deletePayoutMethod));

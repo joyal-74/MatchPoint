@@ -1,8 +1,8 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import ManagerLayout from "../../../pages/layout/ManagerLayout";
-import { TransactionList } from "./TransactionList";
-import { useAppSelector } from "../../../hooks/hooks";
+import ManagerLayout from "../layout/ManagerLayout";
+import { TransactionList } from "../../components/shared/wallet/TransactionList";
+import { useAppSelector } from "../../hooks/hooks";
 
 export default function FinancialHistory() {
     const navigate = useNavigate();

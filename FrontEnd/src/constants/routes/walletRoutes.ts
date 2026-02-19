@@ -1,6 +1,7 @@
 import { API_PREFIX } from "../../utils/api";
 
 export const Wallet_ROUTES = {
+    GET_USER_WALLET: (userId: string) => `${API_PREFIX}/wallet/${userId}/user`,
     SAVE_ACCOUNT_METHOD: (userId: string) => `${API_PREFIX}/wallet/${userId}/save`,
     GET_ACCOUNT_METHOD: (userId: string) => `${API_PREFIX}/wallet/${userId}/methods`,
     DELETE_ACCOUNT_METHOD: (userId: string) => `${API_PREFIX}/wallet/${userId}/remove`,

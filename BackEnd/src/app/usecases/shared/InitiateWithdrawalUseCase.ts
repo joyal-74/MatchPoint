@@ -32,16 +32,16 @@ export class InitiateWithdrawalUseCase implements IInitiateWithdrawalUseCase {
             type: method.type
         });
 
-        console.log('hi')
-
-        console.log(payout, 'payout')
-
         return await this._transactionRepo.create({
             type: 'WITHDRAWAL',
             amount,
             status: (payout.status === 'processed') ? 'SUCCESS' : 'PENDING',
             paymentRefId: payout.payoutId,
-            toWalletId: wallet.id
+            fromWalletId: wallet.id,
+            toWalletId: null,
+            metadata: {
+                description: `Withdrawal to ${method.type}: ${method.detail}`
+            }
         });
     }
 }

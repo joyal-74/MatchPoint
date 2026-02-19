@@ -1,5 +1,5 @@
 import { Landmark, Smartphone, Trash2, ShieldCheck, Plus } from "lucide-react";
-import type { PayoutMethod } from "../../../features/shared/wallet/walletTypes";
+import type { PayoutMethod } from "../../../features/shared/wallet/walletTypes"; 
 
 
 

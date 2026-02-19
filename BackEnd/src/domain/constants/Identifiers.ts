@@ -270,6 +270,7 @@ const SharedUseCaseTokens = {
     VerifyWalletPaymentUseCase: "VerifyWalletPaymentUseCase",
     InitiateWithdrawalUseCase: "InitiateWithdrawalUseCase",
     HandleWebhookUseCase: "HandleWebhookUseCase",
+    GetUserWalletUseCase : 'GetUserWalletUseCase',
 }
 
 

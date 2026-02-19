@@ -37,7 +37,6 @@ const LeaderboardTable = ({
     accentColor, 
 }: {
     title: string; 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data: any[]; 
     valueLabel: string; 
     icon: JSX.Element; 

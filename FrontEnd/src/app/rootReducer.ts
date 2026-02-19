@@ -18,7 +18,7 @@ import settingsReducer from "../features/shared/settings/settingsSlice";
 import notificationsReducer from "../features/player/notifications/notificationSlice";
 import adminTournamnetReducer from "../features/admin/tournament/tournamentSlice";
 import dashboardStatsReducer from "../features/admin/dashboard/dashboardSlice";
-import financialReducer from "../features/manager/financials/financialSlice";
+import walletReducer from "../features/shared/wallet/walletSlice";
 import adminTransactionReducer from "../features/admin/transaction/transactionSlice";
 import { logoutUser } from "../features/auth";
 
@@ -43,7 +43,7 @@ const appReducer = combineReducers({
     notifications : notificationsReducer,
     adminTournaments : adminTournamnetReducer,
     adminDashboard : dashboardStatsReducer,
-    financials : financialReducer,
+    wallet : walletReducer,
     adminTransactions : adminTransactionReducer
 });
 

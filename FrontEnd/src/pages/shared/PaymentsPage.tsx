@@ -1,30 +1,30 @@
 import { useState, useEffect, useMemo } from "react";
 import { Wallet, History, ArrowUpRight } from "lucide-react";
-import ManagerLayout from "../../pages/layout/ManagerLayout";
-import LoadingOverlay from "../shared/LoadingOverlay";
-import { createRazorpayOrder, deletePayoutMethod, fetchFinancialReport, fetchPayoutMethods, initiateWithdrawal, saveNewAccountMethod, verifyPayment } from "../../features/shared/wallet/walletThunks";
+import LoadingOverlay from "../../components/shared/LoadingOverlay";
+import { createRazorpayOrder, deletePayoutMethod, fetchPayoutMethods, initiateWithdrawal, saveNewAccountMethod, verifyPayment } from "../../features/shared/wallet/walletThunks";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-
-// Import Modular Components
-import { WalletHeaderCard } from "./wallet/WalletHeaderCard";
-import { PayoutMethods } from "./wallet/PayoutMethods";
-import { TransactionList } from "./wallet/TransactionList";
-import { DepositModal } from "./wallet/DepositModal";
-import { AddPaymentMethodModal } from "./wallet/AddPaymentMethodModal";
+import { useNavigate } from "react-router-dom";
+import { useRazorpayGateway } from "../../hooks/useRazorpayGateway";
+import type { SavePayoutMethodPayload } from "../../features/shared/wallet/walletTypes";
 import toast from "react-hot-toast";
 import { getApiErrorMessage } from "../../utils/apiError";
-import type { SavePayoutMethodPayload } from "../../features/shared/wallet/walletTypes"; 
-import ConfirmTeamModal from "../shared/modal/ConfirmTeamModal";
-import { useRazorpayGateway } from "../../hooks/useRazorpayGateway";
-import { useNavigate } from "react-router-dom";
-import { WithdrawalModal } from "./wallet/WithdrawalModal";
+import { WalletHeaderCard } from "../../components/shared/wallet/WalletHeaderCard";
+import { PayoutMethods } from "../../components/shared/wallet/PayoutMethods";
+import { TransactionList } from "../../components/shared/wallet/TransactionList";
+import { DepositModal } from "../../components/shared/wallet/DepositModal";
+import { AddPaymentMethodModal } from "../../components/shared/wallet/AddPaymentMethodModal";
+import ConfirmTeamModal from "../../components/shared/modal/ConfirmTeamModal";
+import { WithdrawalModal } from "../../components/shared/wallet/WithdrawalModal";
+import RoleLayoutWrapper from "./RoleLayoutWrapper";
+import { fetchUserPayments } from "../../features/shared/wallet/walletThunks";
+
 
 export default function FinancialsPage() {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
     const navigate = useNavigate();
     const { transactions, balance, payoutMethods, loading } = useAppSelector((state) => state.wallet);
-    const managerId = user?._id;
+    const userId = user?._id;
     const { initiatePayment } = useRazorpayGateway();
 
     const [showDeposit, setShowDeposit] = useState(false);
@@ -33,26 +33,26 @@ export default function FinancialsPage() {
     const [showWithdrawal, setShowWithdrawal] = useState(false);
 
     useEffect(() => {
-        if (managerId) {
-            dispatch(fetchFinancialReport(managerId));
-            dispatch(fetchPayoutMethods(managerId));
+        if (userId) {
+            dispatch(fetchUserPayments(userId));
+            dispatch(fetchPayoutMethods(userId));
         }
-    }, [dispatch, managerId]);
+    }, [dispatch, userId]);
 
 
     const handleSaveNewMethod = async (newMethod: SavePayoutMethodPayload) => {
-        if (!managerId) return;
+        if (!userId) return;
 
         try {
             await dispatch(saveNewAccountMethod({
-                userId: managerId,
+                userId,
                 payload: newMethod
             })).unwrap();
 
             toast.success("Payout method saved successfully");
             setShowAddMethod(false);
 
-            dispatch(fetchPayoutMethods(managerId));
+            dispatch(fetchPayoutMethods(userId));
         } catch (error: unknown) {
             toast.error(getApiErrorMessage(error) || 'Failed to save payout method');
             console.error("Failed to save method", error);
@@ -64,11 +64,11 @@ export default function FinancialsPage() {
     };
 
     const handleDeleteMethod = async () => {
-        if (!managerId || !confirmDeleteId) return;
+        if (!userId || !confirmDeleteId) return;
 
         try {
             await dispatch(deletePayoutMethod({
-                userId: managerId,
+                userId,
                 payoutId: confirmDeleteId
             })).unwrap();
 
@@ -85,7 +85,7 @@ export default function FinancialsPage() {
         try {
             const order = await dispatch(createRazorpayOrder({
                 amount: Number(amount),
-                userId: managerId!
+                userId: userId!
             })).unwrap();
 
             initiatePayment(
@@ -108,13 +108,13 @@ export default function FinancialsPage() {
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_signature: response.razorpay_signature,
-                            userId: managerId!,
+                            userId: userId!,
                             amount: Number(amount),
                         })).unwrap();
 
                         toast.success("Money added to wallet!");
                         setShowDeposit(false);
-                        dispatch(fetchFinancialReport(managerId!));
+                        dispatch(fetchUserPayments(userId!));
                     } catch (err) {
                         console.log(err)
                         toast.error("Signature verification failed.");
@@ -139,15 +139,19 @@ export default function FinancialsPage() {
     }, [transactions]);
 
     const handleViewFullHistory = () => {
-        navigate('/manager/payments/history');
+        if (user?.role == 'viewer') {
+            navigate(`/payments/history`);
+        } else {
+            navigate(`/${user?.role}/payments/history`);
+        }
     };
 
     const handleWithdraw = async (payoutData: string | SavePayoutMethodPayload, amount: number) => {
-        if (!managerId) return;
+        if (!userId) return;
 
         try {
             await dispatch(initiateWithdrawal({
-                userId: managerId,
+                userId,
                 payoutData,
                 amount
             })).unwrap();
@@ -155,8 +159,8 @@ export default function FinancialsPage() {
             toast.success("Withdrawal initiated successfully!");
             setShowWithdrawal(false);
 
-            dispatch(fetchFinancialReport(managerId));
-            dispatch(fetchPayoutMethods(managerId));
+            dispatch(fetchUserPayments(userId));
+            dispatch(fetchPayoutMethods(userId));
 
         } catch (error: unknown) {
             toast.error(getApiErrorMessage(error) || 'Withdrawal failed');
@@ -164,7 +168,7 @@ export default function FinancialsPage() {
     };
 
     return (
-        <ManagerLayout>
+        <RoleLayoutWrapper>
             <LoadingOverlay show={loading} />
 
             <div className="bg-background transition-colors">
@@ -267,6 +271,6 @@ export default function FinancialsPage() {
                     onClose={() => setShowWithdrawal(false)}
                 />
             )}
-        </ManagerLayout>
+        </RoleLayoutWrapper>
     );
 }

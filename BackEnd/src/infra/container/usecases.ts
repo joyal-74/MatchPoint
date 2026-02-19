@@ -152,6 +152,7 @@ import { VerifyWalletPaymentUseCase } from "../../app/usecases/shared/VerifyWall
 import { CreateWalletOrderUseCase } from "../../app/usecases/shared/CreateWalletOrderUseCase.js";
 import { InitiateWithdrawalUseCase } from "../../app/usecases/shared/InitiateWithdrawalUseCase.js";
 import { HandlePayoutWebhookUseCase } from "../../app/usecases/shared/HandlePayoutWebhook.js";
+import { GetUserWalletUseCase } from "../../app/usecases/shared/GetUserWalletUseCase.js";
 
 
 // Registrations
@@ -319,6 +320,7 @@ container.register(DI_TOKENS.CreateWalletOrderUseCase, { useClass: CreateWalletO
 container.register(DI_TOKENS.VerifyWalletPaymentUseCase, { useClass: VerifyWalletPaymentUseCase });
 container.register(DI_TOKENS.InitiateWithdrawalUseCase, { useClass: InitiateWithdrawalUseCase });
 container.register(DI_TOKENS.HandleWebhookUseCase, { useClass: HandlePayoutWebhookUseCase });
+container.register(DI_TOKENS.GetUserWalletUseCase, { useClass: GetUserWalletUseCase });
 
 // --- Viewer ---
 container.register(DI_TOKENS.GetViewerProfile, { useClass: GetViewerProfile });

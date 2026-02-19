@@ -11,9 +11,11 @@ import {
     ICreateWalletOrderUseCase,
     IVerifyWalletPaymentUseCase,
     IInitiateWithdrawalUseCase,
-    IHandlePayoutWebhookUseCase
+    IHandlePayoutWebhookUseCase,
+    IGetUserWalletUseCase
 } from "../../../../app/repositories/interfaces/usecases/IFinancialUseCases.js";
 import { WebhookService } from "../../../../infra/services/WebhookService.js";
+import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
 
 @injectable()
 export class WalletController {
@@ -25,6 +27,7 @@ export class WalletController {
         @inject(DI_TOKENS.VerifyWalletPaymentUseCase) private _verifyPayment: IVerifyWalletPaymentUseCase,
         @inject(DI_TOKENS.InitiateWithdrawalUseCase) private _initiateWithdrawal: IInitiateWithdrawalUseCase,
         @inject(DI_TOKENS.HandleWebhookUseCase) private _handleWebhookUseCase: IHandlePayoutWebhookUseCase,
+        @inject(DI_TOKENS.GetUserWalletUseCase) private _getUserWalletUseCase: IGetUserWalletUseCase,
         @inject(DI_TOKENS.WebhookService) private _webhookService: WebhookService
     ) { }
 
@@ -145,4 +148,12 @@ export class WalletController {
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Webhook processed"));
     };
+
+    getWallet = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const userId = httpRequest.params.userId;
+
+        const result = await this._getUserWalletUseCase.execute(userId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Wallet report generated', result));
+    }
 }

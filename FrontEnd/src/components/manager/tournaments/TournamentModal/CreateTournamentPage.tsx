@@ -44,7 +44,7 @@ export default function CreateTournamentPage() {
             }
         };
         getUmpires();
-    }, [dispatch]);
+    }, [dispatch, user?._id]);
 
     const estimatedPrizePool = useMemo(() => {
         return Number(formData.entryFee) * Number(formData.minTeams);

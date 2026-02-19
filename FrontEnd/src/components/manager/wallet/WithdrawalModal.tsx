@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { X, Landmark, CreditCard, AlertCircle, Plus } from "lucide-react";
-import type { PayoutMethod, SavePayoutMethodPayload } from "../../../features/manager/financials/financialTypes";
+import type { PayoutMethod, SavePayoutMethodPayload } from "../../../features/shared/wallet/walletTypes";
 
 interface WithdrawalModalProps {
     methods: PayoutMethod[];
