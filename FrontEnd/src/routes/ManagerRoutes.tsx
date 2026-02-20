@@ -27,7 +27,8 @@ const PaymentFailedPage = lazy(() => import("../components/manager/tournaments/T
 const MatchDashboard = lazy(() => import("../components/manager/matches/MatchDashboard"));
 const ScoreboardDashboard = lazy(() => import("../components/manager/scoreControl/ScoreboardDashboard"));
 const EarningsPage = lazy(() => import("../components/manager/EarningsOverview"));
-const FinancialsPage = lazy(() => import("../components/manager/PaymentsPage"));
+const WalletPage = lazy(() => import("../components/manager/PaymentsPage"));
+const FinancialHistory = lazy(() => import("../components/manager/wallet/FinancialHistory"));
 const ExplorePage = lazy(() => import("../pages/manager/ExplorePage"));
 const MatchesSection = lazy(() => import("../pages/manager/MatchesPage"));
 const MyMatchesPage = lazy(() => import("../pages/manager/MyMatches"));
@@ -45,7 +46,8 @@ const ManagerRoutes = () => {
             <Route path="dashboard" element={withManagerProtection(<Dashboard />)} />
             <Route path="profile" element={withManagerProtection(<UserProfile />)} />
             <Route path="teams" element={withManagerProtection(<TeamsListPage />)} />
-            <Route path="payments" element={withManagerProtection(<FinancialsPage />)} />
+            <Route path="payments" element={withManagerProtection(<WalletPage />)} />
+            <Route path="payments/history" element={withManagerProtection(<FinancialHistory />)} />
             <Route path="payments/earnings" element={withManagerProtection(<EarningsPage />)} />
             <Route path="team/:teamId" element={withManagerProtection(<ViewTeamManager />)} />
             <Route path="team/:teamId/manage" element={withManagerProtection(<ManageMembersPage />)} />

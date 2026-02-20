@@ -10,6 +10,7 @@ interface CanceledInfo {
 export interface TournamentDocument extends Omit<Tournament, "_id" | "managerId">, Document {
     _id: Types.ObjectId,
     managerId: Types.ObjectId,
+    umpireId: Types.ObjectId,
     canceled: CanceledInfo
 }
 
@@ -17,6 +18,7 @@ const TournamentSchema = new Schema<TournamentDocument>(
     {
         tourId: { type: String, required: true },
         managerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        umpireId: { type: Schema.Types.ObjectId, ref: "User", default: null },
         title: { type: String, required: true },
         description: { type: String },
         sport: { type: String, required: true },

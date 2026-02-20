@@ -8,16 +8,18 @@ interface AdminLayoutProps {
 
 const ViewerProfileLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     return (
-        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+        <div className="bg-background text-foreground">
+            <Navbar />
+
             <Sidebar />
 
-            <div className="flex-1 flex flex-col">
-                <div className="ml-60">
-                    <Navbar />
+            <main
+                className="relative flex-1 bg-background transition-all duration-300 ease-in-out md:ml-16 lg:ml-60 "
+            >
+                <div className="p-4 md:p-6 lg:p-6">
+                    {children}
                 </div>
-
-                <main className="flex-1 px-6 md:ml-10 lg:ml-70">{children}</main>
-            </div>
+            </main>
         </div>
     );
 };

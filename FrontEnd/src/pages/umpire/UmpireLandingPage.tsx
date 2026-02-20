@@ -16,7 +16,7 @@ const UmpireLandingPage = () => {
 
     useEffect(() => {
         if (userId) {
-            dispatch(fetchAllMatches({ limit: 4, page: 1, userId }));
+            dispatch(fetchAllMatches(userId));
         }
     }, [dispatch, userId]);
 
@@ -128,9 +128,9 @@ const UmpireLandingPage = () => {
                                     <div key={i} className="h-64 bg-white/5 animate-pulse rounded-2xl" />
                                 ))
                             ) : allMatches.length > 0 ? (
-                                allMatches.map((match) => {
+                                allMatches.slice(0,4).map((match) => {
                                     const isLive = match.status === 'ongoing';
-                                    const dateStr = match.createdAt ? new Date(match.createdAt).toLocaleDateString() : 'TBD';
+                                    const dateStr = match.date ? new Date(match.date).toLocaleDateString() : 'TBD';
 
                                     return (
                                         <div
@@ -152,10 +152,10 @@ const UmpireLandingPage = () => {
                                             <div className="flex items-center justify-between mb-6">
                                                 <div className="flex flex-col items-center gap-1 flex-1">
                                                     <div className="w-10 h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-xs font-bold text-white group-hover:border-primary/50 transition-colors">
-                                                        {match.innings1?.battingTeam?.name?.[0] || 'T'}
+                                                        {(match.teamA as string)?.[0] || 'T'}
                                                     </div>
                                                     <span className="text-[11px] font-bold text-slate-300 truncate w-full text-center">
-                                                        {match.innings1?.battingTeam?.name || 'Team A'}
+                                                        {(match.teamA as string) || 'Team A'}
                                                     </span>
                                                 </div>
 
@@ -163,10 +163,10 @@ const UmpireLandingPage = () => {
 
                                                 <div className="flex flex-col items-center gap-1 flex-1">
                                                     <div className="w-10 h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-xs font-bold text-white group-hover:border-primary/50 transition-colors">
-                                                        {match.innings1?.bowlingTeam?.name?.[0] || 'T'}
+                                                        {(match.teamB as string)?.[0] || 'T'}
                                                     </div>
                                                     <span className="text-[11px] font-bold text-slate-300 truncate w-full text-center">
-                                                        {match.innings1?.bowlingTeam?.name || 'Team B'}
+                                                        {(match.teamB as string)|| 'Team B'}
                                                     </span>
                                                 </div>
                                             </div>

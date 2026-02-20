@@ -11,16 +11,22 @@ export function validateUserInput(data) {
     const lastName = data.lastName?.trim();
     const password = data.password?.trim();
 
+    const isSocialSignup = data.authProvider === 'google' || data.authProvider === 'facebook' || !!data.tempToken;
+
     if (!Validators.notEmpty(email)) {
         errors.email = "Email is required";
     } else if (!Validators.isEmail(email)) {
         errors.email = "Invalid email format";
     }
 
-    if (!Validators.notEmpty(password)) {
-        errors.password = "Password is required";
-    } else if (!Validators.minLength(password, 6)) {
-        errors.password = "Password must be at least 6 characters";
+    if (!isSocialSignup) {
+        if (!Validators.notEmpty(password)) {
+            errors.password = "Password is required";
+        } else if (!Validators.minLength(password, 6)) {
+            errors.password = "Password must be at least 6 characters";
+        } else if (!Validators.isStrongPassword(password)) {
+            errors.password = "Password must include uppercase, lowercase, a number, and a special character (@$!%*?&)";
+        }
     }
 
     if (!Validators.notEmpty(firstName)) errors.firstName = "First name is required";

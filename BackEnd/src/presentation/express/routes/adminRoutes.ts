@@ -6,14 +6,16 @@ import { adminOnly } from "../middlewares/index.js";
 import { TournamentManagementController } from "../../http/controllers/admin/TournamnetManagementController.js";
 import { AdminTransactionController } from "../../http/controllers/admin/TransactionController.js";
 import { UsersManagementController } from "../../http/controllers/admin/UsersManagementController.js";
+import { BulkUpdateController } from "../../http/controllers/admin/BulkUpdateController.js";
 
 
 const router = Router();
 
-const dashboardController = container.resolve(DashboardController)
-const tournamentController = container.resolve(TournamentManagementController)
-const transactionController = container.resolve(AdminTransactionController)
-const usersManagementController = container.resolve(UsersManagementController)
+const dashboardController = container.resolve(DashboardController);
+const tournamentController = container.resolve(TournamentManagementController);
+const transactionController = container.resolve(AdminTransactionController);
+const usersManagementController = container.resolve(UsersManagementController);
+const bulkSignupController = container.resolve(BulkUpdateController);
 
 router.get("/dashboard/stats", adminOnly, expressAdapter(dashboardController.getDashboard));
 
@@ -38,5 +40,7 @@ router.get("/transactions/:id", adminOnly, expressAdapter(transactionController.
 
 router.patch( "/:role/:userId/status", adminOnly, expressAdapter(usersManagementController.changeUserStatus));
 router.patch( "/user/:userId/blockStatus", adminOnly, expressAdapter(usersManagementController.changeUserBlockStatus));
+
+router.post( "/new-users", expressAdapter(bulkSignupController.bulkSignUp));
 
 export default router;

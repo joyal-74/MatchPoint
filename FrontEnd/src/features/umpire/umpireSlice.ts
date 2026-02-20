@@ -61,8 +61,7 @@ const umpireSlice = createSlice({
             })
             .addCase(fetchAllMatches.fulfilled, (state, action) => {
                 state.loading = false;
-                state.allMatches = action.payload.matches;
-                state.totalPages = action.payload.totalPages;
+                state.allMatches = action.payload;
                 state.error = null;
             })
             .addCase(fetchAllMatches.rejected, (state, action) => {

@@ -7,7 +7,7 @@ const ProviderTokens = {
     PasswordHasher: "PasswordHasher",
     FileStorage: "FileStorage",
     WalletProvider: "WalletProvider",
-    RazorpayProvider: "RazorpayProvider",
+    PaymentProvider: "PaymentProvider",
     IdGenerator: "IdGenerator",
     ManagerIdGenerator: "ManagerIdGenerator",
     PlayerIdGenerator: "PlayerIdGenerator",
@@ -22,6 +22,10 @@ const ProviderTokens = {
     GoogleAuthService: "GoogleAuthService",
     FacebookServices: "FacebookServices",
     Scheduler: "Scheduler",
+    EncryptionProvider: "EncryptionProvider",
+    TournamentPaymentProcessor: "TournamentPaymentProcessor",
+    PayoutProvider: "PayoutProvider",
+    PayoutResolver: "PayoutResolver",
 }
 
 // repository
@@ -49,6 +53,8 @@ const RepositoryTokens = {
     WalletRepository: "WalletRepository",
     OtpRepository: "OtpRepository",
     PointsTableRepository: "PointsTableRepository",
+    PayoutRepository: "PayoutRepository",
+    PayoutMappingRepository: "PayoutMappingRepository",
 }
 
 // services
@@ -70,6 +76,14 @@ const ServiceTokens = {
     GetPlansAndUserSubscription: "GetPlansAndUserSubscription",
     StartTournament: "StartTournament",
     TournamentRefundService: "TournamentRefundService",
+    PayoutMethodResolver: "PayoutMethodResolver",
+    WebhookService: "WebhookService",
+    ProfileInitializationService: "ProfileInitializationService",
+}
+
+const StategyTokens = {
+    PaymentStrategy : 'PaymentStrategy',
+    PaymentStrategyRegistry : 'PaymentStrategyRegistry',
 }
 
 // usecases
@@ -127,6 +141,7 @@ const AdminUsecaseTokens = {
 
     // --- Admin Dashboard ---
     GetDashboardStatsUseCase: "GetDashboardStatsUseCase",
+    BulkUserSignup: "BulkUserSignup",
 }
 
 
@@ -158,6 +173,7 @@ const ManagerUsecaseTokens = {
 
     // --- Tournament ---
     GetMyTournamentsUsecase: 'GetMyTournamentsUsecase',
+    GetAvailableUmpires: 'GetAvailableUmpires',
     GetExploreTournamentsUsecase: 'GetExploreTournamentsUsecase',
     AddTournamentsUsecase: 'AddTournamentsUsecase',
     EditTournamentsUsecase: 'EditTournamentsUsecase',
@@ -250,6 +266,14 @@ const SharedUseCaseTokens = {
     CreatePaymentSession: "CreatePaymentSession",
     SubscriptionService: "SubscriptionService",
     GetUserSubscriptionPlan: "GetUserSubscriptionPlan",
+    SavePayoutMethodUseCase: "SavePayoutMethodUseCase",
+    GetPayoutMethodsUseCase: "GetPayoutMethodsUseCase",
+    DeletePayoutMethodUseCase: "DeletePayoutMethodUseCase",
+    CreateWalletOrderUseCase: "CreateWalletOrderUseCase",
+    VerifyWalletPaymentUseCase: "VerifyWalletPaymentUseCase",
+    InitiateWithdrawalUseCase: "InitiateWithdrawalUseCase",
+    HandleWebhookUseCase: "HandleWebhookUseCase",
+    GetUserWalletUseCase : 'GetUserWalletUseCase',
 }
 
 
@@ -257,6 +281,7 @@ export const DI_TOKENS = {
     ...ProviderTokens,
     ...RepositoryTokens,
     ...ServiceTokens,
+    ...StategyTokens,
     ...AuthUsecaseTokens,
     ...AdminUsecaseTokens,
     ...ManagerUsecaseTokens,

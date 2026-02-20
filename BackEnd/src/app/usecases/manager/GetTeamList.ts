@@ -6,7 +6,6 @@ import { ILogger } from "../../providers/ILogger.js";
 import { TeamDataFull } from "../../../domain/dtos/Team.dto.js";
 
 
-
 @injectable()
 export class GetAllTeamsUseCase implements IGetAllTeamsUseCase {
     constructor(
@@ -16,7 +15,8 @@ export class GetAllTeamsUseCase implements IGetAllTeamsUseCase {
 
     async execute(managerId: string): Promise<TeamDataFull[]> {
         this._logger.info(`Finding all teams for manager ${managerId}`);
-        const teams = await this._teamRepo.findAll(managerId);
+
+        const teams = await this._teamRepo.findAllByManager(managerId);
 
         this._logger.info(`Total ${teams.length} teams found`);
         return teams;

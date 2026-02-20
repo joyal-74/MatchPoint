@@ -8,6 +8,7 @@ import { TeamsController } from "../../http/controllers/player/TeamsController.j
 import { TournamentsController } from "../../http/controllers/player/TournamentsController.js";
 import { expressFileUpdateHandler } from "../../adaptors/ExpressFileAdaptor.js";
 import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
+import { playerOnly } from "../middlewares/index.js";
 
 const router = Router();
 const upload = multer();
@@ -16,36 +17,36 @@ const playerProfileController = container.resolve(PlayerProfileController)
 const playerTeamController = container.resolve(TeamsController)
 const playerTournamentController = container.resolve(TournamentsController)
 
-router.put("/:playerId/profile", upload.single("file"), expressFileUpdateHandler(playerProfileController.updateProfile));
+router.put("/:playerId/profile", playerOnly, upload.single("file"), expressFileUpdateHandler(playerProfileController.updateProfile));
 
-router.get("/:userId/stats", expressAdapter(playerProfileController.getPlayerStats));
+router.get("/:userId/stats",playerOnly, expressAdapter(playerProfileController.getPlayerStats));
 
-router.put('/:playerId/profile/sports', expressAdapter(playerProfileController.updatePlayerSportsFields));
+router.put('/:playerId/profile/sports',playerOnly, expressAdapter(playerProfileController.updatePlayerSportsFields));
 
-router.get('/:playerId/profile', expressAdapter(playerProfileController.getProfile));
+router.get('/:playerId/profile',playerOnly, expressAdapter(playerProfileController.getProfile));
 
-router.get('/teams', expressAdapter(playerTeamController.getAllTeams))
+router.get('/teams',playerOnly, expressAdapter(playerTeamController.getAllTeams))
 
-router.get('/teams/:playerId', expressAdapter(playerTeamController.getMyTeams))
+router.get('/teams/:playerId',playerOnly, expressAdapter(playerTeamController.getMyTeams))
 
-router.post('/team/:playerId/invite/status', expressAdapter(playerTeamController.updateStatus))
+router.post('/team/:playerId/invite/status',playerOnly, expressAdapter(playerTeamController.updateStatus))
 
-router.get('/team/:teamId/details', expressAdapter(playerTeamController.getTeamDetails))
+router.get('/team/:teamId/details',playerOnly, expressAdapter(playerTeamController.getTeamDetails))
 
-router.post('/:teamId/join', expressAdapter(playerTeamController.joinTeams))
+router.post('/:teamId/join',playerOnly, expressAdapter(playerTeamController.joinTeams))
 
-router.post('/:teamId/leave', expressAdapter(playerTeamController.playerLeaveTeam))
+router.post('/:teamId/leave',playerOnly, expressAdapter(playerTeamController.playerLeaveTeam))
 
-router.get('/tournaments', expressAdapter(playerTournamentController.getplayerTournaments))
+router.get('/tournaments',playerOnly, expressAdapter(playerTournamentController.getplayerTournaments))
 
-router.post('/tournaments/details', expressAdapter(playerTournamentController.getPlayerTournamentDetails))
+router.post('/tournaments/details',playerOnly, expressAdapter(playerTournamentController.getPlayerTournamentDetails))
 
-router.post('/tournaments/details/matches', expressAdapter(playerTournamentController.getplayerTournamentMatches))
+router.post('/tournaments/details/matches',playerOnly, expressAdapter(playerTournamentController.getplayerTournamentMatches))
 
-router.post('/tournaments/details/pointstable', expressAdapter(playerTournamentController.getTournamentPointsTable))
+router.post('/tournaments/details/pointstable',playerOnly, expressAdapter(playerTournamentController.getTournamentPointsTable))
 
-router.post('/tournaments/details/stats', expressAdapter(playerTournamentController.getTournamentPointsTable))
+router.post('/tournaments/details/stats',playerOnly, expressAdapter(playerTournamentController.getTournamentPointsTable))
 
-router.get('/tournament/matches', expressAdapter(playerTournamentController.getplayerMatches))
+router.get('/tournament/matches',playerOnly, expressAdapter(playerTournamentController.getplayerMatches))
 
 export default router;

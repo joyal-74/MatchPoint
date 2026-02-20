@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import type { RootState } from "../../app/store";
 import type { UserProfile } from "../../types/Profile";
@@ -7,12 +7,14 @@ import { toast } from "react-toastify";
 
 export const useUmpireProfile = () => {
     const dispatch = useAppDispatch();
-    const { umpire, loading, error } = useAppSelector((state: RootState) => state.umpire);
+    const { umpire, loading } = useAppSelector((state: RootState) => state.umpire);
     const umpireId = useAppSelector((state: RootState) => state.auth.user?._id);
 
     const [isEditing, setIsEditing] = useState(false);
     const [profileImage, setProfileImage] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [errors, setErrors] = useState<Record<string, string>>({});
+
     const [formData, setFormData] = useState<UserProfile | null>(null);
 
     // Fetch umpire data
@@ -42,9 +44,16 @@ export const useUmpireProfile = () => {
         reader.readAsDataURL(file);
     };
 
-    const handleInputChange = (field: keyof UserProfile, value: string) => {
+    const handleInputChange = useCallback((field: keyof UserProfile, value: string) => {
         setFormData((prev) => (prev ? { ...prev, [field]: value } : prev));
-    };
+        if (errors[field]) {
+            setErrors(prev => {
+                const newErrs = { ...prev };
+                delete newErrs[field];
+                return newErrs;
+            });
+        }
+    }, [errors]);
 
     const handleSave = async () => {
         if (!formData || !umpireId) return;
@@ -88,7 +97,7 @@ export const useUmpireProfile = () => {
         profileImage,
         formData,
         loading,
-        error,
+        errors,
         handleImageUpload,
         handleInputChange,
         handleSave,

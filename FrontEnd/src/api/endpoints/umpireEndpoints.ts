@@ -16,11 +16,8 @@ export const umpireEndpoints = {
         return data.data;
     },
 
-    fetchAllMatches: async (filters?: { userId : string, status?: string; search?: string, page?: number; limit?: number; }): Promise<{ matches: Match[], totalPages: number }> => {
-        const { status, page = 1, limit = 10, search, userId } = filters || {};
-        const { data } = await axiosClient.get(UMPIRE_ROUTES.GET_All_MATCHES, {
-            params: { status, page, search, limit, userId }
-        });
+    fetchAllMatches: async (userId : string): Promise<Match[]> => {
+        const { data } = await axiosClient.get(UMPIRE_ROUTES.GET_All_MATCHES(userId));
         return data.data;
     },
 

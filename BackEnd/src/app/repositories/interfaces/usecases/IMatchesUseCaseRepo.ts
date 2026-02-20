@@ -1,6 +1,7 @@
 import { LiveScoreDto } from "../../../../domain/dtos/LiveScoreDto.js";
 import { MatchResponseDTO } from "../../../../domain/dtos/MatchDTO.js";
 import { AddWicketPayload } from "../../../../domain/entities/Innings.js";
+import { Match } from "../../../../domain/entities/Match.js";
 import { InitInningsPayload, MatchEntity } from "../../../../domain/entities/MatchEntity.js";
 
 export type AddRunsPayload = {
@@ -19,6 +20,7 @@ export interface EndMatchUseCaseInput {
         resultType: 'WIN' | 'TIE' | 'DRAW';
         winType?: 'runs' | 'wickets';
         margin?: string;
+        notes?: string;
     } | null;
 }
 
@@ -99,5 +101,5 @@ export interface IGetAllMatches {
 }
 
 export interface IGetUmpireAllMatches {
-    execute(userId: string, search: string, limit: number, page: number): Promise<{ matches: MatchEntity[], totalPages: number }>;
+    execute(userId: string): Promise<Match[] | null>;
 }

@@ -1,19 +1,19 @@
-
 import mongoose, { ClientSession, FilterQuery } from "mongoose";
 import { TransactionCheckDTO, TransactionCreateDTO } from "../../../domain/dtos/Transaction.dto.js";
-import { ITransactionRepository, TransactionStats } from "../../../app/repositories/interfaces/shared/ITransactionRepository.js";
+import { ITransactionRepository, PopulatedTransactionDoc, TransactionReadModel, TransactionStats } from "../../../app/repositories/interfaces/shared/ITransactionRepository.js";
 import { TransactionModel } from "../../databases/mongo/models/TransactionModel.js";
 import { Transaction } from "../../../domain/entities/Transaction.js";
 import { AdminFilters } from "../../../domain/dtos/Team.dto.js";
 import { RevenueChartPoint } from "../../../domain/dtos/Analytics.dto.js";
+import { BaseRepository } from "./BaseRepository.js";
+import { TransactionMapper } from "../../utils/mappers/TransactionMapper.js";
 
 
-export class TransactionRepository implements ITransactionRepository {
-    async create(data: TransactionCreateDTO, ctx?: unknown): Promise<void> {
-
+export class TransactionRepository extends BaseRepository<TransactionCreateDTO, Transaction> implements ITransactionRepository {
+    async create(data: TransactionCreateDTO, ctx?: unknown): Promise<Transaction> {
         const session = ctx as ClientSession | undefined;
 
-        await TransactionModel.create(
+        const [doc] = await TransactionModel.create(
             [
                 {
                     type: data.type,
@@ -28,6 +28,8 @@ export class TransactionRepository implements ITransactionRepository {
             ],
             { session }
         );
+
+        return doc.toObject() as unknown as Transaction;
     }
 
     async exists(data: TransactionCheckDTO, ctx?: unknown): Promise<boolean> {
@@ -92,16 +94,12 @@ export class TransactionRepository implements ITransactionRepository {
         return doc.toObject() as unknown as Transaction;
     }
 
-    async findAll(filters: AdminFilters): Promise<{ data: Transaction[]; total: number; }> {
+    async findAllTransactions(filters: AdminFilters): Promise<{ data: TransactionReadModel[]; total: number }> {
         const { page, limit, search, filter } = filters;
         const skip = (page - 1) * limit;
-
         const query: FilterQuery<typeof TransactionModel> = {};
 
-        if (filter && filter !== 'All') {
-            query.type = filter;
-        }
-
+        if (filter && filter !== 'All') query.type = filter;
         if (search) {
             query.$or = [
                 { paymentRefId: { $regex: search, $options: 'i' } },
@@ -116,25 +114,20 @@ export class TransactionRepository implements ITransactionRepository {
                 .limit(limit)
                 .populate({
                     path: 'fromWalletId',
-                    populate: {
-                        path: 'ownerId',
-                        select: 'firstName lastName name title email'
-                    }
+                    populate: { path: 'ownerId', select: 'firstName lastName email' }
                 })
                 .populate({
                     path: 'toWalletId',
-                    populate: {
-                        path: 'ownerId',
-                        select: 'firstName lastName name title email'
-                    }
+                    populate: { path: 'ownerId', select: 'firstName lastName email' }
                 })
                 .populate('metadata.tournamentId', 'title')
+                .lean<PopulatedTransactionDoc[]>()
                 .exec(),
             TransactionModel.countDocuments(query)
         ]);
 
         return {
-            data: docs as unknown as Transaction[],
+            data: TransactionMapper.toReadModelArray(docs),
             total
         };
     }
@@ -187,17 +180,17 @@ export class TransactionRepository implements ITransactionRepository {
                     year: { $year: "$createdAt" },
                     amount: 1,
                     // Determine direction
-                    isIncome: { 
+                    isIncome: {
                         $and: [
-                            { $eq: ["$toWalletId", objectId] }, 
+                            { $eq: ["$toWalletId", objectId] },
                             { $in: ["$type", ["PRIZE", "REFUND"]] }
-                        ] 
+                        ]
                     },
-                    isExpense: { 
+                    isExpense: {
                         $and: [
                             { $eq: ["$fromWalletId", objectId] },
                             { $in: ["$type", ["ENTRY_FEE", "WITHDRAWAL", "SUBSCRIPTION"]] }
-                        ] 
+                        ]
                     }
                 }
             },
@@ -210,5 +203,26 @@ export class TransactionRepository implements ITransactionRepository {
             },
             { $sort: { "_id.year": 1, "_id.month": 1 } }
         ]);
+    }
+
+    async findByPaymentRef(refId: string): Promise<Transaction | null> {
+        const doc = await TransactionModel.findOne({ paymentRefId: refId }).exec();
+
+        if (!doc) return null;
+
+        return doc.toObject() as unknown as Transaction;
+    }
+
+    async markAsSuccess(transactionId: string, finalPaymentId: string): Promise<void> {
+        await TransactionModel.findByIdAndUpdate(
+            transactionId,
+            {
+                $set: {
+                    status: 'SUCCESS',
+                    paymentId: finalPaymentId
+                }
+            },
+            { new: true }
+        ).exec();
     }
 }

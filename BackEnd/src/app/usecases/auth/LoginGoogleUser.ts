@@ -40,6 +40,16 @@ export class LoginGoogleUser implements ILoginGoogleUser {
         const payloadTemp: JwtTempPayload = { email, name, picture };
         const tempToken = await this._jwtService.generateTempToken(payloadTemp);
 
-        return { isNewUser: true, tempToken, authProvider: "google" };
+        return { 
+            isNewUser: true, 
+            tempToken, 
+            authProvider: "google",
+            user: {
+                email,
+                firstName: name?.split(" ")[0] || "",
+                lastName: name?.split(" ").slice(1).join(" ") || "",
+                profileImage: picture || null
+            }
+        };
     }
 }

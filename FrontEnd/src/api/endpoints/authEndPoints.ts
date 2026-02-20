@@ -15,6 +15,7 @@ export const authEndpoints = {
 
     loginGoogle: async (code: string): Promise<LoginSocialResult> => {
         const { data } = await axiosClient.post(AUTH_ROUTES.LOGIN_GOOGLE, { code: code });
+        console.log('hsdjh', data.data)
         return data.data;
     },
 

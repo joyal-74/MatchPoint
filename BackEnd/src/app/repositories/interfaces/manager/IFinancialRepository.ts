@@ -26,6 +26,12 @@ export interface FinancialReport {
     tournaments: DomainTournamentFinancials[];
 }
 
+export interface WalletRepot {
+    balance: number;
+    transactions: DomainTransaction[];
+}
+
 export interface IFinancialRepository {
     getManagerFinancialReport(managerId: string): Promise<FinancialReport>;
+    getWalletReport(userId: string): Promise<WalletRepot>;
 }

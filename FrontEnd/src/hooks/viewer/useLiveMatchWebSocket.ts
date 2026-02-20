@@ -34,7 +34,7 @@ export const useLiveMatchViewer = (matchId: string | undefined) => {
     // WebSocket Handlers
     const handleMatchState = useCallback((data: any) => {
         const matchUpdate = data.liveScore ?? data;
-        const { timestamp, updateType, ...cleanUpdate } = matchUpdate;
+        const { updateType, ...cleanUpdate } = matchUpdate;
 
         dispatch(updateLiveScore({ liveScore: cleanUpdate }));
 

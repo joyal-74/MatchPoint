@@ -10,6 +10,7 @@ export interface Match {
     winner: string | null;
     venue?: string;
     date?: Date;
+    umpire: string;
     stats: Record<string, unknown>;
 }
 
@@ -33,7 +34,7 @@ function assignMatchDates<T extends Match>(matches: T[], startDate: string | Dat
 }
 
 
-export function generateKnockoutFixtures(teams: RegisteredTeam[], location: string, startDate: string | Date, matchesPerDay: number): Match[] {
+export function generateKnockoutFixtures(teams: RegisteredTeam[], umpire: string, location: string, startDate: string | Date, matchesPerDay: number): Match[] {
     const shuffled = shuffleTeams([...teams]);
     const matches: Match[] = [];
     let matchNumber = 1;
@@ -52,6 +53,7 @@ export function generateKnockoutFixtures(teams: RegisteredTeam[], location: stri
                 venue: location,
                 winner: teamA.teamId,
                 stats: {},
+                umpire: umpire
             });
         } else {
             matches.push({
@@ -63,6 +65,8 @@ export function generateKnockoutFixtures(teams: RegisteredTeam[], location: stri
                 status: "upcoming",
                 winner: null,
                 stats: {},
+                umpire: umpire
+
             });
         }
     }
@@ -71,7 +75,7 @@ export function generateKnockoutFixtures(teams: RegisteredTeam[], location: stri
 }
 
 
-export function generateLeagueFixtures(teams: RegisteredTeam[], location: string, startDate: string | Date, matchesPerDay: number): Match[] {
+export function generateLeagueFixtures(teams: RegisteredTeam[], umpire: string, location: string, startDate: string | Date, matchesPerDay: number): Match[] {
     const matches: Match[] = [];
     let matchNumber = 1;
 
@@ -86,6 +90,7 @@ export function generateLeagueFixtures(teams: RegisteredTeam[], location: string
                 status: "upcoming",
                 winner: null,
                 stats: {},
+                umpire: umpire
             });
         }
     }
@@ -94,7 +99,7 @@ export function generateLeagueFixtures(teams: RegisteredTeam[], location: string
 }
 
 
-export function generateFriendlyFixture(teams: RegisteredTeam[], location: string, startDate: string | Date,): Match[] {
+export function generateFriendlyFixture(teams: RegisteredTeam[], umpire: string, location: string, startDate: string | Date,): Match[] {
     const shuffled = shuffleTeams([...teams]);
     return [
         {
@@ -107,6 +112,7 @@ export function generateFriendlyFixture(teams: RegisteredTeam[], location: strin
             status: "upcoming",
             winner: null,
             stats: {},
+            umpire: umpire
         },
     ];
 }

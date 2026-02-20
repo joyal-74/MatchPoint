@@ -7,6 +7,7 @@ import Pagination from '../../components/player/Teams/Pagination';
 import TeamModal from '../../components/player/Teams/TeamModal';
 import LoadingOverlay from '../../components/shared/LoadingOverlay';
 import { useTeamActions, useTeamData, useTeamFilters } from '../../hooks/player/useTeamFinderHooks';
+import { useDebounce } from '../../hooks/useDebounce';
 
 const TeamFinderPage = () => {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -15,9 +16,11 @@ const TeamFinderPage = () => {
         searchQuery, setSearchQuery, filters, updateFilter, clearFilters, hasActiveFilters 
     } = useTeamFilters();
 
+    const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
     const { 
         currentTeams, allTeams, loading, user, pagination 
-    } = useTeamData(filters, searchQuery);
+    } = useTeamData(filters, debouncedSearchQuery);
 
     const { 
         selectedTeam, isModalOpen, openTeamDetails, closeModal, handleJoinTeam 

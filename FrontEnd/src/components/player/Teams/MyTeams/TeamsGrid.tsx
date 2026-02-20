@@ -9,9 +9,10 @@ import { getApiErrorMessage } from "../../../../utils/apiError";
 
 interface TeamsGridProps {
     teams: Team[];
+    status: 'approved' | 'pending';
 }
 
-export const TeamsGrid: React.FC<TeamsGridProps> = ({ teams }) => {
+export const TeamsGrid: React.FC<TeamsGridProps> = ({ teams, status }) => {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [selectedTeam, setSelectedTeam] = useState<{ id: string, name: string } | null>(null);
     const userId = useAppSelector(state => state.auth.user?._id)
@@ -34,7 +35,7 @@ export const TeamsGrid: React.FC<TeamsGridProps> = ({ teams }) => {
                 setConfirmOpen(false);
                 setSelectedTeam(null);
 
-            } catch (error : unknown) {
+            } catch (error: unknown) {
                 toast.error(getApiErrorMessage(error) || "Failed to leave the team");
             }
         }
@@ -56,6 +57,7 @@ export const TeamsGrid: React.FC<TeamsGridProps> = ({ teams }) => {
                         maxPlayers={team.maxPlayers.toString()}
                         created={team.createdAt}
                         onLeaveRequest={() => handleLeaveRequest(team._id, team.name)}
+                        status={status}
                     />
                 ))}
             </div>

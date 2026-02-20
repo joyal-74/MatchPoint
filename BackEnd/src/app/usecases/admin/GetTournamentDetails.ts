@@ -17,9 +17,11 @@ export class AdminGetTournamentDetails implements IGetTournamentDetails {
         const tournament = await this._tourRepo.findById(tournamentId);
 
         if (!tournament) {
-            this._logger.warn(`Team not found for ID: ${tournamentId}`);
-            throw new NotFoundError("Manager not found");
+            this._logger.warn(`AdminGetTournamentDetails => Tournament not found with ID: ${tournamentId}`);
+            throw new NotFoundError("Tournament not found");
         }
+
+        this._logger.info(`AdminGetTournamentDetails => Successfully retrieved: "${tournament.title}" (ID: ${tournamentId})`);
 
         return tournament;
     }

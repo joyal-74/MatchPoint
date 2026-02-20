@@ -61,9 +61,12 @@ const FormField: React.FC<FormFieldProps> = ({
                 {as === "input" ? (
                     <input
                         id={id}
+                        name={id}
+                        value={props.value}
                         disabled={disabled}
                         className={finalInputClasses}
                         aria-invalid={!!error}
+                        onChange={props.onChange}
                         {...props}
                     />
                 ) : as === "select" ? (

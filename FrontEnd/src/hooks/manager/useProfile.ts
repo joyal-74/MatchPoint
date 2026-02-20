@@ -1,18 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import type { RootState } from "../../app/store";
 import type { UserProfile } from "../../types/Profile";
 import { fetchManagerData, updateManagerData } from "../../features/manager";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
+import { validateProfile } from "../../validators/ProfileValidator";
+
 
 export const useProfile = () => {
     const dispatch = useAppDispatch();
-    const { manager, loading, error } = useAppSelector((state: RootState) => state.manager);
+    const { manager, loading } = useAppSelector((state: RootState) => state.manager);
     const managerId = useAppSelector((state: RootState) => state.auth.user?._id);
 
     const [isEditing, setIsEditing] = useState(false);
     const [profileImage, setProfileImage] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const [formData, setFormData] = useState<UserProfile | null>(null);
 
     // Fetch manager data
@@ -42,12 +45,29 @@ export const useProfile = () => {
         reader.readAsDataURL(file);
     };
 
-    const handleInputChange = (field: keyof UserProfile, value: string) => {
+    const handleInputChange = useCallback((field: keyof UserProfile, value: string) => {
         setFormData((prev) => (prev ? { ...prev, [field]: value } : prev));
-    };
+
+        if (errors[field]) {
+            setErrors(prev => {
+                const newErrs = { ...prev };
+                delete newErrs[field];
+                return newErrs;
+            });
+        }
+    }, [errors]);
 
     const handleSave = async () => {
         if (!formData || !managerId) return;
+
+        const validationErrors = validateProfile(formData, "user");
+
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            toast.error("Please fix the errors in the form.");
+            return;
+        }
+
         const data = new FormData();
 
         for (const [key, value] of Object.entries(formData)) {
@@ -63,6 +83,7 @@ export const useProfile = () => {
             toast.success("Profile updated successfully!");
             setIsEditing(false);
             setSelectedFile(null);
+            setErrors({});
         } catch (err) {
             console.error("Profile update failed:", err);
             toast.error("Failed to update profile. Please try again.");
@@ -88,7 +109,7 @@ export const useProfile = () => {
         profileImage,
         formData,
         loading,
-        error,
+        errors,
         handleImageUpload,
         handleInputChange,
         handleSave,

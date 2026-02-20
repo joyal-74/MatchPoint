@@ -15,6 +15,16 @@ export default defineConfig([
             reactHooks.configs['recommended-latest'],
             reactRefresh.configs.vite,
         ],
+        rules: {
+            ...reactHooks.configs.recommended.rules,
+            'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+            
+            '@typescript-eslint/no-unused-vars': ['error', { "argsIgnorePattern": "^_" }],
+            
+            '@typescript-eslint/no-explicit-any': 'off',
+            
+            'react-hooks/exhaustive-deps': 'warn',
+        },
         languageOptions: {
             ecmaVersion: 2020,
             globals: globals.browser,

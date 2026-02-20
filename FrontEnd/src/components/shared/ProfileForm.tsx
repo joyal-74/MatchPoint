@@ -6,10 +6,11 @@ interface ProfileFormProps {
     formData: UserProfile;
     isEditing: boolean;
     onChange: (field: keyof UserProfile, value: string) => void;
+    errors: Record<string, string>;
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ formData, isEditing, onChange }) => {
-    
+const ProfileForm: React.FC<ProfileFormProps> = ({ formData, isEditing, onChange, errors }) => {
+
     const fields = [
         { label: "First Name", field: "firstName", placeholder: "John", width: "half" },
         { label: "Last Name", field: "lastName", placeholder: "Doe", width: "half" },
@@ -21,7 +22,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ formData, isEditing, onChange
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
             {fields.map(({ label, field, type, options, textarea, width, placeholder }) => (
                 <div key={field} className={width === "full" ? "md:col-span-2" : "md:col-span-1"}>
                     <EditableField
@@ -34,6 +35,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ formData, isEditing, onChange
                         textarea={textarea}
                         fullWidth={true}
                         onChange={(val) => onChange(field as keyof UserProfile, val)}
+                        error={errors[field]}
                     />
                 </div>
             ))}

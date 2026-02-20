@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import toast from "react-hot-toast";
-import { signupUser, loginUserGoogle, loginUserFacebook } from "../features/auth/authThunks";
+import { signupUser, loginUserGoogle, loginUserFacebook, loginUserSocialComplete } from "../features/auth/authThunks";
 import { SignupRoles, type Gender, type SignupRole } from "../types/UserRoles";
 import { validateSignup } from "../validators/SignpValidators";
+import type { CompleteUserData } from "../types/api/UserApi";
+import { clearSignupDraft } from "../features/auth";
 
 export interface SignUpFormExtended {
     firstName: string;
@@ -19,7 +21,9 @@ export interface SignUpFormExtended {
     bowlingStyle?: string;
     playingPosition?: string;
     jerseyNumber?: string;
-    profileImage?: File | null;
+    profileImage?: File | string | null;
+    isSocial?: boolean;
+    tempToken?: string | null;
 }
 
 type FormErrors = Partial<Record<keyof SignUpFormExtended, string>> & { global?: string };
@@ -28,26 +32,31 @@ export const useSignup = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
+    const draft = useAppSelector((s) => s.auth.signupDraft);
+
     const [formData, setFormData] = useState<SignUpFormExtended>({
         firstName: "",
         lastName: "",
         email: "",
         phone: "",
-        gender: "male" as Gender,
+        gender: "" as Gender,
         password: "",
         confirmPassword: "",
         role: SignupRoles.Player,
-        battingStyle: "Right Hand",
+        battingStyle: "",
         bowlingStyle: "",
         playingPosition: "",
         jerseyNumber: "",
-        profileImage: null
+        profileImage: null,
+        isSocial: false,
+        tempToken: null,
+        ...draft
     });
 
     const [errors, setErrors] = useState<FormErrors>({});
+    const [preview, setPreview] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    // Dynamic validation as user types
     const handleFieldChange = <K extends keyof SignUpFormExtended>(field: K, value: SignUpFormExtended[K]) => {
         const updatedData = { ...formData, [field]: value };
         setFormData(updatedData);
@@ -61,44 +70,52 @@ export const useSignup = () => {
     const isStepValid = (step: number, hasPreview: boolean): boolean => {
         const v = validateSignup(formData);
         if (step === 1) {
-            return !!(formData.firstName && formData.lastName && hasPreview && !v.firstName && !v.lastName && !v.profileImage);
+            // Step 1 is valid if names exist and (either a preview exists OR it's social)
+            return !!(formData.firstName && formData.lastName && (hasPreview || formData.isSocial) && !v.firstName && !v.lastName);
         }
         if (step === 2) {
-            return !!(
-                formData.battingStyle &&
-                formData.bowlingStyle &&
-                formData.playingPosition &&
-                formData.jerseyNumber &&
-                !v.battingStyle &&
-                !v.bowlingStyle &&
-                !v.playingPosition &&
-                !v.jerseyNumber
-            );
+            return !!(formData.battingStyle && formData.bowlingStyle && formData.playingPosition && formData.jerseyNumber && !v.battingStyle && !v.bowlingStyle && !v.playingPosition && !v.jerseyNumber);
         }
         if (step === 3) {
-            return !v.email && !v.password && !!formData.confirmPassword && !v.confirmPassword;
+            if (formData.isSocial) return !!(formData.phone && formData.gender && !v.phone && !v.gender);
+            return !!(!v.email && !v.password && formData.confirmPassword && !v.confirmPassword);
         }
         return true;
     };
 
-    const handleSignupSubmit = async (e?: React.FormEvent) => {
-        if (e) e.preventDefault();
+    const handleSignupSubmit = async () => {
         setErrors({});
-
         setLoading(true);
         try {
-            const data = new FormData();
+            if (formData.isSocial) {
+                const socialData: CompleteUserData = {
+                    tempToken: formData.tempToken!,
+                    role: formData.role,
+                    gender: formData.gender,
+                    phone: formData.phone,
+                    username: `${formData.firstName.toLowerCase()}${formData.lastName.toLowerCase()}`,
+                    authProvider: "google",
+                    sport: "Cricket",
+                };
 
-            Object.entries(formData).forEach(([key, value]) => {
-                if (value !== null && value !== undefined) {
-                    data.append(key, value instanceof File ? value : String(value));
-                }
-            });
+                await dispatch(loginUserSocialComplete(socialData)).unwrap();
+                dispatch(clearSignupDraft());
+                
+                toast.success("Welcome to MatchPoint!");
+                navigate("/login");
 
-            const res = await dispatch(signupUser(data)).unwrap();
+            } else {
+                const data = new FormData();
+                Object.entries(formData).forEach(([key, value]) => {
+                    if (value !== null && value !== undefined) {
+                        data.append(key, value instanceof File ? value : String(value));
+                    }
+                });
 
-            toast.success("Account created!");
-            navigate("/otp-verify", { state: { email: formData.email, expiresAt: res.expiresAt } });
+                const res = await dispatch(signupUser(data)).unwrap();
+                toast.success("Account created!");
+                navigate("/otp-verify", { state: { email: formData.email, expiresAt: res.expiresAt } });
+            }
         } catch (err) {
             toast.error(typeof err === "string" ? err : "Signup failed");
         } finally {
@@ -109,20 +126,17 @@ export const useSignup = () => {
     const handleGoogleSignUp = async (token: string) => {
         setLoading(true);
         try {
-           const result = await dispatch(loginUserGoogle(token)).unwrap();
+            const result = await dispatch(loginUserGoogle(token)).unwrap();
 
             if (result.tempToken) {
-
-                toast.success("Almost there! Please select your role to finish signup.");
-                navigate('/complete-profile', {
-                    state: { tempToken: result.tempToken, provider: 'google' }
-                });
+                toast.success("Google verified! Complete your profile.");
             } else if (result.accessToken) {
                 toast.success("Welcome back!");
-                navigate('/');
+                navigate("/");
             }
         } catch (err) {
-            toast.error(typeof err === "string" ? err : "Google Auth failed");
+            console.error("Auth Error:", err);
+            toast.error("Google Auth failed");
         } finally {
             setLoading(false);
         }
@@ -132,33 +146,32 @@ export const useSignup = () => {
         setLoading(true);
         try {
             const result = await dispatch(loginUserFacebook(token)).unwrap();
-
             if (result.tempToken) {
+                setFormData(prev => ({
+                    ...prev,
+                    firstName: result.user?.firstName || "",
+                    lastName: result.user?.lastName || "",
+                    email: result.user?.email || "",
+                    profileImage: result.user?.profileImage || null,
+                    isSocial: true,
+                    tempToken: result.tempToken
+                }));
 
-                toast.success("Almost there! Please select your role to finish signup.");
-                navigate('/complete-profile', {
-                    state: { tempToken: result.tempToken, provider: 'facebook' }
-                });
+                if (result.user?.profileImage) {
+                    setPreview(result.user.profileImage);
+                }
+                toast.success("Facebook verified! Complete your profile.");
             } else if (result.accessToken) {
                 toast.success("Welcome back!");
                 navigate('/');
             }
         } catch (err) {
-            toast.error(typeof err === "string" ? err : "Facebook Auth failed");
+            console.error(err);
+            toast.error("Facebook Auth failed");
         } finally {
             setLoading(false);
         }
     };
 
-    return {
-        formData,
-        errors,
-        setErrors,
-        loading,
-        isStepValid,
-        handleFieldChange,
-        handleSignupSubmit,
-        handleGoogleSignUp,
-        handleFacebookSignUp
-    };
+    return { formData, preview, setPreview, errors, setErrors, loading, isStepValid, handleFieldChange, handleSignupSubmit, handleGoogleSignUp, handleFacebookSignUp };
 };

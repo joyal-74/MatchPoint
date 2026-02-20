@@ -12,6 +12,10 @@ export class PlanRepository implements IPlanRepository {
         return await PlanModel.find().sort({ createdAt: -1 });
     }
 
+    async findById(id: string): Promise<Plan | null> {
+        return await PlanModel.findById(id).exec();
+    }
+
     async findByTypeAndLevel(userType: string, level: string, billingCycle?: string): Promise<Plan | null> {
         const query = {
             userType,
@@ -27,7 +31,7 @@ export class PlanRepository implements IPlanRepository {
     }
 
     async delete(id: string): Promise<boolean> {
-        const res = await PlanModel.findByIdAndDelete(id);
+        const res = await PlanModel.findByIdAndUpdate(id, { isArchived: true });
         return !!res;
     }
 
@@ -35,7 +39,7 @@ export class PlanRepository implements IPlanRepository {
         return await PlanModel.find({ userType: role }).sort({ createdAt: -1 });
     }
 
-    async update(id: string, newPlan: Plan): Promise<Plan> {
+    async update(id: string, newPlan: Partial<Plan>): Promise<Plan> {
         const { _id, ...updateData } = newPlan as Plan;
         console.log(_id)
 

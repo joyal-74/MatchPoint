@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
+
 
 function loadRazorpayScript(): Promise<void> {
     return new Promise((resolve, reject) => {

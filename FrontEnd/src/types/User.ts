@@ -20,6 +20,7 @@ export interface LoginUser {
     wallet: number;
     isActive: boolean;
     createdAt: Date;
+    tempToken?: string;
 
 }
 

@@ -5,8 +5,9 @@ interface ProfileFormProps {
     formData: UserProfile;
     isEditing: boolean;
     onChange: (field: keyof UserProfile, value: string) => void;
+    errors : Record<string, string>;
 }
-const ProfileForm: React.FC<ProfileFormProps> = ({ formData, isEditing, onChange }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ formData, isEditing, onChange, errors }) => {
 
     return (
         <div className="w-full flex mx-auto gap-3">
@@ -31,6 +32,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ formData, isEditing, onChange
                         textarea={textarea}
                         fullWidth={fullWidth}
                         onChange={(val) => onChange(field as keyof UserProfile, val)}
+                        error={errors[field]}
                     />
                 ))}
             </div>

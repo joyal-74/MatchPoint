@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import ProfileHeader from "../../components/shared/ProfileHeader";
 import ProfileForm from "../../components/shared/ProfileForm";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
-import ProfileError from "../../components/manager/profile/ProfileError"; 
 import UmpireProfileLayout from "../layout/UmpireLayout";
 import { useUmpireProfile } from "../../hooks/umpire/useUmpireProfile";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
@@ -17,8 +16,8 @@ const ProfilePage: React.FC = () => {
 
     const {
         isEditing, setIsEditing, profileImage, formData,
-        loading, error, handleImageUpload, handleInputChange,
-        handleSave, handleCancel, handleRetry
+        loading, errors, handleImageUpload, handleInputChange,
+        handleSave, handleCancel
     } = useUmpireProfile();
 
     const handleLogout = async () => {
@@ -31,7 +30,6 @@ const ProfilePage: React.FC = () => {
     };
 
     if (loading && !formData) return <UmpireProfileLayout><LoadingOverlay show={true} /></UmpireProfileLayout>;
-    if (error) return <ProfileError error={error} onAction={handleRetry} />;
     if (!formData) return null;
 
     return (
@@ -112,7 +110,7 @@ const ProfilePage: React.FC = () => {
                             {/* Form Body */}
                             <div className="p-5 sm:p-8">
                                 <div className="max-w-3xl mx-auto lg:mx-0 animate-in fade-in slide-in-from-bottom-2">
-                                    <ProfileForm isEditing={isEditing} formData={formData} onChange={handleInputChange} />
+                                    <ProfileForm errors={errors} isEditing={isEditing} formData={formData} onChange={handleInputChange} />
                                 </div>
                             </div>
 

@@ -51,7 +51,7 @@ export const useTeamChatLogic = ({ initialTeamId }: { initialTeamId?: string }) 
         if (teams.length === 0 && currentUserId !== "me") {
             dispatch(getMyAllTeams(currentUserId));
         }
-    }, [currentUserId, dispatch]);
+    }, [currentUserId, dispatch, teams.length]);
 
     // 2. Room Join Logic (Gatekept by Ref to stop loops)
     useEffect(() => {

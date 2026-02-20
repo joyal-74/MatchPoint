@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import ProfileHeader from "../../components/shared/ProfileHeader";
 import ProfileForm from "../../components/shared/ProfileForm";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
-import ProfileError from "../../components/viewer/profile/ProfileError";
 import ViewerProfileLayout from "../layout/ViewerProfileLayout";
 import { useProfile } from "../../hooks/viewer/useProfile";
 import { useAppDispatch } from "../../hooks/hooks";
@@ -21,12 +20,11 @@ const ProfilePage: React.FC = () => {
         profileImage,
         formData,
         loading,
-        error,
+        errors,
         handleImageUpload,
         handleInputChange,
         handleSave,
         handleCancel,
-        handleRetry
     } = useProfile();
 
     const handleLogout = async () => {
@@ -39,7 +37,6 @@ const ProfilePage: React.FC = () => {
     };
 
     if (loading && !formData) return <ViewerProfileLayout><LoadingOverlay show={true} /></ViewerProfileLayout>;
-    if (error) return <ProfileError error={error} onAction={handleRetry} />;
     if (!formData) return null;
 
     return (
@@ -62,7 +59,7 @@ const ProfilePage: React.FC = () => {
                         {/* Desktop Sidebar Actions */}
                         <div className="hidden lg:block bg-card border border-border rounded-2xl p-2 shadow-sm">
                             <button 
-                                onClick={() => navigate('/viewer/settings')} 
+                                onClick={() => navigate('/settings')} 
                                 className="flex items-center gap-3 w-full p-3 text-sm font-medium hover:bg-muted rounded-xl transition-all"
                             >
                                 <Settings size={18} /> Settings
@@ -120,13 +117,13 @@ const ProfilePage: React.FC = () => {
                             {/* Form Body */}
                             <div className="p-5 sm:p-8">
                                 <div className="max-w-3xl mx-auto lg:mx-0 animate-in fade-in slide-in-from-bottom-2">
-                                    <ProfileForm isEditing={isEditing} formData={formData} onChange={handleInputChange} />
+                                    <ProfileForm isEditing={isEditing} formData={formData} onChange={handleInputChange} errors={errors} />
                                 </div>
                             </div>
 
                             {/* Mobile-only Footer (Settings/Logout) */}
                             <div className="lg:hidden p-4 bg-muted/20 border-t border-border grid grid-cols-2 gap-3">
-                                <button onClick={() => navigate('/viewer/settings')} className="py-3 text-xs font-bold bg-card border border-border rounded-xl flex items-center justify-center gap-2">
+                                <button onClick={() => navigate('/settings')} className="py-3 text-xs font-bold bg-card border border-border rounded-xl flex items-center justify-center gap-2">
                                     <Settings size={14}/> Settings
                                 </button>
                                 <button onClick={handleLogout} className="py-3 text-xs font-bold text-destructive bg-destructive/10 rounded-xl flex items-center justify-center gap-2">

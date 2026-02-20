@@ -7,6 +7,7 @@ export interface Plan {
     userType: "Player" | "Manager" | "Viewer";
     level: PlanLevel;
     price: number;
+    isArchived : boolean;
     billingCycle?: BillingCycle;
     features: string[];
     createdAt?: Date;

@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { IBaseRepository } from "../../IBaseRepository.js";
 
 export interface CreateNotificationDTO {
     userId: Types.ObjectId | string;
@@ -19,16 +20,13 @@ export interface NotificationResponse {
     createdAt: Date;
 }
 
-export interface INotificationRepository {
-    create(data: CreateNotificationDTO): Promise<NotificationResponse>;
-
+export interface INotificationRepository extends IBaseRepository<CreateNotificationDTO, NotificationResponse> {
+    
     findByUser(userId: string, options?: { limit?: number; skip?: number; unreadOnly?: boolean; }): Promise<NotificationResponse[]>;
-
-    markAsRead(notificationId: string, userId: string): Promise<NotificationResponse | null>;
-
-    markAllAsRead(userId: string): Promise<void>;
-
     getUnreadCount(userId: string): Promise<number>;
 
-    markInviteAsRead(playerId: string, teamId: string, status : string): Promise<void>;
+    markAsRead(notificationId: string, userId: string): Promise<NotificationResponse | null>;
+    markAllAsRead(userId: string): Promise<void>;
+    
+    markInviteAsRead(playerId: string, teamId: string, status: string): Promise<void>;
 }

@@ -3,7 +3,6 @@ import { Edit2, Save, Loader2, LogOut, Settings, UserCog } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ProfileHeader from "../../components/shared/ProfileHeader";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
-import ProfileError from "../../components/manager/profile/ProfileError";
 import ManagerLayout from "../layout/ManagerLayout";
 import ProfileForm from "../../components/shared/ProfileForm";
 import { useProfile } from "../../hooks/manager/useProfile";
@@ -17,8 +16,8 @@ const ProfilePage: React.FC = () => {
 
     const {
         isEditing, setIsEditing, profileImage, formData,
-        loading, error, handleImageUpload, handleInputChange,
-        handleSave, handleCancel, handleRetry
+        loading, errors, handleImageUpload, handleInputChange,
+        handleSave, handleCancel
     } = useProfile();
 
     const handleLogout = async () => {
@@ -31,12 +30,10 @@ const ProfilePage: React.FC = () => {
     };
 
     if (loading && !formData) return <ManagerLayout><LoadingOverlay show={true} /></ManagerLayout>;
-    if (error) return <ProfileError error={error} onAction={handleRetry} />;
     if (!formData) return null;
 
     return (
         <ManagerLayout>
-            {/* Added pb-24 for mobile to clear the BottomNavbar, lg:pb-0 for desktop */}
             <div className="mx-auto w-full pb-24 lg:pb-0">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
                     
@@ -65,7 +62,7 @@ const ProfilePage: React.FC = () => {
                     <div className="lg:col-span-8">
                         <div className="bg-card border border-border rounded-2xl sm:rounded-3xl shadow-sm overflow-hidden flex flex-col">
                             
-                            <div className="px-5 pt-6 border-b border-border">
+                            <div className="px-5 pt-4 border-b border-border">
                                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                                     <div>
                                         <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
@@ -101,9 +98,9 @@ const ProfilePage: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="p-5 sm:p-8">
+                            <div className="p-2 sm:px-8 sm:py-6">
                                 <div className="max-w-3xl mx-auto lg:mx-0 animate-in fade-in slide-in-from-bottom-2">
-                                    <ProfileForm isEditing={isEditing} formData={formData} onChange={handleInputChange} />
+                                    <ProfileForm isEditing={isEditing} formData={formData} onChange={handleInputChange} errors={errors} />
                                 </div>
                             </div>
 

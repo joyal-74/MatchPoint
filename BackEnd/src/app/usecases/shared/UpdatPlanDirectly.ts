@@ -7,8 +7,6 @@ import { BillingCycle, PlanLevel } from "../../../domain/entities/Plan.js";
 import { ForbiddenError } from "../../../domain/errors/index.js";
 
 
-
-// Domain Helper for Ranking
 const getPlanRank = (level: string): number => {
     const ranks: Record<string, number> = { "Free": 0, "Basic": 1, "Super": 2, "Premium": 3 };
     return ranks[level] || 0;

@@ -3,7 +3,6 @@ import { Edit2, Save, Loader2, LogOut, Settings, User, Trophy } from "lucide-rea
 import { useNavigate } from "react-router-dom";
 import ProfileHeader from "../../components/shared/ProfileHeader";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
-import ProfileError from "../../components/player/profile/ProfileError";
 import PlayerLayout from "../layout/PlayerLayout";
 import ProfileForm from "../../components/player/profile/ProfileForm";
 import SportsProfileForm from "../../components/player/profile/SportsProfileForm";
@@ -17,8 +16,8 @@ const PlayerProfilePage: React.FC = () => {
     const user = useAppSelector(s => s.auth.user);
     const {
         isEditing, setIsEditing, profileImage, formData, playerProfile,
-        loading, error, handleImageUpload, handleInputChange,
-        handlePlayerProfileChange, handleSave, handleCancel, handleRetry
+        loading, errors, handleImageUpload, handleInputChange,
+        handlePlayerProfileChange, handleSave, handleCancel,
     } = useProfile();
 
     const [activeTab, setActiveTab] = useState<"user" | "sport">("user");
@@ -31,7 +30,6 @@ const PlayerProfilePage: React.FC = () => {
     };
 
     if (loading && !formData) return <PlayerLayout><LoadingOverlay show={true} /></PlayerLayout>;
-    if (error) return <ProfileError error={error} onAction={handleRetry} />;
     if (!formData || !playerProfile) return null;
 
     return (
@@ -117,7 +115,7 @@ const PlayerProfilePage: React.FC = () => {
                             <div className="p-5 sm:p-8">
                                 <div className="max-w-3xl mx-auto lg:mx-0 animate-in fade-in slide-in-from-bottom-2">
                                     {activeTab === "user" ? (
-                                        <ProfileForm isEditing={isEditing} formData={formData} onChange={handleInputChange} />
+                                        <ProfileForm isEditing={isEditing} formData={formData} onChange={handleInputChange} errors={errors} />
                                     ) : (
                                         <SportsProfileForm isEditing={isEditing} formData={playerProfile} onChange={handlePlayerProfileChange} />
                                     )}

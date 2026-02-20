@@ -18,7 +18,6 @@ const formatDate = (dateInput?: string | Date) => {
 };
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, profileData, profileImage, isEditing, onEditToggle, onImageUpload }) => {
-    console.log(user, 'profileData')
     return (
         <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden group">
 
@@ -49,7 +48,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, profileData, profil
                             />
                         ) : (
                             <div className="text-4xl font-bold text-muted-foreground">
-                                {(profileData?.firstName?.[0] || '') + (profileData?.lastName?.[0] || '') || '?'}
+                                {(user?.firstName?.[0] || '') + (user?.lastName?.[0] || '') || '?'}
                             </div>
                         )}
                     </div>
@@ -64,7 +63,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, profileData, profil
 
                 <div className="space-y-1">
                     <h1 className="text-2xl font-bold text-foreground">
-                        {profileData.firstName} {profileData.lastName}
+                        {user?.firstName ?? profileData.firstName} {user?.lastName ?? profileData.lastName}
                     </h1>
                     <p className="text-primary font-medium">@{profileData.username}</p>
                 </div>

@@ -79,13 +79,13 @@ export default function FixturesTab({ type }: FixtureTabProp) {
         try {
             switch (selectedTournament.format) {
                 case "knockout":
-                    matches = generateKnockoutFixtures(registeredTeams, confirmedSettings.location, confirmedSettings.startDate, confirmedSettings.matchesPerDay);
+                    matches = generateKnockoutFixtures(registeredTeams, selectedTournament.umpireId, confirmedSettings.location, confirmedSettings.startDate, confirmedSettings.matchesPerDay);
                     break;
                 case "league":
-                    matches = generateLeagueFixtures(registeredTeams, confirmedSettings.location, confirmedSettings.startDate, confirmedSettings.matchesPerDay);
+                    matches = generateLeagueFixtures(registeredTeams, selectedTournament.umpireId, confirmedSettings.location, confirmedSettings.startDate, confirmedSettings.matchesPerDay);
                     break;
                 case "friendly":
-                    matches = generateFriendlyFixture(registeredTeams, confirmedSettings.location, confirmedSettings.startDate);
+                    matches = generateFriendlyFixture(registeredTeams, selectedTournament.umpireId, confirmedSettings.location, confirmedSettings.startDate);
                     break;
                 default:
                     return toast.error("Unknown tournament format");
@@ -125,7 +125,7 @@ export default function FixturesTab({ type }: FixtureTabProp) {
     if (!fixtures?.matches?.length) {
         return (
             <div className="w-full flex flex-col items-center justify-center p-8 md:p-12 animate-in fade-in duration-500 bg-muted/10 border border-dashed border-border rounded-xl">
-                
+
                 {/* Icon Circle */}
                 <div className="bg-background p-4 rounded-full shadow-sm mb-4 ring-1 ring-border/50">
                     <Trophy className="w-8 h-8 text-muted-foreground" strokeWidth={1.5} />

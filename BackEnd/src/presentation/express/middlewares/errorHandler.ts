@@ -13,7 +13,7 @@ export class ErrorHandler {
         @inject(DI_TOKENS.Logger) private readonly logger: ILogger
     ) {}
 
-    public handle = (err: any, req: Request, res: Response, next: NextFunction) => {
+    public handle = (err: any, req: Request, res: Response, _next: NextFunction) => {
         this.logger.error(`${err.message}${err.stack ? `\nStack: ${err.stack}` : ""}`);
 
         if (err instanceof AppError) {

@@ -1,5 +1,5 @@
 import { type JSX } from "react";
-import { User, Trophy, CreditCard, Settings, } from "lucide-react";
+import { User, CreditCard, Settings, } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 interface MenuItem {
@@ -11,7 +11,6 @@ interface MenuItem {
 const Sidebar: React.FC = () => {
     const menuItems: MenuItem[] = [
         { name: "Profile", path: "/umpire/profile", icon: <User size={20} /> },
-        { name: "Tournaments", path: "/umpire/tournaments", icon: <Trophy size={20} /> },
         { name: "Subscription", path: "/umpire/subscription", icon: <CreditCard size={20} /> },
         { name: "Settings", path: "/umpire/settings", icon: <Settings size={20} /> },
     ];

@@ -1,12 +1,12 @@
 import { Socket } from "socket.io-client";
 import { createSocket, getSocket } from "./socket";
 
+type SocketCallback = (data?: any) => void;
+
 export class ViewerWebSocketService {
-    // Ideally private, but if you need direct access for WebRTC transports later,
-    // you might make this public. Keeping private for now and adding methods.
     private socket: Socket | null = null; 
     private matchId: string | null = null;
-    private listeners: Map<string, Function[]> = new Map();
+    private listeners: Map<string, SocketCallback[]> = new Map();
 
     constructor() {
         this.socket = getSocket() || createSocket();
@@ -79,12 +79,12 @@ export class ViewerWebSocketService {
 
     // --- Event Handling ---
 
-    on(event: string, callback: Function) {
+    on(event: string, callback: SocketCallback) {
         if (!this.listeners.has(event)) this.listeners.set(event, []);
         this.listeners.get(event)!.push(callback);
     }
 
-    off(event: string, callback: Function) {
+    off(event: string, callback: SocketCallback) {
         const list = this.listeners.get(event);
         if (!list) return;
         const i = list.indexOf(callback);
@@ -107,7 +107,6 @@ export class ViewerWebSocketService {
         return !!this.socket?.connected;
     }
     
-    // Helper to get socket if needed for advanced WebRTC handling externally
     getSocketInstance() {
         return this.socket;
     }

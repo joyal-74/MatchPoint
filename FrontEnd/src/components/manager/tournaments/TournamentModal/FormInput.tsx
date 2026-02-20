@@ -1,5 +1,5 @@
 import React, { useId, useMemo } from "react";
-import CustomSelect, { type Option } from "../../../ui/CustomSelect"; // Import Option from CustomSelect
+import CustomSelect, { type Option } from "../../../ui/CustomSelect";
 import { normalizeValue } from "../../../../utils/NormalizeDate";
 import { AlertCircle } from "lucide-react";
 
@@ -8,6 +8,7 @@ export interface FormInputProps {
     name: string;
     value: string | number | undefined;
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+    onSelectChange?: (name: string, value: string) => void;
     type?: "text" | "number" | "email" | "password" | "date" | "datetime-local" | "textarea" | "select";
     icon?: React.ReactNode;
     placeholder?: string;
@@ -15,38 +16,35 @@ export interface FormInputProps {
     min?: string | number;
     rows?: number;
     // UPDATED: Accepts simple strings OR objects
-    options?: string[] | Option[]; 
+    options?: string[] | Option[];
     error?: string;
     disabled?: boolean;
 }
 
 export default function FormInput({
-    label, icon, type = "text", name, value, onChange,
+    label, icon, type = "text", name, value, onChange, onSelectChange,
     placeholder, required = false, min, options, rows, error, disabled
 }: FormInputProps) {
 
     const id = useId();
 
-    // 1. Smart Normalization: Convert string[] to Option[] automatically
     const normalizedOptions: Option[] = useMemo(() => {
         if (!options) return [];
-        // Check if the first item is a string
         if (typeof options[0] === 'string') {
             return (options as string[]).map(opt => ({ label: opt, value: opt }));
         }
-        // Otherwise assume it's already Option[]
         return options as Option[];
     }, [options]);
 
-    // 2. Helper to find the selected option object
-    const getSelectedOption = () => {
-        if (!normalizedOptions || value === undefined || value === null) return null;
-        // String comparison to be safe
-        return normalizedOptions.find(opt => String(opt.value) === String(value)) || null;
-    };
+    const selectedOption = useMemo(() => {
+        if (!normalizedOptions || normalizedOptions.length === 0) return null;
 
-    // 3. Styles
-    const baseClasses = 
+        // Find the option where the value matches
+        // We use String() to avoid any issues with number vs string comparisons
+        return normalizedOptions.find(opt => String(opt.value) === String(value)) || null;
+    }, [normalizedOptions, value]);
+
+    const baseClasses =
         "w-full px-4 py-2.5 bg-background border rounded-lg text-foreground text-sm " +
         "placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 transition-all duration-200 " +
         "file:border-0 file:bg-transparent file:text-sm file:font-medium " +
@@ -61,8 +59,8 @@ export default function FormInput({
 
     return (
         <div className="space-y-1.5">
-            <label 
-                htmlFor={id} 
+            <label
+                htmlFor={id}
                 className="text-sm font-medium text-muted-foreground flex items-center gap-2"
             >
                 {icon && <span className="text-primary">{icon}</span>}
@@ -75,19 +73,15 @@ export default function FormInput({
                     id={id}
                     options={normalizedOptions}
                     name={name}
-                    value={getSelectedOption()} 
+                    value={selectedOption}
                     isDisabled={disabled}
-                    onChange={(selectedOption) => {
-                        const syntheticEvent = {
-                            target: {
-                                name: name,
-                                value: selectedOption?.value ?? ""
-                            }
-                        } as React.ChangeEvent<HTMLSelectElement>;
-                        onChange(syntheticEvent);
+                    onChange={(selected) => {
+                        console.log("RAW selected option:", selected); // 👈 ADD THIS
+                        console.log("Value:", (selected as any)?.value); // debug
+                        onSelectChange?.(name, String((selected as any)?.value ?? ""));
                     }}
                     placeholder={placeholder || `Select ${label.toLowerCase()}`}
-                    className={error ? "border-destructive" : ""} 
+                    className={error ? "border-destructive" : ""}
                 />
             ) : type === "textarea" ? (
                 <textarea

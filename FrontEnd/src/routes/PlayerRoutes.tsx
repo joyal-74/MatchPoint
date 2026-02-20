@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
 import RoleLayoutWrapper from "../pages/shared/RoleLayoutWrapper";
+import AllTimeLeaderboard from "../pages/shared/LeaderBoard/AllTimeLeaderboard";
+import NavbarWrapper from "../components/shared/NavbarWrapper";
 
 const MyStatisticsPage = lazy(() => import("../pages/player/MyStats/MyStatisticsPage"));
 const MyTournamentsPage = lazy(() => import("../pages/player/MyTournamentsPage"));
@@ -19,6 +21,8 @@ const LiveMatchesPage = lazy(() => import("../pages/player/LiveMatchPage"));
 const SettingsPage = lazy(() => import("../pages/shared/SettingsPage"));
 const SubscriptionPage = lazy(() => import("../pages/shared/SubscriptionsPage"));
 const NotificationsPage = lazy(() => import("../pages/player/NotificationsPage"));
+const WalletPage = lazy(() => import("../pages/shared/PaymentsPage"));
+const FinancialHistory = lazy(() => import("../pages/shared/FinancialHistory"));
 
 const withPlayerProtection = (component: JSX.Element) => (
     <ProtectedRoute allowedRoles={["player"]}>
@@ -39,6 +43,8 @@ const PlayerRoutes = () => {
             <Route path="live/:matchId/details" element={withPlayerProtection(<LiveMatchDetails />)} />
             <Route path="tournaments/:id" element={withPlayerProtection(<TournamentDetailsPage />)} />
             <Route path="teams" element={withPlayerProtection(<TeamFinderPage />)} />
+            <Route path="payments" element={withPlayerProtection(<WalletPage />)} />
+            <Route path="payments/history" element={withPlayerProtection(<FinancialHistory />)} />
             <Route path="myteams/:status" element={withPlayerProtection(<TeamsListPage />)} />
             <Route path="myteam/:teamId" element={withPlayerProtection(<ViewTeam />)} />
             <Route path="statistics" element={withPlayerProtection(<MyStatisticsPage />)} />
@@ -46,6 +52,7 @@ const PlayerRoutes = () => {
             <Route path="settings" element={<RoleLayoutWrapper><SettingsPage /></RoleLayoutWrapper>} />
             <Route path="subscription" element={<RoleLayoutWrapper><SubscriptionPage /></RoleLayoutWrapper>} />
             <Route path="notifications" element={<RoleLayoutWrapper><NotificationsPage /></RoleLayoutWrapper>} />
+            <Route path="leaderboard" element={<NavbarWrapper><AllTimeLeaderboard /></NavbarWrapper>} />
         </Routes>
     );
 };

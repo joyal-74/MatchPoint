@@ -2,7 +2,8 @@ import { type JSX } from "react";
 import {
     DollarSign,
     Settings,
-    User
+    User,
+    Wallet
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
@@ -16,12 +17,13 @@ const Sidebar: React.FC = () => {
 
     const menuItems: MenuItem[] = [
         { name: "Profile", path: "/profile", icon: <User size={20} /> },
+        { name: "Payments", path: "/payments", icon: <Wallet size={20} /> },
         { name: "Subscriptions", path: "/subscription", icon: <DollarSign size={20} /> },
         { name: "Settings", path: "/settings", icon: <Settings size={20} /> },
     ];
 
     return (
-        <aside className="fixed top-[60px] left-0 h-[calc(100vh-60px)] w-16 lg:w-64 bg-background border-r border-border text-foreground transition-colors duration-300 z-40 hidden md:flex flex-col">
+        <aside className="fixed top-[60px] left-0 h-[calc(100vh-60px)] w-16 lg:w-60 bg-background border-r border-border text-foreground transition-colors duration-300 z-40 hidden md:flex flex-col">
             <nav className="flex-1 mt-6 px-3 space-y-1">
                 {menuItems.map((item) => (
                     <NavLink

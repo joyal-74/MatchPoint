@@ -3,7 +3,7 @@ import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
 import { ManagerResponseDTO, ManagerUpdateDTO } from "../../../domain/dtos/Manager.dto.js";
 import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
 import { IFileStorage } from "../../providers/IFileStorage.js";
-import { validateManagerUpdate } from "../../../domain/validators/ManagerUpdateValidator.js";
+import { validateUserProfileUpdata } from "../../../domain/validators/UserProfileUpdateValidator.js";
 import { NotFoundError } from "../../../domain/errors/index.js";
 import { ManagerMapper } from "../../mappers/ManagerMapper.js";
 import { IUpdateManagerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
@@ -18,7 +18,7 @@ export class UpdateManagerProfile implements IUpdateManagerProfile {
     ) { }
 
     async execute(updateData: ManagerUpdateDTO, file?: File): Promise<ManagerResponseDTO> {
-        const validData = validateManagerUpdate(updateData, file);
+        const validData = validateUserProfileUpdata(updateData, file);
 
         if (file) {
             const fileKey = await this.fileStorage.upload(file);

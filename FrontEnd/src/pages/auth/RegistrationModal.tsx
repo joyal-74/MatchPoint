@@ -175,6 +175,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                             id="phone"
                             label="Phone"
                             type="tel"
+                            name="phone"
                             value={formData.phone}
                             onChange={handleChange}
                             placeholder="9876543210"

@@ -6,9 +6,9 @@ import { IUpdateUmpireProfile } from "../../repositories/interfaces/usecases/IUs
 import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
 import { IFileStorage } from "../../providers/IFileStorage.js";
 import { UmpireResponseDTO, UmpireUpdateDTO } from "../../../domain/dtos/Umpire.dto.js";
-import { validateUmpireUpdate } from "../../../domain/validators/UmpireProfileValidator.js";
 import { NotFoundError } from "../../../domain/errors/index.js";
 import { UserMapper } from "../../mappers/UserMapper.js";
+import { validateUserProfileUpdata } from "../../../domain/validators/UserProfileUpdateValidator.js";
 
 
 @injectable()
@@ -19,7 +19,7 @@ export class UpdateUmpireProfile implements IUpdateUmpireProfile {
     ) { }
 
     async execute(updateData: UmpireUpdateDTO, file?: File): Promise<UmpireResponseDTO> {
-        const validData = validateUmpireUpdate(updateData, file);
+        const validData = validateUserProfileUpdata(updateData, file);
 
         if (file) {
             const fileKey = await this.fileStorage.upload(file);

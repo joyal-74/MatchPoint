@@ -47,7 +47,8 @@ export class TournamentMapper {
             format: tournament.format,
             prizePool: tournament.prizePool,
             rules: tournament.rules,
-            banner : tournament.banner
+            banner : tournament.banner,
+            umpireId : tournament.umpire
         };
     }
 

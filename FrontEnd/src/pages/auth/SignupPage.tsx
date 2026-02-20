@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSignup, type SignUpFormExtended } from "../../hooks/useSignup";
 import { SignupRoles, UserRole, type Gender, type SignupRole } from "../../types/UserRoles";
@@ -13,18 +13,29 @@ import RolePicker from "./SignUp/RolePicker";
 import toast from "react-hot-toast";
 import { validateSignup } from "../../validators/SignpValidators";
 import { Link } from "react-router-dom";
+import { clearSignupDraft } from "../../features/auth";
+import { useAppDispatch } from "../../hooks/hooks";
 
 const SignupPage = () => {
-    const { formData, loading, handleFieldChange, handleSignupSubmit, handleGoogleSignUp, handleFacebookSignUp, isStepValid, errors, setErrors } = useSignup();
+    const { formData, preview,
+        setPreview, loading, handleFieldChange, handleSignupSubmit, handleGoogleSignUp,
+        handleFacebookSignUp, isStepValid, errors, setErrors }
+        = useSignup();
     const [step, setStep] = useState(1);
-    const [preview, setPreview] = useState<string | null>(null);
+    const dispatch = useAppDispatch();
+
     const canGoNext = isStepValid(step, !!preview);
+
+    useEffect(() => {
+        return () => {
+            dispatch(clearSignupDraft());
+        };
+    }, [dispatch]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             handleFieldChange("profileImage", file);
-
             const reader = new FileReader();
             reader.onloadend = () => setPreview(reader.result as string);
             reader.readAsDataURL(file);
@@ -33,23 +44,17 @@ const SignupPage = () => {
 
     const handleNext = () => {
         const allErrors = validateSignup(formData);
-
         const stepFields: Record<number, (keyof SignUpFormExtended)[]> = {
             1: ["firstName", "lastName", "profileImage"],
             2: ["battingStyle", "bowlingStyle", "playingPosition", "jerseyNumber"],
-            3: ["email", "phone", "password", "confirmPassword"]
+            3: ["email", "phone", "password", "confirmPassword", "gender"]
         };
 
         const currentStepFields = stepFields[step] || [];
-
         const visibleErrors = currentStepFields.reduce((acc, field) => {
             if (allErrors[field]) acc[field] = allErrors[field];
             return acc;
         }, {} as Partial<Record<keyof SignUpFormExtended, string>>);
-
-        if (step === 1 && !preview) {
-            visibleErrors.profileImage = "Profile photo required";
-        }
 
         if (Object.keys(visibleErrors).length > 0) {
             setErrors(visibleErrors);
@@ -58,7 +63,6 @@ const SignupPage = () => {
         }
 
         setErrors({});
-
         if (step === 1 && formData.role !== UserRole.Player) {
             setStep(3);
         } else {
@@ -136,7 +140,7 @@ const SignupPage = () => {
                 {/* --- FORM SECTION --- */}
                 <div className="flex-1 p-6 md:p-8 lg:p-10 bg-card flex flex-col overflow-y-auto lg:overflow-visible">
                     <form className="max-w-xl mx-auto w-full flex flex-col h-full" onSubmit={(e) => e.preventDefault()}>
-                        
+
                         {/* Scrollable Content Area */}
                         <div className="flex-1">
                             <AnimatePresence mode="wait">
@@ -146,12 +150,12 @@ const SignupPage = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
                                     transition={{ duration: 0.2 }}
-                                    className="space-y-4" // Reduced from space-y-8
+                                    className="space-y-4"
                                 >
                                     <StepHeader step={step} />
 
                                     {step === 1 && (
-                                        <div className="space-y-3"> {/* Tightened spacing */}
+                                        <div className="space-y-3">
                                             <AvatarUpload preview={preview} error={errors.profileImage} onImageChange={handleImageChange} />
                                             <RolePicker
                                                 selectedRole={formData.role}
@@ -166,32 +170,35 @@ const SignupPage = () => {
                                     )}
 
                                     {step === 2 && (
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3"> {/* Use grid for compactness */}
-                                            <FormSelect label="Batting Style" error={errors.battingStyle} options={[{ value: 'RHB', label: 'Right Hand' }, { value: 'LHB', label: 'Left Hand' }]} onChange={(v) => handleFieldChange("battingStyle", v)} />
-                                            <FormSelect label="Bowling Style" error={errors.bowlingStyle} options={[
-                                                { value: 'none', label: 'None' },
-                                                { value: 'RAF', label: 'R-arm Fast' },
-                                                { value: 'RAFM', label: 'R-arm Fast Med' },
-                                                { value: 'RAS', label: 'R-arm Off Spin' },
-                                                { value: 'RALB', label: 'R-arm Leg Spin' },
-                                                { value: 'LAO', label: 'L-arm Orthodox' },
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
+                                            <FormSelect value={formData.battingStyle} label="Batting Style" error={errors.battingStyle} options={[{ value: 'RHB', label: 'Right Hand' }, { value: 'LHB', label: 'Left Hand' }]} onChange={(v) => handleFieldChange("battingStyle", v)} />
+                                            <FormSelect value={formData.bowlingStyle} label="Bowling Style" error={errors.bowlingStyle} options={[
+                                                { value: 'None', label: 'None' },
+                                                { value: 'Right-arm Fast', label: 'Right-arm Fast' },
+                                                { value: 'Right-arm Fast Medium', label: 'Right-arm Fast Medium' },
+                                                { value: 'Right-arm Off Spin', label: 'Right-arm Off Spin' },
+                                                { value: 'Right-arm Leg Spin', label: 'Right-arm Leg Spin' },
+                                                { value: 'Left-arm Orthodox', label: 'Left-arm Orthodox' },
+                                                { value: 'Left-arm Fast', label: 'Left-arm Fast' }
                                             ]} onChange={(v) => handleFieldChange("bowlingStyle", v)} />
-                                            <FormSelect label="Position" error={errors.playingPosition} options={[{ value: 'bt', label: 'Batting' }, { value: 'bl', label: 'Bowling' }, { value: 'ar', label: 'All Rounder' }, { value: 'wk', label: 'Wicket Keeper' }]} onChange={(v) => handleFieldChange("playingPosition", v)} />
+                                            <FormSelect value={formData.playingPosition} label="Position" error={errors.playingPosition} options={[{ value: 'bt', label: 'Batting' }, { value: 'bl', label: 'Bowling' }, { value: 'ar', label: 'All Rounder' }, { value: 'wk', label: 'Wicket Keeper' }]} onChange={(v) => handleFieldChange("playingPosition", v)} />
                                             <FormInput icon={Hash} error={errors.jerseyNumber} label="Jersey #" type="number" value={formData.jerseyNumber} onChange={(v) => handleFieldChange("jerseyNumber", v)} />
                                         </div>
                                     )}
 
                                     {step === 3 && (
                                         <div className="space-y-3">
-                                            <FormInput icon={Mail} error={errors.email} label="Email" type="email" value={formData.email} onChange={(v) => handleFieldChange("email", v)} />
+                                            <FormInput icon={Mail} error={errors.email} label="Email" type="email" value={formData.email} placeholder="Enter your email" onChange={(v) => handleFieldChange("email", v)} />
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                                <FormInput icon={Phone} error={errors.phone} label="Phone" value={formData.phone} onChange={(v) => handleFieldChange("phone", v)} />
-                                                <FormSelect label="Gender" error={errors.gender} options={[{ value: 'm', label: 'Male' }, { value: 'f', label: 'Female' }]} onChange={(v) => handleFieldChange("gender", v as Gender)} />
+                                                <FormInput icon={Phone} error={errors.phone} label="Phone" placeholder="Enter your mobile number" value={formData.phone} onChange={(v) => handleFieldChange("phone", v)} />
+                                                <FormSelect label="Gender" value={formData.gender} error={errors.gender} options={[{ value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }]} onChange={(v) => handleFieldChange("gender", v as Gender)} />
                                             </div>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                                <FormInput icon={Lock} error={errors.password} label="Password" type="password" onChange={(v) => handleFieldChange("password", v)} />
-                                                <FormInput icon={Lock} error={errors.confirmPassword} label="Confirm" type="password" onChange={(v) => handleFieldChange("confirmPassword", v)} />
-                                            </div>
+                                            {!formData.isSocial && (
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                                    <FormInput icon={Lock} error={errors.password} placeholder="Set your password" label="Password" type="password" onChange={(v) => handleFieldChange("password", v)} />
+                                                    <FormInput icon={Lock} error={errors.confirmPassword} placeholder="Confirm your password" label="Confirm" type="password" onChange={(v) => handleFieldChange("confirmPassword", v)} />
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                 </motion.div>
@@ -231,9 +238,9 @@ const SignupPage = () => {
                                         </p>
                                     </>
                                 )}
-                                
-                                <Link 
-                                    to="/privacy" 
+
+                                <Link
+                                    to="/privacy"
                                     className="block text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50 hover:text-primary transition-colors"
                                 >
                                     Privacy Policy & Usage Terms
