@@ -16,7 +16,7 @@ export class PointsTableRepository implements IPointsTableRepository {
             _id: doc._id.toString(),
             tournamentId: doc.tournamentId.toString(),
             teamId: doc.teamId.toString(),
-            teamName: doc.teamName || doc.team,
+            teamName: doc.team,
         }));
     }
 
