@@ -2,7 +2,6 @@ export interface PointsRow {
     _id: string;
     tournamentId: string;
     teamId: string;
-    teamName: string;
     team : string;
     teamLogo?: string;
     groupName?: string;

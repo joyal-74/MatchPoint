@@ -115,24 +115,34 @@ export class RegistrationRepository implements IRegistrationRepository {
         return ids.map(id => id.toString());
     }
 
+    // Inside RegistrationRepository.ts
     async getPaidRegistrationsByTournament(tournamentId: string): Promise<Registration[]> {
         const docs = await RegistrationModel.find({
             tournamentId: tournamentId,
             paymentStatus: 'completed'
         }).populate('teamId', 'name').exec();
 
-        return docs.map(doc => new Registration(
-            doc._id.toString(), 
-            doc.tournamentId.toString(),
-            doc.type,
-            doc.teamId.toString(), 
-            doc.captainId.toString(),
-            doc.managerId.toString(),
-            doc.paymentStatus as PaymentStatus,
-            doc.paymentId || null,
-            doc._id.getTimestamp(),
-            doc.updatedAt
-        ));
+        return docs.map(doc => {
+            const populatedTeam = doc.teamId as any;
+            const actualId = populatedTeam?._id ? populatedTeam._id.toString() : doc.teamId.toString();
+
+            const reg = new Registration(
+                doc._id.toString(),
+                doc.tournamentId.toString(),
+                doc.type,
+                actualId,
+                doc.captainId.toString(),
+                doc.managerId.toString(),
+                doc.paymentStatus as PaymentStatus,
+                doc.paymentId || null,
+                doc._id.getTimestamp(),
+                doc.updatedAt
+            );
+
+            // Attach the name temporarily so the Use Case can see it
+            (reg as any).teamName = populatedTeam?.name || "Unknown Team"; 
+            return reg;
+        });
     }
 
     async getDailyRegistrations(tournamentIds: string[], days: number): Promise<TrafficPoint[]> {
