@@ -5,7 +5,6 @@ import { Mail, Lock, ArrowRight } from "lucide-react";
 import { useLogin } from "../../hooks/useLogin";
 import { FormInput } from "./SignUp/FormInput";
 import SocialAuth from "./SignUp/SocialAuth";
-import RegistrationModal from "./RegistrationModal";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
 
 const LoginPage: React.FC = () => {
@@ -17,12 +16,6 @@ const LoginPage: React.FC = () => {
         handleLoginSubmit,
         handleGoogleLogin,
         handleFacebookLogin,
-        showModal,
-        tempToken,
-        authProvider,
-        registrationLoading,
-        closeRegistrationModal,
-        handleFinalRegistration
     } = useLogin();
 
     return (
@@ -83,10 +76,10 @@ const LoginPage: React.FC = () => {
                             </div>
 
                             <div className="space-y-4">
-                                <FormInput label="Email Address" icon={Mail} type="email" placeholder="cr7@matchpoint.com" value={formData.email} error={errors.email} onChange={(v) => handleFieldChange("email", v)} />
+                                <FormInput label="Email Address" icon={Mail} type="email" placeholder="Enter your email address" value={formData.email} error={errors.email} onChange={(v) => handleFieldChange("email", v)} />
 
                                 <div className="space-y-1">
-                                    <FormInput label="Password" icon={Lock} type="password" placeholder="••••••••" value={formData.password} error={errors.password} onChange={(v) => handleFieldChange("password", v)} />
+                                    <FormInput label="Password" icon={Lock} type="password" placeholder="Enter your password" value={formData.password} error={errors.password} onChange={(v) => handleFieldChange("password", v)} />
                                     <div className="flex justify-end">
                                         <Link to="/forgot-password" className="text-xs font-semibold text-primary hover:underline" >
                                             Forgot Password?
@@ -121,18 +114,6 @@ const LoginPage: React.FC = () => {
                     </form>
                 </div>
             </div>
-
-            {/* Social Registration Modal */}
-            {tempToken && authProvider && (
-                <RegistrationModal
-                    isOpen={showModal}
-                    tempToken={tempToken}
-                    authProvider={authProvider}
-                    loading={registrationLoading}
-                    onClose={closeRegistrationModal}
-                    onSubmit={handleFinalRegistration}
-                />
-            )}
         </div>
     );
 };

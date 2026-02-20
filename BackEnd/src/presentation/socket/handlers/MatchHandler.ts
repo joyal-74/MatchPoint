@@ -404,7 +404,7 @@ export class MatchHandler {
             }
 
             if (type === "WICKET") {
-                const commentary = this.generateWicketCommentary(payloadRaw);
+                const commentary = await this.generateWicketCommentary(payloadRaw);
                 this.io.to(`commentary-match-${matchId}`).emit("commentary", {
                     matchId,
                     text: commentary,

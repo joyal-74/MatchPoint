@@ -4,16 +4,18 @@ import type { RootState } from "../../app/store";
 import type { UserProfile } from "../../types/Profile";
 import { toast } from "react-toastify";
 import { fetchPlayerData, updatePlayerData, updatePlayerProfileData } from "../../features/player/playerThunks";
+import { validateProfile } from "../../validators/ProfileValidator";
 
 export const useProfile = () => {
     const dispatch = useAppDispatch();
-    const { player, loading, error } = useAppSelector((state: RootState) => state.player);
+    const { player, loading } = useAppSelector((state: RootState) => state.player);
     const userId = useAppSelector((state: RootState) => state.auth.user?._id);
 
     const [isEditing, setIsEditing] = useState(false);
     const [profileImage, setProfileImage] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [formData, setFormData] = useState<UserProfile | null>(null);
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const [playerProfile, setPlayerProfile] = useState({
         sport: "",
         profile: {},
@@ -54,7 +56,15 @@ export const useProfile = () => {
 
     const handleInputChange = useCallback((field: keyof UserProfile, value: string) => {
         setFormData((prev) => (prev ? { ...prev, [field]: value } : prev));
-    }, []);
+
+        if (errors[field]) {
+            setErrors(prev => {
+                const newErrs = { ...prev };
+                delete newErrs[field];
+                return newErrs;
+            });
+        }
+    }, [errors]);
 
 
     const handlePlayerProfileChange = (field: string, value: string) => {
@@ -76,6 +86,15 @@ export const useProfile = () => {
 
     const handleSave = async (activeTab: "user" | "sport") => {
         if (!userId) return;
+
+        const dataToValidate = activeTab === "user" ? formData : playerProfile.profile;
+        const validationResults = validateProfile(dataToValidate, activeTab);
+
+        if (Object.keys(validationResults).length > 0) {
+            setErrors(validationResults);
+            toast.error("Please fix the errors in the form.");
+            return;
+        }
 
         try {
             if (activeTab === "user" && formData) {
@@ -128,7 +147,8 @@ export const useProfile = () => {
         formData,
         playerProfile,
         loading,
-        error,
+        errors,
+        setErrors,
         handleImageUpload,
         handleInputChange,
         handlePlayerProfileChange,

@@ -115,7 +115,7 @@ const ScoreboardDashboard: React.FC = () => {
             <main className="max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8 space-y-6">
 
                 {/* === HEADER === */}
-                <header className="relative overflow-hidden rounded-2xl bg-card border border-border shadow-sm group">
+                <header className="relative overflow-hidden rounded-2xl bg-card border border-border shadow-sm group mt-10">
                     <div className="absolute top-0 right-0 p-20 bg-primary/5 rounded-bl-full -mr-10 -mt-10 blur-3xl pointer-events-none" />
                     <div className="relative px-6 py-6 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
 

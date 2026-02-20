@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import ProfileHeader from "../shared/ProfileHeader";
 import ProfileForm from "../shared/ProfileForm";
 import ProfileActions from "../shared/ProfileActions";
@@ -22,6 +22,8 @@ const ProfilePage: React.FC = () => {
     });
 
     const [formData, setFormData] = useState<UserProfile>({ ...profileData });
+    const [errors, setErrors] = useState<Record<string, string>>({});
+
     const user = useAppSelector((state) => state.auth.user)
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,9 +35,17 @@ const ProfilePage: React.FC = () => {
         }
     };
 
-    const handleInputChange = (field: keyof UserProfile, value: string) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-    };
+    const handleInputChange = useCallback((field: keyof UserProfile, value: string) => {
+        setFormData((prev) => (prev ? { ...prev, [field]: value } : prev));
+
+        if (errors[field]) {
+            setErrors(prev => {
+                const newErrs = { ...prev };
+                delete newErrs[field];
+                return newErrs;
+            });
+        }
+    }, [errors]);
 
     const handleSave = () => {
         setProfileData({ ...profileData, ...formData });
@@ -60,7 +70,7 @@ const ProfilePage: React.FC = () => {
                 />
 
                 <div className="py-8">
-                    <ProfileForm formData={formData} isEditing={isEditing} onChange={handleInputChange} />
+                    <ProfileForm errors={errors} formData={formData} isEditing={isEditing} onChange={handleInputChange} />
                     {isEditing ? <ProfileActions onSave={handleSave} onCancel={handleCancel} /> : null}
 
                     {!isEditing && (

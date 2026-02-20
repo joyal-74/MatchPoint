@@ -26,6 +26,7 @@ import { ITournamentController } from "../../interfaces/ITournamentController.js
 import { TournamentMessages } from "../../../../domain/constants/TournamentMessages.js";
 import { ILogger } from "../../../../app/providers/ILogger.js";
 import { IGetPointsTableUseCase, IGetTourLeaderboard, IStartTournament } from "../../../../app/repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
+import { GetAvailableUmpires } from "../../../../app/usecases/manager/tournaments/GetAvailableUmpires.js";
 
 @injectable()
 export class TournamentController implements ITournamentController {
@@ -33,6 +34,7 @@ export class TournamentController implements ITournamentController {
         @inject(DI_TOKENS.GetMyTournamentsUsecase) private _getMyTournamentsUsecase: IGetMyTournaments,
         @inject(DI_TOKENS.GetExploreTournamentsUsecase) private _getExploreTournamentsUsecase: IGetExploreTournaments,
         @inject(DI_TOKENS.AddTournamentsUsecase) private _addTournamentsUsecase: IAddTournament,
+        @inject(DI_TOKENS.GetAvailableUmpires) private _getAvailableUmpires: GetAvailableUmpires,
         @inject(DI_TOKENS.EditTournamentsUsecase) private _editTournamentsUsecase: IEditTournament,
         @inject(DI_TOKENS.CancelTournamentsUsecase) private _cancelTournamentsUsecase: ICancelTournament,
         @inject(DI_TOKENS.TournamentsDetailsUsecase) private _tournamentsDetailsUsecase: IGetTournamentDetails,
@@ -268,6 +270,14 @@ export class TournamentController implements ITournamentController {
         const { tournamentId } = httpRequest.params;
 
         const result = await this._getPointsTableUseCase.execute(tournamentId);
+
+        return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.POINTS_TABLE_FETCHED, result));
+    };
+
+    getUmpires = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
+        const { page, limit } = httpRequest.params;
+
+        const result = await this._getAvailableUmpires.execute(page, limit);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TournamentMessages.POINTS_TABLE_FETCHED, result));
     };

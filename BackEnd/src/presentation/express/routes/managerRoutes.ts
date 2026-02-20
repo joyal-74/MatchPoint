@@ -8,7 +8,7 @@ import { MatchController } from "../../http/controllers/manager/MatchController.
 import { FinancialsController } from "../../http/controllers/manager/FinancialsController.js";
 import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
 import { expressFileUpdateHandler } from "../../adaptors/ExpressFileAdaptor.js";
-import { managerOnly } from "../middlewares/index.js";
+import { managerOnly, umpireAndManagerOnly } from "../middlewares/index.js";
 
 
 const router = Router();
@@ -58,14 +58,15 @@ router.get("/tournament/:tournamentId/matches", managerOnly, expressAdapter(tour
 router.get("/tournament/:tournamentId/points-table", managerOnly, expressAdapter(tournamentManagementController.getPointsTable));
 router.get("/tournament/:tournamentId/fixture", managerOnly, expressAdapter(tournamentManagementController.getTournamentFixtures));
 router.post("/tournament/:tournamentId/fixture", managerOnly, expressAdapter(tournamentManagementController.createTournamentFixtures));
+router.get("/tournament/umpires/available", managerOnly, expressAdapter(tournamentManagementController.getUmpires));
 
 router.get("/tournament/:tournamentId/leaderboard", managerOnly, expressAdapter(tournamentManagementController.getTournamentLeaderBoard));
 router.get("/tournament/:tournamentId/results", managerOnly, expressAdapter(tournamentManagementController.getTournamentMatchResults));
 
-router.get("/tournament/matches/:matchId/details", managerOnly, expressAdapter(matchController.getMatchDetails));
-router.get("/tournament/matches/:matchId/livescore", managerOnly, expressAdapter(matchController.getLiveScore));
-router.post("/tournament/matches/:matchId/save", managerOnly, expressAdapter(matchController.saveMatchData));
-router.post("/tournament/matches/start", managerOnly, expressAdapter(matchController.startMatchData));
+router.get("/tournament/matches/:matchId/details", umpireAndManagerOnly, expressAdapter(matchController.getMatchDetails));
+router.get("/tournament/matches/:matchId/livescore", umpireAndManagerOnly, expressAdapter(matchController.getLiveScore));
+router.post("/tournament/matches/:matchId/save", umpireAndManagerOnly, expressAdapter(matchController.saveMatchData));
+router.post("/tournament/matches/start", umpireAndManagerOnly, expressAdapter(matchController.startMatchData));
 
 router.get("/financials/:managerId", managerOnly, expressAdapter(financialsController.getReport));
 

@@ -69,6 +69,7 @@ export interface TournamentCard {
     minTeams: number;
     currTeams: number;
     entryFee: string;
+    umpireId: string;
     umpire: string;
     prizePool: number;
     playersPerTeam: number;

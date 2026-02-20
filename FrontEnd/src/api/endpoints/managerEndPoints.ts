@@ -191,6 +191,7 @@ export const managerEndpoints = {
 
     searchAvailableUmpires: async (): Promise<UmpireData[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.AVAILABLE_UMPIRES);
+        console.log(data.data)
         return data.data;
     },
 }

@@ -5,12 +5,14 @@ import { IMatchesRepository } from "../../repositories/interfaces/manager/IMatch
 import { ILogger } from "../../providers/ILogger.js";
 import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
 import { MatchEntity } from "../../../domain/entities/MatchEntity.js";
+import { IMatchStatsRepo } from "../../repositories/interfaces/manager/IMatchStatsRepo.js";
 
 
 @injectable()
 export class SaveMatchData implements ISaveMatchData {
     constructor(
         @inject(DI_TOKENS.MatchesRepository) private _matchRepo: IMatchesRepository,
+        @inject(DI_TOKENS.MatchStatsRepository) private _matchstatsRepo: IMatchStatsRepo,
         @inject(DI_TOKENS.Logger) private _logger: ILogger
     ) { }
 
@@ -20,6 +22,7 @@ export class SaveMatchData implements ISaveMatchData {
         if (!tossDecision) throw new NotFoundError("Toss decision is required");
 
         const result = await this._matchRepo.updateTossDetails(matchId, tossWinnerId, tossDecision);
+        await this._matchstatsRepo.updateStatus(matchId, 'ongoing');
 
         if(!result) throw new BadRequestError('Toss update faiiled')
 

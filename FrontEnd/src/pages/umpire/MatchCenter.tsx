@@ -15,7 +15,7 @@ const UmpireMatchDashboard = () => {
 
     useEffect(() => {
         if (userId) {
-            dispatch(fetchAllMatches({ limit: 50, page: 1, userId }));
+            dispatch(fetchAllMatches(userId));
         }
     }, [dispatch, userId]);
 
@@ -65,22 +65,22 @@ const UmpireMatchDashboard = () => {
                                     <div className="flex items-center gap-8">
                                         <div className="flex flex-col items-center gap-2">
                                             <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-xl font-black border-2 border-primary shadow-inner">
-                                                {ongoingMatch.innings1?.battingTeam?.name?.[0] || 'A'}
+                                                {(ongoingMatch.teamA as string)?.[0] || 'A'}
                                             </div>
-                                            <p className="text-xs font-bold uppercase">{ongoingMatch.innings1?.battingTeam?.name || 'Team A'}</p>
+                                            <p className="text-xs font-bold uppercase">{(ongoingMatch.teamA as string) || 'Team A'}</p>
                                         </div>
                                         <span className="text-3xl font-black italic text-muted/30 tracking-tighter">VS</span>
                                         <div className="flex flex-col items-center gap-2">
                                             <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-xl font-black border border-border">
-                                                {ongoingMatch.innings1?.bowlingTeam?.name?.[0] || 'B'}
+                                                {(ongoingMatch.teamB as string)?.[0] || 'B'}
                                             </div>
-                                            <p className="text-xs font-bold uppercase">{ongoingMatch.innings1?.bowlingTeam?.name || 'Team B'}</p>
+                                            <p className="text-xs font-bold uppercase">{(ongoingMatch.teamB as string) || 'Team B'}</p>
                                         </div>
                                     </div>
 
                                     <div className="space-y-1 pt-2">
                                         <h3 className="text-3xl font-black tracking-tighter">
-                                            {ongoingMatch.innings1?.runs}/{ongoingMatch.innings1?.wickets}
+                                            {ongoingMatch.innings1?.runs ?? 0}/{ongoingMatch.innings1?.wickets ?? 0}
                                             <span className="text-sm ml-2 text-muted-foreground">({Math.floor(ongoingMatch.innings1?.legalBalls ?? 0 / 6)}.{ongoingMatch.innings1?.legalBalls ?? 0 % 6} ov)</span>
                                         </h3>
                                         <p className="text-[11px] text-muted-foreground font-medium italic">Innings {ongoingMatch.currentInnings} in progress</p>
@@ -97,7 +97,7 @@ const UmpireMatchDashboard = () => {
                                         </div>
                                     </div>
                                     <button 
-                                    onClick={()=> navigate(`/umpire/matches/${ongoingMatch.matchId}/live-score`)}
+                                    onClick={()=> navigate(`/umpire/matches/${ongoingMatch._id}/live-score`)}
                                     className="w-full md:w-auto px-10 py-4 bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest rounded-full shadow-lg shadow-primary/20 hover:opacity-90 transition-all flex items-center justify-center gap-3">
                                         Resume Scoring <PlayCircle size={18} fill="currentColor" />
                                     </button>
@@ -146,18 +146,18 @@ const UmpireMatchDashboard = () => {
 
                                 <div className="flex items-center justify-center gap-4 mb-8">
                                     <span className="text-[12px] font-black uppercase tracking-tight text-center truncate w-20">
-                                        {m.innings1?.battingTeam?.name || 'T1'}
+                                        {(m.teamA as string) || 'T1'}
                                     </span>
                                     <span className="text-[10px] font-black text-muted/40 italic">VS</span>
                                     <span className="text-[12px] font-black uppercase tracking-tight text-center truncate w-20">
-                                        {m.innings1?.bowlingTeam?.name || 'T2'}
+                                        {(m.teamB as string)|| 'T2'}
                                     </span>
                                 </div>
 
                                 <div className="space-y-2 pt-4 border-t border-border">
                                     <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground">
                                         <Calendar size={12} className="text-primary" />
-                                        {new Date(m.createdAt).toLocaleDateString('en-GB')}
+                                        {new Date(m.date).toLocaleDateString('en-GB')}
                                     </div>
                                     <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground">
                                         <MapPin size={12} className="text-primary" /> {m.venue?.split(',')[0]}

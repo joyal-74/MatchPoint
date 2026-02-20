@@ -153,6 +153,8 @@ import { CreateWalletOrderUseCase } from "../../app/usecases/shared/CreateWallet
 import { InitiateWithdrawalUseCase } from "../../app/usecases/shared/InitiateWithdrawalUseCase.js";
 import { HandlePayoutWebhookUseCase } from "../../app/usecases/shared/HandlePayoutWebhook.js";
 import { GetUserWalletUseCase } from "../../app/usecases/shared/GetUserWalletUseCase.js";
+import { BulkUserSignup } from "../../app/usecases/admin/BulkUserSignup.js";
+import { GetAvailableUmpires } from "../../app/usecases/manager/tournaments/GetAvailableUmpires.js";
 
 
 // Registrations
@@ -175,6 +177,7 @@ container.register(DI_TOKENS.ForgotPasswordUseCase, { useClass: ForgotPassword }
 container.register(DI_TOKENS.VerifyOtpUseCase, { useClass: VerifyOtp });
 container.register(DI_TOKENS.ResendOtpUseCase, { useClass: ResendOtp });
 container.register(DI_TOKENS.ResetPasswordUseCase, { useClass: ResetPassword });
+container.register(DI_TOKENS.BulkUserSignup, { useClass: BulkUserSignup });
 
 
 // Users
@@ -261,6 +264,7 @@ container.register(DI_TOKENS.TournamentTeamsUsecase, { useClass: GetRegisteredTe
 container.register(DI_TOKENS.SaveMatchData, { useClass: SaveMatchData });
 container.register(DI_TOKENS.GetTourLeaderboard, { useClass: GetTourLeaderboard });
 container.register(DI_TOKENS.GetDashboardAnalytics, { useClass: GetDashboardAnalytics });
+container.register(DI_TOKENS.GetAvailableUmpires, { useClass: GetAvailableUmpires });
 
 // --- Manager Fixtures & Matches ---
 container.register(DI_TOKENS.GetFixturesUsecase, { useClass: GetTournamentFixtures });

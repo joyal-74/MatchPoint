@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { editTournament, fetchTournament } from "../../../../features/manager/Tournaments/tournamentThunks";
+import { editTournament, fetchTournament, searchAvailableUmpires } from "../../../../features/manager/Tournaments/tournamentThunks";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/hooks";
 import { initialEditFormData, mapTournamentToFormData, sports, formats } from "./constants";
 import FormInput from "./FormInput";
@@ -8,10 +8,11 @@ import MapPicker from "../../../shared/MapPicker";
 import { validateTournamentForm } from "../../../../validators/ValidateTournamentForm";
 import {
     Trophy, Calendar, Activity, FileText, Image as ImageIcon,
-    MapPin, ChevronLeft, Save, Sparkles, Info, Users
+    MapPin, ChevronLeft, Save, Sparkles, Info, Users, UserCheck, AlertCircle, Check
 } from "lucide-react";
 import Navbar from "../../Navbar";
 import LoadingOverlay from "../../../shared/LoadingOverlay";
+import type { UmpireData } from "../../../../features/umpire/umpireTypes";
 
 export default function EditTournamentPage() {
     const dispatch = useAppDispatch();
@@ -26,22 +27,31 @@ export default function EditTournamentPage() {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [availableUmpires, setAvailableUmpires] = useState<UmpireData[] | null>([]);
 
     // Helpers
-    // Convert string array to options for select
     const toOptions = (items: string[]) => items.map(item => ({ value: item, label: item }));
-    // Safe date formatter
     const formatDate = (date: string | Date) => {
         if (!date) return "";
         return new Date(date).toISOString().split('T')[0];
     };
 
-    // 1. Fetch Data if missing
+    // 1. Fetch Data & Umpires
     useEffect(() => {
         if (id && !selectedTournament) {
             dispatch(fetchTournament(id));
         }
-    }, [id, selectedTournament, dispatch]);
+        
+        const getUmpires = async () => {
+            try {
+                const result = await dispatch(searchAvailableUmpires(user?._id)).unwrap();
+                setAvailableUmpires(result);
+            } catch (err) {
+                console.error("Failed to load umpires", err);
+            }
+        };
+        getUmpires();
+    }, [id, selectedTournament, dispatch, user?._id]);
 
     // 2. Populate Form
     useEffect(() => {
@@ -62,7 +72,10 @@ export default function EditTournamentPage() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         if (name === "rules") { setRulesText(value); return; }
-        const isNumberField = ["maxTeams", "minTeams", "entryFee", "playersPerTeam", "overs", "prizePool"].some(field => name.includes(field));
+        
+        const numberFields = ["maxTeams", "minTeams", "entryFee", "playersPerTeam", "overs", "prizePool"];
+        const isNumberField = numberFields.includes(name);
+        
         setFormData(prev => ({ ...prev, [name]: isNumberField ? Number(value) : value }));
     };
 
@@ -85,7 +98,6 @@ export default function EditTournamentPage() {
 
         setIsSubmitting(true);
         const fd = new FormData();
-
         fd.append("_id", id);
         fd.append("managerId", user?._id || "");
 
@@ -95,7 +107,6 @@ export default function EditTournamentPage() {
         });
 
         formattedData.rules.forEach((r, i) => fd.append(`rules[${i}]`, r));
-
         if (formattedData.banner instanceof File) {
             fd.append("banner", formattedData.banner);
         }
@@ -143,7 +154,6 @@ export default function EditTournamentPage() {
             <main className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-                    {/* === LEFT COLUMN (Core Info) === */}
                     <div className="lg:col-span-7 space-y-8">
 
                         {/* 1. BASIC INFO */}
@@ -167,7 +177,46 @@ export default function EditTournamentPage() {
                             </div>
                         </section>
 
-                        {/* 2. SCHEDULE */}
+                        {/* 2. MATCH OFFICIAL (NEW) */}
+                        <section className="bg-card border border-border/50 rounded-2xl p-6 md:p-8 shadow-sm">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                                    <UserCheck size={20} />
+                                </div>
+                                <div>
+                                    <h2 className="text-lg font-bold">Match Official</h2>
+                                    <p className="text-[10px] text-muted-foreground uppercase font-medium tracking-wider">Update assigned umpire</p>
+                                </div>
+                            </div>
+                            <div className="space-y-4">
+                                <FormInput
+                                    label="Select Primary Umpire"
+                                    type="select"
+                                    name="umpireId"
+                                    value={formData.umpireId}
+                                    options={[
+                                        { value: "none", label: "Assign later / No Umpire" },
+                                        ...(availableUmpires?.map(u => ({
+                                            value: u._id,
+                                            label: `${u.firstName} ${u.lastName}`
+                                        })) || [])
+                                    ]}
+                                    onChange={handleChange}
+                                    onSelectChange={(name, value) => {
+                                        setFormData(prev => ({ ...prev, [name]: value }));
+                                    }}
+                                    error={errors.umpireId}
+                                />
+                                <div className="p-4 bg-muted/30 rounded-xl flex gap-3 items-start border border-border/50">
+                                    <Info size={16} className="text-primary shrink-0 mt-0.5" />
+                                    <p className="text-xs text-muted-foreground leading-relaxed">
+                                        Assigning an official allows them to start matches and update live scores for this tournament.
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* 3. SCHEDULE */}
                         <section className="bg-card border border-border/50 rounded-2xl p-6 md:p-8 shadow-sm">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500"><Calendar size={20} /></div>
@@ -180,7 +229,7 @@ export default function EditTournamentPage() {
                             </div>
                         </section>
 
-                        {/* 3. LOCATION */}
+                        {/* 4. LOCATION */}
                         <section className="bg-card border border-border/50 rounded-2xl p-6 md:p-8 shadow-sm h-fit">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500"><MapPin size={20} /></div>
@@ -196,14 +245,15 @@ export default function EditTournamentPage() {
                                 <div className={`px-5 py-4 border-t border-border flex items-center gap-3 ${formData.location ? 'bg-card' : 'bg-muted/30'}`}>
                                     <MapPin size={18} className={formData.location ? "text-primary" : "text-muted-foreground"} />
                                     <span className="text-sm font-medium text-foreground flex-1 truncate">{formData.location || "Search or click on map to pin location"}</span>
+                                    {formData.location && <Check className="text-green-500 w-5 h-5" />}
                                 </div>
                             </div>
+                            {errors.location && <p className="text-xs text-destructive mt-2 flex items-center gap-1"><AlertCircle size={12} />{errors.location}</p>}
                         </section>
                     </div>
 
-                    {/* === RIGHT COLUMN (Mechanics & Visuals) === */}
                     <div className="lg:col-span-5 space-y-8">
-
+                        {/* BANNER, LOGISTICS, FINANCIALS, RULES sections remain as per your existing code... */}
                         {/* 1. BANNER */}
                         <section className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm">
                             <div className="flex items-center justify-between mb-4">
@@ -213,11 +263,7 @@ export default function EditTournamentPage() {
                             <div className="aspect-video rounded-xl border-2 border-dashed border-border hover:border-primary/50 bg-muted/10 transition-all group relative overflow-hidden flex flex-col items-center justify-center">
                                 {formData.banner ? (
                                     <>
-                                        <img
-                                            src={formData.banner instanceof File ? URL.createObjectURL(formData.banner) : formData.banner as string}
-                                            className="w-full h-full object-cover"
-                                            alt="Banner"
-                                        />
+                                        <img src={formData.banner instanceof File ? URL.createObjectURL(formData.banner) : formData.banner as string} className="w-full h-full object-cover" alt="Banner" />
                                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                             <button onClick={() => setFormData(prev => ({ ...prev, banner: undefined }))} className="bg-destructive text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg">Change</button>
                                         </div>
@@ -232,7 +278,6 @@ export default function EditTournamentPage() {
                             </div>
                         </section>
 
-                        {/* 2. TEAM LOGISTICS (Moved here) */}
                         <section className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500"><Users size={20} /></div>
@@ -247,7 +292,6 @@ export default function EditTournamentPage() {
                             </div>
                         </section>
 
-                        {/* 3. FINANCIALS */}
                         <section className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-24 h-24 bg-green-500/5 rounded-bl-full -mr-6 -mt-6 pointer-events-none" />
                             <div className="flex items-center gap-3 mb-6">
@@ -257,18 +301,9 @@ export default function EditTournamentPage() {
                             <div className="space-y-5">
                                 <FormInput label="Entry Fee (₹)" type="number" name="entryFee" value={formData.entryFee} onChange={handleChange} error={errors.entryFee} />
                                 <FormInput label="Total Prize Pool (₹)" type="number" name="prizePool" value={formData.prizePool} onChange={handleChange} error={errors.prizePool} />
-                                <div className="p-4 bg-muted/30 rounded-xl border border-border/50">
-                                    <div className="flex gap-2 items-start">
-                                        <Info size={12} className="text-muted-foreground mt-0.5" />
-                                        <p className="text-[10px] text-muted-foreground leading-tight">
-                                            You can manually override the Prize Pool amount in Edit mode.
-                                        </p>
-                                    </div>
-                                </div>
                             </div>
                         </section>
 
-                        {/* 4. RULES (Moved here) */}
                         <section className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500"><FileText size={20} /></div>
@@ -276,7 +311,6 @@ export default function EditTournamentPage() {
                             </div>
                             <textarea name="rules" value={rulesText} onChange={handleChange} rows={8} className="w-full bg-background border border-input rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none font-mono" />
                         </section>
-
                     </div>
                 </div>
             </main>

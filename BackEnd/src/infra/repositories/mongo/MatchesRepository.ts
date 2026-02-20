@@ -1,4 +1,4 @@
-import { FilterQuery } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { EndMatchDTO, IMatchesRepository, MatchStreamData } from "../../../app/repositories/interfaces/manager/IMatchesRepository.js";
 import { DashboardTeam, MatchResponseDTO } from "../../../domain/dtos/MatchDTO.js";
 import { Extras } from "../../../domain/entities/Extra.js";
@@ -54,6 +54,17 @@ export class MatchesRepository implements IMatchesRepository {
         ]);
 
         return MatchMongoMapper.toMatchResponseArray(matches)
+    }
+
+    async getUmpireMatches(umpireId: string): Promise<Match[] | null> {
+        const matches = await MatchesModel.find({ umpire: umpireId }).populate([
+            { path: "teamA", select: "name logo" },
+            { path: "teamB", select: "name logo" },
+        ]);
+
+        const mapped = MatchMongoMapper.toMatchResponseArray(matches);
+
+        return mapped
     }
 
     async getMatchById(matchId: string): Promise<Match | null> {
@@ -116,9 +127,16 @@ export class MatchesRepository implements IMatchesRepository {
     }
 
     async updateTossDetails(matchId: string, tossWinnerId: string, tossDecision: string): Promise<any | null> {
+        // 1. Update toss info and set status to ongoing
         await MatchesModel.findByIdAndUpdate(
             matchId,
-            { $set: { tossWinner: tossWinnerId, tossDecision } }
+            {
+                $set: {
+                    tossWinner: tossWinnerId,
+                    tossDecision,
+                    status: "ongoing" // Update status here
+                }
+            }
         );
 
         const match = await MatchesModel.findById(matchId)
@@ -128,31 +146,33 @@ export class MatchesRepository implements IMatchesRepository {
 
         if (!match) return null;
 
+        // Handle Bye (If teamB is missing)
         if (!match.teamB) {
             return await MatchesModel.findByIdAndUpdate(
                 matchId,
                 {
                     $set: {
                         status: "bye",
-                        winner: match.teamA._id,
+                        winner: (match.teamA as any)._id, // Type cast to access _id safely
                     }
                 },
                 { new: true }
             );
         }
 
-        const teamA = match.teamA._id.toString();
-        const teamB = match.teamB._id.toString();
+        // SAFE ACCESS: Cast to any or specific Interface to avoid "Property 0" index error
+        const teamAId = (match.teamA as any)._id.toString();
+        const teamBId = (match.teamB as any)._id.toString();
 
         let battingTeamId: string;
         let bowlingTeamId: string;
 
         if (tossDecision === "Batting") {
             battingTeamId = tossWinnerId;
-            bowlingTeamId = tossWinnerId === teamA ? teamB : teamA;
+            bowlingTeamId = tossWinnerId === teamAId ? teamBId : teamAId;
         } else {
             bowlingTeamId = tossWinnerId;
-            battingTeamId = tossWinnerId === teamA ? teamB : teamA;
+            battingTeamId = tossWinnerId === teamAId ? teamBId : teamAId;
         }
 
         const innings1 = new Innings({
@@ -173,11 +193,11 @@ export class MatchesRepository implements IMatchesRepository {
         const innings1DTO = innings1.toDTO();
 
         const matchStatsData = {
-            tournamentId: match.tournamentId.toString(),
+            tournamentId: (match.tournamentId as any).toString(),
             matchId: matchId,
             oversLimit: match.oversLimit || 20,
             venue: match.venue || "",
-            status: 'upcoming',
+            status: 'ongoing', // Stats should also reflect ongoing
             innings1: innings1DTO,
             innings2: null,
             currentInnings: 1,
@@ -198,16 +218,17 @@ export class MatchesRepository implements IMatchesRepository {
     }
 
     async endMatch(matchId: string, data: EndMatchDTO): Promise<MatchEntity> {
+        // 1. Find the document
         const doc = await MatchesModel.findById(matchId);
-
         if (!doc) throw new NotFoundError("Match not found");
 
+        // 2. Map to Entity and apply domain logic
         const matchEntity = MatchMongoMapper.toEntity(doc);
 
         matchEntity.endMatch({
             type: (data.type as any) || "NORMAL",
             reason: (data.reason as any),
-            winnerId: data.winnerId,
+            winnerId: data.winner,
             endedBy: data.endedBy ?? undefined,
             resultType: data.resultType as any,
             winMargin: data.winMargin,
@@ -215,8 +236,28 @@ export class MatchesRepository implements IMatchesRepository {
             resultDescription: data.resultDescription
         });
 
-        const updatedData = MatchMongoMapper.toMatchResponse(matchEntity);
-        await MatchesModel.updateOne({ _id: matchId }, { $set: updatedData });
+        
+        const updatePayload = {
+            status: "completed",
+            winner: (data.winner && Types.ObjectId.isValid(data.winner)) ? data.winner : null,
+            resultType: data.resultType || null,
+            resultDescription: data.resultDescription || "",
+            winMargin: data.winMargin || null,
+            winType: data.winType || null,
+            endInfo: {
+                type: data.type || "NORMAL",
+                reason: data.reason,
+                notes: data.notes || "",
+                endedBy: (data.endedBy && Types.ObjectId.isValid(data.endedBy)) ? data.endedBy : null,
+                endedAt: new Date()
+            }
+        };
+
+        // 4. Use $set with the cleaned object
+        await MatchesModel.updateOne(
+            { _id: matchId },
+            { $set: updatePayload }
+        );
 
         return matchEntity;
     }

@@ -68,12 +68,6 @@ export class SignupManager implements IManagerSignupUseCase {
             }
         });
 
-        await this._managerRepository.create({
-            userId: newUser._id,
-            tournamentsCreated: [],
-            teams: [],
-        });
-
         const otp = this._otpGenerator.generateOtp();
 
         const expiresAt = new Date(Date.now() + 2 * 60 * 1000);

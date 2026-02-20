@@ -76,11 +76,16 @@ export interface UserEntity {
 
 
 export interface SocialUserRegisterData {
-    tempToken: string,
-    role: UserRole,
-    gender: GenderType,
-    authProvider: string,
-    sport: string,
-    phone: string,
-    username: string
+    tempToken: string;
+    role: UserRole;
+    gender: GenderType;
+    authProvider: string;
+    sport: string;
+    phone: string;
+    profile : any;
+    username: string;
+    battingStyle?: string;
+    bowlingStyle?: string;
+    playingPosition?: string;
+    jerseyNumber?: string;
 }

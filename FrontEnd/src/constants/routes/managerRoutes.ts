@@ -33,5 +33,5 @@ export const MANAGER_ROUTES = {
     GET_FIXTURES: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/fixture`,
     GET_AVAILABLE_PLAYERS: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/available-players`,
     GET_MATCH_RESULT: (tournamentId: string) => `${API_PREFIX}/manager/tournament/${tournamentId}/results`,
-    AVAILABLE_UMPIRES: `${API_PREFIX}/manager/tournament/umpires`,
+    AVAILABLE_UMPIRES: `${API_PREFIX}/manager/tournament/umpires/available`,
 } as const;

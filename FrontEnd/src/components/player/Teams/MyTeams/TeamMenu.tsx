@@ -7,12 +7,14 @@ export interface TeamMenuProps {
     teamId: string;
     onLeaveRequest: (teamId: string) => void;
     className?: string;
+    status : 'approved' | 'pending';
 }
 
 export default function TeamMenu({
     teamId,
     onLeaveRequest,
-    className = ""
+    className = "",
+    status
 }: TeamMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -70,7 +72,7 @@ export default function TeamMenu({
                             "
                         >
                             <LogOut size={16} className="group-hover:-translate-x-0.5 transition-transform" />
-                            Leave Team
+                            {status === 'approved' ? 'Leave Team' : 'Cancel request' }
                         </button>
                         
                     </div>

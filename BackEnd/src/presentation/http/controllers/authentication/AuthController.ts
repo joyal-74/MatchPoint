@@ -81,10 +81,7 @@ export class AuthController implements IAuthController {
 
         if (result.isNewUser) {
             return new HttpResponse(HttpStatusCode.OK, {
-                ...buildResponse(true, AuthMessages.GOOGLE_NEW_USER, {
-                    tempToken: result.tempToken,
-                    authProvider: result.authProvider,
-                }),
+                ...buildResponse(true, AuthMessages.GOOGLE_NEW_USER, result),
             });
         }
 

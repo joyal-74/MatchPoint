@@ -21,9 +21,9 @@ export class MatchController {
      */
 
     getAllMatches = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { search, limit, page, userId } = httpRequest.params;
+        const { umpireId } = httpRequest.params;
 
-        const umpire = await this._getUmpireAllMatches.execute(search, limit, page, userId);
+        const umpire = await this._getUmpireAllMatches.execute(umpireId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, 'Matches fetched', umpire));
     }

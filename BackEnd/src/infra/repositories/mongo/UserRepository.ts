@@ -34,6 +34,11 @@ export class UserRepository extends BaseRepository<UserSchemaType, UserResponse>
         return this.filterUsersByRole("viewer", params);
     }
 
+    async findAllUmpires(params: GetAllUsersParams): Promise<{ users: UserResponseDTO[], totalCount: number }> {
+        return this.filterUsersByRole("umpire", params);
+    }
+
+
     async findUnverifiedUsersForDeletion(date: Date): Promise<{ _id: string; role: string }[]> {
         return UserModel.find({
             isVerified: false,

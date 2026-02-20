@@ -25,7 +25,7 @@ export default function CreateTournamentPage() {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const [availableUmpires, setAvailableUmpires] = useState<UmpireData[] | null>();
+    const [availableUmpires, setAvailableUmpires] = useState<UmpireData[] | null>([]);
     const toOptions = (items: string[]) => items.map(item => ({ value: item, label: item }));
 
     useEffect(() => {
@@ -52,14 +52,32 @@ export default function CreateTournamentPage() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        if (name === "rules") { setRulesText(value); return; }
-        const isNumberField = ["maxTeams", "minTeams", "entryFee", "playersPerTeam", "overs"].some(field => name.includes(field));
-        setFormData(prev => ({ ...prev, [name]: isNumberField ? Number(value) : value }));
+
+        if (name === "rules") {
+            setRulesText(value);
+            return;
+        }
+
+        // Use exact match to avoid catching fields like 'umpireId'
+        const numberFields = ["maxTeams", "minTeams", "entryFee", "playersPerTeam", "overs"];
+        const isNumberField = numberFields.includes(name);
+
+        setFormData(prev => {
+            const newState = {
+                ...prev,
+                [name]: isNumberField ? (value === "" ? 0 : Number(value)) : value
+            };
+            return newState;
+        });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const formattedData = { ...formData, rules: rulesText.split("\n").map(r => r.trim()).filter(r => r) };
+        const formattedData = {
+            ...formData,
+            rules: rulesText.split("\n").map(r => r.trim()).filter(r => r),
+        };
+
         const { isValid, errors: validationErrors } = validateTournamentForm(formattedData);
         setErrors(validationErrors);
 
@@ -153,11 +171,17 @@ export default function CreateTournamentPage() {
                                     type="select"
                                     name="umpireId"
                                     value={formData.umpireId}
-                                    onChange={handleChange}
                                     options={[
-                                        { value: "", label: "Assign later / No Umpire" },
-                                        ...(availableUmpires?.map(u => ({ value: u._id, label: u.name })) || [])
+                                        { value: "none", label: "Assign later / No Umpire" },
+                                        ...(availableUmpires?.map(u => ({
+                                            value: u._id,
+                                            label: `${u.firstName} ${u.lastName}`
+                                        })) || [])
                                     ]}
+                                    onChange={handleChange}
+                                    onSelectChange={(name, value) => {
+                                        setFormData(prev => ({ ...prev, [name]: value }));
+                                    }}
                                     error={errors.umpireId}
                                 />
 

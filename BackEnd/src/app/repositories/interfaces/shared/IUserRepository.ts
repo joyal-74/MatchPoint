@@ -17,5 +17,7 @@ export interface IUserRepository extends IBaseRepository<UserDocument, UserRespo
 
     findAllViewers(params: GetAllUsersParams): Promise<{ users: UserResponseDTO[], totalCount: number }>;
 
+    findAllUmpires(params: GetAllUsersParams): Promise<{ users: UserResponseDTO[], totalCount: number }>;
+
     deleteById(id: string): Promise<void>;
 }

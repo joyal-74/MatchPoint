@@ -82,7 +82,7 @@ const TeamsListPage: React.FC = () => {
                             <EmptyTeams onExplore={() => navigate('/player/teams')} />
                         </div>
                     ) : (
-                        <TeamsGrid teams={teams || []} />
+                        <TeamsGrid teams={teams || []} status={currentStatus} />
                     )}
                 </div>
             </div>

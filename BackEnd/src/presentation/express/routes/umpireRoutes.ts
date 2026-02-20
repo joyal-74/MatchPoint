@@ -15,7 +15,7 @@ const umpireProfileController = container.resolve(ProfileController)
 const umpireMatchController = container.resolve(MatchController)
 
 
-router.get('/matches', umpireOnly, expressAdapter(umpireMatchController.getAllMatches));
+router.get('/:umpireId/matches', umpireOnly, expressAdapter(umpireMatchController.getAllMatches));
 router.put("/:umpireId", umpireOnly, upload.single("file"), expressFileUpdateHandler(umpireProfileController.updateProfile));
 router.get('/:umpireId', umpireOnly, expressAdapter(umpireProfileController.getProfile));
 

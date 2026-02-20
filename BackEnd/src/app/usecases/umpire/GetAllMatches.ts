@@ -1,20 +1,25 @@
 import { injectable, inject } from "tsyringe";
 import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
 import { IGetUmpireAllMatches } from "../../repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
-import { IMatchStatsRepo } from "../../repositories/interfaces/manager/IMatchStatsRepo.js";
-import { MatchEntity } from "../../../domain/entities/MatchEntity.js";
+import { IMatchesRepository } from "../../repositories/interfaces/manager/IMatchesRepository.js";
+import { Match } from "../../../domain/entities/Match.js";
+import { NotFoundError } from "../../../domain/errors/index.js";
 
 
 @injectable()
 export class GetUmpireAllMatches implements IGetUmpireAllMatches {
     constructor(
-        @inject(DI_TOKENS.MatchStatsRepository) private _matchRepository: IMatchStatsRepo
+        @inject(DI_TOKENS.MatchesRepository) private _matchRepository: IMatchesRepository
     ) { }
 
-    async execute(userId: string, search: string, limit: number = 10, page: number = 1): Promise<{ matches: MatchEntity[], totalPages: number }> {
+    async execute(userId: string): Promise<Match[] | null> {
 
-        const { matches, totalPages } = await this._matchRepository.findAllMatches({ search, limit, page, userId });
+        const matches = await this._matchRepository.getUmpireMatches(userId);
 
-        return { matches, totalPages };
+        if(!matches) {
+            throw new NotFoundError('No matches found')
+        }
+
+        return matches ;
     }
 }

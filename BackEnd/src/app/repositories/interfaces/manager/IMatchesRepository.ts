@@ -14,15 +14,23 @@ export interface MatchStreamData {
 export interface EndMatchDTO {
     status?: string;
     type?: string;
-    reason: string; 
+    reason: string;
     notes?: string;
     endedBy: string | null;
-    
-    winnerId?: string | null;
+
+    winner?: string | null;
     resultType?: string | null;
     winMargin?: string | null;
     winType?: string | null;
     resultDescription?: string;
+
+    endInfo?: {
+        type: string | null;
+        reason: string;
+        notes?: string;
+        endedBy: string | null;
+        endedAt: Date;
+    };
 }
 
 
@@ -31,8 +39,9 @@ export interface IMatchesRepository {
     updateMatchStats(matchId: string, stats: Record<string, string | number>): Promise<Match>;
     updateStatus(matchId: string, status: string): Promise<void>;
     getMatchesByTournament(tournamentId: string): Promise<Match[]>;
-    getMatchesFilters(filters: { status?: string; page?: number; limit?: number }): Promise<{matches : Match[], total : number}>;
+    getMatchesFilters(filters: { status?: string; page?: number; limit?: number }): Promise<{ matches: Match[], total: number }>;
     getMatchById(matchId: string): Promise<Match | null>;
+    getUmpireMatches(umpireId: string): Promise<Match[] | null>;
     getMatchDetails(matchId: string): Promise<MatchResponseDTO | null>;
     getStreamMetadata(matchId: string,): Promise<MatchStreamData>;
     updateStreamMetadata(matchId: string, data: MatchStreamData): Promise<void>;

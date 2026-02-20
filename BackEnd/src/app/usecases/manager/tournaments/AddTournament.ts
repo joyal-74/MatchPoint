@@ -40,6 +40,8 @@ export class AddTournamentUseCase implements IAddTournament {
             format : data.format.toLocaleLowerCase() as Format
         };
 
+        console.log(newData, 'data')
+
         const tournament = await this._tournamentRepo.create(newData);
 
         await this._managerRepo.addTournamentToManager(data.managerId, tournament._id);

@@ -69,7 +69,8 @@ export interface UmpireState {
 
 export interface UmpireData {
     _id : string;
-    name : string;
+    firstName : string;
+    lastName : string;
     profileImage : string;
     matches : string;
 }

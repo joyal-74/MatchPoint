@@ -11,6 +11,7 @@ export const validateSignup = (payload: SignUpFormExtended): ValidationErrors =>
     const nameRegex = /^[a-zA-Z\s-]*$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^\+?[1-9]\d{9,14}$/;
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
     // STEP 1
     if (!payload.firstName.trim()) {
@@ -64,21 +65,32 @@ export const validateSignup = (payload: SignUpFormExtended): ValidationErrors =>
         errors.gender = AuthMessages.GENDER_REQUIRED;
     }
 
-    // Password Logic
-    if (!payload.password) {
-        errors.password = AuthMessages.PASSWORD_REQUIRED;
-    } else if (payload.password.length < 6) {
-        errors.password = AuthMessages.PASSWORD_TOO_SHORT;
+    if (!payload.isSocial) {
+        if (!payload.password) {
+            errors.password = AuthMessages.PASSWORD_REQUIRED;
+        } else if (payload.password.length < 6) {
+            errors.password = "Password must be at least 6 characters long";
+        } else if (!strongPasswordRegex.test(payload.password)) {
+            errors.password = "Must include uppercase, lowercase, number and special character (@$!%*?&)";
+        }
     }
 
+    // Confirm Password Logic
     if (!payload.confirmPassword) {
         errors.confirmPassword = AuthMessages.CONFIRM_PASSWORD_REQUIRED;
     } else if (payload.password !== payload.confirmPassword) {
         errors.confirmPassword = AuthMessages.PASSWORDS_DO_NOT_MATCH;
     }
 
-    if (!payload.profileImage) {
-        errors.profileImage = "Please select Profile image";
+    if (payload.profileImage instanceof File) {
+        const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        if (!allowedTypes.includes(payload.profileImage.type)) {
+            errors.profileImage = "Only JPG, PNG, or WebP images are allowed";
+        } else if (payload.profileImage.size > maxSize) {
+            errors.profileImage = "Image must be less than 5MB";
+        }
     }
 
     return errors;

@@ -14,6 +14,7 @@ export interface TeamCardProps {
     index: number;
     className?: string;
     onLeaveRequest: (teamId: string) => void;
+    status : 'approved' | 'pending';
 }
 
 export default function TeamCard({
@@ -25,7 +26,8 @@ export default function TeamCard({
     logo,
     maxPlayers,
     onLeaveRequest,
-    className = ""
+    className = "",
+    status
 }: TeamCardProps) {
     const navigate = useNavigate();
 
@@ -72,6 +74,7 @@ export default function TeamCard({
                     <TeamMenu 
                         teamId={_id} 
                         onLeaveRequest={onLeaveRequest} 
+                        status={status}
                     />
                 </div>
             </div>

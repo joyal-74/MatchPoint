@@ -14,6 +14,7 @@ interface AuthState {
     error: string | null;
     signupSuccess: boolean;
     tempToken: string | null;
+    signupDraft: any,
     authProvider: 'google' | 'facebook' | null;
     expiresAt: string | null;
     otpVerified: boolean;
@@ -33,6 +34,7 @@ const initialState: AuthState = {
     authProvider: null,
     expiresAt: null,
     otpVerified: false,
+    signupDraft: null,
     resetOtpSent: false,
     resetOtpVerified: false,
     passwordReset: false,
@@ -81,6 +83,12 @@ const authSlice = createSlice({
         clearAuthProvider: (state) => {
             state.authProvider = null;
         },
+        setSignupDraft(state, action) {
+            state.signupDraft = action.payload;
+        },
+        clearSignupDraft(state) {
+            state.signupDraft = null;
+        }
     },
     extraReducers: (builder) => {
         // Login (Admin)
@@ -126,6 +134,17 @@ const authSlice = createSlice({
                 state.user = action.payload?.user || null;
                 state.tempToken = action.payload?.tempToken || null;
                 state.authProvider = action.payload?.authProvider || null;
+                
+                if (action.payload?.tempToken && action.payload?.user) {
+                    state.signupDraft = {
+                        firstName: action.payload.user.firstName || "",
+                        lastName: action.payload.user.lastName || "",
+                        email: action.payload.user.email || "",
+                        profileImage: action.payload.user.profileImage || null,
+                        isSocial: true,
+                        tempToken: action.payload.tempToken
+                    };
+                }
                 state.loading = false;
                 state.error = null;
             })
@@ -140,7 +159,6 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(loginUserFacebook.fulfilled, (state, action) => {
-                console.log(action.payload)
                 state.user = action.payload?.user || null;
                 state.tempToken = action.payload?.tempToken || null;
                 state.authProvider = action.payload?.authProvider || null;
@@ -310,5 +328,9 @@ const authSlice = createSlice({
     },
 });
 
-export const { resetAuthState, clearError, resetPasswordFlow, resetSignupState, clearResetEmail, setUser, setResetData, clearTempToken, clearAuthProvider } = authSlice.actions;
+export const {
+    resetAuthState, clearError, resetPasswordFlow, resetSignupState,
+    clearResetEmail, setUser, setResetData, clearTempToken, clearAuthProvider,
+    setSignupDraft, clearSignupDraft
+} = authSlice.actions;
 export default authSlice.reducer;

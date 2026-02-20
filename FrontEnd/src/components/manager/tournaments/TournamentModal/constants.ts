@@ -2,7 +2,7 @@ import type { Tournament } from "../../../../features/manager/managerTypes";
 import type { TournamentFormData, updateTournamentFormData } from "./types";
 
 export const sports = ["Cricket"];
-export const formats = ["Knockout", "League", "Friendly"];
+export const formats = ["knockout", "league", "friendly"];
 
 export const initialFormData = (managerId: string): TournamentFormData => ({
     title: "",
@@ -77,5 +77,5 @@ export const mapTournamentToFormData = (tournament: Tournament): updateTournamen
     status: tournament.status,
     rules: tournament.rules,
     banner: tournament.banner,
-    umpireId : tournament.umpire
+    umpireId : tournament.umpireId
 });

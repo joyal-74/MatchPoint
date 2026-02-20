@@ -8,7 +8,7 @@ interface ManagerLayoutProps {
 
 const ManagerLayout: React.FC<ManagerLayoutProps> = ({ children }) => {
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="bg-background text-foreground">
             <Navbar />
 
             <Sidebar />

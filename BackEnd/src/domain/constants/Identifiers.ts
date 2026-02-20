@@ -78,6 +78,7 @@ const ServiceTokens = {
     TournamentRefundService: "TournamentRefundService",
     PayoutMethodResolver: "PayoutMethodResolver",
     WebhookService: "WebhookService",
+    ProfileInitializationService: "ProfileInitializationService",
 }
 
 const StategyTokens = {
@@ -140,6 +141,7 @@ const AdminUsecaseTokens = {
 
     // --- Admin Dashboard ---
     GetDashboardStatsUseCase: "GetDashboardStatsUseCase",
+    BulkUserSignup: "BulkUserSignup",
 }
 
 
@@ -171,6 +173,7 @@ const ManagerUsecaseTokens = {
 
     // --- Tournament ---
     GetMyTournamentsUsecase: 'GetMyTournamentsUsecase',
+    GetAvailableUmpires: 'GetAvailableUmpires',
     GetExploreTournamentsUsecase: 'GetExploreTournamentsUsecase',
     AddTournamentsUsecase: 'AddTournamentsUsecase',
     EditTournamentsUsecase: 'EditTournamentsUsecase',
