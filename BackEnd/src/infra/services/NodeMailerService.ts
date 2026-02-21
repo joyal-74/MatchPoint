@@ -1,4 +1,3 @@
-
 import nodemailer from 'nodemailer';
 import { IMailRepository } from '../../app/providers/IMailRepository.js';
 import { OtpContext } from '../../domain/enums/OtpContext.js';
@@ -11,9 +10,8 @@ export class NodeMailerService implements IMailRepository {
     constructor() {
         this.transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
-            port: Number(process.env.SMTP_PORT) || 2525,
+            port: Number(process.env.SMTP_PORT) || 587,
             secure: false,
-            authMethod: 'PLAIN',
             auth: {
                 user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASS,
@@ -26,13 +24,14 @@ export class NodeMailerService implements IMailRepository {
 
     async sendVerificationEmail(to: string, otp: string, context: OtpContext = OtpContext.VerifyEmail): Promise<void> {
         const appName = "MatchPoint";
-        const supportEmail = process.env.SMTP_USER || "support@matchpoint.com";
+        
+        const verifiedSender = process.env.MAIL_FROM || "thorappanbastin77@gmail.com";
 
-        const { subject, html } = generateOtpEmailTemplate(appName, otp, supportEmail, context);
+        const { subject, html } = generateOtpEmailTemplate(appName, otp, verifiedSender, context);
 
         try {
             await this.transporter.sendMail({
-                from: `"${appName}" <${supportEmail}>`,
+                from: `"${appName}" <${verifiedSender}>`,
                 to,
                 subject,
                 html,
