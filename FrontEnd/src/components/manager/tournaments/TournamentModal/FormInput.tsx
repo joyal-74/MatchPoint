@@ -1,5 +1,5 @@
 import React, { useId, useMemo } from "react";
-import CustomSelect, { type Option } from "../../../ui/CustomSelect";
+import  { type Option } from "../../../ui/CustomSelect";
 import { normalizeValue } from "../../../../utils/NormalizeDate";
 import { AlertCircle } from "lucide-react";
 
@@ -15,14 +15,13 @@ export interface FormInputProps {
     required?: boolean;
     min?: string | number;
     rows?: number;
-    // UPDATED: Accepts simple strings OR objects
     options?: string[] | Option[];
     error?: string;
     disabled?: boolean;
 }
 
 export default function FormInput({
-    label, icon, type = "text", name, value, onChange, onSelectChange,
+    label, icon, type = "text", name, value, onChange,
     placeholder, required = false, min, options, rows, error, disabled
 }: FormInputProps) {
 
@@ -35,14 +34,6 @@ export default function FormInput({
         }
         return options as Option[];
     }, [options]);
-
-    const selectedOption = useMemo(() => {
-        if (!normalizedOptions || normalizedOptions.length === 0) return null;
-
-        // Find the option where the value matches
-        // We use String() to avoid any issues with number vs string comparisons
-        return normalizedOptions.find(opt => String(opt.value) === String(value)) || null;
-    }, [normalizedOptions, value]);
 
     const baseClasses =
         "w-full px-4 py-2.5 bg-background border rounded-lg text-foreground text-sm " +
@@ -69,20 +60,25 @@ export default function FormInput({
             </label>
 
             {type === "select" ? (
-                <CustomSelect
+                <select
                     id={id}
-                    options={normalizedOptions}
                     name={name}
-                    value={selectedOption}
-                    isDisabled={disabled}
-                    onChange={(selected) => {
-                        console.log("RAW selected option:", selected); // 👈 ADD THIS
-                        console.log("Value:", (selected as any)?.value); // debug
-                        onSelectChange?.(name, String((selected as any)?.value ?? ""));
-                    }}
-                    placeholder={placeholder || `Select ${label.toLowerCase()}`}
-                    className={error ? "border-destructive" : ""}
-                />
+                    value={value}
+                    onChange={onChange}
+                    disabled={disabled}
+                    className={`${commonClasses} appearance-none cursor-pointer`}
+                    required={required}
+                >
+                    <option value="" disabled>
+                        {placeholder || `Select ${label.toLowerCase()}`}
+                    </option>
+                    {normalizedOptions.map((opt) => (
+                        <option key={String(opt.value)} value={String(opt.value)}>
+                            {opt.label}
+                        </option>
+                    ))}
+                </select>
+
             ) : type === "textarea" ? (
                 <textarea
                     id={id}

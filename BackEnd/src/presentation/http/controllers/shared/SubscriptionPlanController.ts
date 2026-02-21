@@ -67,6 +67,8 @@ export class SubscriptionController {
     updatePlan = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { userId, planLevel, billingCycle } = httpRequest.body;
 
+        console.log(httpRequest.body, "hhjdh_____")
+
         const plans = await this._updatePlanDirectUseCase.execute(userId, planLevel, billingCycle);
 
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, "Subscription plan changed successfully", plans));

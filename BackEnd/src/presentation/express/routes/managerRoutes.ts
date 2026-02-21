@@ -63,8 +63,8 @@ router.get("/tournament/umpires/available", managerOnly, expressAdapter(tourname
 router.get("/tournament/:tournamentId/leaderboard", managerOnly, expressAdapter(tournamentManagementController.getTournamentLeaderBoard));
 router.get("/tournament/:tournamentId/results", managerOnly, expressAdapter(tournamentManagementController.getTournamentMatchResults));
 
-router.get("/tournament/matches/:matchId/details", umpireAndManagerOnly, expressAdapter(matchController.getMatchDetails));
-router.get("/tournament/matches/:matchId/livescore", umpireAndManagerOnly, expressAdapter(matchController.getLiveScore));
+router.get("/tournament/matches/:matchId/details", expressAdapter(matchController.getMatchDetails));
+router.get("/tournament/matches/:matchId/livescore", expressAdapter(matchController.getLiveScore));
 router.post("/tournament/matches/:matchId/save", umpireAndManagerOnly, expressAdapter(matchController.saveMatchData));
 router.post("/tournament/matches/start", umpireAndManagerOnly, expressAdapter(matchController.startMatchData));
 

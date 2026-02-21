@@ -62,6 +62,7 @@
     "nodemailer": "^7.0.6",
     "razorpay": "^2.9.6",
     "reflect-metadata": "^0.2.2",
+    "resend": "^6.9.2",
     "socket.io": "^4.8.1",
     "stripe": "^19.1.0",
     "tsc-alias": "^1.8.16",

@@ -15,8 +15,8 @@ export class SubscriptionPaymentStrategy implements IPaymentStrategy {
             type: this.type,
             userId: metadata.userId,
             planLevel: metadata.planLevel,
-            billingCycle: metadata.billingCycle,
-            amount: metadata.amount.toString()
+            billingCycle: metadata.billingCycle || '',
+            amount: (metadata.amount ?? 0).toString()
         };
     }
 

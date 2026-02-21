@@ -143,8 +143,24 @@ export default function CreateTournamentPage() {
                             <div className="space-y-6">
                                 <FormInput label="Tournament Name" name="title" value={formData.title} onChange={handleChange} placeholder="e.g. Summer Championship 2024" error={errors.title} />
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                    <FormInput label="Sport" type="select" name="sport" value={formData.sport} onChange={handleChange} options={toOptions(sports)} error={errors.sport} />
-                                    <FormInput label="Format" type="select" name="format" value={formData.format} onChange={handleChange} options={toOptions(formats)} error={errors.format} />
+                                    <FormInput
+                                        label="Sport"
+                                        type="select"
+                                        name="sport"
+                                        value={formData.sport}
+                                        onChange={handleChange}
+                                        options={toOptions(sports)}
+                                        error={errors.sport}
+                                    />
+                                    <FormInput
+                                        label="Format"
+                                        type="select"
+                                        name="format"
+                                        value={formData.format}
+                                        onChange={handleChange}
+                                        options={toOptions(formats)}
+                                        error={errors.format}
+                                    />
                                 </div>
                                 <div>
                                     <label className="text-sm font-medium text-muted-foreground mb-2 block">Description</label>
@@ -179,9 +195,6 @@ export default function CreateTournamentPage() {
                                         })) || [])
                                     ]}
                                     onChange={handleChange}
-                                    onSelectChange={(name, value) => {
-                                        setFormData(prev => ({ ...prev, [name]: value }));
-                                    }}
                                     error={errors.umpireId}
                                 />
 

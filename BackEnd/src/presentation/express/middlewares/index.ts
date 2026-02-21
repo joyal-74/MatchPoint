@@ -8,5 +8,5 @@ export const adminOnly = authMiddleware.restrict(["admin"]);
 export const playerOnly = authMiddleware.restrict(["player"]);
 export const managerOnly = authMiddleware.restrict(["manager"]);
 export const umpireOnly = authMiddleware.restrict(["umpire"]);
-export const umpireAndManagerOnly = authMiddleware.restrict(["umpire", "manager"]);
+export const umpireAndManagerOnly = authMiddleware.restrict(["umpire", "manager", "viewer"]);
 export const authAny = authMiddleware.restrict([]);

@@ -11,7 +11,7 @@ export class RazorpayProvider implements IPaymentProvider {
     private razorpay: Razorpay;
 
     constructor(
-        @inject(PaymentStrategyRegistry) private strategyRegistry: PaymentStrategyRegistry,
+        @inject(DI_TOKENS.PaymentStrategyRegistry) private strategyRegistry: PaymentStrategyRegistry,
         @inject(DI_TOKENS.ConfigProvider) private _config: IConfigProvider
     ) {
         this.razorpay = new Razorpay({ 

@@ -16,9 +16,6 @@ export const useLiveMatchViewer = (matchId: string | undefined) => {
     const [lastUpdateType, setLastUpdateType] = useState<string>('');
 
     const pollingRef = useRef<number | null>(null);
-
-    console.log(isStreamOnline, 'stream')
-
     // Initial API Load
     useEffect(() => {
         if (matchId) {

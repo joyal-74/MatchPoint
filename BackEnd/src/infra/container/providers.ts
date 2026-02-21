@@ -1,6 +1,5 @@
 import { WinstonLogger } from "../providers/WinstonLogger.js";
 import { JWTService } from "../services/jwtServices.js";
-import { NodeMailerService } from "../services/NodeMailerService.js";
 import { NodeOtpGenerator } from "../providers/NodeOtpGenerator.js";
 import { BcryptPasswordHasher } from "../providers/BcryptPasswordHasher.js";
 import { ImageKitFileStorage } from "../providers/ImageKitFileStorage.js";
@@ -22,6 +21,7 @@ import { PaymentStrategyRegistry } from "../providers/PaymentStrategyRegistry.js
 import { WalletTournamentProcessor } from "../providers/WalletTournamentProcessor.js";
 import { RazorpayTournamentProcessor } from "../providers/RazorpayTournamentProcessor.js";
 import { RazorpayXPayoutProvider } from "../providers/RazorpayXPayoutProvider.js";
+import { NodeMailerService } from "../services/NodeMailerService.js";
 
 
 
