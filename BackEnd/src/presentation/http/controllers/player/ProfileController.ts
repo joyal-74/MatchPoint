@@ -77,8 +77,6 @@ export class PlayerProfileController implements IProfileController {
     getPlayerStats = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { userId } = httpRequest.params;
 
-        console.log(httpRequest.params)
-
         this._logger.info(`Fetching stats for player ID: ${userId}`, { params: httpRequest.params });
 
         const player = await this._getPlayerStatsUseCase.execute(userId);

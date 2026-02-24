@@ -13,6 +13,6 @@ export const getSocketServer = (): SocketServer => {
 };
 
 export const initSocket = (server: http.Server) => {
-    const io = getSocketServer().init(server);
-    return io;
+    const socketServer = container.resolve(SocketServer); 
+    return socketServer.init(server);
 };

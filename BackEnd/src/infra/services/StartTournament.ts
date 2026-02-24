@@ -35,17 +35,12 @@ export class StartTournament implements IStartTournament {
         const initialRows: Omit<PointsRow, '_id'>[] = registrations.map((reg) => {
             const teamInfo = reg.teamId as unknown as PopulatedTeam;
 
-            console.log("Processing registration teamId:", reg);
-
             const teamId = teamInfo._id
                 ? teamInfo._id.toString()
                 : teamInfo.toString();
 
             // 2. Extract the Name
             const teamName = (reg as any)?.teamName || "Unknown Team";
-
-            console.log(teamId, 'teamid')
-            console.log(teamName, 'name')
 
             return {
                 tournamentId: tournamentId,

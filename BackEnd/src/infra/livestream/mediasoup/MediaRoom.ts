@@ -7,7 +7,6 @@ export class MediaRoom {
     private consumers = new Map<string, Map<string, Consumer>>();
     private transports = new Map<string, WebRtcTransport>();
 
-    // 🔥 Loopback consumers for ICE keep-alive
     private loopbackConsumers = new Map<string, Consumer>();
     private peers: Set<string> = new Set();
 
@@ -28,8 +27,6 @@ export class MediaRoom {
         if (!announcedIp) {
             console.error("❌ CRITICAL: process.env.PUBLIC_IP is undefined! Check your .env file path.");
         }
-
-        console.log(`📡 Creating ${direction} transport for socket ${socketId} using announcedIp: ${announcedIp}`);
 
         const transport = await this.router.createWebRtcTransport({
             listenIps: [{ ip: "0.0.0.0", announcedIp }],
@@ -143,8 +140,6 @@ export class MediaRoom {
         consumer.on("transportclose", () => {
             this.loopbackConsumers.delete(consumer.id);
         });
-
-        console.log(`✅ Loopback consumer created (RECV) for ${producer.id}`);
     }
 
     private cleanupProducer(producerId: string) {
@@ -264,9 +259,6 @@ export class MediaRoom {
             temporalLayer
         });
 
-        console.log(
-            `✅ Consumer ${consumerId} layers set → spatial=${spatialLayer}, temporal=${temporalLayer}`
-        );
     }
 
     /* ================= PRODUCER CONTROL ================= */
@@ -282,7 +274,6 @@ export class MediaRoom {
         if (producer.paused) return;
 
         producer.pause();
-        console.log(`⏸️ Producer paused: ${producerId}`);
     }
 
     resumeProducer(producerId: string) {
@@ -296,7 +287,6 @@ export class MediaRoom {
         if (!producer.paused) return;
 
         producer.resume();
-        console.log(`▶️ Producer resumed: ${producerId}`);
     }
 
 

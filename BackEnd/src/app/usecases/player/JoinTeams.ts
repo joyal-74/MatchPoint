@@ -29,11 +29,20 @@ export class JoinTeamUseCase implements IJoinTeamUseCase {
 
         const playerName = `${player.userId?.firstName} ${player.userId?.lastName}`
 
-        const alreadyMember = team.members.some(m => {
-            return m.userId === userId;
-        });
+        const existingMember = team.members.find(m => m.userId.toString() === userId);
 
-        if (alreadyMember) throw new BadRequestError("Player already in this team");
+        if (existingMember) {
+            switch (existingMember.approvalStatus) {
+                case "approved":
+                    throw new BadRequestError("You are already a member of this team");
+                case "pending":
+                    throw new BadRequestError("Your join request is already pending approval");
+                case "rejected":
+                    throw new BadRequestError("Your request to join this team was previously rejected");
+                default:
+                    throw new BadRequestError("An active record already exists for this team");
+            }
+        }
 
         if (team.members.length >= team.maxPlayers)
             throw new BadRequestError("Team is full");

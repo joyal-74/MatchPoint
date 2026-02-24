@@ -23,6 +23,7 @@ export class GetTeamDetails implements IGetTeamDetails {
             throw new NotFoundError("Manager not found");
         }
 
+
         const teamDetails = TeamMapper.toTeamDTO(team);
         this._logger.info(`Fetched details of team: ${team.name}`);
 

@@ -23,14 +23,14 @@ export class SendMessageUseCase {
 
     async execute(data: SendMessageDTO) {
         const chat = await this._chatRepo.findChatsForUser(data.chatId);
-        console.log(data.chatId, "kjsdfh")
 
         if (!chat) throw new NotFoundError("Chat not found");
 
         const newMsg = await this.messageRepo.create({
             chatId: data.chatId,
             senderId: data.senderId,
-            text: data.text
+            text: data.text,
+            clientId : data.senderId
         });
 
         const io = this.socketServer.getIO();

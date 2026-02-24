@@ -63,6 +63,7 @@ export class TeamMongoMapper {
             stats: m.playerId.stats,
             status: m.status,
             approvalStatus: m.approvalStatus,
+            requestType: m.requestType,
         }));
 
         const approvedCount = team.members.filter((m) => m.approvalStatus === "approved").length;

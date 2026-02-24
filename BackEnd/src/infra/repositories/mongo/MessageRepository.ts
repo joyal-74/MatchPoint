@@ -12,6 +12,8 @@ export class MessageRepository implements IMessageRepository {
             chatId: data.chatId,
             senderId: data.senderId,
             text: data.text,
+            clientId: data.clientId,
+            replyTo: data.replyTo,
         });
 
         return MessageMapper.fromHydrated(doc);

@@ -23,6 +23,7 @@ export class MessageMapper {
             status: m.status,
             receiverId: m.receiverId,
             clientId: m.clientId,
+            replyTo: m.replyTo
         };
     }
 
@@ -56,6 +57,7 @@ export class MessageMapper {
             createdAt: doc.createdAt,
             receiverId: doc.receiverId?.toString(),
             clientId: doc.clientId,
+            replyTo: doc.replyTo
         };
     }
 
@@ -89,6 +91,7 @@ export class MessageMapper {
             createdAt: doc.createdAt,
             receiverId: doc.receiverId?.toString(),
             clientId: doc.clientId,
+            replyTo: doc.replyTo
         };
     }
 }

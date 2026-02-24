@@ -7,7 +7,12 @@ export type Message = {
     createdAt: string | Date;
     status?: "sent" | "pending" | "failed";
     clientId?: string;
-    profileImage : string;
+    profileImage: string;
+    replyTo?: {
+        messageId: string;
+        text: string;
+        senderName: string;
+    };
 };
 
 

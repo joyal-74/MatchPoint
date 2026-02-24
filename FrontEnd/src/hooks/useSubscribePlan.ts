@@ -22,7 +22,7 @@ export function useSubscribePlan({ plan, userId, userEmail, userName, userPhone,
     const { isProcessing: isRazorpayProcessing, initiatePayment } = useRazorpayGateway();
 
     const navigateToSuccess = () => {
-        navigate(`/subscription/complete`);
+        navigate(`/subscription`);
     }
 
     if (!plan || !userId) {

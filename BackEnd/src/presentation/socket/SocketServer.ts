@@ -15,9 +15,9 @@ import {
     ISetStrikerUseCase, IStartSuperOverUseCase, IUndoLastBallUseCase
 } from "../../app/repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
 import { MatchViewerHandler } from "./handlers/MatchViewerHandler.js";
-import { IPlayerRepository } from "../../app/repositories/interfaces/player/IPlayerRepository.js"; 
+import { IPlayerRepository } from "../../app/repositories/interfaces/player/IPlayerRepository.js";
 import { LiveStreamHandler } from "./handlers/LiveStreamHandler.js";
-import { ILiveStreamService } from "../../app/repositories/interfaces/services/LiveStreamService.js"; 
+import { ILiveStreamService } from "../../app/repositories/interfaces/services/LiveStreamService.js";
 import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
 import { inject, injectable } from "tsyringe";
 
@@ -70,7 +70,10 @@ export class SocketServer {
         this.io.on("connection", (socket: Socket) => {
 
             const authSocket = socket as AuthenticatedSocket;
+            const userId = authSocket.user._id;
             console.log(`Socket Connected: ${authSocket.id} | User: ${authSocket.user.firstName}`);
+
+            authSocket.join(userId);
 
             new ChatHandler(this.io, authSocket);
 
@@ -91,7 +94,7 @@ export class SocketServer {
                     endInnings: this.endInningsUseCase,
                     endOver: this.endOverUseCase,
                     retireBatsman: this.retireBatsmanUseCase,
-                    endMatch : this.endMatchUseCase
+                    endMatch: this.endMatchUseCase
                 },
                 this.matchRepo,
                 this.playerRepo
@@ -112,5 +115,21 @@ export class SocketServer {
     public getIO() {
         if (!this.io) throw new Error("Socket.io not initialized");
         return this.io;
+    }
+
+    public kickUserFromTeam(userId: string, teamId: string) {
+        if (!this.io) return;
+
+        this.io.to(userId).emit("removed-from-team", { teamId });
+
+        const userRoom = this.io.sockets.adapter.rooms.get(userId);
+        if (userRoom) {
+            userRoom.forEach((socketId) => {
+                const socket = this.io.sockets.sockets.get(socketId);
+                socket?.leave(teamId);
+            });
+        }
+
+        console.log(`[Socket] User ${userId} kicked from team room ${teamId}`);
     }
 }

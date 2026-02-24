@@ -10,7 +10,7 @@ import { RoleIdGenerator } from "../providers/RoleIdGenerator.js";
 import { EnvConfigProvider } from "../providers/EnvConfigProvider.js";
 import { RoomRegistry } from "../livestream/mediasoup/RoomRegistry.js";
 import { MongoUnitOfWork } from "../repositories/mongo/MongoUnitOfWork.js";
-import { container } from "tsyringe"; 
+import { container, Lifecycle } from "tsyringe"; 
 import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
 import { NodeCronScheduler } from "../../infra/services/NodeCronScheduler.js";
 import { CryptoEncryptionProvider } from "../providers/CryptoEncryptionProvider.js";
@@ -22,6 +22,7 @@ import { WalletTournamentProcessor } from "../providers/WalletTournamentProcesso
 import { RazorpayTournamentProcessor } from "../providers/RazorpayTournamentProcessor.js";
 import { RazorpayXPayoutProvider } from "../providers/RazorpayXPayoutProvider.js";
 import { NodeMailerService } from "../services/NodeMailerService.js";
+import { SocketServer } from "../../presentation/socket/SocketServer.js";
 
 
 
@@ -69,3 +70,6 @@ container.register(DI_TOKENS.PaymentStrategy, { useClass: SubscriptionPaymentStr
 container.register(DI_TOKENS.TournamentPaymentProcessor, { useClass: WalletTournamentProcessor });
 container.register(DI_TOKENS.TournamentPaymentProcessor, { useClass: RazorpayTournamentProcessor });
 container.register(DI_TOKENS.PayoutProvider, { useClass: RazorpayXPayoutProvider });
+
+
+container.register(SocketServer, { useClass: SocketServer }, { lifecycle: Lifecycle.Singleton });

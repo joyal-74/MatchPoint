@@ -19,7 +19,7 @@ const PlayersSection = ({
     openRemoveModal: (player: PlayerDetails) => void;
 }) => {
     const approvedPlayers = team.members?.filter((p: PlayerDetails) => p.approvalStatus === 'approved') || [];
-    const pendingPlayers = team.members?.filter((p: PlayerDetails) => p.approvalStatus === 'pending') || [];
+    const pendingPlayers = team.members?.filter((p: PlayerDetails) => p.approvalStatus === 'pending' && p.requestType === 'join') || [];
     
     return (
         <div className="bg-card text-card-foreground rounded-xl border border-border shadow-sm flex flex-col h-full min-h-[600px]">

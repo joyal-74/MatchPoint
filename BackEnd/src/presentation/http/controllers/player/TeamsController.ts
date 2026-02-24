@@ -29,13 +29,10 @@ export class TeamsController implements IPlayerTeamController {
      */
     getAllTeams = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const filters = httpRequest.query;
-        console.log(httpRequest.query, ' lajdlkafdaksf')
 
         this._logger.info(`[TeamController] getAllTeams`);
 
         const result = await this._getplayerTeamsUsecase.execute(filters);
-
-        console.log(result, 'result')
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, TeamMessages.TEAMS_FETCHED, result));
     };
@@ -51,8 +48,6 @@ export class TeamsController implements IPlayerTeamController {
         this._logger.info(`[TeamController] joinTeams → playerId=${playerId}, teamId=${teamId}`);
 
         const result = await this._joinTeamsUsecase.execute(playerId, teamId);
-
-        console.log(result)
 
         return new HttpResponse(
             HttpStatusCode.OK,
@@ -107,8 +102,6 @@ export class TeamsController implements IPlayerTeamController {
     playerLeaveTeam = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const { teamId } = httpRequest.params;
         const { playerId } = httpRequest.body;
-
-        console.log(httpRequest.body)
 
         const result = await this._getPlayerLeaveTeamUseCase.execute(playerId, teamId);
 

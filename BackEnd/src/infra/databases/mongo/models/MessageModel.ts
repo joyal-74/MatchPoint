@@ -7,6 +7,11 @@ export interface IMessage extends Document {
     status: 'pending' | 'sent' | 'failed';
     clientId?: string;
     receiverId?: mongoose.Types.ObjectId;
+    replyTo?: {
+        messageId: string;
+        text: string;
+        senderName: string;
+    };
     createdAt: Date;
 }
 
@@ -17,6 +22,11 @@ const messageSchema = new Schema<IMessage>({
     status: { type: String, enum: ['pending', 'sent', 'failed'], default: 'sent' },
     clientId: String,
     receiverId: { type: Schema.Types.ObjectId, ref: 'User' },
+    replyTo: {
+        messageId: { type: String },
+        text: { type: String },
+        senderName: { type: String }
+    },
     createdAt: { type: Date, default: Date.now },
 });
 

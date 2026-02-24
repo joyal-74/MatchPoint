@@ -135,8 +135,6 @@ export class TournamentController implements ITournamentController {
     tournamentDetails = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentId = httpRequest.params.tournamentId;
 
-        console.log(httpRequest.params, 'll')
-
         this._logger.info(`[TournamentController] details → tournamentId=${tournamentId}`);
         const result = await this._tournamentsDetailsUsecase.execute(tournamentId);
 
@@ -151,8 +149,6 @@ export class TournamentController implements ITournamentController {
     entryFeePayment = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
         const tournamentId = httpRequest.params.tournamentId;
         const { teamId, captainId, paymentMethod, managerId } = httpRequest.body;
-
-        console.log(httpRequest.body, 'jjj')
 
         this._logger.info(`[TournamentController] entryFee → tournamentId=${tournamentId}`);
         const result = await this._entryFeePaymentUsecase.execute(tournamentId, teamId, captainId, managerId, paymentMethod);

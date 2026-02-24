@@ -18,8 +18,8 @@ export class PlanController {
     ) { }
 
     create = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const planData = httpRequest.body
-        console.log(httpRequest.body, "kjghkdgjh")
+        const planData = httpRequest.body;
+
         const plan = await this._createPlanUseCase.execute(planData);
 
         return new HttpResponse(HttpStatusCode.CREATED, buildResponse(true, SubscriptionMessages.PLAN_CREATED, plan));

@@ -46,6 +46,7 @@ interface BasePlayer {
     profileImage: string;
     status: playerStatus;
     approvalStatus: 'approved' | 'pending' | 'rejected';
+    requestType: 'invite' | 'join';
 }
 
 interface CricketPlayer extends BasePlayer {

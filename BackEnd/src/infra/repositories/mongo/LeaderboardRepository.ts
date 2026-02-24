@@ -77,8 +77,6 @@ export class LeaderboardRepository implements ILeaderboardRepository {
     async getTournamentLeaderboard(tournamentId: string): Promise<Leaderboard> {
         const objectId = new Types.ObjectId(tournamentId);
 
-        console.log("Fetching leaderboard for tournament:", tournamentId);
-
         // Top Runs Scorer - FIXED with proper team lookup
         const topRunsStats = await TournamentMatchStatsModel.aggregate([
             { $match: { tournamentId: objectId } },
@@ -172,8 +170,6 @@ export class LeaderboardRepository implements ILeaderboardRepository {
             }
         ]);
 
-        console.log("Top runs stats found:", topRunsStats.length);
-        console.log("Sample runs data:", JSON.stringify(topRunsStats[0], null, 2));
 
         // Top Wicket Taker - Same fix
         const topWicketsStats = await TournamentMatchStatsModel.aggregate([
@@ -268,8 +264,6 @@ export class LeaderboardRepository implements ILeaderboardRepository {
             }
         ]);
 
-        console.log("Top wickets stats found:", topWicketsStats.length);
-        console.log("Sample wickets data:", JSON.stringify(topWicketsStats[0], null, 2));
 
         // Most Valuable Player - Fixed with team lookup
         const mvpStats = await TournamentMatchStatsModel.aggregate([
@@ -428,8 +422,6 @@ export class LeaderboardRepository implements ILeaderboardRepository {
             }
         ]);
 
-        console.log("MVP stats found:", mvpStats.length);
-        console.log("Sample MVP data:", JSON.stringify(mvpStats[0], null, 2));
 
         return {
             tournamentId,

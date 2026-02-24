@@ -15,7 +15,6 @@ export class BulkUpdateController {
 
     bulkSignUp = async (_httprequest : IHttpRequest): Promise<IHttpResponse> => {
         const { users } = _httprequest.body;
-        console.log(users)
 
         if (!Array.isArray(users)) {
             return new HttpResponse(HttpStatusCode.BAD_REQUEST, buildResponse(true, 'Users must be an array'));

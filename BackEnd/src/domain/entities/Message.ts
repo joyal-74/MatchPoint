@@ -9,4 +9,9 @@ export interface Message {
     receiverId?: string;
     clientId?: string;
     profileImage : string;
+    replyTo?: {
+        messageId: string;
+        text: string;
+        senderName: string;
+    };
 }

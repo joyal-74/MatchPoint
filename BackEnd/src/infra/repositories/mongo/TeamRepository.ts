@@ -50,6 +50,8 @@ export class TeamRepository extends BaseRepository<TeamRegister, TeamDataFull> i
                 select: "_id firstName lastName",
             });
 
+            console.log(teams)
+
         return TeamMongoMapper.toDomainFullArray(teams as unknown as TeamSummaryPopulatedDocument[]);
     }
 
@@ -157,6 +159,7 @@ export class TeamRepository extends BaseRepository<TeamRegister, TeamDataFull> i
 
 
         const result = TeamMongoMapper.toDomainFull(team as unknown as TeamSummaryPopulatedDocument);
+
         return result
     }
 

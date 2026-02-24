@@ -24,7 +24,6 @@ export const PlanCardUser: React.FC<{
     const isDowngrade = thisRank < currentRank;
     const isPopular = plan.level === "Super"; 
 
-    // Logic: Disable if current OR if this specific plan is already the pending one
     const isDisabled = isCurrent || isPending;
 
     // Determine Button Styling

@@ -74,7 +74,6 @@ export class MatchesRepository implements IMatchesRepository {
 
     async getStreamMetadata(matchId: string): Promise<MatchStreamData> {
         const match = await MatchesModel.findById(matchId).populate('streamerId');
-        console.log(match)
         return MatchMongoMapper.toMetaDataResponse(match);
     }
 

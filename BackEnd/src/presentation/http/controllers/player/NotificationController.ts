@@ -34,8 +34,6 @@ export class NotificationController {
     markAsRead  = async (httpRequest: IHttpRequest) : Promise<IHttpResponse> =>  {
         const { notificationId, userId } = httpRequest.body;
 
-        console.log(httpRequest.body, 'body')
-
         const count = await this._markAsReadUseCase.execute(notificationId, userId);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Notifications mark as read", count));

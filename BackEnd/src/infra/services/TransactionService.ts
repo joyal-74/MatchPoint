@@ -67,8 +67,6 @@ export class TransactionService implements ITransactionService {
     private async executeCharge({ playerUserId, tournamentId, amount, description }: ChargeEntryFeeDTO, ctx: unknown) {
         const playerWallet = await this.getOrCreateWallet(playerUserId, 'USER', ctx);
 
-        console.log(playerWallet, '??????')
-
         const existingTxn = await this.transactionRepo.exists({
             metadata: {
                 tournamentId: tournamentId

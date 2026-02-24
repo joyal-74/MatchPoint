@@ -37,6 +37,7 @@ export interface MapMember {
     };
     status: playerStatus;
     approvalStatus: PlayerApprovalStatus;
+    requestType : requestType;
 }
 
 // For team list

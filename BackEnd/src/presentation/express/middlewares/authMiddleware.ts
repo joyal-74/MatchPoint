@@ -25,7 +25,6 @@ export class AuthMiddleware {
     public restrict(allowedRoles: string[] = []) {
         return async (req: AuthRequest, res: Response, next: NextFunction) => {
             try {
-                // 1. Extract Token
                 const token = req.cookies?.accessToken || req.headers.authorization?.split(" ")[1];
 
                 if (!token) {
@@ -33,12 +32,8 @@ export class AuthMiddleware {
                         .json(buildResponse(false, "No token provided"));
                 }
 
-                // 2. Verify Token via Injected Service
                 const payload = await this._jwtService.verifyAccessToken(token);
 
-                console.log(payload)
-
-                // 3. Check User via Injected Repository
                 let user : AdminResponse | UserResponseDTO | null;
                 if(payload.role === 'admin'){
                     user = await this._adminRepo.findById(payload.userId);

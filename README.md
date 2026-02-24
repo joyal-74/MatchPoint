@@ -54,7 +54,7 @@ MatchPoint is a **sports tournament management platform** designed to simplify t
 
 * **Frontend**: React.js, Redux, Tailwind CSS
 * **Backend**: Node.js, Express.js, clean architecture
-* **Database**: MongoDB / PostgreSQL
+* **Database**: MongoDB
 * **Authentication**: JWT, Role-Based Access Control
 * **Real-time Features**: Socket.io (for live chat, live scores)
 * **Streaming**: WebRTC.
@@ -67,14 +67,14 @@ MatchPoint is a **sports tournament management platform** designed to simplify t
 
 ```
 MatchPoint/
-├── backend/              # Express.js backend
+├── BackEnd/              # Express.js backend
 │   ├── src/
 │   │   ├── app/
 │   │   ├── domain/
 │   │   ├── infra/
 │   │   └── implementation/
 │   └── server.ts
-├── frontend/             # React frontend
+├── FrontEnd/             # React frontend
 │   ├── src/
 │   │   ├── api/
 │   │   ├── app/
@@ -109,16 +109,17 @@ MatchPoint/
 
    ```bash
    # Backend
-   cd backend
+   cd BackEnd
    npm install
 
    # Frontend
-   cd ../frontend
+   cd ../FrontEnd
    npm install
    ```
 
 3. **Setup Environment Variables**
    Create `.env` files in both `backend/` and `frontend/` with required configs:
+   or rename .ENV_SAMPLE to .env
 
    ```
    PORT=5000
@@ -129,11 +130,11 @@ MatchPoint/
 
    ```bash
    # Run backend
-   cd backend
+   cd BackEnd
    npm run dev
 
-   # Run frontend
-   cd ../frontend
+   # Run FrontEnd
+   cd ../FrontEnd
    npm run dev
    ```
 

@@ -15,7 +15,6 @@ export class TournamentRegistrationValidator implements ITournamentRegistrationV
 
     async execute(tournamentId: string, attemptingTeamId: string): Promise<void> {
         const newTeam = await this._teamRepo.findById(attemptingTeamId);
-        console.log(newTeam, " jjsakjfhsdgf")
         if (!newTeam) throw new BadRequestError("Team not found");
 
         const newPlayerIds = new Set<string>(

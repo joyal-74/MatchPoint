@@ -85,8 +85,17 @@ const messagesSlice = createSlice({
                 // but preserve the clientId for tracking
                 state.byChat[chatId][existingIndex] = {
                     ...finalMessage,
-                    clientId // Keep the original clientId to maintain the connection
+                    clientId 
                 };
+            }
+        },
+
+        deleteMessage: (state, action: PayloadAction<{ chatId: string | null; clientId: string }>) => {
+            const { chatId, clientId } = action.payload;
+            if (chatId && state.byChat[chatId]) {
+                state.byChat[chatId] = state.byChat[chatId].filter(
+                    (msg) => msg.clientId !== clientId
+                );
             }
         },
         clearMessagesForChat(state, action: PayloadAction<string>) {
@@ -184,6 +193,7 @@ export const {
     markMessageStatus,
     replaceOptimisticMessage,
     clearMessagesForChat,
+    deleteMessage,
     clearError
 } = messagesSlice.actions;
 export default messagesSlice.reducer;

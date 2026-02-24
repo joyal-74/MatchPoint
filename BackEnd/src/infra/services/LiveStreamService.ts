@@ -96,7 +96,6 @@ export class LiveStreamService implements ILiveStreamService {
     }
 
     public async closeRoom(matchId: string): Promise<void> {
-        console.log(`[SERVICE] Requesting to close room: ${matchId}`);
         await this._matchRepository.updateStreamStatus(matchId, false);
         await this._roomRegistry.removeRoom(matchId);
     }

@@ -41,7 +41,6 @@ export class PlanRepository implements IPlanRepository {
 
     async update(id: string, newPlan: Partial<Plan>): Promise<Plan> {
         const { _id, ...updateData } = newPlan as Plan;
-        console.log(_id)
 
         const result = await PlanModel.findByIdAndUpdate(
             id,

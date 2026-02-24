@@ -65,7 +65,6 @@ export class RazorpayXPayoutProvider implements IPayoutProvider {
         try {
             const accountNumber = this._config.getRazorpayXAccountNumber();
             const mode = data.type === 'upi' ? 'UPI' : 'IMPS';
-            console.log(data.fundAccountId, 'fundId')
             const response = await axios.post(
                 `${this.BASE_URL}/payouts`,
                 {

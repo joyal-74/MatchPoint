@@ -10,6 +10,8 @@ const PendingList = ({
     openPlayerDetails: (player: PlayerDetails) => void;
     openApprovalModal: (player: PlayerDetails) => void;
 }) => {
+
+    console.log(players)
     
     if (players.length === 0) return (
         <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-dashed border-border rounded-xl bg-muted/10">

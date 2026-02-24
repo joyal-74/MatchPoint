@@ -98,7 +98,12 @@ export const useProfile = () => {
 
         try {
             if (activeTab === "user" && formData) {
-                const userData = appendFormEntries(formData);
+                const cleanData = {
+                    ...formData,
+                    gender: formData.gender?.toLowerCase()
+                };
+
+                const userData = appendFormEntries(cleanData);
                 if (selectedFile) userData.append("file", selectedFile);
                 await dispatch(updatePlayerData({ userData, userId })).unwrap();
                 toast.success("User info updated successfully!");
