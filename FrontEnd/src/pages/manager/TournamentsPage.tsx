@@ -47,47 +47,43 @@ export default function TournamentsPage() {
             <Navbar />
 
             <main className="flex-1 w-full px-4 md:px-10 mx-auto pt-4 pb-10">
-                <TournamentsHeader userName={user?.firstName || 'Manager'} />
+                <TournamentsHeader
+                    userName={user?.firstName || 'Manager'}
+                    onCreate={() => navigate(`/manager/tournaments/create`)}
+                    showCreateButton={showMyTournaments.length > 0}
+                />
 
-                <div className="mt-8 space-y-6">
-                    {/* Key Metrics */}
-                    <DashboardStats
-                        myTournamentsCount={showMyTournaments.length}
-                        totalExploreCount={0} // Irrelevant here, or pass a placeholder
-                    />
-
-                    {/* Detailed Charts */}
-                    {analyticsData ? (
-                        <DashboardAnalytics
-                            revenueData={analyticsData.revenueData}
-                            formatData={analyticsData.formatData}
-                            trafficData={analyticsData.trafficData}
-                            topTournaments={analyticsData.topTournaments}
-                        />
-                    ) : (
-                        // Subtle Skeleton for Analytics
-                        <div className="h-[300px] w-full bg-muted/20 rounded-xl animate-pulse flex items-center justify-center text-muted-foreground/50 text-sm">
-                            Loading Dashboard Insights...
+                {showMyTournaments.length > 0 ? (
+                    <div className="mt-8 space-y-12">
+                        {/* Dashboard Stats & Analytics */}
+                        <div className="space-y-6">
+                            <DashboardStats myTournamentsCount={showMyTournaments.length} totalExploreCount={0} />
+                            {analyticsData && <DashboardAnalytics {...analyticsData} />}
                         </div>
-                    )}
-                </div>
 
-                {/* === SECTION 3: MY TOURNAMENTS === */}
-                <div className="mt-12">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-bold text-foreground">Your Tournaments</h2>
-                        {/* Optional: Add a small filter for 'Active' vs 'Archived' here later if needed */}
+                        {/* Tournaments List */}
+                        <div>
+                            <h2 className="text-2xl font-bold text-foreground mb-6">Your Tournaments</h2>
+                            <MyTournamentsSection
+                                tournaments={showMyTournaments}
+                                hasMore={hasMoreMyTournaments}
+                                onShowAll={handleShowAll}
+                                onCancel={handleCancelClick}
+                                onCreate={() => navigate(`/manager/tournaments/create`)}
+                            />
+                        </div>
                     </div>
-
-                    <MyTournamentsSection
-                        tournaments={showMyTournaments}
-                        hasMore={hasMoreMyTournaments}
-                        onShowAll={handleShowAll}
-                        onCancel={handleCancelClick}
-                        onCreate={() => navigate(`/manager/tournaments/create`)}
-                    />
-                </div>
-
+                ) : (
+                    <div className="mt-20">
+                        <MyTournamentsSection
+                            tournaments={[]}
+                            onCreate={() => navigate(`/manager/tournaments/create`)}
+                            onShowAll={handleShowAll}
+                            onCancel={handleCancelClick}
+                            hasMore={false}
+                        />
+                    </div>
+                )}
             </main>
 
             <ConfirmModal

@@ -50,7 +50,7 @@ export class TeamRepository extends BaseRepository<TeamRegister, TeamDataFull> i
                 select: "_id firstName lastName",
             });
 
-            console.log(teams)
+        console.log(teams)
 
         return TeamMongoMapper.toDomainFullArray(teams as unknown as TeamSummaryPopulatedDocument[]);
     }
@@ -157,8 +157,11 @@ export class TeamRepository extends BaseRepository<TeamRegister, TeamDataFull> i
 
         if (!team) return null;
 
+        const teamObj = team.toObject();
+        teamObj.members = teamObj.members.filter(m => m.approvalStatus !== 'rejected');
 
-        const result = TeamMongoMapper.toDomainFull(team as unknown as TeamSummaryPopulatedDocument);
+
+        const result = TeamMongoMapper.toDomainFull(teamObj as unknown as TeamSummaryPopulatedDocument);
 
         return result
     }

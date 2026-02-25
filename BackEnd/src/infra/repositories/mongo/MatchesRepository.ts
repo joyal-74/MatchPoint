@@ -9,6 +9,7 @@ import { NotFoundError } from "../../../domain/errors/index.js";
 import MatchesModel from "../../databases/mongo/models/MatchesModel.js";
 import { TournamentMatchStatsModel } from "../../databases/mongo/models/TournamentStatsModel.js";
 import { MatchMongoMapper } from "../../utils/mappers/MatchMongoMapper.js";
+import { AllMatchQuery } from "../../../app/repositories/interfaces/manager/IMatchStatsRepo.js";
 
 
 export class MatchesRepository implements IMatchesRepository {
@@ -70,6 +71,46 @@ export class MatchesRepository implements IMatchesRepository {
     async getMatchById(matchId: string): Promise<Match | null> {
         const match = await MatchesModel.findById(matchId).lean();
         return MatchMongoMapper.toMatchResponse(match);
+    }
+
+    async findAllMatches(query: AllMatchQuery): Promise<{ matches: Match[]; totalPages: number; }> {
+        const { limit = 10, page = 1, search, userId, status } = query;
+
+        const filter: FilterQuery<any> = {};
+
+        if (userId) {
+            filter.createdBy = userId;
+        }
+
+        if (status) {
+            filter.status = status;
+        }
+
+        if (search) {
+            filter.$or = [
+                { venue: { $regex: search, $options: "i" } },
+                { status: { $regex: search, $options: "i" } },
+
+            ];
+        }
+
+        const skip = (page - 1) * limit;
+
+        const [matchDocs, totalCount] = await Promise.all([
+            MatchesModel.find(filter)
+                .populate("teamA", "name logo")
+                .populate("teamB", "name logo")
+                .sort({ date: -1, createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .lean(),
+            MatchesModel.countDocuments(filter)
+        ]);
+
+        return {
+            matches: MatchMongoMapper.toMatchResponseArray(matchDocs),
+            totalPages: Math.ceil(totalCount / limit)
+        };
     }
 
     async getStreamMetadata(matchId: string): Promise<MatchStreamData> {
@@ -235,7 +276,7 @@ export class MatchesRepository implements IMatchesRepository {
             resultDescription: data.resultDescription
         });
 
-        
+
         const updatePayload = {
             status: "completed",
             winner: (data.winner && Types.ObjectId.isValid(data.winner)) ? data.winner : null,

@@ -97,7 +97,7 @@ export interface IEndMatchUseCase {
 }
 
 export interface IGetAllMatches {
-    execute(search: string, limit: number, page: number): Promise<{ matches: MatchEntity[], totalPages: number }>;
+    execute(search: string, limit: number, page: number, status: string): Promise<{ matches: Match[], totalPages: number }>;
 }
 
 export interface IGetUmpireAllMatches {

@@ -155,6 +155,7 @@ import { HandlePayoutWebhookUseCase } from "../../app/usecases/shared/HandlePayo
 import { GetUserWalletUseCase } from "../../app/usecases/shared/GetUserWalletUseCase.js";
 import { BulkUserSignup } from "../../app/usecases/admin/BulkUserSignup.js";
 import { GetAvailableUmpires } from "../../app/usecases/manager/tournaments/GetAvailableUmpires.js";
+import { ClearAllNotifications } from "../../app/usecases/shared/notifications/ClearAllNotifications.js";
 
 
 // Registrations
@@ -325,6 +326,7 @@ container.register(DI_TOKENS.VerifyWalletPaymentUseCase, { useClass: VerifyWalle
 container.register(DI_TOKENS.InitiateWithdrawalUseCase, { useClass: InitiateWithdrawalUseCase });
 container.register(DI_TOKENS.HandleWebhookUseCase, { useClass: HandlePayoutWebhookUseCase });
 container.register(DI_TOKENS.GetUserWalletUseCase, { useClass: GetUserWalletUseCase });
+container.register(DI_TOKENS.ClearAllNotifications, { useClass: ClearAllNotifications });
 
 // --- Viewer ---
 container.register(DI_TOKENS.GetViewerProfile, { useClass: GetViewerProfile });

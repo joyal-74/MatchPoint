@@ -1,4 +1,13 @@
-export default function TournamentsHeader({userName} : {userName : string}) {
+import { Plus } from "lucide-react";
+
+interface HeaderProps {
+    userName: string;
+    showCreateButton: boolean;
+    onCreate?: () => void;
+
+}
+
+export default function TournamentsHeader({ userName, showCreateButton, onCreate }: HeaderProps) {
     return (
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
@@ -9,6 +18,16 @@ export default function TournamentsHeader({userName} : {userName : string}) {
                     Welcome back, {userName}. Manage your leagues and track progress.
                 </p>
             </div>
+
+            {showCreateButton && (
+                <button
+                    onClick={onCreate}
+                    className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20"
+                >
+                    <Plus size={18} />
+                    <span>Create Tournament</span>
+                </button>
+            )}
         </div>
     );
 }

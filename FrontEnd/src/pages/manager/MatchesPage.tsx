@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Search, MapPin, Trophy, AlertCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, MapPin, Trophy, AlertCircle, Loader2, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import Navbar from '../../components/manager/Navbar';
 
 import { fetchAllMatches } from '../../features/manager/Matches/matchThunks';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { useDebounce } from '../../hooks/useDebounce';
-import type { Match } from '../../domain/match/types';
 
 const tabs = [
     { id: 'all', label: 'All Matches' },
@@ -50,12 +49,12 @@ const MatchesSection = () => {
             <Navbar />
 
             <section className="p-6 md:px-12 lg:px-16">
-                <div className="mx-auto max-w-7xl space-y-8">
+                <div className="mx-auto space-y-8">
 
                     {/* Header Section */}
                     <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
                         <div>
-                            <h2 className="text-4xl font-black tracking-tighter uppercase italic">Match Center</h2>
+                            <h2 className="text-4xl font-black">Match Center</h2>
                         </div>
 
                         {/* Search Bar */}
@@ -81,7 +80,7 @@ const MatchesSection = () => {
                                 <button
                                     key={tab.id}
                                     onClick={() => handleTabChange(tab.id)}
-                                    className={`relative whitespace-nowrap pb-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === tab.id ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                                    className={`relative whitespace-nowrap pb-4 text-xs font-bold transition-all ${activeTab === tab.id ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                                         }`}
                                 >
                                     {tab.label}
@@ -145,65 +144,96 @@ const MatchesSection = () => {
     );
 };
 
+export default MatchesSection;
+
 // --- Sub-Component: MatchCard ---
-const MatchCard = ({ match }: { match: Match }) => {
+const MatchCard = ({ match }: { match: any }) => {
     const isLive = match.status === 'ongoing';
-    
-    // Fallback date if string is malformed
-    const matchDate = match.date ? new Date(match.date).toLocaleDateString('en-GB') : 'TBD';
+
+    const matchDate = match.date
+        ? new Date(match.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
+        : 'TBD';
 
     return (
-        <div className="group flex flex-col gap-4 rounded-2xl border border-border bg-card p-5 transition-all hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 cursor-pointer">
+        <div className="group relative flex flex-col gap-5 rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 cursor-pointer">
+
+            {/* Header: Tournament & Status */}
             <div className="flex items-center justify-between">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 line-clamp-1 max-w-[80%]">
-                    {match.tournamentName || "Tournament"}
-                </span>
+                <div className="flex items-center gap-2">
+                    <Trophy size={12} className="text-primary/60" />
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground line-clamp-1">
+                        {match.tournamentName || "Tournament"}
+                    </span>
+                </div>
+
                 {isLive && (
-                    <span className="flex h-2 w-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
+                    <div className="flex items-center gap-1.5 rounded-full bg-red-500/10 px-2 py-0.5">
+                        <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+                        </span>
+                        <span className="text-[10px] font-black uppercase tracking-tighter text-red-600">Live</span>
+                    </div>
                 )}
             </div>
 
-            <div className="flex items-center justify-between py-2">
+            {/* Teams Section */}
+            <div className="flex items-center justify-between px-2">
                 {/* Team A */}
-                <div className="flex flex-col items-center gap-2 w-1/3">
-                    <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center overflow-hidden border border-border/50">
-                        {match.teamA?.logo ? (
-                            <img src={match.teamA.logo} className="w-full h-full object-contain" alt="" />
-                        ) : (
-                            <span className="text-[10px] font-black">{match.teamA?.name?.substring(0,2) || 'A'}</span>
-                        )}
+                <div className="flex flex-col items-center gap-3 w-1/3">
+                    <div className="relative group-hover:scale-110 transition-transform duration-300">
+                        <div className="w-14 h-14 bg-gradient-to-br from-muted to-background rounded-2xl flex items-center justify-center overflow-hidden border border-border/80 shadow-sm">
+                            {match.teamLogoA ? (
+                                <img src={match.teamLogoA} className="w-10 h-10 object-contain" alt={match.teamA} />
+                            ) : (
+                                <span className="text-xs font-black opacity-40">{match.teamA.substring(0, 2).toUpperCase()}</span>
+                            )}
+                        </div>
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-tighter text-center line-clamp-1">{match.teamA?.name}</span>
+                    <span className="text-xs font-bold uppercase tracking-tight text-center line-clamp-1">{match.teamA}</span>
                 </div>
 
-                <div className="flex flex-col items-center w-1/3">
-                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/30 mb-1">VS</span>
+                {/* Center: VS or Score */}
+                <div className="flex flex-col items-center justify-center w-1/4">
+                    {isLive || match.status === 'completed' ? (
+                        <div className="flex items-center gap-2 font-black text-xl tracking-tighter italic">
+                            <span>{match.scoreA || 0}</span>
+                            <span className="text-muted-foreground/30 text-sm">:</span>
+                            <span>{match.scoreB || 0}</span>
+                        </div>
+                    ) : (
+                        <div className="px-3 py-1 rounded-md bg-muted/50 border border-border/50">
+                            <span className="text-[10px] font-black text-muted-foreground/60 uppercase">VS</span>
+                        </div>
+                    )}
                 </div>
 
                 {/* Team B */}
-                <div className="flex flex-col items-center gap-2 w-1/3">
-                    <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center overflow-hidden border border-border/50">
-                        {match.teamB?.logo ? (
-                            <img src={match.teamB.logo} className="w-full h-full object-contain" alt="" />
-                        ) : (
-                            <span className="text-[10px] font-black">{match.teamB?.name?.substring(0,2) || 'B'}</span>
-                        )}
+                <div className="flex flex-col items-center gap-3 w-1/3">
+                    <div className="relative group-hover:scale-110 transition-transform duration-300">
+                        <div className="w-14 h-14 bg-gradient-to-br from-muted to-background rounded-2xl flex items-center justify-center overflow-hidden border border-border/80 shadow-sm">
+                            {match.teamLogoB ? (
+                                <img src={match.teamLogoB} className="w-10 h-10 object-contain" alt={match.teamB} />
+                            ) : (
+                                <span className="text-xs font-black opacity-40">{match.teamB.substring(0, 2).toUpperCase()}</span>
+                            )}
+                        </div>
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-tighter text-center line-clamp-1">{match.teamB?.name}</span>
+                    <span className="text-xs font-bold uppercase tracking-tight text-center line-clamp-1">{match.teamB}</span>
                 </div>
             </div>
 
-            <div className="mt-auto pt-3 border-t border-border/50 flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-[9px] font-bold text-muted-foreground uppercase">
-                    <MapPin size={10} /> 
-                    <span className="line-clamp-1 max-w-[120px]">{match.venue || "TBD Venue"}</span>
+            {/* Footer */}
+            <div className="mt-2 pt-4 border-t border-border/40 flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase">
+                    <MapPin size={12} className="opacity-70" />
+                    <span className="truncate max-w-[100px]">{match.venue || "TBD Venue"}</span>
                 </div>
-                <div className="text-[9px] font-black text-primary uppercase">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold text-foreground bg-muted/50 px-2 py-1 rounded-md">
+                    <Calendar size={12} className="text-primary" />
                     {matchDate}
                 </div>
             </div>
         </div>
     );
 };
-
-export default MatchesSection;

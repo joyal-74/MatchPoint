@@ -20,5 +20,4 @@ export const umpireEndpoints = {
         const { data } = await axiosClient.get(UMPIRE_ROUTES.GET_All_MATCHES(userId));
         return data.data;
     },
-
 }

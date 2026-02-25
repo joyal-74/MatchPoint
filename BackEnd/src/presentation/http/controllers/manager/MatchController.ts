@@ -340,9 +340,9 @@ export class MatchController {
 
 
     getAllMatches = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { search, limit, page } = httpRequest.params;
+        const { search, limit, page, status } = httpRequest.query;
 
-        const result = await this._getAllMatches.execute(search, limit, page);
+        const result = await this._getAllMatches.execute(search, limit, page, status);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Match fetched", result));
     };

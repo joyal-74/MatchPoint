@@ -1,5 +1,5 @@
 import { lazy, Suspense, type JSX } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
 import RoleLayoutWrapper from "../pages/shared/RoleLayoutWrapper";
@@ -20,7 +20,7 @@ const LiveMatchDetails = lazy(() => import("../pages/player/LiveMatchDetails"));
 const LiveMatchesPage = lazy(() => import("../pages/player/LiveMatchPage"));
 const SettingsPage = lazy(() => import("../pages/shared/SettingsPage"));
 const SubscriptionPage = lazy(() => import("../pages/shared/SubscriptionsPage"));
-const NotificationsPage = lazy(() => import("../pages/player/NotificationsPage"));
+const NotificationsPage = lazy(() => import("../pages/shared/NotificationsPage"));
 const WalletPage = lazy(() => import("../pages/shared/PaymentsPage"));
 const FinancialHistory = lazy(() => import("../pages/shared/FinancialHistory"));
 
@@ -53,6 +53,9 @@ const PlayerRoutes = () => {
             <Route path="subscription" element={<RoleLayoutWrapper><SubscriptionPage /></RoleLayoutWrapper>} />
             <Route path="notifications" element={<RoleLayoutWrapper><NotificationsPage /></RoleLayoutWrapper>} />
             <Route path="leaderboard" element={<NavbarWrapper><AllTimeLeaderboard /></NavbarWrapper>} />
+
+            <Route path="*" element={<Navigate to="/404" replace />} />
+
         </Routes>
     );
 };

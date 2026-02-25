@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "dev": "nodemon --watch src --ext ts --exec \"tsx src/server.ts\"",
-    "build": "tsc && tsc-alias",
+    "dev": "tsx watch src/server.ts",
+    "build": "esbuild src/server.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/server.js --tsconfig=tsconfig.json --keep-names --external:express --external:mongoose --external:mediasoup --banner:js=\"import { createRequire } from 'module'; const require = createRequire(import.meta.url); import { fileURLToPath } from 'url'; import { dirname } from 'path'; const __filename = fileURLToPath(import.meta.url); const __dirname = dirname(__filename);\"",
     "start": "node dist/server.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -26,6 +26,7 @@
     "@types/nodemailer": "^7.0.1",
     "@types/socket.io": "^3.0.1",
     "@types/uuid": "^10.0.0",
+    "esbuild": "^0.27.3",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",

@@ -1,5 +1,5 @@
 import { lazy, Suspense, type JSX } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 // Auth Pages
 const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
@@ -12,7 +12,7 @@ const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPasswordPage'));
 // Shared Pages
 const PrivacyPolicy = lazy(() => import('../pages/shared/PrivacyPolicy'));
 const SettingsPage = lazy(() => import('../pages/shared/SettingsPage'));
-const NotificationsPage = lazy(() => import('../pages/player/NotificationsPage'));
+const NotificationsPage = lazy(() => import('../pages/shared/NotificationsPage'));
 const AllTimeLeaderboard = lazy(() => import('../pages/shared/LeaderBoard/AllTimeLeaderboard'));
 const UserSubscriptionPage = lazy(() => import('../pages/shared/SubscriptionsPage'));
 const Blocked = lazy(() => import('../pages/shared/Blocked'));
@@ -68,7 +68,7 @@ const RootModule = () => {
                 <Route path="live/:matchId/details/stream" element={withViewerProtection(<LiveStreamViewer />)} />
                 <Route path="payments" element={withViewerProtection(<WalletPage />)} />
                 <Route path="payments/history" element={withViewerProtection(<FinancialHistory />)} />
-                
+
                 {/* Root-level Shared Pages (Used by Viewers) */}
                 <Route path="/notifications" element={withViewerProtection(<ViewerProfileLayout><NotificationsPage /></ViewerProfileLayout>)} />
                 <Route path="/settings" element={withViewerProtection(<ViewerProfileLayout><SettingsPage /></ViewerProfileLayout>)} />
@@ -79,6 +79,9 @@ const RootModule = () => {
                 <Route path="/dashboard" element={<ProtectedRoute><RoleRedirect /></ProtectedRoute>} />
                 <Route path="/unauthorized" element={<Unauthorized />} />
                 <Route path="/blocked" element={<Blocked />} />
+
+                <Route path="*" element={<Navigate to="/404" replace />} />
+
             </Routes>
         </Suspense>
     );

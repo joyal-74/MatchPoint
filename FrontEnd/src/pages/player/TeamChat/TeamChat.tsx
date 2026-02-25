@@ -21,7 +21,7 @@ export default function TeamChat() {
             // Scroll to bottom
             container.scrollTop = container.scrollHeight;
         }
-    }, [sortedMessages, activeTeam?._id]);
+    }, [sortedMessages, activeTeam?._id, refs.messagesContainerRef]);
 
     return (
         <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden pb-16 lg:pb-0">

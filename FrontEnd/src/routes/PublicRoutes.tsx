@@ -9,7 +9,7 @@ const EnterForgotOtpPage = lazy(() => import('../pages/auth/EnterForgotOtpPage')
 const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPasswordPage'));
 const PrivacyPolicy = lazy(() => import('../pages/shared/PrivacyPolicy'));
 const SettingsPage = lazy(() => import('../pages/shared/SettingsPage'));
-const NotificationsPage = lazy(() => import('../pages/player/NotificationsPage'));
+const NotificationsPage = lazy(() => import('../pages/shared/NotificationsPage'));
 const AllTimeLeaderboard = lazy(() => import('../pages/shared/LeaderBoard/AllTimeLeaderboard'));
 const UserSubscriptionPage = lazy(() => import('../pages/shared/SubscriptionsPage'));
 

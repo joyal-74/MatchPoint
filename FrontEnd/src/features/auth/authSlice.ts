@@ -198,11 +198,10 @@ const authSlice = createSlice({
                 state.isInitialized = true;
                 state.error = null;
             })
-            .addCase(refreshToken.rejected, (state, action) => {
+            .addCase(refreshToken.rejected, (state) => {
+                state.isInitialized = true;
                 state.loading = false;
                 state.user = null;
-                state.error = action.payload as string;
-                state.isInitialized = true;
             });
 
         // Signup

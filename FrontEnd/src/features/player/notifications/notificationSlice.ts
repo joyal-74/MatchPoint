@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Notification } from "./notificationTypes";
-import { markAllNotificationRead, markNotificationRead } from "./notificationThunks";
+import { deleteNotifications, markAllNotificationRead, markNotificationRead } from "./notificationThunks";
 
 interface NotificationState {
     items: Notification[];
@@ -62,6 +62,19 @@ const notificationSlice = createSlice({
                     }
                     state.items[index] = updatedNotification;
                 }
+            })
+
+        builder
+            .addCase(deleteNotifications.fulfilled, (state) => {
+                state.items = [];
+                state.unreadCount = 0;
+                state.loading = false;
+            })
+            .addCase(deleteNotifications.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(deleteNotifications.rejected, (state) => {
+                state.loading = false;
             })
     },
 });

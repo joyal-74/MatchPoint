@@ -1,5 +1,5 @@
 import type { LoginSocialResult, LoginUser, User } from '../../types/User';
-import type { CompleteUserData} from '../../types/api/UserApi';
+import type { CompleteUserData } from '../../types/api/UserApi';
 import type { ChangePasswordPayload, LoginPayload, OtpPayload, ResetPasswordPayload } from '../../types/api/authPayloads';
 import { axiosClient } from '../http/axiosClient';
 import type { OtpContext } from '../../features/auth/authTypes';
@@ -15,13 +15,11 @@ export const authEndpoints = {
 
     loginGoogle: async (code: string): Promise<LoginSocialResult> => {
         const { data } = await axiosClient.post(AUTH_ROUTES.LOGIN_GOOGLE, { code: code });
-        console.log('hsdjh', data.data)
         return data.data;
     },
 
     loginFacebook: async (code: string): Promise<LoginSocialResult> => {
         const { data } = await axiosClient.post(AUTH_ROUTES.LOGIN_FACEBOOK, { code: code });
-        console.log('facebook', data.data)
         return data.data;
     },
 
@@ -52,7 +50,6 @@ export const authEndpoints = {
 
     resendOtp: async ({ email, context }: { email: string; context: OtpContext }): Promise<{ expiresAt: string }> => {
         const { data } = await axiosClient.post(AUTH_ROUTES.RESEND_OTP, { email, context });
-        console.log(data.data, "otp expiry")
         return data.data;
     },
 
@@ -60,9 +57,16 @@ export const authEndpoints = {
         await axiosClient.post(AUTH_ROUTES.LOGOUT, { userId, role });
     },
 
-    refreshToken: async (): Promise<LoginUser> => {
-        const { data } = await axiosClient.get(AUTH_ROUTES.REFRESH, { withCredentials: true });
-        return data.data.user;
+    refreshToken: async (): Promise<LoginUser | null> => {
+        try {
+            const { data } = await axiosClient.get(AUTH_ROUTES.REFRESH, { withCredentials: true });
+            return data.data.user;
+        } catch (err: any) {
+            if (err.response?.status === 401) {
+                return null;
+            }
+            throw err;
+        }
     },
 
     forgotPassword: async (email: string): Promise<{ expiresAt: string }> => {

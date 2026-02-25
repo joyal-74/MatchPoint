@@ -8,6 +8,7 @@ import { IFileStorage } from "../../../providers/IFileStorage.js";
 import { ILogger } from "../../../providers/ILogger.js";
 import { File } from "../../../../domain/entities/File.js";
 import { Format, Tournament } from "../../../../domain/entities/Tournaments.js";
+import { validateTournamentData } from "../../../../domain/validators/validateTournamentData.js";
 
 
 
@@ -24,6 +25,8 @@ export class AddTournamentUseCase implements IAddTournament {
     async execute(data: Tournament, file?: File): Promise<Tournament> {
         this._logger.info(`[AddTournamentUseCase] Adding new tournament: ${data.title}`);
 
+        validateTournamentData(data, file);
+
         const tourId = this._tournamentId.generate();
 
         let bannerUrl: string | undefined = undefined;
@@ -39,8 +42,6 @@ export class AddTournamentUseCase implements IAddTournament {
             banner: bannerUrl || "",
             format : data.format.toLocaleLowerCase() as Format
         };
-
-        console.log(newData, 'data')
 
         const tournament = await this._tournamentRepo.create(newData);
 
