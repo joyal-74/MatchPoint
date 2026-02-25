@@ -1,4 +1,4 @@
-import { MatchStatus } from "./Fixture.js";
+import { MatchStatus } from "./Fixture";
 
 export interface Match {
     _id: string;

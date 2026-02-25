@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { IJWTRepository } from "../../../app/repositories/interfaces/providers/IjwtRepository.js";
-import { HttpStatusCode } from "../../../domain/enums/StatusCodes.js";
-import { buildResponse } from "../../../infra/utils/responseBuilder.js";
-import { IUserRepository } from "../../../app/repositories/interfaces/shared/IUserRepository.js";
+import { IJWTRepository } from "../../../app/repositories/interfaces/providers/IjwtRepository";
+import { HttpStatusCode } from "../../../domain/enums/StatusCodes";
+import { buildResponse } from "../../../infra/utils/responseBuilder";
+import { IUserRepository } from "../../../app/repositories/interfaces/shared/IUserRepository";
 
 interface AuthRequest extends Request {
     user?: { id: string; role: string };

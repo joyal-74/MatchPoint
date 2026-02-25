@@ -1,8 +1,8 @@
 import { Router } from "express";
 
 import { container } from "tsyringe";
-import { NotificationController } from "../../http/controllers/shared/NotificationController.js";
-import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
+import { NotificationController } from "../../http/controllers/shared/NotificationController";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor";
 
 
 const router = Router();

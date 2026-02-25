@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IUpdateUserDirectlyPlan } from "../../repositories/interfaces/usecases/IPlanUseCaseRepo.js";
-import { ISubscriptionRepository } from "../../repositories/interfaces/shared/ISubscriptionRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { BillingCycle, PlanLevel } from "../../../domain/entities/Plan.js";
-import { ForbiddenError } from "../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IUpdateUserDirectlyPlan } from "../../repositories/interfaces/usecases/IPlanUseCaseRepo";
+import { ISubscriptionRepository } from "../../repositories/interfaces/shared/ISubscriptionRepository";
+import { ILogger } from "../../providers/ILogger";
+import { BillingCycle, PlanLevel } from "../../../domain/entities/Plan";
+import { ForbiddenError } from "../../../domain/errors/index";
 
 
 const getPlanRank = (level: string): number => {

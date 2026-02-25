@@ -1,6 +1,6 @@
 import { Types, HydratedDocument } from "mongoose";
-import { ChatModelType } from "../../databases/mongo/models/ChatModel.js";
-import { Chat } from "../../../domain/entities/Chat.js";
+import { ChatModelType } from "../../databases/mongo/models/ChatModel";
+import { Chat } from "../../../domain/entities/Chat";
 
 
 export class ChatMapper {

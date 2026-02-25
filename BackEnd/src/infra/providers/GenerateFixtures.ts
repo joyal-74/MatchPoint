@@ -1,4 +1,4 @@
-import { IFixtureGeneration, Round } from "../../app/providers/FixtureGeneration.js";
+import { IFixtureGeneration, Round } from "../../app/providers/FixtureGeneration";
 
 
 export class FixtureGeneration implements IFixtureGeneration {

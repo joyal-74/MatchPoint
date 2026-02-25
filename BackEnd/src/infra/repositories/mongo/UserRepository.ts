@@ -1,11 +1,11 @@
-import { IUserRepository } from "../../../app/repositories/interfaces/shared/IUserRepository.js";
-import { GetAllUsersParams } from "../../../app/usecases/admin/GetAllViewers.js";
-import { UserResponseDTO } from "../../../domain/dtos/User.dto.js";
-import { UserResponse } from "../../../domain/entities/User.js";
-import { UserDocument, UserModel } from "../../databases/mongo/models/UserModel.js";
-import { UserSchemaType } from "../../databases/mongo/types/UserDocument.js";
-import { UserMapper } from "../../utils/mappers/UserMongoMapper.js";
-import { BaseRepository } from "./BaseRepository.js";
+import { IUserRepository } from "../../../app/repositories/interfaces/shared/IUserRepository";
+import { GetAllUsersParams } from "../../../app/usecases/admin/GetAllViewers";
+import { UserResponseDTO } from "../../../domain/dtos/User.dto";
+import { UserResponse } from "../../../domain/entities/User";
+import { UserDocument, UserModel } from "../../databases/mongo/models/UserModel";
+import { UserSchemaType } from "../../databases/mongo/types/UserDocument";
+import { UserMapper } from "../../utils/mappers/UserMongoMapper";
+import { BaseRepository } from "./BaseRepository";
 
 
 export class UserRepository extends BaseRepository<UserSchemaType, UserResponse> implements IUserRepository {

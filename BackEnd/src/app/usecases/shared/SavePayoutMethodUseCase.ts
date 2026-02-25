@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { IPayoutResponse } from "../../../domain/dtos/PayoutResponse.dto.js";
-import { SavePayoutMethodPayload } from "../../../domain/types/financialTypes.js";
-import { PayoutValidator } from "../../../domain/validators/PayoutValidator.js";
-import { IEncryptionProvider } from "../../providers/IEncryptionProvider.js";
-import { IPayoutRepository } from "../../repositories/interfaces/shared/IPayoutRepository.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ISavePayoutMethodUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases.js";
-import { IPayoutProvider } from "../../providers/IPayoutProvider.js";
-import { IPayoutMappingRepository } from "../../repositories/interfaces/shared/IPayoutMappingRepository.js";
+import { IPayoutResponse } from "../../../domain/dtos/PayoutResponse.dto";
+import { SavePayoutMethodPayload } from "../../../domain/types/financialTypes";
+import { PayoutValidator } from "../../../domain/validators/PayoutValidator";
+import { IEncryptionProvider } from "../../providers/IEncryptionProvider";
+import { IPayoutRepository } from "../../repositories/interfaces/shared/IPayoutRepository";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ISavePayoutMethodUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases";
+import { IPayoutProvider } from "../../providers/IPayoutProvider";
+import { IPayoutMappingRepository } from "../../repositories/interfaces/shared/IPayoutMappingRepository";
 
 @injectable()
 export class SavePayoutMethodUseCase implements ISavePayoutMethodUseCase {

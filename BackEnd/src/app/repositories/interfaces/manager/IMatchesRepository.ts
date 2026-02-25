@@ -1,7 +1,7 @@
-import { MatchResponseDTO } from "../../../../domain/dtos/MatchDTO.js";
-import type { Match } from "../../../../domain/entities/Match.js";
-import { MatchEntity } from "../../../../domain/entities/MatchEntity.js";
-import { AllMatchQuery } from "./IMatchStatsRepo.js";
+import { MatchResponseDTO } from "../../../../domain/dtos/MatchDTO";
+import type { Match } from "../../../../domain/entities/Match";
+import { MatchEntity } from "../../../../domain/entities/MatchEntity";
+import { AllMatchQuery } from "./IMatchStatsRepo";
 
 export interface MatchStreamData {
     streamTitle: string;

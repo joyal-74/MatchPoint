@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { UserResponseDTO } from "../../../domain/dtos/User.dto.js";
-import { ILogger } from "../../providers/ILogger.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { UserResponseDTO } from "../../../domain/dtos/User.dto";
+import { ILogger } from "../../providers/ILogger";
 
 
 export interface GetAllUsersParams {

@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IChatRepository } from "../../../repositories/interfaces/player/IChatRepository.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IChatRepository } from "../../../repositories/interfaces/player/IChatRepository";
 
 
 @injectable()

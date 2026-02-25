@@ -1,6 +1,6 @@
-import { Validators } from "./common.js";
-import { BadRequestError } from "../errors/index.js";
-import { File } from "../entities/File.js";
+import { Validators } from "./common";
+import { BadRequestError } from "../errors/index";
+import { File } from "../entities/File";
 
 export function validateUserProfileUpdata(data, file?: File) {
     const errors: Record<string, string> = {};

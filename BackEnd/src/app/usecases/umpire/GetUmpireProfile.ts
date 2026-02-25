@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IGetUmpireProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { UmpireResponseDTO } from "../../../domain/dtos/Umpire.dto.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
-import { UserMapper } from "../../mappers/UserMapper.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IGetUmpireProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { UmpireResponseDTO } from "../../../domain/dtos/Umpire.dto";
+import { NotFoundError } from "../../../domain/errors/index";
+import { UserMapper } from "../../mappers/UserMapper";
 
 
 @injectable()

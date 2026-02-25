@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IGetMyTeamDetailsUseCase } from "../../repositories/interfaces/player/ITeamRepositoryUsecase.js";
-import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { TeamDataFull } from "../../../domain/dtos/Team.dto.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
-import { TeamMapper } from "../../mappers/TeamMappers.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IGetMyTeamDetailsUseCase } from "../../repositories/interfaces/player/ITeamRepositoryUsecase";
+import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository";
+import { ILogger } from "../../providers/ILogger";
+import { TeamDataFull } from "../../../domain/dtos/Team.dto";
+import { NotFoundError } from "../../../domain/errors/index";
+import { TeamMapper } from "../../mappers/TeamMappers";
 
 
 @injectable()

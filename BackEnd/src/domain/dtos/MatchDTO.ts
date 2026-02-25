@@ -1,5 +1,5 @@
-import type { TeamEntity as Team } from "../../domain/entities/Match.js";
-import { PlayerEntity } from "../..//domain/entities/Player.js";
+import type { TeamEntity as Team } from "../../domain/entities/Match";
+import { PlayerEntity } from "../..//domain/entities/Player";
 
 export interface DashboardPlayer extends PlayerEntity {
     status: string;

@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { INotificationRepository } from "../../../repositories/interfaces/shared/INotificationRepository.js";
-import { ILogger } from "../../../providers/ILogger.js";
-import { IClearAllNotifications } from "../../../repositories/interfaces/usecases/INotificatinUseCases.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { INotificationRepository } from "../../../repositories/interfaces/shared/INotificationRepository";
+import { ILogger } from "../../../providers/ILogger";
+import { IClearAllNotifications } from "../../../repositories/interfaces/usecases/INotificatinUseCases";
 
 @injectable()
 export class ClearAllNotifications implements IClearAllNotifications {

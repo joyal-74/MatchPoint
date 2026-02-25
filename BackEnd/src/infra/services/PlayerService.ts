@@ -1,14 +1,14 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
-import { IPlayerService } from "../../app/services/player/IPlayerService.js";
-import { IUserRepository } from "../../app/repositories/interfaces/shared/IUserRepository.js";
-import { IPlayerRepository } from "../../app/repositories/interfaces/player/IPlayerRepository.js";
-import { PlayerProfileResponse } from "../../domain/dtos/Player.dto.js";
-import { Player } from "../../domain/entities/Player.js";
-import { User } from "../../domain/entities/User.js";
-import { NotFoundError } from "../../domain/errors/index.js"; 
-import { getDefaultCareerStats, getDefaultProfile } from "../../infra/utils/playerDefaults.js";
+import { IPlayerService } from "../../app/services/player/IPlayerService";
+import { IUserRepository } from "../../app/repositories/interfaces/shared/IUserRepository";
+import { IPlayerRepository } from "../../app/repositories/interfaces/player/IPlayerRepository";
+import { PlayerProfileResponse } from "../../domain/dtos/Player.dto";
+import { Player } from "../../domain/entities/Player";
+import { User } from "../../domain/entities/User";
+import { NotFoundError } from "../../domain/errors/index"; 
+import { getDefaultCareerStats, getDefaultProfile } from "../../infra/utils/playerDefaults";
 
 @injectable()
 export class PlayerService implements IPlayerService {

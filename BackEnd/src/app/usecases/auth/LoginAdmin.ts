@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
-import { IAdminAuthUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IAdminRepository } from "../../repositories/interfaces/admin/IAdminRepository.js";
-import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository.js";
-import { IPasswordHasher } from "../../providers/IPasswordHasher.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { NotFoundError, UnauthorizedError } from "../../../domain/errors/index.js";
-import { AdminToResponseDTO } from "../../../domain/dtos/Admin.dto.js";
-import { AdminMapper } from "../../mappers/AdminMapper.js";
-import { JwtPayload } from "../../../domain/entities/JwtPayload.js";
+import { IAdminAuthUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IAdminRepository } from "../../repositories/interfaces/admin/IAdminRepository";
+import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository";
+import { IPasswordHasher } from "../../providers/IPasswordHasher";
+import { ILogger } from "../../providers/ILogger";
+import { NotFoundError, UnauthorizedError } from "../../../domain/errors/index";
+import { AdminToResponseDTO } from "../../../domain/dtos/Admin.dto";
+import { AdminMapper } from "../../mappers/AdminMapper";
+import { JwtPayload } from "../../../domain/entities/JwtPayload";
 
 
 @injectable()

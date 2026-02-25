@@ -1,5 +1,5 @@
-import { CreateMessageDTO } from '../../../../domain/dtos/CreateMessageDTO.js';
-import { Message } from '../../../../domain/entities/Message.js';
+import { CreateMessageDTO } from '../../../../domain/dtos/CreateMessageDTO';
+import { Message } from '../../../../domain/entities/Message';
 
 export interface IMessageRepository {
     create(data: CreateMessageDTO): Promise<Message>;

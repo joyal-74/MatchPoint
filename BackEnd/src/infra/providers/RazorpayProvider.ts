@@ -1,10 +1,10 @@
 import Razorpay from 'razorpay';
 import { inject, injectable } from 'tsyringe';
-import { IPaymentProvider, PaymentSession } from '../../app/providers/IPaymentProvider.js';
-import { PaymentMetadata } from '../../app/repositories/interfaces/IBasePaymentMetaData.js';
-import { PaymentStrategyRegistry } from './PaymentStrategyRegistry.js';
-import { DI_TOKENS } from '../../domain/constants/Identifiers.js';
-import { IConfigProvider } from '../../app/providers/IConfigProvider.js';
+import { IPaymentProvider, PaymentSession } from '../../app/providers/IPaymentProvider';
+import { PaymentMetadata } from '../../app/repositories/interfaces/IBasePaymentMetaData';
+import { PaymentStrategyRegistry } from './PaymentStrategyRegistry';
+import { DI_TOKENS } from '../../domain/constants/Identifiers';
+import { IConfigProvider } from '../../app/providers/IConfigProvider';
 
 @injectable()
 export class RazorpayProvider implements IPaymentProvider {

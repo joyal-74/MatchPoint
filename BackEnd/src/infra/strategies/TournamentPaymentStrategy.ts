@@ -1,5 +1,5 @@
-import { TournamentPaymentMetadata } from "../../app/repositories/interfaces/IBasePaymentMetaData.js";
-import { IPaymentStrategy } from "../../app/repositories/interfaces/shared/IPaymentStrategy.js";
+import { TournamentPaymentMetadata } from "../../app/repositories/interfaces/IBasePaymentMetaData";
+import { IPaymentStrategy } from "../../app/repositories/interfaces/shared/IPaymentStrategy";
 
 export class TournamentPaymentStrategy implements IPaymentStrategy {
     type = 'tournament' as const;

@@ -1,7 +1,7 @@
-import { User } from '../../../../domain/entities/User.js';
-import { GenderValues, RoleValues, Theme, ThemeValues } from '../../../../domain/enums/index.js';
+import { User } from '../../../../domain/entities/User';
+import { GenderValues, RoleValues, Theme, ThemeValues } from '../../../../domain/enums/index';
 import { Schema, model, HydratedDocument } from 'mongoose';
-import { UserSchemaType } from '../types/UserDocument.js';
+import { UserSchemaType } from '../types/UserDocument';
 
 export type UserDocument = HydratedDocument<User>;
 

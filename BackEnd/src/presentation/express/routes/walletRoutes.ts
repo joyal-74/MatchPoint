@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { container } from "tsyringe";
-import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
-import { WalletController } from "../../http/controllers/shared/WalletController.js";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor";
+import { WalletController } from "../../http/controllers/shared/WalletController";
 
 
 const router = Router();

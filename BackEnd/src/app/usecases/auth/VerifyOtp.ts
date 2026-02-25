@@ -1,11 +1,11 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IVerifyOtpUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository.js";
-import { OtpContext } from "../../../domain/enums/OtpContext.js";
-import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
-import { ProfileInitializationService } from "../../../infra/services/ProfileInitializationService.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IVerifyOtpUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository";
+import { OtpContext } from "../../../domain/enums/OtpContext";
+import { BadRequestError, NotFoundError } from "../../../domain/errors/index";
+import { ProfileInitializationService } from "../../../infra/services/ProfileInitializationService";
 
 
 @injectable()

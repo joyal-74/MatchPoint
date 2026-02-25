@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IUserRepository } from "../../../repositories/interfaces/shared/IUserRepository.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IUserRepository } from "../../../repositories/interfaces/shared/IUserRepository";
 
 @injectable()
 export class GetAvailableUmpires {

@@ -1,4 +1,4 @@
-import { Wallet } from "../../../../domain/entities/Wallet.js";
+import { Wallet } from "../../../../domain/entities/Wallet";
 
 export interface WalletCreateData {
     ownerId: string;

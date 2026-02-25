@@ -1,4 +1,4 @@
-import { ApiResponse } from "../../domain/dtos/ApiResponse.js"; 
+import { ApiResponse } from "../../domain/dtos/ApiResponse"; 
 
 export const buildResponse = <T>(
     success: boolean,

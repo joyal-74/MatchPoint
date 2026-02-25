@@ -1,6 +1,6 @@
 import { createLogger, format, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
-import { ILogger } from "../../app/providers/ILogger.js"; 
+import { ILogger } from "../../app/providers/ILogger"; 
 
 export class WinstonLogger implements ILogger {
     private logger;

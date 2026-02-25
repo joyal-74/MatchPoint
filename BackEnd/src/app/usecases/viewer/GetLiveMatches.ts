@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IGetLiveMatches } from "../../repositories/interfaces/usecases/IViewerUsecaseRepository.js";
-import { IMatchStatsRepo } from "../../repositories/interfaces/manager/IMatchStatsRepo.js";
-import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository.js";
-import { ITournamentRepository } from "../../repositories/interfaces/shared/ITournamentRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { LiveMatchDTO } from "../../../domain/dtos/LiveMatchDTO.js";
-import { LiveMatchMapper } from "../../mappers/LiveMatchMapper.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IGetLiveMatches } from "../../repositories/interfaces/usecases/IViewerUsecaseRepository";
+import { IMatchStatsRepo } from "../../repositories/interfaces/manager/IMatchStatsRepo";
+import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository";
+import { ITournamentRepository } from "../../repositories/interfaces/shared/ITournamentRepository";
+import { ILogger } from "../../providers/ILogger";
+import { LiveMatchDTO } from "../../../domain/dtos/LiveMatchDTO";
+import { LiveMatchMapper } from "../../mappers/LiveMatchMapper";
 
 
 @injectable()

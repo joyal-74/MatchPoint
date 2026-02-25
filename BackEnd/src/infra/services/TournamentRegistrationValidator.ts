@@ -1,10 +1,10 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
-import { IRegistrationRepository } from "../../app/repositories/interfaces/manager/IRegistrationRepository.js";
-import { ITeamRepository } from "../../app/repositories/interfaces/shared/ITeamRepository.js";
-import { BadRequestError } from "../../domain/errors/index.js";
-import { ITournamentRegistrationValidator } from "../../app/repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
+import { IRegistrationRepository } from "../../app/repositories/interfaces/manager/IRegistrationRepository";
+import { ITeamRepository } from "../../app/repositories/interfaces/shared/ITeamRepository";
+import { BadRequestError } from "../../domain/errors/index";
+import { ITournamentRegistrationValidator } from "../../app/repositories/interfaces/usecases/ITournamentUsecaseRepository";
 
 @injectable()
 export class TournamentRegistrationValidator implements ITournamentRegistrationValidator {

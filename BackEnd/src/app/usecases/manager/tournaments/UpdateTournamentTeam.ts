@@ -1,16 +1,16 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IUpdateTournamentTeam } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
-import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
-import { IRegistrationRepository } from "../../../repositories/interfaces/manager/IRegistrationRepository.js";
-import { IWalletRepository } from "../../../repositories/interfaces/shared/IWalletRepository.js";
-import { ITransactionRepository } from "../../../repositories/interfaces/shared/ITransactionRepository.js";
-import { IManagerRepository } from "../../../repositories/interfaces/manager/IManagerRepository.js";
-import { ILogger } from "../../../providers/ILogger.js";
-import { Tournament } from "../../../../domain/entities/Tournaments.js";
-import { NotFoundError } from "../../../../domain/errors/index.js";
-import { Wallet } from "../../../../domain/entities/Wallet.js";
-import { Registration } from "../../../../domain/entities/Registration.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IUpdateTournamentTeam } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository";
+import { IRegistrationRepository } from "../../../repositories/interfaces/manager/IRegistrationRepository";
+import { IWalletRepository } from "../../../repositories/interfaces/shared/IWalletRepository";
+import { ITransactionRepository } from "../../../repositories/interfaces/shared/ITransactionRepository";
+import { IManagerRepository } from "../../../repositories/interfaces/manager/IManagerRepository";
+import { ILogger } from "../../../providers/ILogger";
+import { Tournament } from "../../../../domain/entities/Tournaments";
+import { NotFoundError } from "../../../../domain/errors/index";
+import { Wallet } from "../../../../domain/entities/Wallet";
+import { Registration } from "../../../../domain/entities/Registration";
 
 
 @injectable()

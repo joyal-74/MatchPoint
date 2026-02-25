@@ -1,9 +1,9 @@
 import { inject, injectable, injectAll } from "tsyringe";
-import { IInitiateTournamentPayment, ITournamentRegistrationValidator } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
-import { BadRequestError, NotFoundError } from "../../../../domain/errors/index.js";
-import { ITournamentPaymentProcessor } from "../../../repositories/interfaces/shared/ITournamentPaymentProcessor.js";
+import { IInitiateTournamentPayment, ITournamentRegistrationValidator } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository";
+import { BadRequestError, NotFoundError } from "../../../../domain/errors/index";
+import { ITournamentPaymentProcessor } from "../../../repositories/interfaces/shared/ITournamentPaymentProcessor";
 
 
 @injectable()

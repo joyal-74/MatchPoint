@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ISocialUserAuthUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
-import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository.js";
-import { IUserServices } from "../../services/user/IUserServices.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { SocialUserRegisterData } from "../../../domain/entities/User.js";
-import { UserMapper } from "../../mappers/UserMapper.js";
-import { ProfileInitializationService } from "../../../infra/services/ProfileInitializationService.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ISocialUserAuthUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase";
+import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository";
+import { IUserServices } from "../../services/user/IUserServices";
+import { ILogger } from "../../providers/ILogger";
+import { SocialUserRegisterData } from "../../../domain/entities/User";
+import { UserMapper } from "../../mappers/UserMapper";
+import { ProfileInitializationService } from "../../../infra/services/ProfileInitializationService";
 
 
 @injectable()

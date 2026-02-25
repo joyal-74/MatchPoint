@@ -1,7 +1,7 @@
 import { container } from "tsyringe";
 import { Router } from "express";
-import { SubscriptionController } from "../../http/controllers/shared/SubscriptionPlanController.js";
-import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
+import { SubscriptionController } from "../../http/controllers/shared/SubscriptionPlanController";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor";
 
 
 

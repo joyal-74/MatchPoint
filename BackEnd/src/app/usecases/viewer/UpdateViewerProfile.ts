@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IUpdateViewerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { IFileStorage } from "../../providers/IFileStorage.js";
-import { UserResponseDTO, UserUpdateDTO } from "../../../domain/dtos/User.dto.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
-import { UserMapper } from "../../mappers/UserMapper.js";
-import { File } from "../../../domain/entities/File.js";
-import { validateUserProfileUpdata } from "../../../domain/validators/UserProfileUpdateValidator.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IUpdateViewerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { IFileStorage } from "../../providers/IFileStorage";
+import { UserResponseDTO, UserUpdateDTO } from "../../../domain/dtos/User.dto";
+import { NotFoundError } from "../../../domain/errors/index";
+import { UserMapper } from "../../mappers/UserMapper";
+import { File } from "../../../domain/entities/File";
+import { validateUserProfileUpdata } from "../../../domain/validators/UserProfileUpdateValidator";
 
 
 

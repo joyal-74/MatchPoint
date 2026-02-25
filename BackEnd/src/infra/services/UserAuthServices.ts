@@ -1,14 +1,14 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
-import { UserMapper } from "../../app/mappers/UserMapper.js";
-import { IJWTRepository } from "../../app/repositories/interfaces/providers/IjwtRepository.js";
-import { IUserRepository } from "../../app/repositories/interfaces/shared/IUserRepository.js";
-import { IUserAuthServices } from "../../app/services/auth/IUserAuthServices.js";
-import { UserLoginResponseDTO } from "../../domain/dtos/User.dto.js";
-import { JwtPayload } from "../../domain/entities/JwtPayload.js";
-import { UserResponse } from "../../domain/entities/User.js";
-import { UnauthorizedError } from "../../domain/errors/index.js";
+import { UserMapper } from "../../app/mappers/UserMapper";
+import { IJWTRepository } from "../../app/repositories/interfaces/providers/IjwtRepository";
+import { IUserRepository } from "../../app/repositories/interfaces/shared/IUserRepository";
+import { IUserAuthServices } from "../../app/services/auth/IUserAuthServices";
+import { UserLoginResponseDTO } from "../../domain/dtos/User.dto";
+import { JwtPayload } from "../../domain/entities/JwtPayload";
+import { UserResponse } from "../../domain/entities/User";
+import { UnauthorizedError } from "../../domain/errors/index";
 
 
 @injectable()

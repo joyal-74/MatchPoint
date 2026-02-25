@@ -1,9 +1,9 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
-import { IPlayerTeamServices } from "../../app/services/player/IPlayerTeamServices.js";
-import { ITeamRepository } from "../../app/repositories/interfaces/shared/ITeamRepository.js";
-import { PlayerTeamResponseDTO } from "../../domain/dtos/Team.dto.js";
+import { IPlayerTeamServices } from "../../app/services/player/IPlayerTeamServices";
+import { ITeamRepository } from "../../app/repositories/interfaces/shared/ITeamRepository";
+import { PlayerTeamResponseDTO } from "../../domain/dtos/Team.dto";
 
 @injectable()
 export class PlayerTeamServices implements IPlayerTeamServices {

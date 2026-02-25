@@ -1,15 +1,15 @@
 import { FilterQuery, Types } from "mongoose";
-import { EndMatchDTO, IMatchesRepository, MatchStreamData } from "../../../app/repositories/interfaces/manager/IMatchesRepository.js";
-import { DashboardTeam, MatchResponseDTO } from "../../../domain/dtos/MatchDTO.js";
-import { Extras } from "../../../domain/entities/Extra.js";
-import { Innings } from "../../../domain/entities/Innings.js";
-import { Match } from "../../../domain/entities/Match.js";
-import { MatchEntity } from "../../../domain/entities/MatchEntity.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
-import MatchesModel from "../../databases/mongo/models/MatchesModel.js";
-import { TournamentMatchStatsModel } from "../../databases/mongo/models/TournamentStatsModel.js";
-import { MatchMongoMapper } from "../../utils/mappers/MatchMongoMapper.js";
-import { AllMatchQuery } from "../../../app/repositories/interfaces/manager/IMatchStatsRepo.js";
+import { EndMatchDTO, IMatchesRepository, MatchStreamData } from "../../../app/repositories/interfaces/manager/IMatchesRepository";
+import { DashboardTeam, MatchResponseDTO } from "../../../domain/dtos/MatchDTO";
+import { Extras } from "../../../domain/entities/Extra";
+import { Innings } from "../../../domain/entities/Innings";
+import { Match } from "../../../domain/entities/Match";
+import { MatchEntity } from "../../../domain/entities/MatchEntity";
+import { NotFoundError } from "../../../domain/errors/index";
+import MatchesModel from "../../databases/mongo/models/MatchesModel";
+import { TournamentMatchStatsModel } from "../../databases/mongo/models/TournamentStatsModel";
+import { MatchMongoMapper } from "../../utils/mappers/MatchMongoMapper";
+import { AllMatchQuery } from "../../../app/repositories/interfaces/manager/IMatchStatsRepo";
 
 
 export class MatchesRepository implements IMatchesRepository {

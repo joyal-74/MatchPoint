@@ -1,11 +1,11 @@
 import { FilterQuery, Types } from "mongoose";
-import { AllMatchQuery, IMatchStatsRepo, LiveMatchQuery } from "../../../app/repositories/interfaces/manager/IMatchStatsRepo.js";
-import { TournamentResult } from "../../../domain/entities/Match.js";
-import { MatchEntity } from "../../../domain/entities/MatchEntity.js";
-import { TournamentMatchStatsDocument } from "../../../domain/types/match.types.js";
-import { TournamentMatchStatsModel } from "../../databases/mongo/models/TournamentStatsModel.js";
-import { MatchResultMapper } from "../../utils/mappers/MatchResultMapper.js";
-import { MatchStatsMapper } from "../../utils/mappers/MatchStatsMapper.js";
+import { AllMatchQuery, IMatchStatsRepo, LiveMatchQuery } from "../../../app/repositories/interfaces/manager/IMatchStatsRepo";
+import { TournamentResult } from "../../../domain/entities/Match";
+import { MatchEntity } from "../../../domain/entities/MatchEntity";
+import { TournamentMatchStatsDocument } from "../../../domain/types/match.types";
+import { TournamentMatchStatsModel } from "../../databases/mongo/models/TournamentStatsModel";
+import { MatchResultMapper } from "../../utils/mappers/MatchResultMapper";
+import { MatchStatsMapper } from "../../utils/mappers/MatchStatsMapper";
 
 
 export class MatchStatsRepository implements IMatchStatsRepo {

@@ -1,4 +1,4 @@
-import { Theme } from "../../domain/enums/Theme.js";
+import { Theme } from "../../domain/enums/Theme";
 
 export interface AdminSettings {
     theme: Theme;

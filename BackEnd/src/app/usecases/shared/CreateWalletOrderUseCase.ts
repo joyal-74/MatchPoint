@@ -1,11 +1,11 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IPaymentProvider } from "../../providers/IPaymentProvider.js";
-import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { WalletPaymentMetadata } from "../../repositories/interfaces/IBasePaymentMetaData.js"; 
-import { ICreateWalletOrderUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases.js";
-import { IWalletRepository } from "../../repositories/interfaces/shared/IWalletRepository.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IPaymentProvider } from "../../providers/IPaymentProvider";
+import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository";
+import { ILogger } from "../../providers/ILogger";
+import { WalletPaymentMetadata } from "../../repositories/interfaces/IBasePaymentMetaData"; 
+import { ICreateWalletOrderUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases";
+import { IWalletRepository } from "../../repositories/interfaces/shared/IWalletRepository";
 
 @injectable()
 export class CreateWalletOrderUseCase implements ICreateWalletOrderUseCase {

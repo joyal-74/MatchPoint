@@ -1,4 +1,4 @@
-import { PointsRow } from "../../../../domain/entities/PointsTable.js";
+import { PointsRow } from "../../../../domain/entities/PointsTable";
 
 export interface IPointsTableRepository {
     findByTournamentId(id: string): Promise<PointsRow[]>;

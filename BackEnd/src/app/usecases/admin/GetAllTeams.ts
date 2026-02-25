@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IGetTeamsUsecase } from "../../repositories/interfaces/admin/IAdminUsecases.js";
-import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository.js";
-import { AdminFilters, TeamDataSummary } from "../../../domain/dtos/Team.dto.js";
-import { ILogger } from "../../providers/ILogger.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IGetTeamsUsecase } from "../../repositories/interfaces/admin/IAdminUsecases";
+import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository";
+import { AdminFilters, TeamDataSummary } from "../../../domain/dtos/Team.dto";
+import { ILogger } from "../../providers/ILogger";
 
 
 @injectable()

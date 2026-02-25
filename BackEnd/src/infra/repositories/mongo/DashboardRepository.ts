@@ -1,8 +1,8 @@
-import { DashboardStats, IDashboardRepository } from "../../../app/repositories/interfaces/admin/IDashboardRepository.js";
-import { TeamModel } from "../../databases/mongo/models/TeamModel.js";
-import { TournamentModel } from "../../databases/mongo/models/TournamentModel.js";
-import { TransactionModel } from "../../databases/mongo/models/TransactionModel.js";
-import { UserModel } from "../../databases/mongo/models/UserModel.js";
+import { DashboardStats, IDashboardRepository } from "../../../app/repositories/interfaces/admin/IDashboardRepository";
+import { TeamModel } from "../../databases/mongo/models/TeamModel";
+import { TournamentModel } from "../../databases/mongo/models/TournamentModel";
+import { TransactionModel } from "../../databases/mongo/models/TransactionModel";
+import { UserModel } from "../../databases/mongo/models/UserModel";
 
 
 

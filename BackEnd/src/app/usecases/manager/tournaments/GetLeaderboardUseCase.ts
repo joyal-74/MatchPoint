@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { IGetTourLeaderboard } from "../../../repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
-import { ILeaderboardRepository } from "../../../repositories/interfaces/shared/ILeaderboardRepository.js";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { Leaderboard } from "../../../../domain/entities/Tournaments.js";
+import { IGetTourLeaderboard } from "../../../repositories/interfaces/usecases/ITournamentsRepoUsecaes";
+import { ILeaderboardRepository } from "../../../repositories/interfaces/shared/ILeaderboardRepository";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { Leaderboard } from "../../../../domain/entities/Tournaments";
 
 
 @injectable()

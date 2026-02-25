@@ -1,4 +1,4 @@
-import { BillingCycle, PlanLevel, UserSubscription } from "../../../../domain/entities/Plan.js";
+import { BillingCycle, PlanLevel, UserSubscription } from "../../../../domain/entities/Plan";
 
 export interface ISubscriptionRepository {
     create(subscriptionData: Partial<UserSubscription>): Promise<UserSubscription>;

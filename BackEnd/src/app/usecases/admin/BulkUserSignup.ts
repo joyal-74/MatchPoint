@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ProfileInitializationService } from "../../../infra/services/ProfileInitializationService.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { IPasswordHasher } from "../../providers/IPasswordHasher.js";
-import { IRoleIdGenerator } from "../../providers/IIdGenerator.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ProfileInitializationService } from "../../../infra/services/ProfileInitializationService";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { IPasswordHasher } from "../../providers/IPasswordHasher";
+import { IRoleIdGenerator } from "../../providers/IIdGenerator";
 
 interface BulkResult {
     email: string;

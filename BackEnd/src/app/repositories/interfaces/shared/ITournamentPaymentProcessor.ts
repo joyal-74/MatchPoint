@@ -1,4 +1,4 @@
-import { Tournament } from "../../../../domain/entities/Tournaments.js";
+import { Tournament } from "../../../../domain/entities/Tournaments";
 
 export interface TournamentPaymentRequest {
     tournament: Tournament;

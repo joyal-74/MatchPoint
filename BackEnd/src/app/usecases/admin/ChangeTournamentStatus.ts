@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { AdminTableParams, IChangeTournamentStatus } from "../../repositories/interfaces/admin/IAdminUsecases.js";
-import { ITournamentRepository } from "../../repositories/interfaces/shared/ITournamentRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { AdminTableParams, IChangeTournamentStatus } from "../../repositories/interfaces/admin/IAdminUsecases";
+import { ITournamentRepository } from "../../repositories/interfaces/shared/ITournamentRepository";
+import { ILogger } from "../../providers/ILogger";
 
 
 @injectable()

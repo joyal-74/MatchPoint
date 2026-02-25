@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { IHttpRequest } from "../../presentation/http/interfaces/IHttpRequest.js";
-import { IHttpResponse } from "../../presentation/http/interfaces/IHttpResponse.js";
+import { IHttpRequest } from "../../presentation/http/interfaces/IHttpRequest";
+import { IHttpResponse } from "../../presentation/http/interfaces/IHttpResponse";
 
 export const expressAdapter = (controllerMethod: (httpRequest: IHttpRequest) => Promise<IHttpResponse>) =>
     async (req: Request, res: Response, next: NextFunction) => {

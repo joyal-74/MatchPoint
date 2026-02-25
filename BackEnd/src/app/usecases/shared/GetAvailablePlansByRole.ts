@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { Plan } from "../../../domain/entities/Plan.js";
-import { IPlanRepository } from "../../repositories/interfaces/admin/IPlanRepository.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ILogger } from "../../providers/ILogger";
+import { Plan } from "../../../domain/entities/Plan";
+import { IPlanRepository } from "../../repositories/interfaces/admin/IPlanRepository";
 
 
 @injectable()

@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { ITeamRepository } from "../../../repositories/interfaces/shared/ITeamRepository.js";
-import { ISwapPlayers } from "../../../repositories/interfaces/usecases/ITeamUsecaseRepository.js";
-import { ILogger } from "../../../providers/ILogger.js";
-import { BadRequestError, NotFoundError } from "../../../../domain/errors/index.js";
-import { playerStatus } from "../../../../domain/dtos/Team.dto.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { ITeamRepository } from "../../../repositories/interfaces/shared/ITeamRepository";
+import { ISwapPlayers } from "../../../repositories/interfaces/usecases/ITeamUsecaseRepository";
+import { ILogger } from "../../../providers/ILogger";
+import { BadRequestError, NotFoundError } from "../../../../domain/errors/index";
+import { playerStatus } from "../../../../domain/dtos/Team.dto";
 
 
 @injectable()

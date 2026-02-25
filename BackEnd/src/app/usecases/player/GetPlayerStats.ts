@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IGetPlayerStats } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
-import { IPlayerRepository } from "../../repositories/interfaces/player/IPlayerRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
-import { PopulatedPlayer } from "../../../domain/entities/Player.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IGetPlayerStats } from "../../repositories/interfaces/usecases/IUserProfileRepository";
+import { IPlayerRepository } from "../../repositories/interfaces/player/IPlayerRepository";
+import { ILogger } from "../../providers/ILogger";
+import { NotFoundError } from "../../../domain/errors/index";
+import { PopulatedPlayer } from "../../../domain/entities/Player";
 
 
 @injectable()

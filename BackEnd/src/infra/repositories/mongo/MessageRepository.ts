@@ -1,8 +1,8 @@
-import { IMessageRepository } from "../../../app/repositories/interfaces/player/IMessageRepository.js";
-import { CreateMessageDTO } from "../../../domain/dtos/CreateMessageDTO.js";
-import { Message } from "../../../domain/entities/Message.js";
-import { MessageModel } from "../../databases/mongo/models/MessageModel.js";
-import { MessageMapper } from "../../utils/mappers/MessageMapper.js";
+import { IMessageRepository } from "../../../app/repositories/interfaces/player/IMessageRepository";
+import { CreateMessageDTO } from "../../../domain/dtos/CreateMessageDTO";
+import { Message } from "../../../domain/entities/Message";
+import { MessageModel } from "../../databases/mongo/models/MessageModel";
+import { MessageMapper } from "../../utils/mappers/MessageMapper";
 
 
 

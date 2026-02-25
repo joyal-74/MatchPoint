@@ -1,11 +1,11 @@
 import { Router } from "express";
 import multer from "multer";
 import { container } from "tsyringe";
-import { MatchesController } from "../../http/controllers/viewer/MatchesController.js";
-import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
-import { expressFileUpdateHandler } from "../../adaptors/ExpressFileAdaptor.js";
-import { TournamentController } from "../../http/controllers/viewer/TournamentController.js";
-import { ProfileController } from "../../http/controllers/viewer/ProfileController.js";
+import { MatchesController } from "../../http/controllers/viewer/MatchesController";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor";
+import { expressFileUpdateHandler } from "../../adaptors/ExpressFileAdaptor";
+import { TournamentController } from "../../http/controllers/viewer/TournamentController";
+import { ProfileController } from "../../http/controllers/viewer/ProfileController";
 
 const router = Router();
 const upload = multer();

@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
-import { IFixturesRepository } from "../../../app/repositories/interfaces/manager/IFixturesRepository.js";
-import { Fixture } from "../../../domain/entities/Fixture.js";
-import FixtureModel from "../../databases/mongo/models/FixtureModel.js";
-import { FixtureMongoMapper } from "../../utils/mappers/FixtureMongoMapper.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
+import { IFixturesRepository } from "../../../app/repositories/interfaces/manager/IFixturesRepository";
+import { Fixture } from "../../../domain/entities/Fixture";
+import FixtureModel from "../../databases/mongo/models/FixtureModel";
+import { FixtureMongoMapper } from "../../utils/mappers/FixtureMongoMapper";
+import { NotFoundError } from "../../../domain/errors/index";
 
 
 export class FixturesRepository implements IFixturesRepository {

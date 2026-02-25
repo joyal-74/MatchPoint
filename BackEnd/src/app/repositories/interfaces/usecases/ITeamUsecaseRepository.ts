@@ -1,6 +1,6 @@
-import { TeamData, TeamDataFull, TeamRegister } from "../../../../domain/dtos/Team.dto.js";
-import { Chat } from "../../../../domain/entities/Chat.js";
-import { File } from "../../../../domain/entities/File.js";
+import { TeamData, TeamDataFull, TeamRegister } from "../../../../domain/dtos/Team.dto";
+import { Chat } from "../../../../domain/entities/Chat";
+import { File } from "../../../../domain/entities/File";
 
 export interface IGetAllTeamsUseCase {
     execute(managerId: string): Promise<TeamDataFull[]>;

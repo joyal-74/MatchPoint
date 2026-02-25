@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ILeaderboardRepository } from "../../repositories/interfaces/shared/ILeaderboardRepository.js";
-import { LeaderboardDTO } from "../../../domain/dtos/LeaderboardDTO.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ILeaderboardRepository } from "../../repositories/interfaces/shared/ILeaderboardRepository";
+import { LeaderboardDTO } from "../../../domain/dtos/LeaderboardDTO";
 
 
 interface GetLeaderboardParams {

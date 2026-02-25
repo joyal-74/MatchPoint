@@ -1,4 +1,4 @@
-import { BatsmanStat, BowlerStat, InningsDTO, TournamentMatchStatsDocument } from "../../../../domain/types/match.types.js";
+import { BatsmanStat, BowlerStat, InningsDTO, TournamentMatchStatsDocument } from "../../../../domain/types/match.types";
 import { Schema, Types, model } from "mongoose";
 
 interface BatsmanPersist extends Omit<BatsmanStat, 'playerId'> {

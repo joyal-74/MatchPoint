@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
-import { IRegistrationRepository } from "../../app/repositories/interfaces/manager/IRegistrationRepository.js";
-import { IPointsTableRepository } from "../../app/repositories/interfaces/shared/IPointsTableRepository.js";
-import { ITournamentRepository } from "../../app/repositories/interfaces/shared/ITournamentRepository.js";
-import { BadRequestError, NotFoundError } from "../../domain/errors/index.js";
-import { IStartTournament } from "../../app/repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
-import { PointsRow } from "../../domain/entities/PointsTable.js";
+import { IRegistrationRepository } from "../../app/repositories/interfaces/manager/IRegistrationRepository";
+import { IPointsTableRepository } from "../../app/repositories/interfaces/shared/IPointsTableRepository";
+import { ITournamentRepository } from "../../app/repositories/interfaces/shared/ITournamentRepository";
+import { BadRequestError, NotFoundError } from "../../domain/errors/index";
+import { IStartTournament } from "../../app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
+import { PointsRow } from "../../domain/entities/PointsTable";
 
 @injectable()
 export class StartTournament implements IStartTournament {

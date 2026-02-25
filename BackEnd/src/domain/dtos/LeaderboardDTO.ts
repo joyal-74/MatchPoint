@@ -1,4 +1,4 @@
-import type { LeaderBoardPlayer } from "../../domain/entities/Player.js";
+import type { LeaderBoardPlayer } from "../../domain/entities/Player";
 
 export interface LeaderboardDTO {
     topPlayers: LeaderBoardPlayer[];

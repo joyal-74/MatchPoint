@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
 
-import { ILogger } from "../../../providers/ILogger.js";
-import { IStartMatchUseCase } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
-import { IMatchesRepository } from "../../../repositories/interfaces/manager/IMatchesRepository.js";
-import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo.js";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
+import { ILogger } from "../../../providers/ILogger";
+import { IStartMatchUseCase } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { IMatchesRepository } from "../../../repositories/interfaces/manager/IMatchesRepository";
+import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
 
 
 

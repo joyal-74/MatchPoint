@@ -1,8 +1,8 @@
-import { UserResponseDTO } from "../../../../domain/dtos/User.dto.js";
-import { UserResponse } from "../../../../domain/entities/User.js";
-import { UserDocument } from "../../../../infra/databases/mongo/types/UserDocument.js";
-import { GetAllUsersParams } from "../../../usecases/admin/GetAllViewers.js";
-import { IBaseRepository } from "../../IBaseRepository.js";
+import { UserResponseDTO } from "../../../../domain/dtos/User.dto";
+import { UserResponse } from "../../../../domain/entities/User";
+import { UserDocument } from "../../../../infra/databases/mongo/types/UserDocument";
+import { GetAllUsersParams } from "../../../usecases/admin/GetAllViewers";
+import { IBaseRepository } from "../../IBaseRepository";
 
 
 export interface IUserRepository extends IBaseRepository<UserDocument, UserResponse> {

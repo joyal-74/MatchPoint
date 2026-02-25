@@ -1,8 +1,8 @@
 
-import { IAdminRepository } from "../../../app/repositories/interfaces/admin/IAdminRepository.js";
-import { AdminResponse } from "../../../domain/entities/Admin.js";
-import { AdminDocument, AdminModel } from "../../databases/mongo/models/AdminModel.js";
-import { BaseRepository } from "./BaseRepository.js";
+import { IAdminRepository } from "../../../app/repositories/interfaces/admin/IAdminRepository";
+import { AdminResponse } from "../../../domain/entities/Admin";
+import { AdminDocument, AdminModel } from "../../databases/mongo/models/AdminModel";
+import { BaseRepository } from "./BaseRepository";
 
 export class AdminRepository extends BaseRepository<AdminDocument, AdminResponse> implements IAdminRepository {
     constructor() {

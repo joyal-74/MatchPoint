@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { IPlayerLeaveTeamUseCase } from "../../repositories/interfaces/player/ITeamRepositoryUsecase.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
+import { IPlayerLeaveTeamUseCase } from "../../repositories/interfaces/player/ITeamRepositoryUsecase";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository";
+import { ILogger } from "../../providers/ILogger";
 
 
 @injectable()

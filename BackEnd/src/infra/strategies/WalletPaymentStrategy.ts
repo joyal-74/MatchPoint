@@ -1,5 +1,5 @@
-import { WalletPaymentMetadata } from "../../app/repositories/interfaces/IBasePaymentMetaData.js";
-import { IPaymentStrategy } from "../../app/repositories/interfaces/shared/IPaymentStrategy.js";
+import { WalletPaymentMetadata } from "../../app/repositories/interfaces/IBasePaymentMetaData";
+import { IPaymentStrategy } from "../../app/repositories/interfaces/shared/IPaymentStrategy";
 
 export class WalletPaymentStrategy implements IPaymentStrategy {
     type = 'wallet' as const;

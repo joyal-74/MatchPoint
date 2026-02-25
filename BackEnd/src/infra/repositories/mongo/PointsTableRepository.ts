@@ -1,6 +1,6 @@
-import { IPointsTableRepository } from "../../../app/repositories/interfaces/shared/IPointsTableRepository.js";
-import { PointsRow } from "../../../domain/entities/PointsTable.js";
-import { PointsTableModel } from "../../databases/mongo/models/PointsTableModel.js";
+import { IPointsTableRepository } from "../../../app/repositories/interfaces/shared/IPointsTableRepository";
+import { PointsRow } from "../../../domain/entities/PointsTable";
+import { PointsTableModel } from "../../databases/mongo/models/PointsTableModel";
 
 
 export class PointsTableRepository implements IPointsTableRepository {

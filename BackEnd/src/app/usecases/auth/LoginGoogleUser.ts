@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { ILoginGoogleUser } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository.js";
-import { IGoogleAuthServices } from "../../services/auth/IGoogleAuthService.js";
-import { IUserAuthServices } from "../../services/auth/IUserAuthServices.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { UnauthorizedError } from "../../../domain/errors/index.js";
-import { JwtTempPayload } from "../../../domain/entities/JwtPayload.js";
+import { ILoginGoogleUser } from "../../repositories/interfaces/auth/IAuthenticationUseCase";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository";
+import { IGoogleAuthServices } from "../../services/auth/IGoogleAuthService";
+import { IUserAuthServices } from "../../services/auth/IUserAuthServices";
+import { ILogger } from "../../providers/ILogger";
+import { UnauthorizedError } from "../../../domain/errors/index";
+import { JwtTempPayload } from "../../../domain/entities/JwtPayload";
 
 
 @injectable()

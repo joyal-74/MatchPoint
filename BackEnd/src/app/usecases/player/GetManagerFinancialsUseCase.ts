@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IFinancialRepository } from "../../repositories/interfaces/manager/IFinancialRepository.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IFinancialRepository } from "../../repositories/interfaces/manager/IFinancialRepository";
+import { NotFoundError } from "../../../domain/errors/index";
 
 
 @injectable()

@@ -1,4 +1,4 @@
-import { TeamDataFull } from "../../domain/dtos/Team.dto.js"; 
+import { TeamDataFull } from "../../domain/dtos/Team.dto"; 
 
 export class TeamMapper {
     static toTeamDTO(team: TeamDataFull): TeamDataFull {

@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IMessageRepository } from "../../../repositories/interfaces/player/IMessageRepository.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IMessageRepository } from "../../../repositories/interfaces/player/IMessageRepository";
 
 
 

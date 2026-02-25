@@ -1,6 +1,6 @@
-import { FormatStatPoint, TopTournamentPoint } from "../../../../domain/dtos/Analytics.dto.js";
-import { Tournament, TournamentTeam } from "../../../../domain/entities/Tournaments.js";
-import { IBaseRepository } from "../../IBaseRepository.js";
+import { FormatStatPoint, TopTournamentPoint } from "../../../../domain/dtos/Analytics.dto";
+import { Tournament, TournamentTeam } from "../../../../domain/entities/Tournaments";
+import { IBaseRepository } from "../../IBaseRepository";
 
 export interface ITournamentRepository extends IBaseRepository<Tournament, Tournament> {
 

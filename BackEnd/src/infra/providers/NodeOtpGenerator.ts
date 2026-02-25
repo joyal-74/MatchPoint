@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { IOtpGenerator } from "../../app/providers/IOtpGenerator.js"; 
+import { IOtpGenerator } from "../../app/providers/IOtpGenerator"; 
 
 export class NodeOtpGenerator implements IOtpGenerator {
     generateOtp(): string {

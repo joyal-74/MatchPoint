@@ -1,13 +1,13 @@
 import crypto from 'crypto';
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IPaymentProvider } from "../../providers/IPaymentProvider.js";
-import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository.js";
-import { IWalletRepository } from "../../repositories/interfaces/shared/IWalletRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { IRazorpayPaymentData } from '../../../domain/types/financialTypes.js';
-import { IVerifyWalletPaymentUseCase } from '../../repositories/interfaces/usecases/IFinancialUseCases.js';
-import { IConfigProvider } from '../../providers/IConfigProvider.js';
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IPaymentProvider } from "../../providers/IPaymentProvider";
+import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository";
+import { IWalletRepository } from "../../repositories/interfaces/shared/IWalletRepository";
+import { ILogger } from "../../providers/ILogger";
+import { IRazorpayPaymentData } from '../../../domain/types/financialTypes';
+import { IVerifyWalletPaymentUseCase } from '../../repositories/interfaces/usecases/IFinancialUseCases';
+import { IConfigProvider } from '../../providers/IConfigProvider';
 
 @injectable()
 @injectable()

@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
-import { ILeaderboardRepository } from "../../../app/repositories/interfaces/shared/ILeaderboardRepository.js";
-import { LeaderBoardPlayer } from "../../../domain/entities/Player.js";
-import { PlayerModel } from "../../databases/mongo/models/PlayerModel.js";
-import { TournamentMatchStatsModel } from "../../databases/mongo/models/TournamentStatsModel.js";
-import { Leaderboard, MvpBoard, RunsBoard, WicketBoard } from "../../../domain/entities/Tournaments.js";
+import { ILeaderboardRepository } from "../../../app/repositories/interfaces/shared/ILeaderboardRepository";
+import { LeaderBoardPlayer } from "../../../domain/entities/Player";
+import { PlayerModel } from "../../databases/mongo/models/PlayerModel";
+import { TournamentMatchStatsModel } from "../../databases/mongo/models/TournamentStatsModel";
+import { Leaderboard, MvpBoard, RunsBoard, WicketBoard } from "../../../domain/entities/Tournaments";
 
 
 export class LeaderboardRepository implements ILeaderboardRepository {

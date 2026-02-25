@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { ILogoutUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ILogoutService } from "../../services/user/ILogoutService.js";
-import { ILogger } from "../../providers/ILogger.js";
+import { ILogoutUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ILogoutService } from "../../services/user/ILogoutService";
+import { ILogger } from "../../providers/ILogger";
 
 
 @injectable()

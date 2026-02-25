@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { IUserLoginUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository.js";
-import { IPasswordHasher } from "../../providers/IPasswordHasher.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { NotFoundError, UnauthorizedError } from "../../../domain/errors/index.js";
-import { UserMapper } from "../../mappers/UserMapper.js";
-import { JwtPayload } from "../../../domain/entities/JwtPayload.js";
+import { IUserLoginUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository";
+import { IPasswordHasher } from "../../providers/IPasswordHasher";
+import { ILogger } from "../../providers/ILogger";
+import { NotFoundError, UnauthorizedError } from "../../../domain/errors/index";
+import { UserMapper } from "../../mappers/UserMapper";
+import { JwtPayload } from "../../../domain/entities/JwtPayload";
 
 
 @injectable()

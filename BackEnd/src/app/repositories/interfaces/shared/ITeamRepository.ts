@@ -1,5 +1,5 @@
-import { AdminFilters, Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "../../../../domain/dtos/Team.dto.js";
-import { IBaseRepository } from "../../IBaseRepository.js";
+import { AdminFilters, Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "../../../../domain/dtos/Team.dto";
+import { IBaseRepository } from "../../IBaseRepository";
 
 export interface ITeamRepository extends IBaseRepository<TeamRegister, TeamDataFull> {
     

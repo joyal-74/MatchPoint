@@ -1,5 +1,5 @@
-import { IConfigProvider } from "../../app/providers/IConfigProvider.js";
-import { NotFoundError } from "../../domain/errors/index.js";
+import { IConfigProvider } from "../../app/providers/IConfigProvider";
+import { NotFoundError } from "../../domain/errors/index";
 
 
 export class EnvConfigProvider implements IConfigProvider {

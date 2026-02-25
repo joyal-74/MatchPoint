@@ -1,4 +1,4 @@
-import { PlanLevel, BillingCycle } from "../../../../domain/entities/Plan.js";
+import { PlanLevel, BillingCycle } from "../../../../domain/entities/Plan";
 import { Document, model, Schema, Types } from "mongoose";
 
 interface ReservedPlan {

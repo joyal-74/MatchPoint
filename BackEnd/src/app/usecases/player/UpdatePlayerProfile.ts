@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IUpdatePlayerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
-import { IPlayerService } from "../../services/player/IPlayerService.js";
-import { IFileStorage } from "../../providers/IFileStorage.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { PlayerProfileResponse, PlayerUpdateDTO } from "../../../domain/dtos/Player.dto.js";
-import { File } from "../../../domain/entities/File.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
-import { PlayerMapper } from "../../mappers/PlayerMapper.js";
-import { validateUserProfileUpdata } from "../../../domain/validators/UserProfileUpdateValidator.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IUpdatePlayerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository";
+import { IPlayerService } from "../../services/player/IPlayerService";
+import { IFileStorage } from "../../providers/IFileStorage";
+import { ILogger } from "../../providers/ILogger";
+import { PlayerProfileResponse, PlayerUpdateDTO } from "../../../domain/dtos/Player.dto";
+import { File } from "../../../domain/entities/File";
+import { NotFoundError } from "../../../domain/errors/index";
+import { PlayerMapper } from "../../mappers/PlayerMapper";
+import { validateUserProfileUpdata } from "../../../domain/validators/UserProfileUpdateValidator";
 
 
 

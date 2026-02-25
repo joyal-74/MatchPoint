@@ -1,6 +1,6 @@
-import { BadRequestError } from "../../domain/errors/index.js";
-import { File } from "../../domain/entities/File.js";
-import { Tournament } from "../entities/Tournaments.js";
+import { BadRequestError } from "../../domain/errors/index";
+import { File } from "../../domain/entities/File";
+import { Tournament } from "../entities/Tournaments";
 
 
 export function validateTournamentData(data: Tournament, file?: File) {

@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IUpdateUserPlan } from "../../repositories/interfaces/usecases/IPlanUseCaseRepo.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { ISubscriptionRepository } from "../../repositories/interfaces/shared/ISubscriptionRepository.js";
-import { BillingCycle, PlanLevel } from "../../../domain/entities/Plan.js";
-import { BadRequestError } from "../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IUpdateUserPlan } from "../../repositories/interfaces/usecases/IPlanUseCaseRepo";
+import { ILogger } from "../../providers/ILogger";
+import { ISubscriptionRepository } from "../../repositories/interfaces/shared/ISubscriptionRepository";
+import { BillingCycle, PlanLevel } from "../../../domain/entities/Plan";
+import { BadRequestError } from "../../../domain/errors/index";
 
 
 @injectable()

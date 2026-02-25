@@ -1,14 +1,14 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
-import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
-import { HttpResponse } from "../../helpers/HttpResponse.js";
-import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
-import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
-import { IGetPlayerMatches, IGetPlayerTournamentMatches, IGetPlayerTournaments, IGetTournamentPointsTable, IGetTournamentStats } from "../../../../app/repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
-import { ITournamentDetails } from "../../../../app/repositories/interfaces/player/ITournamentUsecases.js";
-import { ILogger } from "../../../../app/providers/ILogger.js";
-import { TournamentMessages } from "../../../../domain/constants/TournamentMessages.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IHttpRequest } from "../../interfaces/IHttpRequest";
+import { IHttpResponse } from "../../interfaces/IHttpResponse";
+import { HttpResponse } from "../../helpers/HttpResponse";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes";
+import { buildResponse } from "../../../../infra/utils/responseBuilder";
+import { IGetPlayerMatches, IGetPlayerTournamentMatches, IGetPlayerTournaments, IGetTournamentPointsTable, IGetTournamentStats } from "../../../../app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
+import { ITournamentDetails } from "../../../../app/repositories/interfaces/player/ITournamentUsecases";
+import { ILogger } from "../../../../app/providers/ILogger";
+import { TournamentMessages } from "../../../../domain/constants/TournamentMessages";
 
 @injectable()
 export class TournamentsController {

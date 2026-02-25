@@ -1,11 +1,11 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository.js";
-import { IWalletRepository } from "../../repositories/interfaces/shared/IWalletRepository.js";
-import { IPayoutProvider } from "../../providers/IPayoutProvider.js";
-import { SavePayoutMethodPayload } from "../../../domain/types/financialTypes.js";
-import { PayoutMethodResolver } from "../../../infra/providers/PayoutMethodResolver.js";
-import { IInitiateWithdrawalUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository";
+import { IWalletRepository } from "../../repositories/interfaces/shared/IWalletRepository";
+import { IPayoutProvider } from "../../providers/IPayoutProvider";
+import { SavePayoutMethodPayload } from "../../../domain/types/financialTypes";
+import { PayoutMethodResolver } from "../../../infra/providers/PayoutMethodResolver";
+import { IInitiateWithdrawalUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases";
 
 
 @injectable()

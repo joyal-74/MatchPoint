@@ -1,10 +1,10 @@
-import { AdminToResponseDTO } from "../../../../domain/dtos/Admin.dto.js"; 
-import { ILoginSocialUserResponse, UserLoginResponseDTO } from "../../../../domain/dtos/User.dto.js";
-import { ManagerRegister } from "../../../../domain/entities/Manager.js";
-import { PlayerRegister } from "../../../../domain/entities/Player.js";
-import { SocialUserRegisterData, UserRegister } from "../../../../domain/entities/User.js";
-import { OtpContext } from "../../../../domain/enums/OtpContext.js";
-import { File } from "../../../../domain/entities/File.js";
+import { AdminToResponseDTO } from "../../../../domain/dtos/Admin.dto"; 
+import { ILoginSocialUserResponse, UserLoginResponseDTO } from "../../../../domain/dtos/User.dto";
+import { ManagerRegister } from "../../../../domain/entities/Manager";
+import { PlayerRegister } from "../../../../domain/entities/Player";
+import { SocialUserRegisterData, UserRegister } from "../../../../domain/entities/User";
+import { OtpContext } from "../../../../domain/enums/OtpContext";
+import { File } from "../../../../domain/entities/File";
 
 
 export interface IAuthUseCase<TAccount> {

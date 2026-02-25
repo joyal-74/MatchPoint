@@ -1,7 +1,7 @@
-import { CreateNotificationDTO, INotificationRepository, NotificationResponse } from "../../../app/repositories/interfaces/shared/INotificationRepository.js";
-import { NotificationDocument, NotificationModel } from "../../databases/mongo/models/NotificationModel.js";
-import { NotificationMapper } from "../../utils/mappers/NotificationMapper.js";
-import { BaseRepository } from "./BaseRepository.js";
+import { CreateNotificationDTO, INotificationRepository, NotificationResponse } from "../../../app/repositories/interfaces/shared/INotificationRepository";
+import { NotificationDocument, NotificationModel } from "../../databases/mongo/models/NotificationModel";
+import { NotificationMapper } from "../../utils/mappers/NotificationMapper";
+import { BaseRepository } from "./BaseRepository";
 
 export class NotificationRepository extends BaseRepository<CreateNotificationDTO, NotificationResponse> implements INotificationRepository {
 

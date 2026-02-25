@@ -1,8 +1,8 @@
 import http from "http";
-import { MongoConnection } from "./infra/databases/mongo/Mongo.config.js";
-import app from "./app.js";
-import { initSocket } from "./presentation/socket/socketConfig.js";
-import { startCronJobs } from "./infra/cron/initCronJobs.js";
+import { MongoConnection } from "./infra/databases/mongo/Mongo.config";
+import app from "./app";
+import { initSocket } from "./presentation/socket/socketConfig";
+import { startCronJobs } from "./infra/cron/initCronJobs";
 
 const PORT = Number(process.env.PORT) || 3000;
 

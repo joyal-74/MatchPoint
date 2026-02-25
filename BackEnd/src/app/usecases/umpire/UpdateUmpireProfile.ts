@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
 
-import { File } from "../../../domain/entities/File.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IUpdateUmpireProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { IFileStorage } from "../../providers/IFileStorage.js";
-import { UmpireResponseDTO, UmpireUpdateDTO } from "../../../domain/dtos/Umpire.dto.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
-import { UserMapper } from "../../mappers/UserMapper.js";
-import { validateUserProfileUpdata } from "../../../domain/validators/UserProfileUpdateValidator.js";
+import { File } from "../../../domain/entities/File";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IUpdateUmpireProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { IFileStorage } from "../../providers/IFileStorage";
+import { UmpireResponseDTO, UmpireUpdateDTO } from "../../../domain/dtos/Umpire.dto";
+import { NotFoundError } from "../../../domain/errors/index";
+import { UserMapper } from "../../mappers/UserMapper";
+import { validateUserProfileUpdata } from "../../../domain/validators/UserProfileUpdateValidator";
 
 
 @injectable()

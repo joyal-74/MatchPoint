@@ -1,14 +1,14 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
-import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
-import { HttpResponse } from "../../helpers/HttpResponse.js";
-import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
-import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
-import { IPlayerTeamController } from "../../interfaces/IPlayerTeamController.js";
-import { IGetMyTeamDetailsUseCase, IGetPlayerJoinedTeamsUseCase, IPlayerLeaveTeamUseCase, IGetPlayerTeamsUseCase, IJoinTeamUseCase, IUpdatePlayerInviteStatus } from "../../../../app/repositories/interfaces/player/ITeamRepositoryUsecase.js";
-import { ILogger } from "../../../../app/providers/ILogger.js";
-import { TeamMessages } from "../../../../domain/constants/TeamMessages.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IHttpRequest } from "../../interfaces/IHttpRequest";
+import { IHttpResponse } from "../../interfaces/IHttpResponse";
+import { HttpResponse } from "../../helpers/HttpResponse";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes";
+import { buildResponse } from "../../../../infra/utils/responseBuilder";
+import { IPlayerTeamController } from "../../interfaces/IPlayerTeamController";
+import { IGetMyTeamDetailsUseCase, IGetPlayerJoinedTeamsUseCase, IPlayerLeaveTeamUseCase, IGetPlayerTeamsUseCase, IJoinTeamUseCase, IUpdatePlayerInviteStatus } from "../../../../app/repositories/interfaces/player/ITeamRepositoryUsecase";
+import { ILogger } from "../../../../app/providers/ILogger";
+import { TeamMessages } from "../../../../domain/constants/TeamMessages";
 
 @injectable()
 export class TeamsController implements IPlayerTeamController {

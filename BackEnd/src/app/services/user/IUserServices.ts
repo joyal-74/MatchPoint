@@ -1,5 +1,5 @@
-import { SocialUserRegisterData, UserResponse } from "../../../domain/entities/User.js";
-import { FacebookPictureData } from "../auth/IFacebookServices.js";
+import { SocialUserRegisterData, UserResponse } from "../../../domain/entities/User";
+import { FacebookPictureData } from "../auth/IFacebookServices";
 
 export interface IUserServices {
     findExistingUserByEmail(email: string): Promise<UserResponse | null>;

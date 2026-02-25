@@ -1,5 +1,5 @@
-import { FacebookCredentials, FacebookDebugTokenResponse, FacebookUserData, IFacebookServices } from "../../app/services/auth/IFacebookServices.js";
-import { NotFoundError, UnauthorizedError } from "../../domain/errors/index.js"; 
+import { FacebookCredentials, FacebookDebugTokenResponse, FacebookUserData, IFacebookServices } from "../../app/services/auth/IFacebookServices";
+import { NotFoundError, UnauthorizedError } from "../../domain/errors/index"; 
 
 export class FacebookServices implements IFacebookServices {
     validateCredentials(): FacebookCredentials {

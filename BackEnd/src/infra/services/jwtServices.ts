@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { IJWTRepository } from "../../app/repositories/interfaces/providers/IjwtRepository.js";
-import { JwtPayload, JwtTempPayload } from "../../domain/entities/JwtPayload.js";
+import { IJWTRepository } from "../../app/repositories/interfaces/providers/IjwtRepository";
+import { JwtPayload, JwtTempPayload } from "../../domain/entities/JwtPayload";
 
 
 const ACCESS_SECRET = process.env.ACCESS_TOKEN_SECRET!;

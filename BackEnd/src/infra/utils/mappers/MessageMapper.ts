@@ -1,5 +1,5 @@
-import { Message } from "../../../domain/entities/Message.js";
-import { IMessage } from "../../../infra/databases/mongo/models/MessageModel.js";
+import { Message } from "../../../domain/entities/Message";
+import { IMessage } from "../../../infra/databases/mongo/models/MessageModel";
 import { FlattenMaps, HydratedDocument, Types } from "mongoose";
 
 type PopulatedSender = {

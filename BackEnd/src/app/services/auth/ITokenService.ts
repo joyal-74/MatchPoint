@@ -1,4 +1,4 @@
-import { JwtTempPayload } from "../../../domain/entities/JwtPayload.js"; 
+import { JwtTempPayload } from "../../../domain/entities/JwtPayload"; 
 import { JwtPayload } from "jsonwebtoken";
 
 export interface ITokenService {

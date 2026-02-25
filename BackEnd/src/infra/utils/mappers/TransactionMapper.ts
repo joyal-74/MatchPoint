@@ -1,5 +1,5 @@
-import { PopulatedTransactionDoc, TransactionReadModel } from "../../../app/repositories/interfaces/shared/ITransactionRepository.js";
-import { Transaction } from "../../../domain/entities/Transaction.js";
+import { PopulatedTransactionDoc, TransactionReadModel } from "../../../app/repositories/interfaces/shared/ITransactionRepository";
+import { Transaction } from "../../../domain/entities/Transaction";
 
 export class TransactionMapper {
     static toDomain(doc: any): Transaction {

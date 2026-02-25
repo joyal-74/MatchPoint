@@ -1,10 +1,10 @@
-import { AdminFilters, Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "../../../domain/dtos/Team.dto.js";
+import { AdminFilters, Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "../../../domain/dtos/Team.dto";
 import mongoose from "mongoose";
-import { TeamModel } from "../../databases/mongo/models/TeamModel.js";
-import { ITeamRepository } from "../../../app/repositories/interfaces/shared/ITeamRepository.js";
-import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
-import { TeamMongoMapper, TeamSummaryPopulatedDocument } from "../../utils/mappers/TeamMongoMapper.js";
-import { BaseRepository } from "./BaseRepository.js";
+import { TeamModel } from "../../databases/mongo/models/TeamModel";
+import { ITeamRepository } from "../../../app/repositories/interfaces/shared/ITeamRepository";
+import { BadRequestError, NotFoundError } from "../../../domain/errors/index";
+import { TeamMongoMapper, TeamSummaryPopulatedDocument } from "../../utils/mappers/TeamMongoMapper";
+import { BaseRepository } from "./BaseRepository";
 
 export class TeamRepository extends BaseRepository<TeamRegister, TeamDataFull> implements ITeamRepository {
 

@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { IPointsTableRepository } from "../../repositories/interfaces/shared/IPointsTableRepository.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IRegistrationRepository } from "../../repositories/interfaces/manager/IRegistrationRepository.js";
-import { PointsRow } from "../../../domain/entities/PointsTable.js";
+import { IPointsTableRepository } from "../../repositories/interfaces/shared/IPointsTableRepository";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IRegistrationRepository } from "../../repositories/interfaces/manager/IRegistrationRepository";
+import { PointsRow } from "../../../domain/entities/PointsTable";
 
 
 interface PopulatedTeam {

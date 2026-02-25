@@ -1,9 +1,9 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IGetAllMatches } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
-import { IMatchesRepository } from "../../../repositories/interfaces/manager/IMatchesRepository.js";
-import { Match } from "../../../../domain/entities/Match.js";
-import { ILogger } from "../../../providers/ILogger.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IGetAllMatches } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { IMatchesRepository } from "../../../repositories/interfaces/manager/IMatchesRepository";
+import { Match } from "../../../../domain/entities/Match";
+import { ILogger } from "../../../providers/ILogger";
 
 
 @injectable()

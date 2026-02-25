@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IGetTournamentStats } from "../../repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
-import { ILeaderboardRepository } from "../../repositories/interfaces/shared/ILeaderboardRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { Leaderboard } from "../../../domain/entities/Tournaments.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IGetTournamentStats } from "../../repositories/interfaces/usecases/ITournamentsRepoUsecaes";
+import { ILeaderboardRepository } from "../../repositories/interfaces/shared/ILeaderboardRepository";
+import { ILogger } from "../../providers/ILogger";
+import { Leaderboard } from "../../../domain/entities/Tournaments";
 
 
 @injectable()

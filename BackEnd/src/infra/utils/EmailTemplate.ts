@@ -1,4 +1,4 @@
-import { OtpContext } from "../../domain/enums/OtpContext.js";
+import { OtpContext } from "../../domain/enums/OtpContext";
 
 export const generateOtpEmailTemplate = (
     appName: string,

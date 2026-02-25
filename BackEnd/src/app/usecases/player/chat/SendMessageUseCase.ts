@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IMessageRepository } from "../../../repositories/interfaces/player/IMessageRepository.js";
-import { IChatRepository } from "../../../repositories/interfaces/player/IChatRepository.js";
-import { SocketServer } from "../../../../presentation/socket/SocketServer.js";
-import { NotFoundError } from "../../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IMessageRepository } from "../../../repositories/interfaces/player/IMessageRepository";
+import { IChatRepository } from "../../../repositories/interfaces/player/IChatRepository";
+import { SocketServer } from "../../../../presentation/socket/SocketServer";
+import { NotFoundError } from "../../../../domain/errors/index";
 
 
 

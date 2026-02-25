@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../../domain/constants/Identifiers.js";
-import { ICreateTournamentFixtures } from "../../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
-import { IFixturesRepository } from "../../../../repositories/interfaces/manager/IFixturesRepository.js";
-import { ILogger } from "../../../../providers/ILogger.js";
-import { BadRequestError, NotFoundError } from "../../../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../../../domain/constants/Identifiers";
+import { ICreateTournamentFixtures } from "../../../../repositories/interfaces/usecases/ITournamentUsecaseRepository";
+import { IFixturesRepository } from "../../../../repositories/interfaces/manager/IFixturesRepository";
+import { ILogger } from "../../../../providers/ILogger";
+import { BadRequestError, NotFoundError } from "../../../../../domain/errors/index";
 
 
 @injectable()

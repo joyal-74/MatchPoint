@@ -1,4 +1,4 @@
-import { NotificationResponse } from "../shared/INotificationRepository.js";
+import { NotificationResponse } from "../shared/INotificationRepository";
 
 export interface IGetPlayerNotificationsUseCase {
     execute(playerId: string): Promise<NotificationResponse[]>;

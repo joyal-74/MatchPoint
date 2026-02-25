@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ILoginFacebookUser } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
-import { IFacebookServices } from "../../services/auth/IFacebookServices.js";
-import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository.js";
-import { IUserServices } from "../../services/user/IUserServices.js";
-import { IUserAuthServices } from "../../services/auth/IUserAuthServices.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { UserMapper } from "../../mappers/UserMapper.js";
-import { JwtPayload, JwtTempPayload } from "../../../domain/entities/JwtPayload.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ILoginFacebookUser } from "../../repositories/interfaces/auth/IAuthenticationUseCase";
+import { IFacebookServices } from "../../services/auth/IFacebookServices";
+import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository";
+import { IUserServices } from "../../services/user/IUserServices";
+import { IUserAuthServices } from "../../services/auth/IUserAuthServices";
+import { ILogger } from "../../providers/ILogger";
+import { UserMapper } from "../../mappers/UserMapper";
+import { JwtPayload, JwtTempPayload } from "../../../domain/entities/JwtPayload";
 
 
 @injectable()

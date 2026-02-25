@@ -1,4 +1,4 @@
-import { DtlsParameters, MediaKind, RtpCapabilities, RtpParameters } from "../../../infra/livestream/Types.js";
+import { DtlsParameters, MediaKind, RtpCapabilities, RtpParameters } from "../../../infra/livestream/Types";
 
 export interface ProduceData {
     matchId: string;

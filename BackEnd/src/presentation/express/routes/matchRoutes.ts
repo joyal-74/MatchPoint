@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { MatchController } from "../../http/controllers/manager/MatchController.js";
+import { MatchController } from "../../http/controllers/manager/MatchController";
 import { container } from "tsyringe";
-import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
-import { managerOnly, umpireOnly } from "../middlewares/index.js";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor";
+import { managerOnly, umpireOnly } from "../middlewares/index";
 
 
 const router = Router();

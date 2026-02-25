@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IPlanRepository } from "../../repositories/interfaces/admin/IPlanRepository.js";
-import { IUpdatePlan } from "../../repositories/interfaces/admin/IAdminUsecases.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { Plan } from "../../../domain/entities/Plan.js";
-import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
-import { validatePlanData } from "../../../domain/validators/validatePlanData.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IPlanRepository } from "../../repositories/interfaces/admin/IPlanRepository";
+import { IUpdatePlan } from "../../repositories/interfaces/admin/IAdminUsecases";
+import { ILogger } from "../../providers/ILogger";
+import { Plan } from "../../../domain/entities/Plan";
+import { BadRequestError, NotFoundError } from "../../../domain/errors/index";
+import { validatePlanData } from "../../../domain/validators/validatePlanData";
 
 
 @injectable()

@@ -1,11 +1,11 @@
 import { injectable, inject } from "tsyringe";
 import { Types } from "mongoose";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
-import { IPayoutRepository } from "../../app/repositories/interfaces/shared/IPayoutRepository.js";
-import { IPayoutMappingRepository } from "../../app/repositories/interfaces/shared/IPayoutMappingRepository.js";
-import { IPayoutProvider } from "../../app/providers/IPayoutProvider.js";
-import { IEncryptionProvider } from "../../app/providers/IEncryptionProvider.js";
-import { SavePayoutMethodPayload } from "../../domain/types/financialTypes.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
+import { IPayoutRepository } from "../../app/repositories/interfaces/shared/IPayoutRepository";
+import { IPayoutMappingRepository } from "../../app/repositories/interfaces/shared/IPayoutMappingRepository";
+import { IPayoutProvider } from "../../app/providers/IPayoutProvider";
+import { IEncryptionProvider } from "../../app/providers/IEncryptionProvider";
+import { SavePayoutMethodPayload } from "../../domain/types/financialTypes";
 
 @injectable()
 export class PayoutMethodResolver {

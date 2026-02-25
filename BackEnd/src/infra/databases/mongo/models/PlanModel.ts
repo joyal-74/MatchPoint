@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { Plan } from "../../../../domain/entities/Plan.js";
+import { Plan } from "../../../../domain/entities/Plan";
 
 const PlanSchema = new Schema<Plan>(
     {

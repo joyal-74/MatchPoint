@@ -1,4 +1,4 @@
-import { PlayerProfileType } from "./Sports.dto.js";
+import { PlayerProfileType } from "./Sports.dto";
 
 export type TeamStatus = 'active' | 'blocked' | 'deleted'
 export type playerStatus = "playing" | "substitute";

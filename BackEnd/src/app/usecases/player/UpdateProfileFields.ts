@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IUpdatePlayerFields } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
-import { IPlayerService } from "../../services/player/IPlayerService.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { PlayerProfileFieldDTO, PlayerProfileResponse } from "../../../domain/dtos/Player.dto.js";
-import { validatePlayerSportsFields } from "../../../domain/validators/PlayerFieldValidators.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
-import { PlayerMapper } from "../../mappers/PlayerMapper.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IUpdatePlayerFields } from "../../repositories/interfaces/usecases/IUserProfileRepository";
+import { IPlayerService } from "../../services/player/IPlayerService";
+import { ILogger } from "../../providers/ILogger";
+import { PlayerProfileFieldDTO, PlayerProfileResponse } from "../../../domain/dtos/Player.dto";
+import { validatePlayerSportsFields } from "../../../domain/validators/PlayerFieldValidators";
+import { NotFoundError } from "../../../domain/errors/index";
+import { PlayerMapper } from "../../mappers/PlayerMapper";
 
 
 @injectable()

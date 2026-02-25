@@ -1,8 +1,8 @@
-import { ManagerLoginResponseDTO, ManagerResponseDTO } from "../../domain/dtos/Manager.dto.js";
-import { UserResponseDTO } from "../../domain/dtos/User.dto.js";
-import { ManagerResponse } from "../../domain/entities/Manager.js";
-import { User } from "../../domain/entities/User.js";
-import { ManagerDetails } from "../usecases/admin/GetManagerDetails.js";
+import { ManagerLoginResponseDTO, ManagerResponseDTO } from "../../domain/dtos/Manager.dto";
+import { UserResponseDTO } from "../../domain/dtos/User.dto";
+import { ManagerResponse } from "../../domain/entities/Manager";
+import { User } from "../../domain/entities/User";
+import { ManagerDetails } from "../usecases/admin/GetManagerDetails";
 
 
 

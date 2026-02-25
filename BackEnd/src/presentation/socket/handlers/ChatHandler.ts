@@ -1,8 +1,8 @@
 import { Server } from "socket.io";
 import { Types } from "mongoose";
-import { AuthenticatedSocket } from "../SocketServer.js";
-import { MessageModel } from "../../../infra/databases/mongo/models/MessageModel.js";
-import { TeamModel } from "../../../infra/databases/mongo/models/TeamModel.js";
+import { AuthenticatedSocket } from "../SocketServer";
+import { MessageModel } from "../../../infra/databases/mongo/models/MessageModel";
+import { TeamModel } from "../../../infra/databases/mongo/models/TeamModel";
 
 interface IReplyTo {
     messageId: string;

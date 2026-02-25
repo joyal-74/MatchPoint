@@ -3,12 +3,12 @@ import multer from "multer";
 
 
 import { container } from "tsyringe";
-import { PlayerProfileController } from "../../http/controllers/player/ProfileController.js";
-import { TeamsController } from "../../http/controllers/player/TeamsController.js";
-import { TournamentsController } from "../../http/controllers/player/TournamentsController.js";
-import { expressFileUpdateHandler } from "../../adaptors/ExpressFileAdaptor.js";
-import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
-import { playerOnly } from "../middlewares/index.js";
+import { PlayerProfileController } from "../../http/controllers/player/ProfileController";
+import { TeamsController } from "../../http/controllers/player/TeamsController";
+import { TournamentsController } from "../../http/controllers/player/TournamentsController";
+import { expressFileUpdateHandler } from "../../adaptors/ExpressFileAdaptor";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor";
+import { playerOnly } from "../middlewares/index";
 
 const router = Router();
 const upload = multer();

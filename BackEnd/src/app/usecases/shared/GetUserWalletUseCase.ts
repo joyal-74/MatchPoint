@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { IGetUserWalletUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { DomainTransaction, IFinancialRepository } from "../../repositories/interfaces/manager/IFinancialRepository.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
+import { IGetUserWalletUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { DomainTransaction, IFinancialRepository } from "../../repositories/interfaces/manager/IFinancialRepository";
+import { NotFoundError } from "../../../domain/errors/index";
 
 @injectable()
 export class GetUserWalletUseCase implements IGetUserWalletUseCase {

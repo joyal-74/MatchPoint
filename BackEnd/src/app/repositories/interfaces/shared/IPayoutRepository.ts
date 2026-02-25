@@ -1,6 +1,6 @@
-import { IPayoutResponse } from "../../../../domain/dtos/PayoutResponse.dto.js";
-import { IPayoutSchema } from "../../../../infra/databases/mongo/models/PayoutMethodModel.js";
-import { IBaseRepository } from "../../IBaseRepository.js"; 
+import { IPayoutResponse } from "../../../../domain/dtos/PayoutResponse.dto";
+import { IPayoutSchema } from "../../../../infra/databases/mongo/models/PayoutMethodModel";
+import { IBaseRepository } from "../../IBaseRepository"; 
 
 export interface IPayoutRepository extends IBaseRepository<IPayoutSchema, IPayoutResponse> {
     findByUser(userId: string): Promise<IPayoutResponse[]>;

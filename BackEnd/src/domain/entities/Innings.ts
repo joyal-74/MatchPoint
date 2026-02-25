@@ -1,7 +1,7 @@
-import { Batsman } from "./Batsman.js";
-import { Bowler } from "./Bowler.js";
-import { Extras, ExtraType } from "./Extra.js";
-import { BallLog } from "./BallLog.js";
+import { Batsman } from "./Batsman";
+import { Bowler } from "./Bowler";
+import { Extras, ExtraType } from "./Extra";
+import { BallLog } from "./BallLog";
 
 export interface RetireBatsmanPayload {
     outBatsmanId: string;

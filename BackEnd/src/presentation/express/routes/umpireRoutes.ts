@@ -1,11 +1,11 @@
 import { Router } from "express";
 import multer from "multer";
 import { container } from "tsyringe";
-import { ProfileController } from "../../http/controllers/umpire/ProfileController.js";
-import { MatchController } from "../../http/controllers/umpire/MatchController.js";
-import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
-import { expressFileUpdateHandler } from "../../adaptors/ExpressFileAdaptor.js";
-import { umpireOnly } from "../middlewares/index.js";
+import { ProfileController } from "../../http/controllers/umpire/ProfileController";
+import { MatchController } from "../../http/controllers/umpire/MatchController";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor";
+import { expressFileUpdateHandler } from "../../adaptors/ExpressFileAdaptor";
+import { umpireOnly } from "../middlewares/index";
 
 
 const router = Router();

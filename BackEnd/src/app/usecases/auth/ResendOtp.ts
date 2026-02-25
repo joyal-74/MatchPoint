@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IResendOtpUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository.js";
-import { IMailRepository } from "../../providers/IMailRepository.js";
-import { IOtpGenerator } from "../../providers/IOtpGenerator.js";
-import { OtpContext } from "../../../domain/enums/OtpContext.js";
-import { BadRequestError } from "../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IResendOtpUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository";
+import { IMailRepository } from "../../providers/IMailRepository";
+import { IOtpGenerator } from "../../providers/IOtpGenerator";
+import { OtpContext } from "../../../domain/enums/OtpContext";
+import { BadRequestError } from "../../../domain/errors/index";
 
 
 @injectable()

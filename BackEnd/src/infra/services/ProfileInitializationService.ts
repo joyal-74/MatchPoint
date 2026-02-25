@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
-import { IWalletRepository } from "../../app/repositories/interfaces/shared/IWalletRepository.js";
-import { ISubscriptionRepository } from "../../app/repositories/interfaces/shared/ISubscriptionRepository.js";
-import { IPlayerRepository } from "../../app/repositories/interfaces/player/IPlayerRepository.js";
-import { IManagerRepository } from "../../app/repositories/interfaces/manager/IManagerRepository.js";
-import { UserRoles } from "../../domain/enums/Roles.js";
-import { getDefaultCareerStats } from "../utils/playerDefaults.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
+import { IWalletRepository } from "../../app/repositories/interfaces/shared/IWalletRepository";
+import { ISubscriptionRepository } from "../../app/repositories/interfaces/shared/ISubscriptionRepository";
+import { IPlayerRepository } from "../../app/repositories/interfaces/player/IPlayerRepository";
+import { IManagerRepository } from "../../app/repositories/interfaces/manager/IManagerRepository";
+import { UserRoles } from "../../domain/enums/Roles";
+import { getDefaultCareerStats } from "../utils/playerDefaults";
 
 @injectable()
 export class ProfileInitializationService {

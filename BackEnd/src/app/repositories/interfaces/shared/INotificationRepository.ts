@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { IBaseRepository } from "../../IBaseRepository.js";
+import { IBaseRepository } from "../../IBaseRepository";
 
 export interface CreateNotificationDTO {
     userId: Types.ObjectId | string;

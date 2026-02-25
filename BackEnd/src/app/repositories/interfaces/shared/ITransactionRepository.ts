@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
-import { RevenueChartPoint } from "../../../../domain/dtos/Analytics.dto.js";
-import { AdminFilters } from "../../../../domain/dtos/Team.dto.js";
-import { TransactionCheckDTO, TransactionCreateDTO } from "../../../../domain/dtos/Transaction.dto.js";
-import { Transaction } from "../../../../domain/entities/Transaction.js";
-import { IBaseRepository } from "../../IBaseRepository.js";
+import { RevenueChartPoint } from "../../../../domain/dtos/Analytics.dto";
+import { AdminFilters } from "../../../../domain/dtos/Team.dto";
+import { TransactionCheckDTO, TransactionCreateDTO } from "../../../../domain/dtos/Transaction.dto";
+import { Transaction } from "../../../../domain/entities/Transaction";
+import { IBaseRepository } from "../../IBaseRepository";
 
 export interface TransactionStats {
     totalRevenue: number;

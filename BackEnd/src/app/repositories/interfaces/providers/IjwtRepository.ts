@@ -1,4 +1,4 @@
-import { JwtPayload, JwtTempPayload } from "../../../../domain/entities/JwtPayload.js";
+import { JwtPayload, JwtTempPayload } from "../../../../domain/entities/JwtPayload";
 
 export interface IJWTRepository {
     generateAccessToken(payload: JwtPayload): Promise<string>;

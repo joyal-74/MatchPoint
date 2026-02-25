@@ -1,9 +1,9 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
-import { IChangeUserBlockStatus, IChangeUserStatus, IGetUsersByRole, RoleResponseDTO } from "../../app/repositories/interfaces/admin/IAdminUsecases.js";
-import { IUserManagementService } from "../../app/repositories/interfaces/services/AdminUserServices.js";
-import { GetAllUsersParams } from "../../app/usecases/admin/GetAllViewers.js";
+import { IChangeUserBlockStatus, IChangeUserStatus, IGetUsersByRole, RoleResponseDTO } from "../../app/repositories/interfaces/admin/IAdminUsecases";
+import { IUserManagementService } from "../../app/repositories/interfaces/services/AdminUserServices";
+import { GetAllUsersParams } from "../../app/usecases/admin/GetAllViewers";
 
 @injectable()
 export class UserManagementService implements IUserManagementService {

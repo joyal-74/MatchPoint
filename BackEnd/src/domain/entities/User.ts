@@ -1,5 +1,5 @@
-import { UserRole } from "../../domain/enums/Roles.js";
-import { GenderType,ThemeType, RoleType } from "../enums/index.js";
+import { UserRole } from "../../domain/enums/Roles";
+import { GenderType,ThemeType, RoleType } from "../enums/index";
 
 export interface UserSettings {
     location?: string;

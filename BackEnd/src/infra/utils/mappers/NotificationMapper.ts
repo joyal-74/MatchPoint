@@ -1,5 +1,5 @@
-import { NotificationResponse } from "../../../app/repositories/interfaces/shared/INotificationRepository.js";
-import { NotificationDocument } from "../../databases/mongo/models/NotificationModel.js";
+import { NotificationResponse } from "../../../app/repositories/interfaces/shared/INotificationRepository";
+import { NotificationDocument } from "../../databases/mongo/models/NotificationModel";
 
 
 export class NotificationMapper {
