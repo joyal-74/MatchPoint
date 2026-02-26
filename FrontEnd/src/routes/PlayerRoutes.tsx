@@ -15,7 +15,7 @@ const TeamsListPage = lazy(() => import("../pages/player/TeamsListPage"));
 const TournamentsPage = lazy(() => import("../pages/player/Tournaments"));
 const PlayerProfilePage = lazy(() => import("../pages/player/ProfilePage"));
 const TeamFinderPage = lazy(() => import("../pages/player/TeamsPage"));
-const TeamChat = lazy(() => import("../pages/player/TeamChat/TeamChat"));
+const TeamChat = lazy(() => import("../pages/shared/TeamChat/TeamChat"));
 const LiveMatchDetails = lazy(() => import("../pages/player/LiveMatchDetails"));
 const LiveMatchesPage = lazy(() => import("../pages/player/LiveMatchPage"));
 const SettingsPage = lazy(() => import("../pages/shared/SettingsPage"));
@@ -48,7 +48,7 @@ const PlayerRoutes = () => {
             <Route path="myteams/:status" element={withPlayerProtection(<TeamsListPage />)} />
             <Route path="myteam/:teamId" element={withPlayerProtection(<ViewTeam />)} />
             <Route path="statistics" element={withPlayerProtection(<MyStatisticsPage />)} />
-            <Route path="chat" element={withPlayerProtection(<TeamChat />)} />
+            <Route path="chat" element={withPlayerProtection(<NavbarWrapper><TeamChat /></NavbarWrapper>)} />
             <Route path="settings" element={<RoleLayoutWrapper><SettingsPage /></RoleLayoutWrapper>} />
             <Route path="subscription" element={<RoleLayoutWrapper><SubscriptionPage /></RoleLayoutWrapper>} />
             <Route path="notifications" element={<RoleLayoutWrapper><NotificationsPage /></RoleLayoutWrapper>} />

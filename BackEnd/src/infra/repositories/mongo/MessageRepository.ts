@@ -14,6 +14,7 @@ export class MessageRepository implements IMessageRepository {
             text: data.text,
             clientId: data.clientId,
             replyTo: data.replyTo,
+            senderRole : data.senderRole
         });
 
         return MessageMapper.fromHydrated(doc);
@@ -26,7 +27,7 @@ export class MessageRepository implements IMessageRepository {
             .sort({ createdAt: -1 })
             .limit(pageSize)
             .skip(skip)
-            .populate({ path: 'senderId', select: 'firstName lastName profileImage' })
+            .populate({ path: 'senderId', select: 'firstName lastName profileImage role' })
             .lean();
 
         return rawDocs.reverse().map(MessageMapper.fromLean);

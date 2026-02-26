@@ -275,6 +275,7 @@ const SharedUseCaseTokens = {
     HandleWebhookUseCase: "HandleWebhookUseCase",
     GetUserWalletUseCase : 'GetUserWalletUseCase',
     ClearAllNotifications : 'ClearAllNotifications',
+    GetUserTeamsUseCase : 'GetUserTeamsUseCase',
 }
 
 

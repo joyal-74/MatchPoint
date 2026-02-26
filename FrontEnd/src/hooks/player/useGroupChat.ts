@@ -5,7 +5,7 @@ import {
     deleteMessage,
     replaceOptimisticMessage
 } from "../../features/player/Chat/messages/messagesSlice";
-import type { Message } from "../../features/player/Chat/messages/messageTypes";
+import type { ChatParticipantRole, Message } from "../../features/player/Chat/messages/messageTypes";
 import { v4 as uuidv4 } from "uuid";
 import { createSocket, getSocket } from "../../socket/socket";
 import { loadMessages, loadMoreMessages } from "../../features/player/Chat/messages/messagesThunk";
@@ -29,13 +29,13 @@ export function useGroupChat({
     autoJoin = false,
     onMessagesLoaded,
     onMoreMessagesLoaded,
-    onRemovedFromTeam // NEW
+    onRemovedFromTeam
 }: {
     initialChatId?: string;
     autoJoin?: boolean;
     onMessagesLoaded?: (messages: Message[], isInitialLoad: boolean) => void;
     onMoreMessagesLoaded?: (messages: Message[]) => void;
-    onRemovedFromTeam?: (teamId: string) => void; // NEW
+    onRemovedFromTeam?: (teamId: string) => void;
 }) {
     const [socket, setSocket] = useState<ReturnType<typeof getSocket> | null>(null);
     const [connected, setConnected] = useState(false);
@@ -44,7 +44,8 @@ export function useGroupChat({
 
     const dispatch = useAppDispatch();
     const { byChat, loading } = useAppSelector((state) => state.messages);
-    const currentUserId = useAppSelector((state) => state.auth.user?._id || "me");
+    const currentUser = useAppSelector((state) => state.auth.user);
+    const currentUserId = currentUser?._id || "me";
 
     const currentChat = useRef<string | null>(initialChatId ?? null);
     const nextPageRef = useRef(2);
@@ -108,6 +109,14 @@ export function useGroupChat({
             return false;
         }
 
+        const rawRole = currentUser?.role;
+        if (rawRole !== "player" && rawRole !== "manager") {
+            console.error("Unauthorized: Only players and managers can send messages.");
+            return false;
+        }
+
+        const senderRole = rawRole as ChatParticipantRole;
+
         const tempId = `temp-${uuidv4()}`;
 
         const optimisticMsg: Message = {
@@ -115,6 +124,7 @@ export function useGroupChat({
             chatId: currentChat.current,
             senderId: currentUserId,
             senderName: "You",
+            senderRole,
             text,
             createdAt: new Date(),
             status: "pending",
@@ -133,11 +143,12 @@ export function useGroupChat({
             text,
             clientId: tempId,
             profileImage: currentUserProfileImage || '',
-            replyTo
+            replyTo,
+            senderRole
         });
 
         return true;
-    }, [socket, connected, currentUserId, dispatch, currentUserProfileImage]);
+    }, [socket, connected, currentUserId, currentUser?.role, dispatch, currentUserProfileImage]);
 
     useEffect(() => {
         if (socketInitialized.current) return;

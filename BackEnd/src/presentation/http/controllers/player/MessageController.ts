@@ -18,12 +18,13 @@ export class MessageController {
     ) { }
 
     sendMessage = async (httpRequest: IHttpRequest) : Promise<IHttpResponse> => {
-        const { chatId, senderId, text } = httpRequest.body;
+        const { chatId, senderId, text, senderRole } = httpRequest.body;
 
         const result = await this._sendMessageUC.execute({
             chatId,
             senderId,
             text,
+            senderRole
         });
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "message send success", result));

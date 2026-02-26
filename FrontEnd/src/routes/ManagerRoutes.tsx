@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
 import RoleLayoutWrapper from "../pages/shared/RoleLayoutWrapper";
+import NavbarWrapper from "../components/shared/NavbarWrapper";
 
 // Helper for protection
 const withManagerProtection = (component: JSX.Element) => (
@@ -30,6 +31,7 @@ const EarningsPage = lazy(() => import("../components/manager/EarningsOverview")
 const WalletPage = lazy(() => import("../components/manager/PaymentsPage"));
 const FinancialHistory = lazy(() => import("../components/manager/wallet/FinancialHistory"));
 const ExplorePage = lazy(() => import("../pages/manager/ExplorePage"));
+const TeamChat = lazy(() => import("../pages/shared/TeamChat/TeamChat"));
 const MatchesSection = lazy(() => import("../pages/manager/MatchesPage"));
 const MyMatchesPage = lazy(() => import("../pages/manager/MyMatches"));
 const CreateTournamentPage = lazy(() => import("../components/manager/tournaments/TournamentModal/CreateTournamentPage"));
@@ -47,6 +49,7 @@ const ManagerRoutes = () => {
             <Route path="profile" element={withManagerProtection(<UserProfile />)} />
             <Route path="teams" element={withManagerProtection(<TeamsListPage />)} />
             <Route path="payments" element={withManagerProtection(<WalletPage />)} />
+            <Route path="chat" element={withManagerProtection(<NavbarWrapper><TeamChat /></NavbarWrapper>)} />
             <Route path="payments/history" element={withManagerProtection(<FinancialHistory />)} />
             <Route path="payments/earnings" element={withManagerProtection(<EarningsPage />)} />
             <Route path="team/:teamId" element={withManagerProtection(<ViewTeamManager />)} />

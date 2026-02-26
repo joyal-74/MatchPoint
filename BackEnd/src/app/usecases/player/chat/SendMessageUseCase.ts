@@ -10,6 +10,7 @@ import { NotFoundError } from "../../../../domain/errors/index";
 interface SendMessageDTO {
     chatId: string;
     senderId: string;
+    senderRole: string;
     text: string;
 }
 
@@ -30,7 +31,8 @@ export class SendMessageUseCase {
             chatId: data.chatId,
             senderId: data.senderId,
             text: data.text,
-            clientId : data.senderId
+            clientId : data.senderId,
+            senderRole : data.senderRole
         });
 
         const io = this.socketServer.getIO();

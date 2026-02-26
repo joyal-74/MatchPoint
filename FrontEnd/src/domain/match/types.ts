@@ -65,11 +65,6 @@ export interface Player {
     [key: string]: any;
 }
 
-export interface Team {
-    _id: string;
-    name: string;
-    members: Player[];
-}
 
 export interface MatchData {
     matchNo: number;

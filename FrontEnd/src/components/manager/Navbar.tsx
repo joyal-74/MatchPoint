@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Bell } from "lucide-react";
+import { Bell, MessageCircle } from "lucide-react";
 import ProfileCard from "../shared/ProfileCard";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { logoutUser } from "../../features/auth";
@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
 
     useEffect(() => {
         closeNotifications();
-    }, [location.pathname]);
+    }, [location.pathname, closeNotifications]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -66,7 +66,8 @@ const Navbar: React.FC = () => {
         <>
             {/* --- TOP NAVBAR --- */}
             {/* Added h-[60px] to strictly enforce height for alignment with Sidebar */}
-            <nav className="fixed top-0 left-0 right-0 z-50 h-[60px] flex items-center justify-between px-4 md:px-10 py-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border transition-colors duration-300">
+            <nav className="fixed top-0 left-0 right-0 z-50 h-[60px] flex items-center justify-between px-4 md:px-10 py-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border transition-colors duration-300">
+            
                 <div className="flex items-center gap-12">
                     <h1 className="text-foreground text-xl md:text-2xl font-rowdies cursor-pointer" onClick={() => navigate('/manager/dashboard')}>
                         <span className="text-primary">M</span>atch<span className="text-primary">P</span>oint
@@ -87,6 +88,17 @@ const Navbar: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-3 md:gap-4 relative">
+
+                    <button
+                        onClick={() => navigate('/manager/chat')}
+                        className={`relative p-2 rounded-full transition-all duration-200 
+                                                ${location.pathname === '/manager/chat'
+                                ? 'bg-accent text-accent-foreground'
+                                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                            }`}
+                    >
+                        <MessageCircle className="w-5 h-5" />
+                    </button>
                     <button
                         onClick={toggleNotifications}
                         className={`relative p-2 rounded-full transition-all duration-200 ${showNotifications ? 'bg-accent text-accent-foreground' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'}`}
