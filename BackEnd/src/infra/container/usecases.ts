@@ -156,7 +156,7 @@ import { GetUserWalletUseCase } from "../../app/usecases/shared/GetUserWalletUse
 import { BulkUserSignup } from "../../app/usecases/admin/BulkUserSignup";
 import { GetAvailableUmpires } from "../../app/usecases/manager/tournaments/GetAvailableUmpires";
 import { ClearAllNotifications } from "../../app/usecases/shared/notifications/ClearAllNotifications";
-import { GetUserTeamsUseCase } from "../../app/usecases/shared/GEtUserTeams";
+import { GetUserTeamsUseCase } from "../../app/usecases/shared/GetUserTeams";
 
 
 // Registrations
