@@ -1,4 +1,4 @@
-import { Consumer, DtlsParameters, MediaKind, Producer, Router, RtpCapabilities, RtpParameters, WebRtcTransport } from "../Types.js";
+import { Consumer, DtlsParameters, MediaKind, Producer, Router, RtpCapabilities, RtpParameters, WebRtcTransport } from "../Types";
 
 type TransportDirection = "send" | "recv";
 

@@ -1,15 +1,15 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { File } from "../../../../domain/entities/File.js";
-import { IAddTeamUseCase } from "../../../repositories/interfaces/usecases/ITeamUsecaseRepository.js";
-import { ITeamRepository } from "../../../repositories/interfaces/shared/ITeamRepository.js";
-import { IManagerRepository } from "../../../repositories/interfaces/manager/IManagerRepository.js";
-import { ITeamIdGenerator } from "../../../providers/IIdGenerator.js";
-import { IFileStorage } from "../../../providers/IFileStorage.js";
-import { ILogger } from "../../../providers/ILogger.js";
-import { TeamDataFull, TeamRegister } from "../../../../domain/dtos/Team.dto.js";
-import { BadRequestError } from "../../../../domain/errors/index.js";
-import { TeamMapper } from "../../../mappers/TeamMappers.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { File } from "../../../../domain/entities/File";
+import { IAddTeamUseCase } from "../../../repositories/interfaces/usecases/ITeamUsecaseRepository";
+import { ITeamRepository } from "../../../repositories/interfaces/shared/ITeamRepository";
+import { IManagerRepository } from "../../../repositories/interfaces/manager/IManagerRepository";
+import { ITeamIdGenerator } from "../../../providers/IIdGenerator";
+import { IFileStorage } from "../../../providers/IFileStorage";
+import { ILogger } from "../../../providers/ILogger";
+import { TeamDataFull, TeamRegister } from "../../../../domain/dtos/Team.dto";
+import { BadRequestError } from "../../../../domain/errors/index";
+import { TeamMapper } from "../../../mappers/TeamMappers";
 
 
 @injectable()

@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IGetAdminTransactions } from "../../repositories/interfaces/admin/IAdminUsecases.js";
-import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository.js";
-import { AdminFilters } from "../../../domain/dtos/Team.dto.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IGetAdminTransactions } from "../../repositories/interfaces/admin/IAdminUsecases";
+import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository";
+import { AdminFilters } from "../../../domain/dtos/Team.dto";
 
 
 @injectable()

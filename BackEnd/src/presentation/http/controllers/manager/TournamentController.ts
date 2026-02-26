@@ -16,17 +16,17 @@ import {
     IGetMyTournamentMatchResult,
 } from "../../../../app/repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
-import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
-import { HttpResponse } from "../../helpers/HttpResponse.js";
-import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
-import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
-import { ITournamentController } from "../../interfaces/ITournamentController.js";
-import { TournamentMessages } from "../../../../domain/constants/TournamentMessages.js";
-import { ILogger } from "../../../../app/providers/ILogger.js";
-import { IGetPointsTableUseCase, IGetTourLeaderboard, IStartTournament } from "../../../../app/repositories/interfaces/usecases/ITournamentsRepoUsecaes.js";
-import { GetAvailableUmpires } from "../../../../app/usecases/manager/tournaments/GetAvailableUmpires.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IHttpRequest } from "../../interfaces/IHttpRequest";
+import { IHttpResponse } from "../../interfaces/IHttpResponse";
+import { HttpResponse } from "../../helpers/HttpResponse";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes";
+import { buildResponse } from "../../../../infra/utils/responseBuilder";
+import { ITournamentController } from "../../interfaces/ITournamentController";
+import { TournamentMessages } from "../../../../domain/constants/TournamentMessages";
+import { ILogger } from "../../../../app/providers/ILogger";
+import { IGetPointsTableUseCase, IGetTourLeaderboard, IStartTournament } from "../../../../app/repositories/interfaces/usecases/ITournamentsRepoUsecaes";
+import { GetAvailableUmpires } from "../../../../app/usecases/manager/tournaments/GetAvailableUmpires";
 
 @injectable()
 export class TournamentController implements ITournamentController {

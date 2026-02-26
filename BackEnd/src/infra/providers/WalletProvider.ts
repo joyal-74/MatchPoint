@@ -1,10 +1,10 @@
 import { inject } from "tsyringe";
-import { IPaymentProvider, PaymentSession } from "../../app/providers/IPaymentProvider.js";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
-import { IWalletRepository } from "../../app/repositories/interfaces/shared/IWalletRepository.js";
-import { IRegistrationRepository } from "../../app/repositories/interfaces/manager/IRegistrationRepository.js";
-import { PaymentMetadata, TournamentPaymentMetadata } from "../../app/repositories/interfaces/IBasePaymentMetaData.js";
-import { BadRequestError, NotFoundError } from "../../domain/errors/index.js";
+import { IPaymentProvider, PaymentSession } from "../../app/providers/IPaymentProvider";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
+import { IWalletRepository } from "../../app/repositories/interfaces/shared/IWalletRepository";
+import { IRegistrationRepository } from "../../app/repositories/interfaces/manager/IRegistrationRepository";
+import { PaymentMetadata, TournamentPaymentMetadata } from "../../app/repositories/interfaces/IBasePaymentMetaData";
+import { BadRequestError, NotFoundError } from "../../domain/errors/index";
 
 
 export class WalletProvider implements IPaymentProvider {

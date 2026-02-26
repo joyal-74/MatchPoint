@@ -1,6 +1,6 @@
-import { UserLoginResponseDTO, UserResponseDTO } from "../../domain/dtos/User.dto.js"; 
-import { UserResponse } from "../../domain/entities/User.js";
-import { ViewerDetails } from "../usecases/admin/GetViewerDetails.js";
+import { UserLoginResponseDTO, UserResponseDTO } from "../../domain/dtos/User.dto"; 
+import { UserResponse } from "../../domain/entities/User";
+import { ViewerDetails } from "../usecases/admin/GetViewerDetails";
 
 
 export class UserMapper {

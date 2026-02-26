@@ -1,5 +1,5 @@
 import mediasoup from "mediasoup";
-import { Worker } from "../Types.js";
+import { Worker } from "../Types";
 
 
 export const createMediaWorker = async (): Promise<Worker> => {

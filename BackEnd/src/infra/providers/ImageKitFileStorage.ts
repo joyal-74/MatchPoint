@@ -1,8 +1,8 @@
 
 import ImageKit from "imagekit";
 import { v4 as uuidv4 } from 'uuid';
-import { IFileStorage } from "../../app/providers/IFileStorage.js";
-import { File } from "../../domain/entities/File.js";
+import { IFileStorage } from "../../app/providers/IFileStorage";
+import { File } from "../../domain/entities/File";
 
 
 export class ImageKitFileStorage implements IFileStorage {

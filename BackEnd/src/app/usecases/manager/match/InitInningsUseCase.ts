@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { InitInningsPayload, MatchEntity } from "../../../../domain/entities/MatchEntity.js";
-import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo.js";
-import { NotFoundError } from "../../../../domain/errors/index.js";
-import { IInitInningsUseCase } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { InitInningsPayload, MatchEntity } from "../../../../domain/entities/MatchEntity";
+import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo";
+import { NotFoundError } from "../../../../domain/errors/index";
+import { IInitInningsUseCase } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo";
 
 
 @injectable()

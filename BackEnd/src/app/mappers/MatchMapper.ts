@@ -1,5 +1,5 @@
-import { MatchResponseDTO } from "../../domain/dtos/MatchDTO.js"; 
-import { MatchTeamMapper } from "./MatchTeamMapper.js";
+import { MatchResponseDTO } from "../../domain/dtos/MatchDTO"; 
+import { MatchTeamMapper } from "./MatchTeamMapper";
 
 export class MatchMapper {
     static toMatchEntity(rawMatch: any, teamA?: any, teamB?: any): any {

@@ -1,10 +1,10 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
-import { IUserRepository } from "../../app/repositories/interfaces/shared/IUserRepository.js";
-import { IRoleIdGenerator } from "../../app/providers/IIdGenerator.js";
-import { SocialUserRegisterData, UserResponse } from "../../domain/entities/User.js";
-import { IUserServices } from "../../app/services/user/IUserServices.js";
+import { IUserRepository } from "../../app/repositories/interfaces/shared/IUserRepository";
+import { IRoleIdGenerator } from "../../app/providers/IIdGenerator";
+import { SocialUserRegisterData, UserResponse } from "../../domain/entities/User";
+import { IUserServices } from "../../app/services/user/IUserServices";
 
 
 @injectable()

@@ -1,11 +1,11 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
-import { ILogoutService } from "../../app/services/user/ILogoutService.js";
-import { IUserRepository } from "../../app/repositories/interfaces/shared/IUserRepository.js";
-import { IAdminRepository } from "../../app/repositories/interfaces/admin/IAdminRepository.js";
-import { BadRequestError } from "../../domain/errors/index.js";
-import { Admin } from "../../domain/entities/Admin.js";
-import { User } from "../../domain/entities/User.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
+import { ILogoutService } from "../../app/services/user/ILogoutService";
+import { IUserRepository } from "../../app/repositories/interfaces/shared/IUserRepository";
+import { IAdminRepository } from "../../app/repositories/interfaces/admin/IAdminRepository";
+import { BadRequestError } from "../../domain/errors/index";
+import { Admin } from "../../domain/entities/Admin";
+import { User } from "../../domain/entities/User";
 
 
 @injectable()

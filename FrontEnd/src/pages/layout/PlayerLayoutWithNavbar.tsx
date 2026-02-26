@@ -7,11 +7,15 @@ interface PlayerLayoutProps {
 
 const PlayerLayoutNavbar: React.FC<PlayerLayoutProps> = ({ children }) => {
     return (
-        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-            <div className="flex-1 flex flex-col">
-                    <Navbar />
-                <main className="flex-1 px-6 ml-15">{children}</main>
-            </div>
+        <div className="bg-background text-foreground">
+            <Navbar />
+            <main
+                className="relative flex-1 bg-background transition-all duration-300 ease-in-out md:ml-16 lg:ml-60 "
+            >
+                <div className="p-4 md:p-6 lg:p-6">
+                    {children}
+                </div>
+            </main>
         </div>
     );
 };

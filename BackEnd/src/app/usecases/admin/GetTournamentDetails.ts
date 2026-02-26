@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ITournamentRepository } from "../../repositories/interfaces/shared/ITournamentRepository.js";
-import { IGetTournamentDetails } from "../../repositories/interfaces/admin/IAdminUsecases.js";
-import { Tournament } from "../../../domain/entities/Tournaments.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ITournamentRepository } from "../../repositories/interfaces/shared/ITournamentRepository";
+import { IGetTournamentDetails } from "../../repositories/interfaces/admin/IAdminUsecases";
+import { Tournament } from "../../../domain/entities/Tournaments";
+import { ILogger } from "../../providers/ILogger";
+import { NotFoundError } from "../../../domain/errors/index";
 
 @injectable()
 export class AdminGetTournamentDetails implements IGetTournamentDetails {

@@ -2,9 +2,9 @@ import { Router } from "express";
 
 
 import { container } from "tsyringe";
-import { PlanController } from "../../http/controllers/admin/PlanController.js";
-import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
-import { adminOnly } from "../middlewares/index.js";
+import { PlanController } from "../../http/controllers/admin/PlanController";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor";
+import { adminOnly } from "../middlewares/index";
 
 const router = Router();
 

@@ -1,5 +1,5 @@
-import { IBaseRepository } from "../../IBaseRepository.js";
-import { IPayoutMappingSchema } from "../../../../infra/databases/mongo/models/PayoutMappingModel.js";
+import { IBaseRepository } from "../../IBaseRepository";
+import { IPayoutMappingSchema } from "../../../../infra/databases/mongo/models/PayoutMappingModel";
 
 export interface IPayoutMappingResponse {
     internalMethodId: string;

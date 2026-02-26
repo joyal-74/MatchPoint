@@ -1,9 +1,9 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
-import { IGetPlansAndUserSubscription } from "../../app/services/ISubscriptionServices.js";
-import { IPlanRepository } from "../../app/repositories/interfaces/admin/IPlanRepository.js";
-import { ISubscriptionRepository } from "../../app/repositories/interfaces/shared/ISubscriptionRepository.js";
-import { ILogger } from "../../app/providers/ILogger.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
+import { IGetPlansAndUserSubscription } from "../../app/services/ISubscriptionServices";
+import { IPlanRepository } from "../../app/repositories/interfaces/admin/IPlanRepository";
+import { ISubscriptionRepository } from "../../app/repositories/interfaces/shared/ISubscriptionRepository";
+import { ILogger } from "../../app/providers/ILogger";
 
 
 @injectable()

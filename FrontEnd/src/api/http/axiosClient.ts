@@ -10,6 +10,14 @@ axiosClient.interceptors.response.use(
     async (error) => {
         const status = error?.response?.status;
         const msg = error?.response?.data?.message;
+        const url = error?.config?.url;
+
+        if (status === 401 && url?.includes("/auth/refresh")) {
+            return Promise.reject({
+                ...error,
+                isSilent: true 
+            });
+        }
 
         if (status === 403 && msg === "You are blocked") {
             try {

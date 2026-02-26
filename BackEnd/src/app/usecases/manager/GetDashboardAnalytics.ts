@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IGetDashboardAnalytics } from "../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
-import { IWalletRepository } from "../../repositories/interfaces/shared/IWalletRepository.js";
-import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository.js";
-import { ITournamentRepository } from "../../repositories/interfaces/shared/ITournamentRepository.js";
-import { IRegistrationRepository } from "../../repositories/interfaces/manager/IRegistrationRepository.js";
-import { DashboardAnalyticsDTO, TrafficPoint } from "../../../domain/dtos/Analytics.dto.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IGetDashboardAnalytics } from "../../repositories/interfaces/usecases/ITournamentUsecaseRepository";
+import { IWalletRepository } from "../../repositories/interfaces/shared/IWalletRepository";
+import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository";
+import { ITournamentRepository } from "../../repositories/interfaces/shared/ITournamentRepository";
+import { IRegistrationRepository } from "../../repositories/interfaces/manager/IRegistrationRepository";
+import { DashboardAnalyticsDTO, TrafficPoint } from "../../../domain/dtos/Analytics.dto";
 
 
 @injectable()

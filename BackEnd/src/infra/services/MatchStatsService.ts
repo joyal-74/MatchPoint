@@ -1,5 +1,5 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
 import {
     IAddRunsUseCase,
@@ -18,9 +18,9 @@ import {
     IEndMatchUseCase
 } from "../../app/repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
 
-import { IMatchScoreService } from "../../app/services/manager/IMatchScoreService.js";
-import { InitInningsPayload } from "../../domain/entities/MatchEntity.js";
-import { DismissalType } from "../../domain/entities/Innings.js";
+import { IMatchScoreService } from "../../app/services/manager/IMatchScoreService";
+import { InitInningsPayload } from "../../domain/entities/MatchEntity";
+import { DismissalType } from "../../domain/entities/Innings";
 
 
 @injectable()

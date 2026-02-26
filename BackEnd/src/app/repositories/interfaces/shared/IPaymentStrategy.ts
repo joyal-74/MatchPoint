@@ -1,4 +1,4 @@
-import { PaymentMetadata } from "../IBasePaymentMetaData.js"; 
+import { PaymentMetadata } from "../IBasePaymentMetaData"; 
 
 export interface IPaymentStrategy {
     type: string;

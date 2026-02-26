@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IAddWicketUseCase } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
-import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo.js";
-import { MatchEntity } from "../../../../domain/entities/MatchEntity.js";
-import { AddWicketPayload } from "../../../../domain/entities/Innings.js";
-import { NotFoundError } from "../../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IAddWicketUseCase } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo";
+import { MatchEntity } from "../../../../domain/entities/MatchEntity";
+import { AddWicketPayload } from "../../../../domain/entities/Innings";
+import { NotFoundError } from "../../../../domain/errors/index";
 
 
 @injectable()

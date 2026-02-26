@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { PaymentMetadata } from "../../repositories/interfaces/IBasePaymentMetaData.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ICreatePaymentSession } from "../../repositories/interfaces/usecases/IPlanUseCaseRepo.js";
-import { IPaymentProvider, PaymentSession } from "../../providers/IPaymentProvider.js";
-import { BadRequestError } from "../../../domain/errors/index.js";
+import { PaymentMetadata } from "../../repositories/interfaces/IBasePaymentMetaData";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ICreatePaymentSession } from "../../repositories/interfaces/usecases/IPlanUseCaseRepo";
+import { IPaymentProvider, PaymentSession } from "../../providers/IPaymentProvider";
+import { BadRequestError } from "../../../domain/errors/index";
 
 
 export interface CreatePaymentSessionDTO {

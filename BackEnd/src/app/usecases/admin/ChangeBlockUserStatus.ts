@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IChangeUserBlockStatus, RoleResponseDTO } from "../../repositories/interfaces/admin/IAdminUsecases.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IChangeUserBlockStatus, RoleResponseDTO } from "../../repositories/interfaces/admin/IAdminUsecases";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { ILogger } from "../../providers/ILogger";
+import { NotFoundError } from "../../../domain/errors/index";
 
 
 @injectable()

@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { IWebhookValidator } from '../../app/providers/IWebhookValidator.js'; 
+import { IWebhookValidator } from '../../app/providers/IWebhookValidator'; 
 
 export class RazorpayWebhookValidator implements IWebhookValidator {
     validateRazorpaySignature(body: any, signature: string, secret: string): boolean {

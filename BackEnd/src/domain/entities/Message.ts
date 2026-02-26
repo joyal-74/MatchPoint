@@ -3,6 +3,7 @@ export interface Message {
     chatId: string;
     senderId: string;
     senderName: string;
+    senderRole: string;
     text: string;
     status: 'pending' | 'sent' | 'failed';
     createdAt: Date;

@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { IPlayerRepository } from "../../repositories/interfaces/player/IPlayerRepository.js";
-import { IManagerRepository } from "../../repositories/interfaces/manager/IManagerRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { IPlayerRepository } from "../../repositories/interfaces/player/IPlayerRepository";
+import { IManagerRepository } from "../../repositories/interfaces/manager/IManagerRepository";
+import { ILogger } from "../../providers/ILogger";
 
 
 @injectable()

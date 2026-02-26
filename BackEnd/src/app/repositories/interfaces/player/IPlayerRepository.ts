@@ -1,6 +1,6 @@
 import { AnyBulkWriteOperation } from "mongoose";
-import { PlayerProfileResponse } from "../../../../domain/dtos/Player.dto.js";
-import { Player, PlayerEntity, PlayerRegister, PlayerResponse, PopulatedPlayer } from "../../../../domain/entities/Player.js";
+import { PlayerProfileResponse } from "../../../../domain/dtos/Player.dto";
+import { Player, PlayerEntity, PlayerRegister, PlayerResponse, PopulatedPlayer } from "../../../../domain/entities/Player";
 
 export interface IPlayerRepository {
     findById(userId: string): Promise<PlayerProfileResponse | null>;

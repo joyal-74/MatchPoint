@@ -1,10 +1,10 @@
 import { Server, Socket } from "socket.io";
 import http from "http";
-import { authenticateSocket } from "../../presentation/express/middlewares/socketAuth.js";
-import { ChatHandler } from "./handlers/ChatHandler.js";
-import { MatchHandler } from "./handlers/MatchHandler.js";
+import { authenticateSocket } from "../../presentation/express/middlewares/socketAuth";
+import { ChatHandler } from "./handlers/ChatHandler";
+import { MatchHandler } from "./handlers/MatchHandler";
 
-import { IMatchStatsRepo } from "../../app/repositories/interfaces/manager/IMatchStatsRepo.js";
+import { IMatchStatsRepo } from "../../app/repositories/interfaces/manager/IMatchStatsRepo";
 
 import {
     IAddExtrasUseCase, IAddPenaltyUseCase, IAddRunsUseCase, IAddWicketUseCase,
@@ -14,11 +14,11 @@ import {
     IInitInningsUseCase, IRetireBatsmanUseCase, ISetBowlerUseCase, ISetNonStrikerUseCase,
     ISetStrikerUseCase, IStartSuperOverUseCase, IUndoLastBallUseCase
 } from "../../app/repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
-import { MatchViewerHandler } from "./handlers/MatchViewerHandler.js";
-import { IPlayerRepository } from "../../app/repositories/interfaces/player/IPlayerRepository.js";
-import { LiveStreamHandler } from "./handlers/LiveStreamHandler.js";
-import { ILiveStreamService } from "../../app/repositories/interfaces/services/LiveStreamService.js";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { MatchViewerHandler } from "./handlers/MatchViewerHandler";
+import { IPlayerRepository } from "../../app/repositories/interfaces/player/IPlayerRepository";
+import { LiveStreamHandler } from "./handlers/LiveStreamHandler";
+import { ILiveStreamService } from "../../app/repositories/interfaces/services/LiveStreamService";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 import { inject, injectable } from "tsyringe";
 
 export interface AuthenticatedSocket extends Socket {

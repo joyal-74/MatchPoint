@@ -1,20 +1,20 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { File } from "../../../domain/entities/File.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { IUmpireSignupUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
-import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository.js";
-import { IMailRepository } from "../../providers/IMailRepository.js";
-import { IPasswordHasher } from "../../providers/IPasswordHasher.js";
-import { IOtpGenerator } from "../../providers/IOtpGenerator.js";
-import { IUmpireIdGenerator } from "../../providers/IIdGenerator.js";
-import { IFileStorage } from "../../providers/IFileStorage.js";
-import { validateUserInput } from "../../../domain/validators/UserValidators.js";
-import { UserRegister } from "../../../domain/entities/User.js";
-import { BadRequestError } from "../../../domain/errors/index.js";
-import { UserRoles } from "../../../domain/enums/Roles.js";
-import { OtpContext } from "../../../domain/enums/OtpContext.js";
-import { UserMapper } from "../../mappers/UserMapper.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { File } from "../../../domain/entities/File";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { IUmpireSignupUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase";
+import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository";
+import { IMailRepository } from "../../providers/IMailRepository";
+import { IPasswordHasher } from "../../providers/IPasswordHasher";
+import { IOtpGenerator } from "../../providers/IOtpGenerator";
+import { IUmpireIdGenerator } from "../../providers/IIdGenerator";
+import { IFileStorage } from "../../providers/IFileStorage";
+import { validateUserInput } from "../../../domain/validators/UserValidators";
+import { UserRegister } from "../../../domain/entities/User";
+import { BadRequestError } from "../../../domain/errors/index";
+import { UserRoles } from "../../../domain/enums/Roles";
+import { OtpContext } from "../../../domain/enums/OtpContext";
+import { UserMapper } from "../../mappers/UserMapper";
 
 
 

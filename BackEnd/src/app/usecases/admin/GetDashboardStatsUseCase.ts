@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IDashboardRepository } from "../../repositories/interfaces/admin/IDashboardRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { IGetDashboardStatsUseCase } from "../../repositories/interfaces/admin/IAdminUsecases.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IDashboardRepository } from "../../repositories/interfaces/admin/IDashboardRepository";
+import { ILogger } from "../../providers/ILogger";
+import { IGetDashboardStatsUseCase } from "../../repositories/interfaces/admin/IAdminUsecases";
 
 
 @injectable()

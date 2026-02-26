@@ -1,5 +1,5 @@
-import { AppError } from "./AppError.js";
-import { HttpStatusCode } from "../enums/StatusCodes.js";
+import { AppError } from "./AppError";
+import { HttpStatusCode } from "../enums/StatusCodes";
 
 export class BadRequestError extends AppError {
     constructor(message = "Bad request", details?: Record<string, string>) {

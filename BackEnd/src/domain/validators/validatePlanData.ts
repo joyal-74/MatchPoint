@@ -1,5 +1,5 @@
-import { Plan } from "../entities/Plan.js";
-import { BadRequestError } from "../errors/index.js";
+import { Plan } from "../entities/Plan";
+import { BadRequestError } from "../errors/index";
 
 export function validatePlanData(data: Partial<Plan>) {
     const errors: Record<string, string> = {};

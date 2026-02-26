@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
 import { inject, injectable } from "tsyringe";
-import { IJWTRepository } from "../../../app/repositories/interfaces/providers/IjwtRepository.js";
-import { IUserRepository } from "../../../app/repositories/interfaces/shared/IUserRepository.js";
-import { HttpStatusCode } from "../../../domain/enums/StatusCodes.js";
-import { buildResponse } from "../../../infra/utils/responseBuilder.js";
-import { IAdminRepository } from "../../../app/repositories/interfaces/admin/IAdminRepository.js";
-import { AdminResponse } from "../../../domain/entities/Admin.js";
-import { UserResponseDTO } from "../../../domain/dtos/User.dto.js";
+import { IJWTRepository } from "../../../app/repositories/interfaces/providers/IjwtRepository";
+import { IUserRepository } from "../../../app/repositories/interfaces/shared/IUserRepository";
+import { HttpStatusCode } from "../../../domain/enums/StatusCodes";
+import { buildResponse } from "../../../infra/utils/responseBuilder";
+import { IAdminRepository } from "../../../app/repositories/interfaces/admin/IAdminRepository";
+import { AdminResponse } from "../../../domain/entities/Admin";
+import { UserResponseDTO } from "../../../domain/dtos/User.dto";
 
 
 export interface AuthRequest extends Request {

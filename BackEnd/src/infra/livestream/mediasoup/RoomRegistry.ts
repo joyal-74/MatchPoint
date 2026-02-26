@@ -1,7 +1,7 @@
-import { createMediaWorker } from "./MediaWorker.js";
-import { createMediaRouter } from "./MediaRouter.js";
-import { MediaRoom } from "./MediaRoom.js";
-import { IRoomRegistry } from "../../../app/repositories/interfaces/shared/ISocketServices.js";
+import { createMediaWorker } from "./MediaWorker";
+import { createMediaRouter } from "./MediaRouter";
+import { MediaRoom } from "./MediaRoom";
+import { IRoomRegistry } from "../../../app/repositories/interfaces/shared/ISocketServices";
 
 export class RoomRegistry implements IRoomRegistry {
     private rooms = new Map<string, MediaRoom>();

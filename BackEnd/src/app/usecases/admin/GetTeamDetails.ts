@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { IGetTeamDetails } from "../../repositories/interfaces/admin/IAdminUsecases.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { TeamDataFull } from "../../../domain/dtos/Team.dto.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
-import { TeamMapper } from "../../mappers/TeamMappers.js";
+import { IGetTeamDetails } from "../../repositories/interfaces/admin/IAdminUsecases";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ITeamRepository } from "../../repositories/interfaces/shared/ITeamRepository";
+import { ILogger } from "../../providers/ILogger";
+import { TeamDataFull } from "../../../domain/dtos/Team.dto";
+import { NotFoundError } from "../../../domain/errors/index";
+import { TeamMapper } from "../../mappers/TeamMappers";
 
 
 @injectable()
@@ -22,7 +22,6 @@ export class GetTeamDetails implements IGetTeamDetails {
             this._logger.warn(`Team not found for ID: ${playerId}`);
             throw new NotFoundError("Manager not found");
         }
-
 
         const teamDetails = TeamMapper.toTeamDTO(team);
         this._logger.info(`Fetched details of team: ${team.name}`);

@@ -1,8 +1,8 @@
-import { IWalletRepository, WalletCreateData, WalletCreditData } from "../../../app/repositories/interfaces/shared/IWalletRepository.js";
+import { IWalletRepository, WalletCreateData, WalletCreditData } from "../../../app/repositories/interfaces/shared/IWalletRepository";
 
 import { ClientSession } from "mongoose";
-import { WalletModel } from "../../databases/mongo/models/WalletModel.js";
-import { Wallet } from "../../../domain/entities/Wallet.js";
+import { WalletModel } from "../../databases/mongo/models/WalletModel";
+import { Wallet } from "../../../domain/entities/Wallet";
 
 export class WalletRepository implements IWalletRepository {
     async create(data: WalletCreateData, ctx?: unknown): Promise<Wallet> {

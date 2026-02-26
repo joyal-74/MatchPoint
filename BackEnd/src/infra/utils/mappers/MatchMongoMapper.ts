@@ -1,7 +1,7 @@
-import { MatchStreamData } from "../../../app/repositories/interfaces/manager/IMatchesRepository.js";
-import { Innings } from "../../../domain/entities/Innings.js";
-import type { Match } from "../../../domain/entities/Match.js";
-import { MatchEntity } from "../../../domain/entities/MatchEntity.js";
+import { MatchStreamData } from "../../../app/repositories/interfaces/manager/IMatchesRepository";
+import { Innings } from "../../../domain/entities/Innings";
+import type { Match } from "../../../domain/entities/Match";
+import { MatchEntity } from "../../../domain/entities/MatchEntity";
 
 export class MatchMongoMapper {
     static toMatchResponse(matchDoc: any): Match {

@@ -1,6 +1,6 @@
-import { Otp, OtpResponse } from "../../../../domain/entities/Otp.js";
-import { OtpContext } from "../../../../domain/enums/OtpContext.js";
-import { IBaseRepository } from "../../IBaseRepository.js";
+import { Otp, OtpResponse } from "../../../../domain/entities/Otp";
+import { OtpContext } from "../../../../domain/enums/OtpContext";
+import { IBaseRepository } from "../../IBaseRepository";
 
 export interface IOtpRepository extends IBaseRepository<Otp, Otp> {
     saveOtp(id: string, email: string, otp: string, context: OtpContext): Promise<Otp>;

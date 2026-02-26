@@ -1,8 +1,8 @@
 import { inject, singleton } from "tsyringe";
-import { IScheduler } from "../../app/repositories/interfaces/providers/IScheduler.js";
-import { DeleteUnverifiedUsers } from "../../app/usecases/auth/DeleteUnverifiedUsers.js";
-import { ILogger } from "../../app/providers/ILogger.js";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { IScheduler } from "../../app/repositories/interfaces/providers/IScheduler";
+import { DeleteUnverifiedUsers } from "../../app/usecases/auth/DeleteUnverifiedUsers";
+import { ILogger } from "../../app/providers/ILogger";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
 @singleton()
 export class DeleteUnverifiedUsersCronJob {

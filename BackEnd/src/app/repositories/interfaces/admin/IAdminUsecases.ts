@@ -1,15 +1,15 @@
-import { ManagerResponseDTO } from "../../../../domain/dtos/Manager.dto.js";
-import { PlayerResponseDTO } from "../../../../domain/dtos/Player.dto.js";
-import { AdminFilters, TeamDataFull, TeamDataSummary, TeamStatus } from "../../../../domain/dtos/Team.dto.js";
-import { UserResponseDTO } from "../../../../domain/dtos/User.dto.js";
-import { Plan } from "../../../../domain/entities/Plan.js";
-import { Tournament } from "../../../../domain/entities/Tournaments.js";
-import { Transaction } from "../../../../domain/entities/Transaction.js";
-import { GetAllUsersParams } from "../../../usecases/admin/GetAllViewers.js";
-import { ManagerDetails } from "../../../usecases/admin/GetManagerDetails.js";
-import { PlayerDetails } from "../../../usecases/admin/GetPlayerDetails.js";
-import { ViewerDetails } from "../../../usecases/admin/GetViewerDetails.js";
-import { TransactionReadModel, TransactionStats } from "../shared/ITransactionRepository.js";
+import { ManagerResponseDTO } from "../../../../domain/dtos/Manager.dto";
+import { PlayerResponseDTO } from "../../../../domain/dtos/Player.dto";
+import { AdminFilters, TeamDataFull, TeamDataSummary, TeamStatus } from "../../../../domain/dtos/Team.dto";
+import { UserResponseDTO } from "../../../../domain/dtos/User.dto";
+import { Plan } from "../../../../domain/entities/Plan";
+import { Tournament } from "../../../../domain/entities/Tournaments";
+import { Transaction } from "../../../../domain/entities/Transaction";
+import { GetAllUsersParams } from "../../../usecases/admin/GetAllViewers";
+import { ManagerDetails } from "../../../usecases/admin/GetManagerDetails";
+import { PlayerDetails } from "../../../usecases/admin/GetPlayerDetails";
+import { ViewerDetails } from "../../../usecases/admin/GetViewerDetails";
+import { TransactionReadModel, TransactionStats } from "../shared/ITransactionRepository";
 
 
 export interface AdminTableParams {

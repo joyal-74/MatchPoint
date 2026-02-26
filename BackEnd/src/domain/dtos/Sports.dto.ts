@@ -1,3 +1,3 @@
-import { CricketProfile } from "../../domain/entities/SportsProfile.js";
+import { CricketProfile } from "../../domain/entities/SportsProfile";
 
 export type PlayerProfileType = CricketProfile;

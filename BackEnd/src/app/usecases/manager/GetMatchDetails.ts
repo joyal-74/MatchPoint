@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { IGetMatchDetails } from "../../repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
-import { IMatchesRepository } from "../../repositories/interfaces/manager/IMatchesRepository.js";
-import { MatchResponseDTO } from "../../../domain/dtos/MatchDTO.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
-import { MatchMapper } from "../../mappers/MatchMapper.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { IGetMatchDetails } from "../../repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { IMatchesRepository } from "../../repositories/interfaces/manager/IMatchesRepository";
+import { MatchResponseDTO } from "../../../domain/dtos/MatchDTO";
+import { NotFoundError } from "../../../domain/errors/index";
+import { MatchMapper } from "../../mappers/MatchMapper";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
 
 @injectable()
 export class GetMatchDetails implements IGetMatchDetails {

@@ -14,6 +14,7 @@ export interface FormInputProps {
     placeholder?: string;
     required?: boolean;
     min?: string | number;
+    max?: string | number;
     rows?: number;
     options?: string[] | Option[];
     error?: string;
@@ -22,7 +23,7 @@ export interface FormInputProps {
 
 export default function FormInput({
     label, icon, type = "text", name, value, onChange,
-    placeholder, required = false, min, options, rows, error, disabled
+    placeholder, required = false, min,max, options, rows, error, disabled
 }: FormInputProps) {
 
     const id = useId();
@@ -102,6 +103,7 @@ export default function FormInput({
                     className={commonClasses}
                     required={required}
                     min={min}
+                    max={max}
                     disabled={disabled}
                 />
             )}

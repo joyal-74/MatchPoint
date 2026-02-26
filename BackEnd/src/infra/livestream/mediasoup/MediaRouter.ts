@@ -1,4 +1,4 @@
-import { Router, RtpCodecCapability, Worker } from "../Types.js";
+import { Router, RtpCodecCapability, Worker } from "../Types";
 
 const mediaCodecs: RtpCodecCapability[] = [
     {

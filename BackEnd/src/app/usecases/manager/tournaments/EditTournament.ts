@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IEditTournament } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
-import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
-import { IFileStorage } from "../../../providers/IFileStorage.js";
-import { ILogger } from "../../../providers/ILogger.js";
-import { Tournament } from "../../../../domain/entities/Tournaments.js";
-import { NotFoundError } from "../../../../domain/errors/index.js";
-import { File } from "../../../../domain/entities/File.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IEditTournament } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository";
+import { IFileStorage } from "../../../providers/IFileStorage";
+import { ILogger } from "../../../providers/ILogger";
+import { Tournament } from "../../../../domain/entities/Tournaments";
+import { NotFoundError } from "../../../../domain/errors/index";
+import { File } from "../../../../domain/entities/File";
 
 
 

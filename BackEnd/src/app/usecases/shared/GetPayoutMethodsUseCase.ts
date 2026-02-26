@@ -1,9 +1,9 @@
-import { IPayoutRepository } from "../../repositories/interfaces/shared/IPayoutRepository.js";
-import { IPayoutResponse } from "../../../domain/dtos/PayoutResponse.dto.js";
-import { ILogger } from "../../providers/ILogger.js";
+import { IPayoutRepository } from "../../repositories/interfaces/shared/IPayoutRepository";
+import { IPayoutResponse } from "../../../domain/dtos/PayoutResponse.dto";
+import { ILogger } from "../../providers/ILogger";
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IGetPayoutMethodUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IGetPayoutMethodUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases";
 
 @injectable()
 export class GetPayoutMethodsUseCase implements IGetPayoutMethodUseCase {

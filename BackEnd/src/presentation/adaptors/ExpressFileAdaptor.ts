@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { File } from "../../domain/entities/File.js";
-import { IHttpRequest } from "../../presentation/http/interfaces/IHttpRequest.js";
-import { IHttpResponse } from "../../presentation/http/interfaces/IHttpResponse.js";
+import { File } from "../../domain/entities/File";
+import { IHttpRequest } from "../../presentation/http/interfaces/IHttpRequest";
+import { IHttpResponse } from "../../presentation/http/interfaces/IHttpResponse";
 
 export const expressFileUpdateHandler = (controllerMethod: (httpRequest: IHttpRequest) => Promise<IHttpResponse>) =>
     async (req: Request, res: Response) => {

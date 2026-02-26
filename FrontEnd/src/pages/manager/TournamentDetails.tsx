@@ -19,9 +19,7 @@ export default function TournamentDetailsPage() {
     const { selectedTournament, loading, registeredTeams } = useAppSelector((state: RootState) => state.managerTournaments);
     const { id, type } = useParams<{ id: string; type: "manage" | 'explore' }>();
 
-    // --- STATE MANAGEMENT ---
     const [showRegisterModal, setShowRegisterModal] = useState(false);
-    // Removed showEditModal state
 
     const { teams, fetched, loading: teamsLoading } = useAppSelector(state => state.manager);
     const { user } = useAppSelector(state => state.auth);

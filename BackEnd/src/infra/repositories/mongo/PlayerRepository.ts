@@ -1,12 +1,12 @@
 import { AnyBulkWriteOperation } from "mongoose";
-import { IPlayerRepository } from "../../../app/repositories/interfaces/player/IPlayerRepository.js";
-import { PlayerProfileResponse } from "../../../domain/dtos/Player.dto.js";
-import { Player, PlayerEntity, PlayerRegister, PlayerResponse, PopulatedPlayer } from "../../../domain/entities/Player.js";
-import { UserRole } from "../../../domain/enums/Roles.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
-import { PlayerModel } from "../../databases/mongo/models/PlayerModel.js";
-import { PlayerDetailsMapper } from "../../utils/mappers/PlayerDetailsMapper.js";
-import { PlayerMongoMapper } from "../../utils/mappers/PlayerMongoMapper.js";
+import { IPlayerRepository } from "../../../app/repositories/interfaces/player/IPlayerRepository";
+import { PlayerProfileResponse } from "../../../domain/dtos/Player.dto";
+import { Player, PlayerEntity, PlayerRegister, PlayerResponse, PopulatedPlayer } from "../../../domain/entities/Player";
+import { UserRole } from "../../../domain/enums/Roles";
+import { NotFoundError } from "../../../domain/errors/index";
+import { PlayerModel } from "../../databases/mongo/models/PlayerModel";
+import { PlayerDetailsMapper } from "../../utils/mappers/PlayerDetailsMapper";
+import { PlayerMongoMapper } from "../../utils/mappers/PlayerMongoMapper";
 
 
 export class PlayerRepository implements IPlayerRepository {

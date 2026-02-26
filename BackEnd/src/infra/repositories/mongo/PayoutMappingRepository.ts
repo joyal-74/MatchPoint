@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
-import { IPayoutMappingRepository, IPayoutMappingResponse } from "../../../app/repositories/interfaces/shared/IPayoutMappingRepository.js";
-import PayoutMappingModel, { IPayoutMappingSchema } from "../../databases/mongo/models/PayoutMappingModel.js";
-import { BaseRepository } from "./BaseRepository.js";
+import { IPayoutMappingRepository, IPayoutMappingResponse } from "../../../app/repositories/interfaces/shared/IPayoutMappingRepository";
+import PayoutMappingModel, { IPayoutMappingSchema } from "../../databases/mongo/models/PayoutMappingModel";
+import { BaseRepository } from "./BaseRepository";
 
 export class PayoutMappingRepository 
     extends BaseRepository<IPayoutMappingSchema, IPayoutMappingResponse> 

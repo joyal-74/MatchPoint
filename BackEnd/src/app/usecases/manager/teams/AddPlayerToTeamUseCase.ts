@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IAddPlayerToTeamUseCase } from "../../../repositories/interfaces/usecases/ITeamUsecaseRepository.js";
-import { BadRequestError, NotFoundError } from "../../../../domain/errors/index.js";
-import { INotificationRepository } from "../../../repositories/interfaces/shared/INotificationRepository.js";
-import { ITeamRepository } from "../../../repositories/interfaces/shared/ITeamRepository.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IAddPlayerToTeamUseCase } from "../../../repositories/interfaces/usecases/ITeamUsecaseRepository";
+import { BadRequestError, NotFoundError } from "../../../../domain/errors/index";
+import { INotificationRepository } from "../../../repositories/interfaces/shared/INotificationRepository";
+import { ITeamRepository } from "../../../repositories/interfaces/shared/ITeamRepository";
 
 @injectable()
 export class AddPlayerToTeamUseCase implements IAddPlayerToTeamUseCase {

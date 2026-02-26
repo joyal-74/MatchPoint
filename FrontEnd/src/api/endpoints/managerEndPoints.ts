@@ -51,7 +51,6 @@ export const managerEndpoints = {
     },
 
     createTournament: async (formData: FormData): Promise<Tournament> => {
-        console.log(formData, 'ffmdta')
         const { data } = await axiosClient.post(MANAGER_ROUTES.CREATE_TOURNAMENT, formData,
             { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -91,7 +90,6 @@ export const managerEndpoints = {
     paymentInitiate: async ({ tournamentId, teamId, captainId, managerId, paymentMethod }: { tournamentId: string; teamId: string; captainId: string; managerId: string, paymentMethod: 'razorpay' | 'wallet' })
         : Promise<PaymentInitiateResponse> => {
         const { data } = await axiosClient.post(MANAGER_ROUTES.TOUTNAMENT_PAYMENT(tournamentId), { teamId, captainId, managerId, paymentMethod });
-        console.log(data.data)
         return data.data;
     },
 
@@ -102,7 +100,6 @@ export const managerEndpoints = {
 
     getRegisteredTeams: async (tournamentId: string): Promise<RegisteredTeam[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.REGISTERED_TEAMS(tournamentId));
-        console.log(data.data, 'teams')
         return data.data;
     },
 
@@ -133,13 +130,11 @@ export const managerEndpoints = {
 
     createTournamentFixtures: async ({ tournamentId, matchIds, format }: { tournamentId: string, matchIds: { matchId?: string; round: number }[], format: string }): Promise<Fixture[]> => {
         const { data } = await axiosClient.post(MANAGER_ROUTES.CREATE_FIXTURE(tournamentId), { matchIds, format });
-        console.log(data.data)
         return data.data
     },
 
     getTournamentFixtures: async (tournamentId: string): Promise<Fixture> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_FIXTURES(tournamentId));
-        console.log(data.data, "---")
         return data.data
     },
 
@@ -155,7 +150,6 @@ export const managerEndpoints = {
 
     fetchPayments: async (managerId: string): Promise<{ balance: number, transactions: Transaction[], tournaments: TournamentFinancials[] }> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.GET_PAYMENTS(managerId));
-        console.log(data.data)
         return data.data
     },
 
@@ -191,7 +185,6 @@ export const managerEndpoints = {
 
     searchAvailableUmpires: async (): Promise<UmpireData[]> => {
         const { data } = await axiosClient.get(MANAGER_ROUTES.AVAILABLE_UMPIRES);
-        console.log(data.data)
         return data.data;
     },
 }

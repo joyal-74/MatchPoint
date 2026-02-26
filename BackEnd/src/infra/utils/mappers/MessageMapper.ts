@@ -1,12 +1,14 @@
-import { Message } from "../../../domain/entities/Message.js";
-import { IMessage } from "../../../infra/databases/mongo/models/MessageModel.js";
+import { Message } from "../../../domain/entities/Message";
+import { IMessage } from "../../../infra/databases/mongo/models/MessageModel";
 import { FlattenMaps, HydratedDocument, Types } from "mongoose";
 
 type PopulatedSender = {
     _id: Types.ObjectId;
     firstName?: string;
     lastName?: string;
+    name?: string;
     profileImage?: string;
+    role?: 'player' | 'manager';
 } | Types.ObjectId | string | undefined;
 
 export type LeanMessage = FlattenMaps<IMessage> & {
@@ -19,6 +21,7 @@ export class MessageMapper {
         return {
             chatId: m.chatId,
             senderId: m.senderId,
+            senderRole: m.senderRole,
             text: m.text,
             status: m.status,
             receiverId: m.receiverId,
@@ -33,6 +36,7 @@ export class MessageMapper {
         let senderId = "";
         let senderName = "Unknown";
         let profileImage = "";
+        let senderRole = doc.senderRole || 'player';
 
         if (sender instanceof Types.ObjectId) {
             senderId = sender.toString();
@@ -44,6 +48,10 @@ export class MessageMapper {
             const lastName = sender.lastName ?? "";
             senderName = firstName || lastName ? `${firstName} ${lastName}`.trim() : "Unknown";
             profileImage = sender.profileImage ?? "";
+
+            if (sender.role) {
+                senderRole = sender.role;
+            }
         }
 
         return {
@@ -51,6 +59,7 @@ export class MessageMapper {
             chatId: doc.chatId.toString(),
             senderId,
             senderName,
+            senderRole,
             profileImage,
             text: doc.text,
             status: doc.status,
@@ -67,6 +76,8 @@ export class MessageMapper {
         let senderId = "";
         let senderName = "Unknown";
         let profileImage = "";
+        let senderRole = doc.senderRole || 'player';
+
 
         if (sender instanceof Types.ObjectId) {
             senderId = sender.toString();
@@ -78,6 +89,10 @@ export class MessageMapper {
             const lastName = sender.lastName ?? "";
             senderName = firstName || lastName ? `${firstName} ${lastName}`.trim() : "Unknown";
             profileImage = sender.profileImage ?? "";
+
+            if (sender.role) {
+                senderRole = sender.role;
+            }
         }
 
         return {
@@ -85,6 +100,7 @@ export class MessageMapper {
             chatId: doc.chatId.toString(),
             senderId,
             senderName,
+            senderRole,
             profileImage,
             text: doc.text,
             status: doc.status,

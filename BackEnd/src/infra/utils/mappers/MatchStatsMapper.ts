@@ -1,9 +1,9 @@
-import { MatchEntity } from "../../../domain/entities/MatchEntity.js";
-import { BatsmanStat, BowlerStat, InningsDTO } from "../../../domain/types/match.types.js";
-import { Innings } from "../../../domain/entities/Innings.js";
-import { Batsman } from "../../..//domain/entities/Batsman.js";
-import { Bowler } from "../../../domain/entities/Bowler.js";
-import { Extras } from "../../../domain/entities/Extra.js";
+import { MatchEntity } from "../../../domain/entities/MatchEntity";
+import { BatsmanStat, BowlerStat, InningsDTO } from "../../../domain/types/match.types";
+import { Innings } from "../../../domain/entities/Innings";
+import { Batsman } from "../../..//domain/entities/Batsman";
+import { Bowler } from "../../../domain/entities/Bowler";
+import { Extras } from "../../../domain/entities/Extra";
 
 export class MatchStatsMapper {
     static mapInnings(doc: InningsDTO | null | undefined): Innings | null {

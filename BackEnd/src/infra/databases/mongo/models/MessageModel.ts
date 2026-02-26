@@ -6,6 +6,7 @@ export interface IMessage extends Document {
     text: string;
     status: 'pending' | 'sent' | 'failed';
     clientId?: string;
+    senderRole : 'player' | 'manager';
     receiverId?: mongoose.Types.ObjectId;
     replyTo?: {
         messageId: string;
@@ -18,6 +19,7 @@ export interface IMessage extends Document {
 const messageSchema = new Schema<IMessage>({
     chatId: { type: Schema.Types.ObjectId, ref: 'Chat', required: true },
     senderId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    senderRole: { type: String, enum: ['player', 'manager'], required: true },
     text: { type: String, required: true },
     status: { type: String, enum: ['pending', 'sent', 'failed'], default: 'sent' },
     clientId: String,

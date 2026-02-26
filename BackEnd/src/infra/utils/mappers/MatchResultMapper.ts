@@ -1,4 +1,4 @@
-import { TeamResultSummary, TournamentResult } from "../../../domain/entities/Match.js";
+import { TeamResultSummary, TournamentResult } from "../../../domain/entities/Match";
 
 export class MatchResultMapper {
     

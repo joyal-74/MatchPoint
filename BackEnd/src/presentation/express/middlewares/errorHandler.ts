@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
 import { inject, injectable } from "tsyringe";
-import { buildResponse } from "../../../infra/utils/responseBuilder.js";
-import { AppError } from "../../../domain/errors/AppError.js";
-import { ILogger } from "../../../app/providers/ILogger.js";
-import { HttpStatusCode } from "../../../domain/enums/StatusCodes.js";
+import { buildResponse } from "../../../infra/utils/responseBuilder";
+import { AppError } from "../../../domain/errors/AppError";
+import { ILogger } from "../../../app/providers/ILogger";
+import { HttpStatusCode } from "../../../domain/enums/StatusCodes";
 
 
 @injectable()

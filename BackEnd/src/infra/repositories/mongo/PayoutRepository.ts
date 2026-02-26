@@ -1,7 +1,7 @@
-import { IPayoutRepository } from "../../../app/repositories/interfaces/shared/IPayoutRepository.js";
-import { IPayoutResponse } from "../../../domain/dtos/PayoutResponse.dto.js";
-import PayoutMethodModel, { IPayoutSchema } from "../../databases/mongo/models/PayoutMethodModel.js";
-import { BaseRepository } from "./BaseRepository.js";
+import { IPayoutRepository } from "../../../app/repositories/interfaces/shared/IPayoutRepository";
+import { IPayoutResponse } from "../../../domain/dtos/PayoutResponse.dto";
+import PayoutMethodModel, { IPayoutSchema } from "../../databases/mongo/models/PayoutMethodModel";
+import { BaseRepository } from "./BaseRepository";
 
 export class PayoutRepository 
     extends BaseRepository<IPayoutSchema, IPayoutResponse> 

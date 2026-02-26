@@ -1,5 +1,5 @@
 import { Model, HydratedDocument, UpdateQuery } from "mongoose";
-import { IBaseRepository } from "../../../app/repositories/IBaseRepository.js";
+import { IBaseRepository } from "../../../app/repositories/IBaseRepository";
 
 export class BaseRepository<TSchema, TResponse>
     implements IBaseRepository<TSchema, TResponse> {

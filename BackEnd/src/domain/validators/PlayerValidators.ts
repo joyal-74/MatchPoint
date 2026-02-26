@@ -1,6 +1,6 @@
-import { BadRequestError } from "../../domain/errors/index.js";
-import { Validators } from "./common.js";
-import { File } from "../../domain/entities/File.js";
+import { BadRequestError } from "../../domain/errors/index";
+import { Validators } from "./common";
+import { File } from "../../domain/entities/File";
 
 export function validatePlayerInput(data, file?: File) {
     const errors: Record<string, string> = {};

@@ -1,6 +1,6 @@
 import { injectable, injectAll } from "tsyringe";
-import { IPaymentStrategy } from "../../app/repositories/interfaces/shared/IPaymentStrategy.js"; 
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { IPaymentStrategy } from "../../app/repositories/interfaces/shared/IPaymentStrategy"; 
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
 @injectable()
 export class PaymentStrategyRegistry {

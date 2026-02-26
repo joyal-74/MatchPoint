@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { EndMatchUseCaseInput, IEndMatchUseCase } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
-import { IMatchesRepository } from "../../../repositories/interfaces/manager/IMatchesRepository.js";
-import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo.js";
-import { IPlayerRepository } from "../../../repositories/interfaces/player/IPlayerRepository.js";
-import { MatchEntity } from "../../../../domain/entities/MatchEntity.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { EndMatchUseCaseInput, IEndMatchUseCase } from "../../../repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { IMatchesRepository } from "../../../repositories/interfaces/manager/IMatchesRepository";
+import { IMatchStatsRepo } from "../../../repositories/interfaces/manager/IMatchStatsRepo";
+import { IPlayerRepository } from "../../../repositories/interfaces/player/IPlayerRepository";
+import { MatchEntity } from "../../../../domain/entities/MatchEntity";
 import { Types } from "mongoose";
 
 @injectable()

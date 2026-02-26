@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { IPayoutProvider, PayoutRequest, RegisterFundAccountRequest } from '../../app/providers/IPayoutProvider.js';
-import { IConfigProvider } from '../../app/providers/IConfigProvider.js';
+import { IPayoutProvider, PayoutRequest, RegisterFundAccountRequest } from '../../app/providers/IPayoutProvider';
+import { IConfigProvider } from '../../app/providers/IConfigProvider';
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
 @injectable()
 export class RazorpayXPayoutProvider implements IPayoutProvider {

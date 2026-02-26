@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IRefreshTokenUseCase, TokenUserResponse } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { IAdminRepository } from "../../repositories/interfaces/admin/IAdminRepository.js";
-import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { NotFoundError, UnauthorizedError } from "../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IRefreshTokenUseCase, TokenUserResponse } from "../../repositories/interfaces/auth/IAuthenticationUseCase";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { IAdminRepository } from "../../repositories/interfaces/admin/IAdminRepository";
+import { IJWTRepository } from "../../repositories/interfaces/providers/IjwtRepository";
+import { ILogger } from "../../providers/ILogger";
+import { NotFoundError, UnauthorizedError } from "../../../domain/errors/index";
 import { JwtPayload } from "jsonwebtoken";
-import { AdminMapper } from "../../mappers/AdminMapper.js";
-import { UserMapper } from "../../mappers/UserMapper.js";
+import { AdminMapper } from "../../mappers/AdminMapper";
+import { UserMapper } from "../../mappers/UserMapper";
 
 
 @injectable()

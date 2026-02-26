@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IMarkNotificationRead } from "../../repositories/interfaces/player/INotificationUseCase.js";
-import { INotificationRepository, NotificationResponse } from "../../repositories/interfaces/shared/INotificationRepository.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IMarkNotificationRead } from "../../repositories/interfaces/player/INotificationUseCase";
+import { INotificationRepository, NotificationResponse } from "../../repositories/interfaces/shared/INotificationRepository";
+import { NotFoundError } from "../../../domain/errors/index";
 
 
 @injectable()

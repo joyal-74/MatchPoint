@@ -1,4 +1,4 @@
-import { ExtraType } from "./Extra.js";
+import { ExtraType } from "./Extra";
 
 export interface BallLog {
     over: number;

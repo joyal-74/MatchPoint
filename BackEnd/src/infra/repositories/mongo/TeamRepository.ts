@@ -1,10 +1,10 @@
-import { AdminFilters, Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "../../../domain/dtos/Team.dto.js";
+import { AdminFilters, Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "../../../domain/dtos/Team.dto";
 import mongoose from "mongoose";
-import { TeamModel } from "../../databases/mongo/models/TeamModel.js";
-import { ITeamRepository } from "../../../app/repositories/interfaces/shared/ITeamRepository.js";
-import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
-import { TeamMongoMapper, TeamSummaryPopulatedDocument } from "../../utils/mappers/TeamMongoMapper.js";
-import { BaseRepository } from "./BaseRepository.js";
+import { TeamModel } from "../../databases/mongo/models/TeamModel";
+import { ITeamRepository } from "../../../app/repositories/interfaces/shared/ITeamRepository";
+import { BadRequestError, NotFoundError } from "../../../domain/errors/index";
+import { TeamMongoMapper, TeamSummaryPopulatedDocument } from "../../utils/mappers/TeamMongoMapper";
+import { BaseRepository } from "./BaseRepository";
 
 export class TeamRepository extends BaseRepository<TeamRegister, TeamDataFull> implements ITeamRepository {
 
@@ -50,9 +50,39 @@ export class TeamRepository extends BaseRepository<TeamRegister, TeamDataFull> i
                 select: "_id firstName lastName",
             });
 
-            console.log(teams)
-
         return TeamMongoMapper.toDomainFullArray(teams as unknown as TeamSummaryPopulatedDocument[]);
+    }
+
+    async findUserTeams(userId: string, role: string): Promise<{ teams: TeamDataFull[]; totalTeams: number; }> {
+        const objectId = new mongoose.Types.ObjectId(userId);
+        const query: mongoose.FilterQuery<InstanceType<typeof TeamModel>> = { status: 'active' };
+
+        if (role === 'manager') {
+            query.managerId = objectId;
+        } else {
+            query.members = {
+                $elemMatch: {
+                    userId: objectId,
+                    approvalStatus: 'approved'
+                }
+            };
+        }
+
+        const [result, totalTeams] = await Promise.all([
+            TeamModel.find(query)
+                .populate('members.playerId')
+                .populate('members.userId')
+                .populate({
+                    path: "managerId",
+                    select: "_id firstName lastName",
+                })
+                .sort({ updatedAt: -1 }),
+            TeamModel.countDocuments(query)
+        ]);
+
+        const teams = TeamMongoMapper.toDomainFullArray(result as unknown as TeamSummaryPopulatedDocument[]);
+
+        return { teams, totalTeams };
     }
 
     async findAllWithFilters(filters: Filters): Promise<{ teams: TeamDataSummary[], totalTeams: number }> {
@@ -157,8 +187,11 @@ export class TeamRepository extends BaseRepository<TeamRegister, TeamDataFull> i
 
         if (!team) return null;
 
+        const teamObj = team.toObject();
+        teamObj.members = teamObj.members.filter(m => m.approvalStatus !== 'rejected');
 
-        const result = TeamMongoMapper.toDomainFull(team as unknown as TeamSummaryPopulatedDocument);
+
+        const result = TeamMongoMapper.toDomainFull(teamObj as unknown as TeamSummaryPopulatedDocument);
 
         return result
     }

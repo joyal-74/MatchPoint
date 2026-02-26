@@ -23,21 +23,22 @@ export default function MyTournamentsSection({
     
     return (
         <section className="mb-12">
-            <div className="flex justify-between items-center mb-6">
-                <div>
-                    <h2 className="text-xl font-bold text-foreground mb-1 flex items-center gap-2">
-                        <span className="w-1.5 h-6 bg-primary rounded-full inline-block"></span>
-                        My Active Tournaments
-                    </h2>
-                    <p className="text-muted-foreground text-sm">Tournaments you're currently managing</p>
-                </div>
-                
-                {tournaments.length > 0 && (
-                    hasMore ? (
+            {tournaments.length > 0 && (
+                <div className="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 className="text-xl font-bold text-foreground mb-1 flex items-center gap-2">
+                            <span className="w-1.5 h-6 bg-primary rounded-full inline-block"></span>
+                            My Active Tournaments
+                        </h2>
+                        <p className="text-muted-foreground text-sm">Tournaments you're currently managing</p>
+                    </div>
+                    
+                    {/* View All logic */}
+                    {hasMore ? (
                         <button
                             className="text-primary hover:text-primary/80 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 border border-primary/20 hover:border-primary/40 bg-primary/5 hover:bg-primary/10"
                             onClick={onShowAll} 
-                        >  
+                        >   
                             View All →
                         </button>
                     ) : (
@@ -47,9 +48,9 @@ export default function MyTournamentsSection({
                         >
                             All Tournaments Shown
                         </button>
-                    )
-                )}
-            </div>
+                    )}
+                </div>
+            )}
 
             {tournaments.length > 0 ? (
                 <>

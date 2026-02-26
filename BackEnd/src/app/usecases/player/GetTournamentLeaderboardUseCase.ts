@@ -1,8 +1,8 @@
 import { injectable, inject } from 'tsyringe';
-import { DI_TOKENS } from '../../../domain/constants/Identifiers.js';
-import { IGetTournamentLeaderboardUseCase } from '../../repositories/interfaces/player/ITournamentUsecases.js';
-import { ILeaderboardRepository } from '../../repositories/interfaces/shared/ILeaderboardRepository.js';
-import { Leaderboard } from '../../../domain/entities/Tournaments.js';
+import { DI_TOKENS } from '../../../domain/constants/Identifiers';
+import { IGetTournamentLeaderboardUseCase } from '../../repositories/interfaces/player/ITournamentUsecases';
+import { ILeaderboardRepository } from '../../repositories/interfaces/shared/ILeaderboardRepository';
+import { Leaderboard } from '../../../domain/entities/Tournaments';
 
 
 

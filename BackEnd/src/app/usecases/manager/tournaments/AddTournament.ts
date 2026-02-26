@@ -1,13 +1,14 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IAddTournament } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
-import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
-import { ITournamentIdGenerator } from "../../../providers/IIdGenerator.js";
-import { IManagerRepository } from "../../../repositories/interfaces/manager/IManagerRepository.js";
-import { IFileStorage } from "../../../providers/IFileStorage.js";
-import { ILogger } from "../../../providers/ILogger.js";
-import { File } from "../../../../domain/entities/File.js";
-import { Format, Tournament } from "../../../../domain/entities/Tournaments.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IAddTournament } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository";
+import { ITournamentIdGenerator } from "../../../providers/IIdGenerator";
+import { IManagerRepository } from "../../../repositories/interfaces/manager/IManagerRepository";
+import { IFileStorage } from "../../../providers/IFileStorage";
+import { ILogger } from "../../../providers/ILogger";
+import { File } from "../../../../domain/entities/File";
+import { Format, Tournament } from "../../../../domain/entities/Tournaments";
+import { validateTournamentData } from "../../../../domain/validators/validateTournamentData";
 
 
 
@@ -24,6 +25,8 @@ export class AddTournamentUseCase implements IAddTournament {
     async execute(data: Tournament, file?: File): Promise<Tournament> {
         this._logger.info(`[AddTournamentUseCase] Adding new tournament: ${data.title}`);
 
+        validateTournamentData(data, file);
+
         const tourId = this._tournamentId.generate();
 
         let bannerUrl: string | undefined = undefined;
@@ -39,8 +42,6 @@ export class AddTournamentUseCase implements IAddTournament {
             banner: bannerUrl || "",
             format : data.format.toLocaleLowerCase() as Format
         };
-
-        console.log(newData, 'data')
 
         const tournament = await this._tournamentRepo.create(newData);
 

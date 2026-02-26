@@ -14,14 +14,23 @@ export const notificationEndpoints = {
         return data.data;
     },
 
-    markNotificationRead: async ({notificationId, userId}:{notificationId: string, userId : string}): Promise<Notification> => {
-        const { data } = await axiosClient.patch(NOTIFICATION_ROUTES.MARK_AS_READ, {notificationId, userId});
+    markNotificationRead: async ({ notificationId, userId }: { notificationId: string, userId: string }): Promise<Notification> => {
+        const { data } = await axiosClient.patch(NOTIFICATION_ROUTES.MARK_AS_READ, { notificationId, userId });
         console.log(data)
         return data.data;
     },
 
     markAllNotificationRead: async (playerId: string): Promise<number> => {
-        const { data } = await axiosClient.patch(NOTIFICATION_ROUTES.MARK_ALL_AS_READ, {playerId});
+        const { data } = await axiosClient.patch(NOTIFICATION_ROUTES.MARK_ALL_AS_READ, { playerId });
+        console.log(data)
+        return data.data;
+    },
+
+    deleteNotifications: async (playerId: string): Promise<number> => {
+        const { data } = await axiosClient.delete(NOTIFICATION_ROUTES.DELETE_ALL_NOTIFICATIONS, {
+            data: { playerId }
+        });
+        
         console.log(data)
         return data.data;
     },

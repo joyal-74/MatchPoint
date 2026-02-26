@@ -1,5 +1,5 @@
-import { FacebookPictureData } from "../../app/services/auth/IFacebookServices.js";
-import { AllRole } from "../../domain/enums/Roles.js";
+import { FacebookPictureData } from "../../app/services/auth/IFacebookServices";
+import { AllRole } from "../../domain/enums/Roles";
 
 export interface JwtPayload {
     userId: string;

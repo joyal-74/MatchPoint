@@ -1,4 +1,4 @@
-import { ThemeType, RoleType, GenderType } from "../../domain/enums/index.js";
+import { ThemeType, RoleType, GenderType } from "../../domain/enums/index";
 
 export interface UmpireSettingsDTO {
     location?: string;

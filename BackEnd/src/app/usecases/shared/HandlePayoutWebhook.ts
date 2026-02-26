@@ -1,8 +1,8 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository.js";
-import { IWalletRepository } from "../../repositories/interfaces/shared/IWalletRepository.js";
-import { IHandlePayoutWebhookUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository";
+import { IWalletRepository } from "../../repositories/interfaces/shared/IWalletRepository";
+import { IHandlePayoutWebhookUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases";
 
 export interface RazorpayPayoutEntity {
     id: string;

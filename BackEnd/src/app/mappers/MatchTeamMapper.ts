@@ -1,4 +1,4 @@
-import { TeamEntity } from "../../domain/entities/Match.js";
+import { TeamEntity } from "../../domain/entities/Match";
 
 export class MatchTeamMapper {
     static toEntity(raw): TeamEntity {

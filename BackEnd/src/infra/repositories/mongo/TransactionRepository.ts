@@ -1,12 +1,12 @@
 import mongoose, { ClientSession, FilterQuery } from "mongoose";
-import { TransactionCheckDTO, TransactionCreateDTO } from "../../../domain/dtos/Transaction.dto.js";
-import { ITransactionRepository, PopulatedTransactionDoc, TransactionReadModel, TransactionStats } from "../../../app/repositories/interfaces/shared/ITransactionRepository.js";
-import { TransactionModel } from "../../databases/mongo/models/TransactionModel.js";
-import { Transaction } from "../../../domain/entities/Transaction.js";
-import { AdminFilters } from "../../../domain/dtos/Team.dto.js";
-import { RevenueChartPoint } from "../../../domain/dtos/Analytics.dto.js";
-import { BaseRepository } from "./BaseRepository.js";
-import { TransactionMapper } from "../../utils/mappers/TransactionMapper.js";
+import { TransactionCheckDTO, TransactionCreateDTO } from "../../../domain/dtos/Transaction.dto";
+import { ITransactionRepository, PopulatedTransactionDoc, TransactionReadModel, TransactionStats } from "../../../app/repositories/interfaces/shared/ITransactionRepository";
+import { TransactionModel } from "../../databases/mongo/models/TransactionModel";
+import { Transaction } from "../../../domain/entities/Transaction";
+import { AdminFilters } from "../../../domain/dtos/Team.dto";
+import { RevenueChartPoint } from "../../../domain/dtos/Analytics.dto";
+import { BaseRepository } from "./BaseRepository";
+import { TransactionMapper } from "../../utils/mappers/TransactionMapper";
 
 
 export class TransactionRepository extends BaseRepository<TransactionCreateDTO, Transaction> implements ITransactionRepository {

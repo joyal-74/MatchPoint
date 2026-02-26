@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IPointsTableRepository } from "../../repositories/interfaces/shared/IPointsTableRepository.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IPointsTableRepository } from "../../repositories/interfaces/shared/IPointsTableRepository";
 
 interface MatchResult {
     winner: string;

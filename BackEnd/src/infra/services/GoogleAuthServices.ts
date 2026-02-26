@@ -1,9 +1,9 @@
 import { injectable, inject } from "tsyringe";
 import { OAuth2Client } from "google-auth-library";
-import { GoogleUserInfo, IGoogleAuthServices } from "../../app/services/auth/IGoogleAuthService.js";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
-import { IConfigProvider } from "../../app/providers/IConfigProvider.js";
-import { UnauthorizedError } from "../../domain/errors/index.js";
+import { GoogleUserInfo, IGoogleAuthServices } from "../../app/services/auth/IGoogleAuthService";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
+import { IConfigProvider } from "../../app/providers/IConfigProvider";
+import { UnauthorizedError } from "../../domain/errors/index";
 
 
 @injectable()

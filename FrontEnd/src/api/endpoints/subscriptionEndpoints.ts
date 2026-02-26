@@ -14,7 +14,6 @@ export const subscriptionEndpoints = {
 
     addPlan: async (newPlan: Omit<Plan, "_id">): Promise<Plan> => {
         const { data } = await axiosClient.post(SUBSCRIPTION_ROUTES.ADD_PLAN, newPlan);
-        console.log(data.data)
 
         return data.data;
     },
@@ -26,7 +25,6 @@ export const subscriptionEndpoints = {
 
     updatePlanDirectly: async ({userId, planLevel, billingCycle }: { userId: string, planLevel: PlanLevel, billingCycle: BillingCycle }): Promise<Plan> => {
         const { data } = await axiosClient.put(SUBSCRIPTION_ROUTES.UPDATE_PLAN, { userId, planLevel, billingCycle });
-        console.log(data.data)
         return data.data;
     },
 

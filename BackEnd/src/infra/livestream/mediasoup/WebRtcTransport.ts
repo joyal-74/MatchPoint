@@ -1,4 +1,4 @@
-import { Router, WebRtcTransport, WebRtcTransportOptions } from "../Types.js";
+import { Router, WebRtcTransport, WebRtcTransportOptions } from "../Types";
 
 export const createWebRtcTransport = async (router: Router): Promise<WebRtcTransport> => {
     const announcedIp = process.env.PUBLIC_IP || "127.0.0.1";

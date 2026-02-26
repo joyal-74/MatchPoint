@@ -1,6 +1,6 @@
-import { TeamData, TeamDataFull, TeamRegister } from "../../../../domain/dtos/Team.dto.js";
-import { Chat } from "../../../../domain/entities/Chat.js";
-import { File } from "../../../../domain/entities/File.js";
+import { TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "../../../../domain/dtos/Team.dto";
+import { Chat } from "../../../../domain/entities/Chat";
+import { File } from "../../../../domain/entities/File";
 
 export interface IGetAllTeamsUseCase {
     execute(managerId: string): Promise<TeamDataFull[]>;
@@ -16,6 +16,10 @@ export interface IEditTeamUseCase {
 
 export interface IChangeTeamStatusUseCase {
     execute(teamId: string): Promise<string>;
+}
+
+export interface IGetUserTeamsUseCase {
+    execute(userId: string, role: string): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
 }
 
 export interface IChangePlayerStatusUseCase {

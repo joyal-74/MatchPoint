@@ -1,13 +1,13 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
-import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
-import { HttpResponse } from "../../helpers/HttpResponse.js";
-import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
-import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
-import { IMatchPlayerServices } from "../../../../app/services/manager/IMatchPlayerService.js";
-import { IMatchScoreService } from "../../../../app/services/manager/IMatchScoreService.js";
-import { IEndMatchUseCase, IGetAllMatches, IGetLiveScoreUseCase, ISaveMatchData, IStartMatchUseCase } from "../../../../app/repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { IHttpRequest } from "../../interfaces/IHttpRequest";
+import { IHttpResponse } from "../../interfaces/IHttpResponse";
+import { HttpResponse } from "../../helpers/HttpResponse";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes";
+import { buildResponse } from "../../../../infra/utils/responseBuilder";
+import { IMatchPlayerServices } from "../../../../app/services/manager/IMatchPlayerService";
+import { IMatchScoreService } from "../../../../app/services/manager/IMatchScoreService";
+import { IEndMatchUseCase, IGetAllMatches, IGetLiveScoreUseCase, ISaveMatchData, IStartMatchUseCase } from "../../../../app/repositories/interfaces/usecases/IMatchesUseCaseRepo";
 
 @injectable()
 export class MatchController {
@@ -340,9 +340,9 @@ export class MatchController {
 
 
     getAllMatches = async (httpRequest: IHttpRequest): Promise<IHttpResponse> => {
-        const { search, limit, page } = httpRequest.params;
+        const { search, limit, page, status } = httpRequest.query;
 
-        const result = await this._getAllMatches.execute(search, limit, page);
+        const result = await this._getAllMatches.execute(search, limit, page, status);
 
         return new HttpResponse(HttpStatusCode.OK, buildResponse(true, "Match fetched", result));
     };

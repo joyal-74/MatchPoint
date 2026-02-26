@@ -1,5 +1,5 @@
-import { Plan, UserSubscription } from "../../domain/entities/Plan.js"; 
-import { IUseCase } from "../repositories/interfaces/IUseCase.js";
+import { Plan, UserSubscription } from "../../domain/entities/Plan"; 
+import { IUseCase } from "../repositories/interfaces/IUseCase";
 
 
 export type SubscriptionFinalizeResult =

@@ -1,7 +1,7 @@
-import { CreateNotificationDTO, INotificationRepository, NotificationResponse } from "../../../app/repositories/interfaces/shared/INotificationRepository.js";
-import { NotificationDocument, NotificationModel } from "../../databases/mongo/models/NotificationModel.js";
-import { NotificationMapper } from "../../utils/mappers/NotificationMapper.js";
-import { BaseRepository } from "./BaseRepository.js";
+import { CreateNotificationDTO, INotificationRepository, NotificationResponse } from "../../../app/repositories/interfaces/shared/INotificationRepository";
+import { NotificationDocument, NotificationModel } from "../../databases/mongo/models/NotificationModel";
+import { NotificationMapper } from "../../utils/mappers/NotificationMapper";
+import { BaseRepository } from "./BaseRepository";
 
 export class NotificationRepository extends BaseRepository<CreateNotificationDTO, NotificationResponse> implements INotificationRepository {
 
@@ -37,7 +37,7 @@ export class NotificationRepository extends BaseRepository<CreateNotificationDTO
 
         return NotificationMapper.toResponseArray(notifications);
     }
-    
+
     async markAsRead(notificationId: string, userId: string): Promise<NotificationResponse | null> {
         const updatedDoc = await NotificationModel.findOneAndUpdate(
             { _id: notificationId, userId },
@@ -51,19 +51,27 @@ export class NotificationRepository extends BaseRepository<CreateNotificationDTO
 
     }
 
-    async markAllAsRead(userId: string): Promise < void> {
-            await NotificationModel.updateMany(
-                { userId, isRead: false },
-                { $set: { isRead: true } }
-            );
-        }
+    async markAllAsRead(userId: string): Promise<void> {
+        await NotificationModel.updateMany(
+            { userId, isRead: false },
+            { $set: { isRead: true } }
+        );
+    }
 
-    async getUnreadCount(userId: string): Promise < number > {
-            return NotificationModel.countDocuments({
-                userId,
-                isRead: false
-            });
-        }
+    async getUnreadCount(userId: string): Promise<number> {
+        return NotificationModel.countDocuments({
+            userId,
+            isRead: false
+        });
+    }
+
+    async deleteAll(userId: string): Promise<number> {
+        const result = await NotificationModel.deleteMany({
+            userId: userId
+        });
+
+        return result.deletedCount;
+    }
 
 
     async markInviteAsRead(playerId: string, teamId: string, status: string) {

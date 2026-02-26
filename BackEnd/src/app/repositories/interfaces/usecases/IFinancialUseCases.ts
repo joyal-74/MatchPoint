@@ -1,7 +1,7 @@
-import { IPayoutResponse } from "../../../../domain/dtos/PayoutResponse.dto.js";
-import { IRazorpayPaymentData, SavePayoutMethodPayload } from "../../../../domain/types/financialTypes.js";
-import { RazorpayPayoutEntity } from "../../../usecases/shared/HandlePayoutWebhook.js";
-import { DomainTransaction } from "../manager/IFinancialRepository.js";
+import { IPayoutResponse } from "../../../../domain/dtos/PayoutResponse.dto";
+import { IRazorpayPaymentData, SavePayoutMethodPayload } from "../../../../domain/types/financialTypes";
+import { RazorpayPayoutEntity } from "../../../usecases/shared/HandlePayoutWebhook";
+import { DomainTransaction } from "../manager/IFinancialRepository";
 
 export interface ISavePayoutMethodUseCase {
     execute(userId: string, payload: SavePayoutMethodPayload): Promise<IPayoutResponse>;

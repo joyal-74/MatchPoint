@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ISaveMatchData } from "../../repositories/interfaces/usecases/IMatchesUseCaseRepo.js";
-import { IMatchesRepository } from "../../repositories/interfaces/manager/IMatchesRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
-import { MatchEntity } from "../../../domain/entities/MatchEntity.js";
-import { IMatchStatsRepo } from "../../repositories/interfaces/manager/IMatchStatsRepo.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ISaveMatchData } from "../../repositories/interfaces/usecases/IMatchesUseCaseRepo";
+import { IMatchesRepository } from "../../repositories/interfaces/manager/IMatchesRepository";
+import { ILogger } from "../../providers/ILogger";
+import { BadRequestError, NotFoundError } from "../../../domain/errors/index";
+import { MatchEntity } from "../../../domain/entities/MatchEntity";
+import { IMatchStatsRepo } from "../../repositories/interfaces/manager/IMatchStatsRepo";
 
 
 @injectable()

@@ -1,5 +1,5 @@
 import { lazy, Suspense, type JSX } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
 import RoleLayoutWrapper from "../pages/shared/RoleLayoutWrapper";
@@ -35,13 +35,16 @@ const UmpireRoutes = () => {
             <Route path="matches/:matchId/live-score" element={withUmpireProtection(<ScoreboardDashboard />)} />
             <Route path="payments" element={withUmpireProtection(<WalletPage />)} />
             <Route path="payments/history" element={withUmpireProtection(<FinancialHistory />)} />
-            
+
             <Route path="settings" element={withUmpireProtection(
-                    <RoleLayoutWrapper>
-                        <SettingsPage />
-                    </RoleLayoutWrapper>
-                )} 
+                <RoleLayoutWrapper>
+                    <SettingsPage />
+                </RoleLayoutWrapper>
+            )}
             />
+
+            <Route path="*" element={<Navigate to="/404" replace />} />
+
         </Routes>
     );
 };

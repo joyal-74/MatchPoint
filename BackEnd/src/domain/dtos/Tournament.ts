@@ -1,6 +1,6 @@
-import { paymentStatus } from "../../domain/entities/Payment.js";
-import { TeamPhase, TeamStatus } from "./Team.dto.js";
-import { PlayerEntity } from "../../domain/entities/Player.js";
+import { paymentStatus } from "../../domain/entities/Payment";
+import { TeamPhase, TeamStatus } from "./Team.dto";
+import { PlayerEntity } from "../../domain/entities/Player";
 
 export interface TournamentTeamData {
     _id: string;

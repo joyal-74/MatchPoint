@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
-import { ITournamentPaymentProcessor, TournamentPaymentRequest } from "../../app/repositories/interfaces/shared/ITournamentPaymentProcessor.js";
-import { TransactionService } from "../services/TransactionService.js";
-import { IRegistrationRepository } from "../../app/repositories/interfaces/manager/IRegistrationRepository.js";
-import { IUnitOfWork } from "../../app/repositories/interfaces/shared/IUnitOfWork.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
+import { ITournamentPaymentProcessor, TournamentPaymentRequest } from "../../app/repositories/interfaces/shared/ITournamentPaymentProcessor";
+import { TransactionService } from "../services/TransactionService";
+import { IRegistrationRepository } from "../../app/repositories/interfaces/manager/IRegistrationRepository";
+import { IUnitOfWork } from "../../app/repositories/interfaces/shared/IUnitOfWork";
 
 @injectable()
 export class WalletTournamentProcessor implements ITournamentPaymentProcessor {

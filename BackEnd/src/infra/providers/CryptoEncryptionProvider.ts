@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { IEncryptionProvider } from '../../app/providers/IEncryptionProvider.js';
+import { IEncryptionProvider } from '../../app/providers/IEncryptionProvider';
 
 export class CryptoEncryptionProvider implements IEncryptionProvider {
     private readonly algorithm = 'aes-256-cbc';

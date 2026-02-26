@@ -1,9 +1,9 @@
-import { ManagerResponseDTO, ManagerUpdateDTO } from "../../../../domain/dtos/Manager.dto.js";
-import { PlayerProfileFieldDTO, PlayerProfileResponse, PlayerUpdateDTO } from "../../../../domain/dtos/Player.dto.js";
-import { UmpireResponseDTO, UmpireUpdateDTO } from "../../../../domain/dtos/Umpire.dto.js";
-import { UserResponseDTO, UserUpdateDTO } from "../../../../domain/dtos/User.dto.js";
-import { File } from "../../../../domain/entities/File.js";
-import { PopulatedPlayer } from "../../../../domain/entities/Player.js";
+import { ManagerResponseDTO, ManagerUpdateDTO } from "../../../../domain/dtos/Manager.dto";
+import { PlayerProfileFieldDTO, PlayerProfileResponse, PlayerUpdateDTO } from "../../../../domain/dtos/Player.dto";
+import { UmpireResponseDTO, UmpireUpdateDTO } from "../../../../domain/dtos/Umpire.dto";
+import { UserResponseDTO, UserUpdateDTO } from "../../../../domain/dtos/User.dto";
+import { File } from "../../../../domain/entities/File";
+import { PopulatedPlayer } from "../../../../domain/entities/Player";
 
 
 export interface IGetManagerProfile {

@@ -1,5 +1,5 @@
-import { LiveMatchDTO } from "../../domain/dtos/LiveMatchDTO.js";
-import { TournamentMatchStatsDocument } from "../../domain/types/match.types.js";
+import { LiveMatchDTO } from "../../domain/dtos/LiveMatchDTO";
+import { TournamentMatchStatsDocument } from "../../domain/types/match.types";
 
 
 export class LiveMatchMapper {

@@ -1,12 +1,12 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
-import { ITransactionService } from "../../app/repositories/interfaces/player/ITransactionService.js";
-import { ITransactionRepository } from "../../app/repositories/interfaces/shared/ITransactionRepository.js";
-import { IUnitOfWork } from "../../app/repositories/interfaces/shared/IUnitOfWork.js";
-import { IWalletRepository } from "../../app/repositories/interfaces/shared/IWalletRepository.js";
-import { ChargeEntryFeeDTO } from "../../domain/dtos/Transaction.dto.js";
-import { ConcurrencyError } from "../../domain/errors/index.js";
+import { ITransactionService } from "../../app/repositories/interfaces/player/ITransactionService";
+import { ITransactionRepository } from "../../app/repositories/interfaces/shared/ITransactionRepository";
+import { IUnitOfWork } from "../../app/repositories/interfaces/shared/IUnitOfWork";
+import { IWalletRepository } from "../../app/repositories/interfaces/shared/IWalletRepository";
+import { ChargeEntryFeeDTO } from "../../domain/dtos/Transaction.dto";
+import { ConcurrencyError } from "../../domain/errors/index";
 
 @injectable()
 export class TransactionService implements ITransactionService {

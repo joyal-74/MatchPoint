@@ -1,8 +1,8 @@
 import { Types } from "mongoose";
-import { IFinancialRepository, FinancialReport, DomainTransaction, WalletRepot } from "../../../app/repositories/interfaces/manager/IFinancialRepository.js"
-import { WalletModel } from "../../databases/mongo/models/WalletModel.js";
-import { TransactionModel } from "../../databases/mongo/models/TransactionModel.js";
-import { TournamentModel } from "../../databases/mongo/models/TournamentModel.js";
+import { IFinancialRepository, FinancialReport, DomainTransaction, WalletRepot } from "../../../app/repositories/interfaces/manager/IFinancialRepository"
+import { WalletModel } from "../../databases/mongo/models/WalletModel";
+import { TransactionModel } from "../../databases/mongo/models/TransactionModel";
+import { TournamentModel } from "../../databases/mongo/models/TournamentModel";
 
 
 interface PopulatedTournament {

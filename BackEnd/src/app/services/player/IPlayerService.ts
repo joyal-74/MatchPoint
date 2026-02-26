@@ -1,6 +1,6 @@
-import { PlayerProfileResponse } from "../../../domain/dtos/Player.dto.js";
-import { Player } from "../../../domain/entities/Player.js";
-import { User } from "../../../domain/entities/User.js";
+import { PlayerProfileResponse } from "../../../domain/dtos/Player.dto";
+import { Player } from "../../../domain/entities/Player";
+import { User } from "../../../domain/entities/User";
 
 export interface IPlayerService {
     updateUserProfile(userId: string, data: Partial<User>): Promise<PlayerProfileResponse | null>;

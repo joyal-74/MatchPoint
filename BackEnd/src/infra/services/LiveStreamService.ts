@@ -1,12 +1,12 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
-import { IMatchesRepository } from "../../app/repositories/interfaces/manager/IMatchesRepository.js";
-import { ILiveStreamService, StreamMetadata } from "../../app/repositories/interfaces/services/LiveStreamService.js";
-import { NotFoundError } from "../../domain/errors/index.js";
+import { IMatchesRepository } from "../../app/repositories/interfaces/manager/IMatchesRepository";
+import { ILiveStreamService, StreamMetadata } from "../../app/repositories/interfaces/services/LiveStreamService";
+import { NotFoundError } from "../../domain/errors/index";
 
-import { IRoomRegistry } from "../../app/repositories/interfaces/shared/ISocketServices.js";
-import { DtlsParameters, MediaKind, RtpCapabilities, RtpParameters } from "../livestream/Types.js";
+import { IRoomRegistry } from "../../app/repositories/interfaces/shared/ISocketServices";
+import { DtlsParameters, MediaKind, RtpCapabilities, RtpParameters } from "../livestream/Types";
 
 type TransportDirection = "send" | "recv";
 

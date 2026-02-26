@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { ITeamRepository } from "../../../repositories/interfaces/shared/ITeamRepository.js";
-import { IRejectPlayerUseCase } from "../../../repositories/interfaces/usecases/ITeamUsecaseRepository.js";
-import { TeamDataFull } from "../../../../domain/dtos/Team.dto.js";
-import { BadRequestError, NotFoundError } from "../../../../domain/errors/index.js";
-import { TeamMapper } from "../../../mappers/TeamMappers.js";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { ITeamRepository } from "../../../repositories/interfaces/shared/ITeamRepository";
+import { IRejectPlayerUseCase } from "../../../repositories/interfaces/usecases/ITeamUsecaseRepository";
+import { TeamDataFull } from "../../../../domain/dtos/Team.dto";
+import { BadRequestError, NotFoundError } from "../../../../domain/errors/index";
+import { TeamMapper } from "../../../mappers/TeamMappers";
 
 
 @injectable()

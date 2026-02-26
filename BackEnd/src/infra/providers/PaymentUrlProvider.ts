@@ -1,4 +1,4 @@
-import { IPaymentUrlProvider } from "../../app/providers/IPaymentUrlsProvider.js";
+import { IPaymentUrlProvider } from "../../app/providers/IPaymentUrlsProvider";
 
 
 export class PaymentUrlProvider implements IPaymentUrlProvider {

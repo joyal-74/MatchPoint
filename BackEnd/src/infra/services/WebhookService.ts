@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
-import { IConfigProvider } from "../../app/providers/IConfigProvider.js";
-import { IHttpRequest } from "../../presentation/http/interfaces/IHttpRequest.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
+import { IConfigProvider } from "../../app/providers/IConfigProvider";
+import { IHttpRequest } from "../../presentation/http/interfaces/IHttpRequest";
 import { createHmac } from 'node:crypto';
 
 @injectable()

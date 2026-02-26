@@ -1,8 +1,8 @@
 import { Server } from "socket.io";
-import { AuthenticatedSocket } from "../SocketServer.js";
-import { ILiveStreamService } from "../../../app/repositories/interfaces/services/LiveStreamService.js"; 
-import { ConnectTransportData, CreateTransportData, ConsumeData, ProduceData, Callback } from "../utils/liveStream.types.js";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
+import { AuthenticatedSocket } from "../SocketServer";
+import { ILiveStreamService } from "../../../app/repositories/interfaces/services/LiveStreamService"; 
+import { ConnectTransportData, CreateTransportData, ConsumeData, ProduceData, Callback } from "../utils/liveStream.types";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
 import { inject, injectable } from "tsyringe";
 
 @injectable()

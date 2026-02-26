@@ -1,8 +1,8 @@
 import { Server } from "socket.io";
 import { Types } from "mongoose";
-import { AuthenticatedSocket } from "../SocketServer.js";
-import { MessageModel } from "../../../infra/databases/mongo/models/MessageModel.js";
-import { TeamModel } from "../../../infra/databases/mongo/models/TeamModel.js";
+import { AuthenticatedSocket } from "../SocketServer";
+import { MessageModel } from "../../../infra/databases/mongo/models/MessageModel";
+import { TeamModel } from "../../../infra/databases/mongo/models/TeamModel";
 
 interface IReplyTo {
     messageId: string;
@@ -34,22 +34,25 @@ export class ChatHandler {
         clientId: string;
         profileImage?: string;
         replyTo?: IReplyTo;
+        senderRole: string;
     }) {
-        const { chatId, text, clientId, profileImage, replyTo } = data;
+        const { chatId, text, clientId, profileImage, replyTo, senderRole } = data;
         try {
-
-            console.log("DEBUG: Incoming Socket Data:", JSON.stringify(data, null, 2));
-
             const userId = this.socket.user._id;
 
             const team = await TeamModel.findOne({
                 _id: chatId,
-                "members": {
-                    $elemMatch: {
-                        userId: new Types.ObjectId(userId),
-                        approvalStatus: "approved"
+                $or: [
+                    { managerId: new Types.ObjectId(userId) },
+                    {
+                        members: {
+                            $elemMatch: {
+                                userId: new Types.ObjectId(userId),
+                                approvalStatus: "approved"
+                            }
+                        }
                     }
-                }
+                ]
             });
 
             if (!team) {
@@ -70,6 +73,7 @@ export class ChatHandler {
                 text,
                 status: "sent",
                 clientId,
+                senderRole,
                 replyTo: replyTo ? {
                     messageId: replyTo.messageId,
                     text: replyTo.text,
@@ -77,14 +81,13 @@ export class ChatHandler {
                 } : undefined,
             });
 
-            console.log("DEBUG: Saved Document:", savedMessage);
-
             // 2. Construct the message to broadcast
             const messageToSend = {
                 id: (savedMessage._id as Types.ObjectId).toString(),
                 chatId,
                 senderId: this.socket.user._id,
                 senderName: `${this.socket.user.firstName} ${this.socket.user.lastName}`,
+                senderRole,
                 text,
                 createdAt: savedMessage.createdAt,
                 status: "sent" as const,
@@ -122,7 +125,11 @@ export class ChatHandler {
 
     private typing({ chatId, typing }: { chatId: string; typing: boolean }) {
         this.socket.to(chatId).emit("typing", {
-            user: { id: this.socket.user._id, name: `${this.socket.user.firstName} ${this.socket.user.lastName}` },
+            user: {
+                id: this.socket.user._id,
+                name: `${this.socket.user.firstName} ${this.socket.user.lastName}`,
+                role: this.socket.user.role
+            },
             typing
         });
     }

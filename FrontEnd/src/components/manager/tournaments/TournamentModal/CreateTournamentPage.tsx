@@ -35,6 +35,14 @@ export default function CreateTournamentPage() {
     }, []);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+
+        if ('scrollRestoration' in window.history) {
+            window.history.scrollRestoration = 'manual';
+        }
+    }, []);
+
+    useEffect(() => {
         const getUmpires = async () => {
             try {
                 const result = await dispatch(searchAvailableUmpires(user?._id)).unwrap();
@@ -69,6 +77,22 @@ export default function CreateTournamentPage() {
             };
             return newState;
         });
+
+        const val = isNumberField ? (value === "" ? 0 : Number(value)) : value;
+
+        setFormData(prev => ({ ...prev, [name]: val }));
+
+        const { errors: validationErrors } = validateTournamentForm({
+            ...formData,
+            [name]: val,
+            rules: rulesText.split("\n").map(r => r.trim()).filter(r => r),
+        });
+
+        // Update only the error for the field currently being changed
+        setErrors(prev => ({
+            ...prev,
+            [name]: validationErrors[name] || ""
+        }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -275,8 +299,8 @@ export default function CreateTournamentPage() {
                             </div>
                             <div className="space-y-5">
                                 <div className="grid grid-cols-2 gap-5">
-                                    <FormInput label="Min Teams" type="number" name="minTeams" value={formData.minTeams} onChange={handleChange} min="2" error={errors.minTeams} />
-                                    <FormInput label="Max Teams" type="number" name="maxTeams" value={formData.maxTeams} onChange={handleChange} min="2" error={errors.maxTeams} />
+                                    <FormInput label="Min Teams" type="number" name="minTeams" value={formData.minTeams} onChange={handleChange} min="2" max={50} error={errors.minTeams} />
+                                    <FormInput label="Max Teams" type="number" name="maxTeams" value={formData.maxTeams} onChange={handleChange} min="2" max={50} error={errors.maxTeams} />
                                 </div>
                                 <FormInput label="Players per Team" type="number" name="playersPerTeam" value={formData.playersPerTeam} onChange={handleChange} min="1" error={errors.playersPerTeam} />
                             </div>

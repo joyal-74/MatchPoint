@@ -1,6 +1,7 @@
-import { MatchResponseDTO } from "../../../../domain/dtos/MatchDTO.js";
-import type { Match } from "../../../../domain/entities/Match.js";
-import { MatchEntity } from "../../../../domain/entities/MatchEntity.js";
+import { MatchResponseDTO } from "../../../../domain/dtos/MatchDTO";
+import type { Match } from "../../../../domain/entities/Match";
+import { MatchEntity } from "../../../../domain/entities/MatchEntity";
+import { AllMatchQuery } from "./IMatchStatsRepo";
 
 export interface MatchStreamData {
     streamTitle: string;
@@ -41,6 +42,7 @@ export interface IMatchesRepository {
     getMatchesByTournament(tournamentId: string): Promise<Match[]>;
     getMatchesFilters(filters: { status?: string; page?: number; limit?: number }): Promise<{ matches: Match[], total: number }>;
     getMatchById(matchId: string): Promise<Match | null>;
+    findAllMatches(query: AllMatchQuery): Promise<{ matches: Match[], totalPages: number }>;
     getUmpireMatches(umpireId: string): Promise<Match[] | null>;
     getMatchDetails(matchId: string): Promise<MatchResponseDTO | null>;
     getStreamMetadata(matchId: string,): Promise<MatchStreamData>;

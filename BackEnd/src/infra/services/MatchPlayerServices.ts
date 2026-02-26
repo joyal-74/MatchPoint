@@ -1,12 +1,12 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
-import { IMatchPlayerServices } from "../../app/services/manager/IMatchPlayerService.js";
-import { IMatchesRepository } from "../../app/repositories/interfaces/manager/IMatchesRepository.js";
-import { IPlayerRepository } from "../../app/repositories/interfaces/player/IPlayerRepository.js";
-import { MatchResponseDTO } from "../../domain/dtos/MatchDTO.js";
-import { NotFoundError } from "../../domain/errors/index.js";
-import { MatchTeamMapper } from "../../app/mappers/MatchTeamMapper.js";
-import { MatchMapper } from "../../app/mappers/MatchMapper.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
+import { IMatchPlayerServices } from "../../app/services/manager/IMatchPlayerService";
+import { IMatchesRepository } from "../../app/repositories/interfaces/manager/IMatchesRepository";
+import { IPlayerRepository } from "../../app/repositories/interfaces/player/IPlayerRepository";
+import { MatchResponseDTO } from "../../domain/dtos/MatchDTO";
+import { NotFoundError } from "../../domain/errors/index";
+import { MatchTeamMapper } from "../../app/mappers/MatchTeamMapper";
+import { MatchMapper } from "../../app/mappers/MatchMapper";
 
 
 @injectable()

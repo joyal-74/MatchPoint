@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { Transaction } from "../../../domain/entities/Transaction.js";
-import { IGetTransactionDetails } from "../../repositories/interfaces/admin/IAdminUsecases.js";
-import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { Transaction } from "../../../domain/entities/Transaction";
+import { IGetTransactionDetails } from "../../repositories/interfaces/admin/IAdminUsecases";
+import { ITransactionRepository } from "../../repositories/interfaces/shared/ITransactionRepository";
+import { NotFoundError } from "../../../domain/errors/index";
 
 
 @injectable()

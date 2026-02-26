@@ -1,21 +1,21 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IManagerSignupUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { IManagerRepository } from "../../repositories/interfaces/manager/IManagerRepository.js";
-import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository.js";
-import { IMailRepository } from "../../providers/IMailRepository.js";
-import { IPasswordHasher } from "../../providers/IPasswordHasher.js";
-import { IOtpGenerator } from "../../providers/IOtpGenerator.js";
-import { IManagerIdGenerator } from "../../providers/IIdGenerator.js";
-import { IFileStorage } from "../../providers/IFileStorage.js";
-import { validateUserInput } from "../../../domain/validators/UserValidators.js";
-import { ManagerRegister } from "../../../domain/entities/Manager.js";
-import { BadRequestError } from "../../../domain/errors/index.js";
-import { UserRoles } from "../../../domain/enums/Roles.js";
-import { OtpContext } from "../../../domain/enums/OtpContext.js";
-import { UserMapper } from "../../mappers/UserMapper.js";
-import { File } from "../../../domain/entities/File.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IManagerSignupUseCase } from "../../repositories/interfaces/auth/IAuthenticationUseCase";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { IManagerRepository } from "../../repositories/interfaces/manager/IManagerRepository";
+import { IOtpRepository } from "../../repositories/interfaces/shared/IOtpRepository";
+import { IMailRepository } from "../../providers/IMailRepository";
+import { IPasswordHasher } from "../../providers/IPasswordHasher";
+import { IOtpGenerator } from "../../providers/IOtpGenerator";
+import { IManagerIdGenerator } from "../../providers/IIdGenerator";
+import { IFileStorage } from "../../providers/IFileStorage";
+import { validateUserInput } from "../../../domain/validators/UserValidators";
+import { ManagerRegister } from "../../../domain/entities/Manager";
+import { BadRequestError } from "../../../domain/errors/index";
+import { UserRoles } from "../../../domain/enums/Roles";
+import { OtpContext } from "../../../domain/enums/OtpContext";
+import { UserMapper } from "../../mappers/UserMapper";
+import { File } from "../../../domain/entities/File";
 
 
 @injectable()

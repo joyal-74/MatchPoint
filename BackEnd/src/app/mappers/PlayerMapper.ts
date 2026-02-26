@@ -1,8 +1,8 @@
-import { PlayerProfileResponse } from "../../domain/dtos/Player.dto.js";
-import { UserLoginResponseDTO } from "../../domain/dtos/User.dto.js";
-import { PlayerResponse } from "../../domain/entities/Player.js";
-import { User } from "../../domain/entities/User.js";
-import { PlayerDetails } from "../usecases/admin/GetPlayerDetails.js";
+import { PlayerProfileResponse } from "../../domain/dtos/Player.dto";
+import { UserLoginResponseDTO } from "../../domain/dtos/User.dto";
+import { PlayerResponse } from "../../domain/entities/Player";
+import { User } from "../../domain/entities/User";
+import { PlayerDetails } from "../usecases/admin/GetPlayerDetails";
 
 
 

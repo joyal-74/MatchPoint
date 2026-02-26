@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
-import { ITournamentPaymentProcessor, TournamentPaymentRequest } from "../../app/repositories/interfaces/shared/ITournamentPaymentProcessor.js";
-import { IRegistrationRepository } from "../../app/repositories/interfaces/manager/IRegistrationRepository.js";
-import { IPaymentProvider } from "../../app/providers/IPaymentProvider.js";
-import { TournamentPaymentMetadata } from "../../app/repositories/interfaces/IBasePaymentMetaData.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
+import { ITournamentPaymentProcessor, TournamentPaymentRequest } from "../../app/repositories/interfaces/shared/ITournamentPaymentProcessor";
+import { IRegistrationRepository } from "../../app/repositories/interfaces/manager/IRegistrationRepository";
+import { IPaymentProvider } from "../../app/providers/IPaymentProvider";
+import { TournamentPaymentMetadata } from "../../app/repositories/interfaces/IBasePaymentMetaData";
 
 
 @injectable()

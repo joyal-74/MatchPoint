@@ -1,6 +1,6 @@
 import { Document, Schema, Types, model } from 'mongoose';
-import { Admin } from '../../../../domain/entities/Admin.js';
-import { Theme, ThemeValues } from '../../../../domain/enums/index.js';
+import { Admin } from '../../../../domain/entities/Admin';
+import { Theme, ThemeValues } from '../../../../domain/enums/index';
 
 export interface AdminDocument extends Document<Types.ObjectId>, Omit<Admin, '_id'> { }
 

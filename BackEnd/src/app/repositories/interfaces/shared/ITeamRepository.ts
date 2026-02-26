@@ -1,18 +1,19 @@
-import { AdminFilters, Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "../../../../domain/dtos/Team.dto.js";
-import { IBaseRepository } from "../../IBaseRepository.js";
+import { AdminFilters, Filters, PlayerApprovalStatus, playerStatus, TeamData, TeamDataFull, TeamDataSummary, TeamRegister } from "../../../../domain/dtos/Team.dto";
+import { IBaseRepository } from "../../IBaseRepository";
 
 export interface ITeamRepository extends IBaseRepository<TeamRegister, TeamDataFull> {
-    
+
     findByName(name: string): Promise<TeamData | null>;
     findTeamsByIds(teamIds: string[]): Promise<TeamDataFull[]>;
     findTeamWithPlayers(teamIds: string[], playerIds: string[]): Promise<TeamData | null>;
     findAllByManager(managerId: string): Promise<TeamDataFull[]>;
-    
+
     // Filtered Listings
     findAllWithFilters(filters: Filters): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
     findAllWithUserId(userId: string, status: string): Promise<{ teams: TeamDataSummary[], totalTeams: number }>;
     findAllTeams(filters: AdminFilters): Promise<{ teams: TeamDataFull[], totalCount: number }>;
-    
+    findUserTeams(userId: string, role: string): Promise<{ teams: TeamDataFull[], totalTeams: number }>;
+
     // Domain Specific Logic
     togglePlayerStatus(teamId: string, playerId: string): Promise<TeamDataFull | null>;
     playerTeamStatus(teamId: string, playerId: string, status: PlayerApprovalStatus): Promise<TeamDataFull | null>;

@@ -1,16 +1,16 @@
 import { useEffect } from "react";
-import { 
-    Send, Users, X, ChevronLeft, Loader2, Reply, 
-    CornerUpRight, MoreVertical, CheckCheck 
+import {
+    Send, Users, X, ChevronLeft, Loader2, Reply,
+    CornerUpRight, MoreVertical, CheckCheck,
+    ShieldCheck
 } from "lucide-react";
 import { useTeamChatLogic } from "../../../hooks/player/useTeamChatLogic";
 import { UserAvatar } from "./UserAvatar";
 import { EmptyState } from "./EmptyState";
-import Navbar from "../../../components/player/Navbar";
 
 export default function TeamChat() {
-    const { 
-        currentUser, activeTeam, teams, sortedMessages, messageInput, 
+    const {
+        currentUser, activeTeam, teams, sortedMessages, messageInput,
         handlers, refs, chatStatus, showMembers, members, loadingMembers,
         replyingTo
     } = useTeamChatLogic({});
@@ -18,26 +18,20 @@ export default function TeamChat() {
     useEffect(() => {
         if (refs.messagesContainerRef.current) {
             const container = refs.messagesContainerRef.current;
-            // Scroll to bottom
             container.scrollTop = container.scrollHeight;
         }
-    }, [sortedMessages, activeTeam?._id]);
+    }, [sortedMessages, activeTeam?._id, refs.messagesContainerRef]);
 
     return (
-        <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden pb-16 lg:pb-0">
-            <Navbar />
-            
-            <div className="flex-1 flex w-full max-w-[1700px] mx-auto overflow-hidden shadow-sm bg-card lg:my-2 lg:rounded-[var(--radius)] lg:border border-border">
+        <div className="flex flex-col h-[calc(100vh-60px)] bg-background text-foreground overflow-hidden pb-16 lg:p-0 lg:mb-0">
+
+            <div className="flex-1 flex w-full max-w-[1700px] mx-auto overflow-hidden shadow-sm bg-card lg:mt-2 lg:rounded-[var(--radius)]">
 
                 {/* LEFT SIDEBAR: SQUAD LIST */}
                 <aside className={`flex-col bg-card border-r border-border transition-all duration-300 ${activeTeam ? 'hidden lg:flex lg:w-[380px]' : 'flex w-full lg:w-[380px]'}`}>
                     <div className="p-4 border-b border-border bg-muted/20">
-                        <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center justify-between">
                             <h1 className="text-xl font-bold tracking-tight">Messages</h1>
-                            {/* <div className="flex gap-1 text-muted-foreground">
-                                <button className="p-2 hover:bg-muted rounded-full transition-colors"><Search size={19} /></button>
-                                <button className="p-2 hover:bg-muted rounded-full transition-colors"><MoreVertical size={19} /></button>
-                            </div> */}
                         </div>
                     </div>
 
@@ -46,9 +40,8 @@ export default function TeamChat() {
                             <button
                                 key={team._id}
                                 onClick={() => handlers.handleSelectTeam(team)}
-                                className={`w-full flex items-center gap-4 px-4 py-4 border-b border-border/50 transition-all ${
-                                    activeTeam?._id === team._id ? 'bg-accent/40 border-r-4 border-r-primary' : 'hover:bg-muted/30'
-                                }`}
+                                className={`w-full flex items-center gap-4 px-4 py-4 border-b border-border/50 transition-all ${activeTeam?._id === team._id ? 'bg-accent/40 border-r-4 border-r-primary' : 'hover:bg-muted/30'
+                                    }`}
                             >
                                 <UserAvatar src={team.logo} name={team.name} size="lg" />
                                 <div className="flex-1 text-left overflow-hidden">
@@ -91,78 +84,106 @@ export default function TeamChat() {
                             </header>
 
                             {/* MESSAGES AREA */}
-                            <div 
-                                ref={refs.messagesContainerRef} 
-                                onScroll={handlers.handleScroll} 
+                            <div
+                                ref={refs.messagesContainerRef}
+                                onScroll={handlers.handleScroll}
                                 className="flex-1 overflow-y-auto px-4 lg:px-12 py-6 space-y-1 custom-scrollbar relative"
-                                style={{ 
+                                style={{
                                     backgroundImage: `radial-gradient(circle at 2px 2px, hsl(var(--muted-foreground) / 0.15) 1px, transparent 0)`,
-                                    backgroundSize: '30px 30px' 
+                                    backgroundSize: '30px 30px'
                                 }}
                             >
                                 {sortedMessages.map((msg, idx) => {
                                     const isMine = msg.senderId === currentUser.id;
+                                    const isManager = msg.senderRole === 'manager' || msg.senderId === activeTeam?.managerId;
                                     const gap = 5 * 60 * 1000;
-                                    const isSameAsPrev = idx > 0 && 
+                                    const isSameAsPrev = idx > 0 &&
                                         sortedMessages[idx - 1].senderId === msg.senderId &&
                                         (new Date(msg.createdAt).getTime() - new Date(sortedMessages[idx - 1].createdAt).getTime() < gap);
 
+                                    // Dynamic classes based on ownership
+                                    const bubbleStyles = isMine
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-card/70 backdrop-blur-md border border-border/50 text-card-foreground";
+
+                                    const tailColor = isMine ? "text-primary" : "text-card/70";
+
                                     return (
                                         <div key={msg.id || idx} className={`flex ${isMine ? "justify-end" : "justify-start"} ${isSameAsPrev ? "mt-0.5" : "mt-4"} group/msg relative animate-in fade-in slide-in-from-bottom-1 duration-300`}>
-                                            
                                             <div className={`flex flex-col ${isMine ? "items-end" : "items-start"} max-w-[85%] lg:max-w-[65%]`}>
-                                                
-                                                <div className={`
-                                                    relative px-3.5 py-1.5 text-[14.5px] shadow-sm transition-all
-                                                    ${isMine 
-                                                        ? "bg-primary text-primary-foreground" 
-                                                        : "bg-card/70 backdrop-blur-md border border-border/50 text-card-foreground"}
-                                                    ${isMine 
-                                                        ? `${!isSameAsPrev ? "rounded-l-xl rounded-br-xl rounded-tr-none" : "rounded-xl"}` 
-                                                        : `${!isSameAsPrev ? "rounded-r-xl rounded-bl-xl rounded-tl-none" : "rounded-xl"}`
-                                                    }
-                                                `}>
-                                                    {/* SVG Transparent-Safe Tail */}
-                                                    {!isSameAsPrev && (
-                                                        <div className={`absolute top-0 w-3 h-3 ${isMine ? "-right-2" : "-left-2"}`}>
-                                                            <svg viewBox="0 0 16 16" className={isMine ? "text-primary" : "text-card/70 fill-card/70 stroke-border/50"}>
-                                                                <path fill="currentColor" d={isMine ? "M0,0 L16,0 L0,16 Z" : "M16,0 L0,0 L16,16 Z"} />
+
+                                                <div className="relative flex items-start">
+                                                    {/* TAIL (Other Users) - Fixed position to avoid dark overlap line */}
+                                                    {!isMine && !isSameAsPrev && (
+                                                        <div className="absolute top-0 -left-[7.5px] w-2 h-4 overflow-hidden z-0">
+                                                            <svg viewBox="0 0 16 16" className={`${tailColor} fill-current`}>
+                                                                <path d="M16,0 L0,0 L16,16 Z" />
                                                             </svg>
                                                         </div>
                                                     )}
 
-                                                    {/* Reply Block */}
-                                                    {msg.replyTo && msg.replyTo.messageId && (
-                                                        <div className={`mb-2 p-2 rounded-md text-xs border-l-[3px] truncate ${
-                                                            isMine ? "bg-black/20 border-white/40" : "bg-muted border-primary"
-                                                        }`}>
-                                                            <p className="font-bold mb-0.5 opacity-90">{msg.replyTo.senderName}</p>
-                                                            <p className="opacity-70 truncate italic line-clamp-1">{msg.replyTo.text}</p>
-                                                        </div>
-                                                    )}
-                                                    
-                                                    {/* Sender Name (Others) */}
-                                                    {!isMine && !isSameAsPrev && (
-                                                        <span className="text-[12px] font-bold text-primary block mb-0.5">{msg.senderName}</span>
-                                                    )}
+                                                    <div className={`
+                                                        relative px-3.5 py-1.5 text-[14.5px] shadow-sm transition-all z-10
+                                                        ${bubbleStyles}
+                                                        ${isMine
+                                                            ? `${!isSameAsPrev ? "rounded-l-xl rounded-br-xl rounded-tr-none" : "rounded-xl"}`
+                                                            : `${!isSameAsPrev ? "rounded-r-xl rounded-bl-xl rounded-tl-none" : "rounded-xl"}`
+                                                        }
+                                                     `}>
+                                                        {/* TAIL (Mine) */}
+                                                        {isMine && !isSameAsPrev && (
+                                                            <div className="absolute top-0 -right-[7.5px] w-2 h-4 overflow-hidden z-0">
+                                                                <svg viewBox="0 0 16 16" className={`${tailColor} fill-current`}>
+                                                                    <path d="M0,0 L16,0 L0,16 Z" />
+                                                                </svg>
+                                                            </div>
+                                                        )}
 
-                                                    <div className="flex gap-2 items-end">
-                                                        <p className="leading-relaxed whitespace-pre-wrap">{msg.text}</p>
-                                                        <div className={`flex items-center gap-1 text-[9px] min-w-fit tabular-nums font-medium ${isMine ? "text-primary-foreground/60" : "text-muted-foreground/80"}`}>
-                                                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                            {isMine && (
-                                                                <CheckCheck size={12} className={msg.status === 'sent' ? 'text-blue-400' : 'text-primary-foreground/40'} />
+                                                        <div className="flex flex-col">
+                                                            {/* Header: Name + Manager Text */}
+                                                            {!isMine && !isSameAsPrev && (
+                                                                <div className="flex items-center gap-1.5 mb-0.5">
+                                                                    <span className="text-[12px] font-bold text-primary">
+                                                                        {msg.senderName}
+                                                                    </span>
+                                                                    {isManager && (
+                                                                        <span className="text-[10px] text-muted-foreground/60 italic lowercase">
+                                                                            manager
+                                                                        </span>
+                                                                    )}
+                                                                </div>
                                                             )}
-                                                        </div>
-                                                    </div>
 
-                                                    {/* Hover Reply Button */}
-                                                    <button 
-                                                        onClick={() => handlers.setReplyingTo(msg)}
-                                                        className={`absolute top-1/2 -translate-y-1/2 p-2 bg-card border border-border shadow-md rounded-full text-muted-foreground hover:text-primary transition-all opacity-0 group-hover/msg:opacity-100 z-20 ${isMine ? "-left-12" : "-right-12"}`}
-                                                    >
-                                                        <Reply size={15} className={!isMine ? "scale-x-[-1]" : ""} />
-                                                    </button>
+                                                            {/* Reply Block */}
+                                                            {msg.replyTo && msg.replyTo.messageId && (
+                                                                <div className={`mb-2 p-2 rounded-md text-xs border-l-[3px] truncate ${isMine ? "bg-primary-foreground/10 border-primary-foreground/40" : "bg-muted border-primary"
+                                                                    }`}>
+                                                                    <p className="font-bold mb-0.5 opacity-90">{msg.replyTo.senderName}</p>
+                                                                    <p className="opacity-70 truncate italic line-clamp-1">{msg.replyTo.text}</p>
+                                                                </div>
+                                                            )}
+
+                                                            <div className="flex gap-2 items-end">
+                                                                <p className="leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                                                                <div className={`flex items-center gap-1 text-[9px] min-w-fit tabular-nums font-medium ${isMine ? "text-primary-foreground/70" : "text-muted-foreground/80"
+                                                                    }`}>
+                                                                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                                    {isMine && (
+                                                                        <CheckCheck size={12} className={msg.status === 'sent' ? 'text-primary-foreground' : 'opacity-40'} />
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* RESTORED: Reply Icon on Hover */}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handlers.setReplyingTo(msg)}
+                                                            className={`absolute top-1/2 -translate-y-1/2 p-2 bg-card border border-border shadow-md rounded-full text-muted-foreground hover:text-primary transition-all opacity-0 group-hover/msg:opacity-100 z-50 ${isMine ? "-left-12" : "-right-12"}`}
+                                                        >
+                                                            <Reply size={15} className={!isMine ? "scale-x-[-1]" : ""} />
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -172,9 +193,9 @@ export default function TeamChat() {
                             </div>
 
                             {/* CHAT INPUT AREA */}
-                            <footer className="px-4 py-4 bg-card border-t border-border">
+                            <footer className="px-4 py-3 bg-card border-t border-border mb-0">
                                 {replyingTo && (
-                                    <div className="max-w-4xl mx-auto flex items-center justify-between px-4 py-2 bg-muted/50 border-l-4 border-primary rounded-t-md mb-[-2px] animate-in slide-in-from-bottom-1">
+                                    <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-2 bg-muted/50 border-l-4 border-primary rounded-t-md mb-[-2px] animate-in slide-in-from-bottom-1">
                                         <div className="flex items-center gap-3 overflow-hidden text-xs">
                                             <CornerUpRight size={14} className="text-primary flex-shrink-0" />
                                             <div className="truncate">
@@ -186,24 +207,24 @@ export default function TeamChat() {
                                     </div>
                                 )}
 
-                                <form 
+                                <form
                                     onSubmit={(e) => {
                                         e.preventDefault();
                                         handlers.handleSendMessage(e);
-                                    }} 
-                                    className="max-w-4xl mx-auto flex items-center gap-3"
+                                    }}
+                                    className="max-w-5xl mx-auto flex items-center gap-3"
                                 >
                                     <div className="flex-1 flex items-center bg-muted/50 border border-border rounded-full px-4 focus-within:bg-card focus-within:ring-2 ring-primary/20 transition-all">
-                                        <input 
-                                            value={messageInput} 
-                                            onChange={handlers.handleInputChange} 
-                                            placeholder={replyingTo ? `Reply to ${replyingTo.senderName}...` : "Write your message..."} 
+                                        <input
+                                            value={messageInput}
+                                            onChange={handlers.handleInputChange}
+                                            placeholder={replyingTo ? `Reply to ${replyingTo.senderName}...` : "Write your message..."}
                                             className="flex-1 bg-transparent py-3 outline-none text-[14px] placeholder:text-muted-foreground/60"
                                             autoComplete="off"
                                         />
                                     </div>
 
-                                    <button 
+                                    <button
                                         type="submit"
                                         disabled={!messageInput.trim() || !chatStatus.connected}
                                         className="p-3.5 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-primary/25 hover:scale-105 active:scale-95 disabled:opacity-30 disabled:grayscale transition-all flex items-center justify-center"
@@ -215,7 +236,7 @@ export default function TeamChat() {
                         </>
                     ) : (
                         <div className="flex-1 flex items-center justify-center p-12 bg-muted/5">
-                             <EmptyState onAction={() => {}} />
+                            <EmptyState onAction={() => { }} />
                         </div>
                     )}
                 </main>
@@ -232,15 +253,23 @@ export default function TeamChat() {
                                 {loadingMembers ? (
                                     <div className="flex justify-center py-12"><Loader2 className="animate-spin text-primary/40" /></div>
                                 ) : (
-                                    members.map((member) => (
-                                        <div key={member._id} className="flex items-center gap-3 p-3 hover:bg-muted/50 rounded-[var(--radius)] transition-all cursor-pointer">
-                                            <UserAvatar name={member.firstName} size="sm" />
-                                            <div className="overflow-hidden">
-                                                <p className="text-sm font-bold truncate">{member.firstName} {member.lastName}</p>
-                                                <p className="text-[10px] text-primary font-bold uppercase tracking-tighter">Verified Player</p>
+                                    members.map((member) => {
+                                        const isStaff = member._id === activeTeam.managerId;
+                                        return (
+                                            <div key={member._id} className="flex items-center gap-3 p-3 hover:bg-muted/50 rounded-[var(--radius)] transition-all cursor-pointer">
+                                                <UserAvatar name={member.firstName} src={member.profileImage} size="sm" />
+                                                <div className="overflow-hidden">
+                                                    <p className="text-sm font-bold truncate">{member.firstName} {member.lastName}</p>
+                                                    <div className="flex items-center gap-1">
+                                                        <p className={`text-[10px] font-bold uppercase tracking-tighter ${isStaff ? 'text-indigo-500' : 'text-primary'}`}>
+                                                            {isStaff ? 'Team Manager' : 'Verified Player'}
+                                                        </p>
+                                                        {isStaff && <ShieldCheck size={10} className="text-indigo-500" />}
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))
+                                        );
+                                    })
                                 )}
                             </div>
                         </div>

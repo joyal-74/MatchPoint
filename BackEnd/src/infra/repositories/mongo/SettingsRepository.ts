@@ -1,7 +1,7 @@
 
-import { ISettingsRepository } from "../../../app/repositories/interfaces/shared/ISettingsRepo.js"; 
-import { User } from "../../../domain/entities/User.js";
-import { UserModel } from "../../databases/mongo/models/UserModel.js";
+import { ISettingsRepository } from "../../../app/repositories/interfaces/shared/ISettingsRepo"; 
+import { User } from "../../../domain/entities/User";
+import { UserModel } from "../../databases/mongo/models/UserModel";
 
 
 export class SettingsRepository implements ISettingsRepository {

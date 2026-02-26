@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { ICancelTournament } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository.js";
-import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository.js";
-import { ITournamentRefundService } from "../../../services/manager/ITournamentServices.js";
-import { ILogger } from "../../../providers/ILogger.js";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js";
-import { BadRequestError } from "../../../../domain/errors/index.js";
+import { ICancelTournament } from "../../../repositories/interfaces/usecases/ITournamentUsecaseRepository";
+import { ITournamentRepository } from "../../../repositories/interfaces/shared/ITournamentRepository";
+import { ITournamentRefundService } from "../../../services/manager/ITournamentServices";
+import { ILogger } from "../../../providers/ILogger";
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers";
+import { BadRequestError } from "../../../../domain/errors/index";
 
 
 @injectable()

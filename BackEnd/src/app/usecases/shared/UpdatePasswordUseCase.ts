@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ISettingsRepository } from "../../repositories/interfaces/shared/ISettingsRepo.js";
-import { IPasswordHasher } from "../../providers/IPasswordHasher.js";
-import { BadRequestError, NotFoundError } from "../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ISettingsRepository } from "../../repositories/interfaces/shared/ISettingsRepo";
+import { IPasswordHasher } from "../../providers/IPasswordHasher";
+import { BadRequestError, NotFoundError } from "../../../domain/errors/index";
 
 
 @injectable()

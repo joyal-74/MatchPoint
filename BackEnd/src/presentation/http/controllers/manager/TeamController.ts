@@ -1,5 +1,5 @@
 import { injectable, inject } from "tsyringe";
-import { DI_TOKENS } from "../../../../domain/constants/Identifiers.js"; 
+import { DI_TOKENS } from "../../../../domain/constants/Identifiers"; 
 
 import {
 
@@ -13,18 +13,18 @@ import {
     IRemovePlayerUseCase,
     ISwapPlayers
 }from "../../../../app/repositories/interfaces/usecases/ITeamUsecaseRepository.js";
-import { ITeamController } from "../../interfaces/ITeamController.js";
-import { TeamSetupService } from "../../../../infra/services/TeamSetupServices.js";
-import { IGetMyTeamDetailsUseCase } from "../../../../app/repositories/interfaces/player/ITeamRepositoryUsecase.js";
-import { IGetAvailablePlayersService } from "../../../../app/services/manager/ITeamSetupService.js";
-import { IHttpRequest } from "../../interfaces/IHttpRequest.js";
-import { IHttpResponse } from "../../interfaces/IHttpResponse.js";
-import { BadRequestError } from "../../../../domain/errors/index.js";
-import { buildResponse } from "../../../../infra/utils/responseBuilder.js";
-import { TeamMessages } from "../../../../domain/constants/TeamMessages.js";
-import { HttpStatusCode } from "../../../../domain/enums/StatusCodes.js";
-import { HttpResponse } from "../../helpers/HttpResponse.js";
-import { ILogger } from "../../../../app/providers/ILogger.js";
+import { ITeamController } from "../../interfaces/ITeamController";
+import { TeamSetupService } from "../../../../infra/services/TeamSetupServices";
+import { IGetMyTeamDetailsUseCase } from "../../../../app/repositories/interfaces/player/ITeamRepositoryUsecase";
+import { IGetAvailablePlayersService } from "../../../../app/services/manager/ITeamSetupService";
+import { IHttpRequest } from "../../interfaces/IHttpRequest";
+import { IHttpResponse } from "../../interfaces/IHttpResponse";
+import { BadRequestError } from "../../../../domain/errors/index";
+import { buildResponse } from "../../../../infra/utils/responseBuilder";
+import { TeamMessages } from "../../../../domain/constants/TeamMessages";
+import { HttpStatusCode } from "../../../../domain/enums/StatusCodes";
+import { HttpResponse } from "../../helpers/HttpResponse";
+import { ILogger } from "../../../../app/providers/ILogger";
 
 
 @injectable()

@@ -1,29 +1,29 @@
 import { container } from "tsyringe"; 
-import { DI_TOKENS } from "../../domain/constants/Identifiers.js";
+import { DI_TOKENS } from "../../domain/constants/Identifiers";
 
 //  Services 
-import { UserManagementService } from "../services/UserManagementService.js";
-import { MatchScoreService } from "../services/MatchStatsService.js";
-import { TeamSetupService } from "../services/TeamSetupServices.js";
-import { PlayerService } from "../services/PlayerService.js";
-import { LogoutService } from "../services/LogoutService.js";
-import { GoogleAuthService } from "../services/GoogleAuthServices.js";
-import { FacebookServices } from "../services/FacebookServices.js";
-import { LiveStreamService } from "../services/LiveStreamService.js";
-import { TransactionService } from "../services/TransactionService.js";
-import { SubscriptionPaymentService } from "../services/SubscriptionService.js";
-import { MatchPlayerServices } from "../services/MatchPlayerServices.js";
-import { GetAvailablePlayersService } from "../services/GetAvailablePlayersService.js";
-import { TournamentRegistrationValidator } from "../services/TournamentRegistrationValidator.js";
-import { PlayerTeamServices } from "../services/PlayerTeamServices.js";
-import { UserServices } from "../services/UserServices.js";
-import { UserAuthServices } from "../services/UserAuthServices.js";
-import { GetPlansAndUserSubscription } from "../services/GetPlansAndUserSubscription.js";
-import { StartTournament } from "../../infra/services/StartTournament.js";
-import { TournamentRefundService } from "../../infra/services/TournamentRefundService.js";
-import { PayoutMethodResolver } from "../providers/PayoutMethodResolver.js";
-import { WebhookService } from "../services/WebhookService.js";
-import { ProfileInitializationService } from "../services/ProfileInitializationService.js";
+import { UserManagementService } from "../services/UserManagementService";
+import { MatchScoreService } from "../services/MatchStatsService";
+import { TeamSetupService } from "../services/TeamSetupServices";
+import { PlayerService } from "../services/PlayerService";
+import { LogoutService } from "../services/LogoutService";
+import { GoogleAuthService } from "../services/GoogleAuthServices";
+import { FacebookServices } from "../services/FacebookServices";
+import { LiveStreamService } from "../services/LiveStreamService";
+import { TransactionService } from "../services/TransactionService";
+import { SubscriptionPaymentService } from "../services/SubscriptionService";
+import { MatchPlayerServices } from "../services/MatchPlayerServices";
+import { GetAvailablePlayersService } from "../services/GetAvailablePlayersService";
+import { TournamentRegistrationValidator } from "../services/TournamentRegistrationValidator";
+import { PlayerTeamServices } from "../services/PlayerTeamServices";
+import { UserServices } from "../services/UserServices";
+import { UserAuthServices } from "../services/UserAuthServices";
+import { GetPlansAndUserSubscription } from "../services/GetPlansAndUserSubscription";
+import { StartTournament } from "../../infra/services/StartTournament";
+import { TournamentRefundService } from "../../infra/services/TournamentRefundService";
+import { PayoutMethodResolver } from "../providers/PayoutMethodResolver";
+import { WebhookService } from "../services/WebhookService";
+import { ProfileInitializationService } from "../services/ProfileInitializationService";
 
 // registrations
 container.register(DI_TOKENS.UserManagementService, { useClass: UserManagementService });

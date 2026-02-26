@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { ManagerResponseDTO, ManagerUpdateDTO } from "../../../domain/dtos/Manager.dto.js";
-import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository.js";
-import { IFileStorage } from "../../providers/IFileStorage.js";
-import { validateUserProfileUpdata } from "../../../domain/validators/UserProfileUpdateValidator.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
-import { ManagerMapper } from "../../mappers/ManagerMapper.js";
-import { IUpdateManagerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository.js";
-import { File } from "../../../domain/entities/File.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { ManagerResponseDTO, ManagerUpdateDTO } from "../../../domain/dtos/Manager.dto";
+import { IUserRepository } from "../../repositories/interfaces/shared/IUserRepository";
+import { IFileStorage } from "../../providers/IFileStorage";
+import { validateUserProfileUpdata } from "../../../domain/validators/UserProfileUpdateValidator";
+import { NotFoundError } from "../../../domain/errors/index";
+import { ManagerMapper } from "../../mappers/ManagerMapper";
+import { IUpdateManagerProfile } from "../../repositories/interfaces/usecases/IUserProfileRepository";
+import { File } from "../../../domain/entities/File";
 
 
 @injectable()

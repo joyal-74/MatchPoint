@@ -1,8 +1,9 @@
 import { lazy, Suspense, type JSX } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
 import RoleLayoutWrapper from "../pages/shared/RoleLayoutWrapper";
+import NavbarWrapper from "../components/shared/NavbarWrapper";
 
 // Helper for protection
 const withManagerProtection = (component: JSX.Element) => (
@@ -30,6 +31,7 @@ const EarningsPage = lazy(() => import("../components/manager/EarningsOverview")
 const WalletPage = lazy(() => import("../components/manager/PaymentsPage"));
 const FinancialHistory = lazy(() => import("../components/manager/wallet/FinancialHistory"));
 const ExplorePage = lazy(() => import("../pages/manager/ExplorePage"));
+const TeamChat = lazy(() => import("../pages/shared/TeamChat/TeamChat"));
 const MatchesSection = lazy(() => import("../pages/manager/MatchesPage"));
 const MyMatchesPage = lazy(() => import("../pages/manager/MyMatches"));
 const CreateTournamentPage = lazy(() => import("../components/manager/tournaments/TournamentModal/CreateTournamentPage"));
@@ -37,7 +39,7 @@ const EditTournamentPage = lazy(() => import("../components/manager/tournaments/
 const StreamSettings = lazy(() => import("../components/manager/liveStream/StreamSettings"));
 const SettingsPage = lazy(() => import("../pages/shared/SettingsPage"));
 const SubscriptionPage = lazy(() => import("../pages/shared/SubscriptionsPage"));
-const NotificationsPage = lazy(() => import("../pages/player/NotificationsPage"));
+const NotificationsPage = lazy(() => import("../pages/shared/NotificationsPage"));
 
 const ManagerRoutes = () => {
     return (
@@ -47,6 +49,7 @@ const ManagerRoutes = () => {
             <Route path="profile" element={withManagerProtection(<UserProfile />)} />
             <Route path="teams" element={withManagerProtection(<TeamsListPage />)} />
             <Route path="payments" element={withManagerProtection(<WalletPage />)} />
+            <Route path="chat" element={withManagerProtection(<NavbarWrapper><TeamChat /></NavbarWrapper>)} />
             <Route path="payments/history" element={withManagerProtection(<FinancialHistory />)} />
             <Route path="payments/earnings" element={withManagerProtection(<EarningsPage />)} />
             <Route path="team/:teamId" element={withManagerProtection(<ViewTeamManager />)} />
@@ -67,6 +70,8 @@ const ManagerRoutes = () => {
             <Route path="settings" element={withManagerProtection(<RoleLayoutWrapper><SettingsPage /></RoleLayoutWrapper>)} />
             <Route path="subscription" element={withManagerProtection(<RoleLayoutWrapper><SubscriptionPage /></RoleLayoutWrapper>)} />
             <Route path="notifications" element={withManagerProtection(<RoleLayoutWrapper><NotificationsPage /></RoleLayoutWrapper>)} />
+
+            <Route path="*" element={<Navigate to="/404" replace />} />
         </Routes>
     );
 };

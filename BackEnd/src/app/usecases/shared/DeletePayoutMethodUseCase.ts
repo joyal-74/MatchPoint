@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { DI_TOKENS } from "../../../domain/constants/Identifiers.js";
-import { IDeletePayoutMethodUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases.js";
-import { IPayoutResponse } from "../../../domain/dtos/PayoutResponse.dto.js";
-import { IPayoutRepository } from "../../repositories/interfaces/shared/IPayoutRepository.js";
-import { ILogger } from "../../providers/ILogger.js";
-import { NotFoundError } from "../../../domain/errors/index.js";
+import { DI_TOKENS } from "../../../domain/constants/Identifiers";
+import { IDeletePayoutMethodUseCase } from "../../repositories/interfaces/usecases/IFinancialUseCases";
+import { IPayoutResponse } from "../../../domain/dtos/PayoutResponse.dto";
+import { IPayoutRepository } from "../../repositories/interfaces/shared/IPayoutRepository";
+import { ILogger } from "../../providers/ILogger";
+import { NotFoundError } from "../../../domain/errors/index";
 
 @injectable()
 export class DeletePayoutMethodUseCase implements IDeletePayoutMethodUseCase {

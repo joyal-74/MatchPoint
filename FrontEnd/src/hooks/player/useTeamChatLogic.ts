@@ -1,22 +1,25 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { useGroupChat } from "./useGroupChat";
-import { getMyAllTeams, getMyTeamDetails } from "../../features/player/playerThunks";
 import type { Team } from "../../components/player/Teams/Types";
 import { toast } from "react-hot-toast";
+import { getTeamDetails, getUserTeams } from "../../features/player/Chat/chatThunks";
 
 interface TeamMember {
     _id: string;
     firstName: string;
     lastName?: string;
+    profileImage: string;
     email?: string;
 }
 
 export const useTeamChatLogic = ({ initialTeamId }: { initialTeamId?: string }) => {
     const dispatch = useAppDispatch();
-    
-    const currentUserId = useAppSelector((state) => state.auth.user?._id) || "me";
-    const teams = useAppSelector((state) => state.player.approvedTeams);
+
+    const currentUser = useAppSelector((state) => state.auth.user);
+    const currentUserId = currentUser?._id || "me";
+    const currentUserRole = currentUser?.role || "player";
+    const teams = useAppSelector((state) => state.chats.teams || []);
 
     const [activeTeamId, setActiveTeamId] = useState<string | null>(initialTeamId || null);
     const [messageInput, setMessageInput] = useState("");
@@ -32,10 +35,11 @@ export const useTeamChatLogic = ({ initialTeamId }: { initialTeamId?: string }) 
     const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const lastJoinedRoom = useRef<string | null>(null);
 
-    const activeTeam = useMemo(
-        () => teams.find((t) => t._id === activeTeamId) || null,
-        [activeTeamId, teams]
-    );
+    const activeTeam = useMemo(() => {
+        if (!Array.isArray(teams)) return null;
+
+        return teams.find((t) => t._id === activeTeamId) || null;
+    }, [activeTeamId, teams]);
 
     const chat = useGroupChat({
         initialChatId: activeTeamId || undefined,
@@ -47,16 +51,16 @@ export const useTeamChatLogic = ({ initialTeamId }: { initialTeamId?: string }) 
                 toast.error("You have been removed from this team.");
             }
             if (currentUserId !== "me") {
-                dispatch(getMyAllTeams(currentUserId));
+                dispatch(getUserTeams({ userId: currentUserId, role: currentUserRole }));
             }
         }
     });
 
     useEffect(() => {
         if (teams.length === 0 && currentUserId !== "me") {
-            dispatch(getMyAllTeams(currentUserId));
+            dispatch(getUserTeams({ userId: currentUserId, role: currentUserRole }));
         }
-    }, [currentUserId, dispatch, teams.length]);
+    }, [currentUserId, dispatch, teams.length, currentUserRole]);
 
     useEffect(() => {
         if (activeTeamId && activeTeamId !== lastJoinedRoom.current) {
@@ -69,16 +73,16 @@ export const useTeamChatLogic = ({ initialTeamId }: { initialTeamId?: string }) 
     useEffect(() => {
         if (showMembers && activeTeamId) {
             setLoadingMembers(true);
-            dispatch(getMyTeamDetails(activeTeamId))
+            dispatch(getTeamDetails(activeTeamId))
                 .unwrap()
-                .then((payload) => setMembers(payload.members || []))
+                .then((payload) => setMembers(payload.members as unknown as TeamMember[] || []))
                 .catch(() => setMembers([]))
                 .finally(() => setLoadingMembers(false));
         }
     }, [showMembers, activeTeamId, dispatch]);
 
     const sortedMessages = useMemo(() => {
-        return [...chat.messages].sort((a, b) => 
+        return [...chat.messages].sort((a, b) =>
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         );
     }, [chat.messages]);
@@ -151,9 +155,9 @@ export const useTeamChatLogic = ({ initialTeamId }: { initialTeamId?: string }) 
                 setIsNearBottom(scrollHeight - scrollTop - clientHeight < 100);
             },
             scrollToBottom: () => {
-                messagesContainerRef.current?.scrollTo({ 
-                    top: messagesContainerRef.current.scrollHeight, 
-                    behavior: 'smooth' 
+                messagesContainerRef.current?.scrollTo({
+                    top: messagesContainerRef.current.scrollHeight,
+                    behavior: 'smooth'
                 });
             }
         },

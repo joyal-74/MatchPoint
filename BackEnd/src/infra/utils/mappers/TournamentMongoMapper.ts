@@ -1,6 +1,6 @@
 import { FlattenMaps, Types } from "mongoose";
-import { Tournament } from "../../../domain/entities/Tournaments.js";
-import { TournamentDocument } from "../../../infra/databases/mongo/models/TournamentModel.js";
+import { Tournament } from "../../../domain/entities/Tournaments";
+import { TournamentDocument } from "../../../infra/databases/mongo/models/TournamentModel";
 
 export type LeanTournament = FlattenMaps<TournamentDocument> & {
     _id: Types.ObjectId;

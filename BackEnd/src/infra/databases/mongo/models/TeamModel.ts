@@ -1,6 +1,6 @@
 import { Schema, model, Types, Document } from "mongoose";
-import { PhaseStatus, playerStatus, statsType, TeamStatus } from "../types/Team.js";
-import { PlayerApprovalStatus, requestType } from "../../../../domain/dtos/Team.dto.js";
+import { PhaseStatus, playerStatus, statsType, TeamStatus } from "../types/Team";
+import { PlayerApprovalStatus, requestType } from "../../../../domain/dtos/Team.dto";
 
 export interface TeamDocument extends Document {
     _id: Types.ObjectId;

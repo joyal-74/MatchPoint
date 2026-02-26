@@ -1,14 +1,14 @@
 import { Router } from "express";
 import multer from "multer";
 import { container } from "tsyringe";
-import { ProfileController } from "../../http/controllers/manager/ProfileController.js";
-import { TeamController } from "../../http/controllers/manager/TeamController.js";
-import { TournamentController } from "../../http/controllers/manager/TournamentController.js";
-import { MatchController } from "../../http/controllers/manager/MatchController.js";
-import { FinancialsController } from "../../http/controllers/manager/FinancialsController.js";
-import { expressAdapter } from "../../adaptors/ExpressAdaptor.js";
-import { expressFileUpdateHandler } from "../../adaptors/ExpressFileAdaptor.js";
-import { managerOnly, umpireAndManagerOnly } from "../middlewares/index.js";
+import { ProfileController } from "../../http/controllers/manager/ProfileController";
+import { TeamController } from "../../http/controllers/manager/TeamController";
+import { TournamentController } from "../../http/controllers/manager/TournamentController";
+import { MatchController } from "../../http/controllers/manager/MatchController";
+import { FinancialsController } from "../../http/controllers/manager/FinancialsController";
+import { expressAdapter } from "../../adaptors/ExpressAdaptor";
+import { expressFileUpdateHandler } from "../../adaptors/ExpressFileAdaptor";
+import { managerOnly, umpireAndManagerOnly } from "../middlewares/index";
 
 
 const router = Router();

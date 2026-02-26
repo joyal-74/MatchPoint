@@ -38,7 +38,6 @@ export const walletEndpoints = {
 
     fetchUserPayments: async (userId: string): Promise<{ balance: number, transactions: Transaction[] }> => {
         const { data } = await axiosClient.get(Wallet_ROUTES.GET_USER_WALLET(userId));
-        console.log(data.data)
         return data.data;
     },
 };

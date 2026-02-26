@@ -1,5 +1,5 @@
 import { lazy, Suspense, type JSX } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import LoadingOverlay from "../components/shared/LoadingOverlay";
 import AdminLoginPage from "../pages/auth/AdminLogin";
@@ -47,6 +47,9 @@ const AdminRoutes = () => {
                 <Route path="subscriptions" element={withAdminProtection(<SubscriptionManagement />)} />
                 <Route path="transactions" element={withAdminProtection(<TransactionManagement />)} />
                 <Route path="transactions/:id" element={withAdminProtection(<TransactionDetailsPage />)} />
+
+                <Route path="*" element={<Navigate to="/404" replace />} />
+
             </Routes>
         </Suspense>
     );

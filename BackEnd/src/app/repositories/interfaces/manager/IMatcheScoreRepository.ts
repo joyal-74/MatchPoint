@@ -1,5 +1,5 @@
-import { MatchEntity } from "../../../../domain/entities/MatchEntity.js";
-import { TournamentMatchStatsDocument } from "../../../../domain/types/match.types.js";
+import { MatchEntity } from "../../../../domain/entities/MatchEntity";
+import { TournamentMatchStatsDocument } from "../../../../domain/types/match.types";
 
 export interface IMatchScoreRepository {
     getMatch(matchId: string): Promise<MatchEntity | null>;

@@ -5,4 +5,5 @@ export const NOTIFICATION_ROUTES = {
     GET_UNREAD_COUNT: (userId: string) => `${API_PREFIX}/notifications/${userId}/unread`,
     MARK_AS_READ: `${API_PREFIX}/notifications/mark-read`,
     MARK_ALL_AS_READ: `${API_PREFIX}/notifications/mark-all-read`,
+    DELETE_ALL_NOTIFICATIONS: `${API_PREFIX}/notifications/clear-all`,
 } as const;

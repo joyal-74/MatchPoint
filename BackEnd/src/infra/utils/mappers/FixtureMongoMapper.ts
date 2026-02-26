@@ -1,4 +1,4 @@
-import type { Fixture } from "../../../domain/entities/Fixture.js"; 
+import type { Fixture } from "../../../domain/entities/Fixture"; 
 
 export class FixtureMongoMapper {
     static toFixtureResponse(doc): Fixture {

@@ -31,3 +31,8 @@ export const markAllNotificationRead = createAsyncThunk(
     "user/markAllNotificationRead",
     createApiThunk(notificationEndpoints.markAllNotificationRead)
 );
+
+export const deleteNotifications = createAsyncThunk(
+    "user/deleteNotifications",
+    createApiThunk(notificationEndpoints.deleteNotifications)
+);

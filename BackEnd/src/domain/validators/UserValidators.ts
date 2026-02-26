@@ -1,5 +1,5 @@
-import { BadRequestError } from "../../domain/errors/index.js";
-import { Validators } from "./common.js";
+import { BadRequestError } from "../../domain/errors/index";
+import { Validators } from "./common";
 
 export function validateUserInput(data) {
     const errors: Record<string, string> = {};

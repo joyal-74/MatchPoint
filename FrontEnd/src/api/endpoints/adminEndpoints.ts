@@ -113,7 +113,6 @@ export const adminEndpoints = {
 
     fetchTransactionDetails: async (id: string) => {
         const response = await axiosClient.get(ADMIN_ROUTES.TRANSACTION_DETAILS(id));
-        console.log(response.data.data)
         return response.data.data;
     },
 };

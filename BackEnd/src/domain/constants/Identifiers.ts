@@ -274,6 +274,8 @@ const SharedUseCaseTokens = {
     InitiateWithdrawalUseCase: "InitiateWithdrawalUseCase",
     HandleWebhookUseCase: "HandleWebhookUseCase",
     GetUserWalletUseCase : 'GetUserWalletUseCase',
+    ClearAllNotifications : 'ClearAllNotifications',
+    GetUserTeamsUseCase : 'GetUserTeamsUseCase',
 }
 
 
