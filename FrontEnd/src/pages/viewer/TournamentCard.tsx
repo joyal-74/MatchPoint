@@ -49,8 +49,8 @@ export const TournamentCard = ({ tournament, type }: TournamentCardProps) => {
 
     const handleClick = () => {
         const path = type === 'registered' 
-            ? `/player/tournaments/${tournament._id}/hub` 
-            : `/player/tournaments/${tournament._id}`;
+            ? `/tournaments/${tournament._id}/hub` 
+            : `/tournaments/${tournament._id}`;
         navigate(path);
     };
 
@@ -62,6 +62,7 @@ export const TournamentCard = ({ tournament, type }: TournamentCardProps) => {
                 bg-card border border-border/50
                 transition-all duration-300 ease-out
                 ${theme.border} hover:-translate-y-1 hover:shadow-xl
+                pb-16 md:pb-0
             `}
         >
             <div className="relative h-40 w-full overflow-hidden bg-muted/20">

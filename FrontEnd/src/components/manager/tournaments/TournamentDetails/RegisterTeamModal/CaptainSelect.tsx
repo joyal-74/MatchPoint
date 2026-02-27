@@ -10,21 +10,19 @@ interface CaptainSelectProps {
 
 export default function CaptainSelect({ team, selectedCaptain, onSelect }: CaptainSelectProps) {
     if (!team) return null;
-
     return (
-        <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-neutral-300 mb-3">
-                <Crown size={16} className="text-yellow-500" />
-                Select Captain
+        <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
+            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <Crown size={14} className="text-warning" /> Assign Captain
             </label>
             <select
-                className="w-full p-3 rounded-md bg-neutral-800 border border-neutral-700 text-white text-sm focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-colors"
+                className="w-full p-3 rounded-xl bg-muted/50 border border-border text-foreground text-sm focus:ring-2 focus:ring-ring outline-none transition-all cursor-pointer"
                 value={selectedCaptain}
                 onChange={(e) => onSelect(e.target.value)}
             >
-                <option value="">Choose a player as Captain</option>
+                <option value="" className="bg-card">Choose the leader...</option>
                 {team.members.map((player) => (
-                    <option key={player.userId} value={player.userId}>
+                    <option key={player.userId} value={player.userId} className="bg-card">
                         {`${player.firstName} ${player.lastName}`}
                     </option>
                 ))}

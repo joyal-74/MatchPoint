@@ -27,6 +27,7 @@ const LiveStreamViewer = lazy(() => import("../pages/viewer/LiveStreamViewer"));
 const WalletPage = lazy(() => import("../pages/shared/PaymentsPage"));
 const FinancialHistory = lazy(() => import("../pages/shared/FinancialHistory"));
 const TournamentsPage = lazy(() => import("../pages/viewer/Tournaments"));
+const TournamentDetails = lazy(() => import("../pages/viewer/TournamentDetailsPage"));
 
 // Components & Layouts
 import NavbarWrapper from '../components/shared/NavbarWrapper';
@@ -50,7 +51,6 @@ const RootModule = () => {
     return (
         <Suspense fallback={<LoadingOverlay show />}>
             <Routes>
-                {/* --- 1. Public Routes --- */}
                 <Route path="privacy" element={<PrivacyPolicy />} />
                 <Route path="login" element={<PublicRoute><LoginPage /></PublicRoute>} />
                 <Route path="signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
@@ -59,23 +59,21 @@ const RootModule = () => {
                 <Route path="otp-verification" element={<PublicRoute><EnterForgotOtpPage /></PublicRoute>} />
                 <Route path="reset-password" element={<PublicRoute><ResetPasswordPage /></PublicRoute>} />
 
-                {/* --- 2. Viewer/Root Level Protected Routes --- */}
                 <Route path="/" element={withViewerProtection(<Home />)} />
                 <Route path="profile" element={withViewerProtection(<ProfilePage />)} />
                 <Route path="tournaments" element={withViewerProtection(<TournamentsPage />)} />
+                <Route path="tournaments/:id" element={withViewerProtection(<TournamentDetails />)} />
                 <Route path="live" element={withViewerProtection(<LiveMatches />)} />
                 <Route path="live/:matchId/details" element={withViewerProtection(<LiveMatchPage />)} />
                 <Route path="live/:matchId/details/stream" element={withViewerProtection(<LiveStreamViewer />)} />
                 <Route path="payments" element={withViewerProtection(<WalletPage />)} />
                 <Route path="payments/history" element={withViewerProtection(<FinancialHistory />)} />
 
-                {/* Root-level Shared Pages (Used by Viewers) */}
                 <Route path="/notifications" element={withViewerProtection(<ViewerProfileLayout><NotificationsPage /></ViewerProfileLayout>)} />
                 <Route path="/settings" element={withViewerProtection(<ViewerProfileLayout><SettingsPage /></ViewerProfileLayout>)} />
                 <Route path="/subscription" element={withViewerProtection(<ViewerProfileLayout><UserSubscriptionPage /></ViewerProfileLayout>)} />
                 <Route path="/leaderboard" element={withViewerProtection(<NavbarWrapper><AllTimeLeaderboard /></NavbarWrapper>)} />
 
-                {/* --- 3. System Utility Routes --- */}
                 <Route path="/dashboard" element={<ProtectedRoute><RoleRedirect /></ProtectedRoute>} />
                 <Route path="/unauthorized" element={<Unauthorized />} />
                 <Route path="/blocked" element={<Blocked />} />

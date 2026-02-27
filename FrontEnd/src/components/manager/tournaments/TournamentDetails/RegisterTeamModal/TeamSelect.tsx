@@ -6,24 +6,20 @@ interface TeamSelectProps {
     selectedTeam: string;
     onSelect: (id: string) => void;
 }
-
 export default function TeamSelect({ teams, selectedTeam, onSelect }: TeamSelectProps) {
     return (
-        <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-neutral-300 mb-3">
-                <Users size={16} />
-                Select Your Team
+        <div className="space-y-2">
+            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <Users size={14} /> Team Selection
             </label>
             <select
-                className="w-full p-3 rounded-md bg-neutral-800 border border-neutral-700 text-white text-sm focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors"
+                className="w-full p-3 rounded-xl bg-muted/50 border border-border text-foreground text-sm focus:ring-2 focus:ring-ring outline-none transition-all appearance-none cursor-pointer"
                 value={selectedTeam}
                 onChange={(e) => onSelect(e.target.value)}
             >
-                <option value="">Choose your Team</option>
+                <option value="" className="bg-card">Select a team...</option>
                 {teams.map((team) => (
-                    <option key={team._id} value={team._id}>
-                        {team.name}
-                    </option>
+                    <option key={team._id} value={team._id} className="bg-card">{team.name}</option>
                 ))}
             </select>
         </div>

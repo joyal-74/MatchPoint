@@ -45,7 +45,7 @@ const TournamentsPage = () => {
                             <Globe size={12} className="animate-spin-slow" />
                             Global Registry
                         </div>
-                        <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-none uppercase italic">
+                        <h1 className="text-3xl md:text-5xl font-bold">
                             Discover <span className="text-primary">Tournaments</span>
                         </h1>
                         <p className="hidden md:block text-muted-foreground text-sm font-medium max-w-lg">
